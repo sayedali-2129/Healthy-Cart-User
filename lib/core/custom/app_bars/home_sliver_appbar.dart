@@ -7,9 +7,13 @@ class HomeSliverAppbar extends StatelessWidget {
   const HomeSliverAppbar({
     super.key,
     required this.searchHint,
+    this.searchController,
+    this.onChanged,
   });
 
   final String searchHint;
+  final TextEditingController? searchController;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +70,8 @@ class HomeSliverAppbar extends StatelessWidget {
                       child: SizedBox(
                         height: 42,
                         child: TextField(
+                          onChanged: onChanged,
+                          controller: searchController,
                           showCursor: false,
                           cursorColor: BColors.black,
                           decoration: InputDecoration(

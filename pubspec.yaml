@@ -28,18 +28,18 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cupertino_icons: ^1.0.6
-  flutter:
-    sdk: flutter
   cached_network_image: ^3.3.1
   carousel_slider: ^4.2.1
   cloud_firestore: ^4.16.0
+  cupertino_icons: ^1.0.6
   dartz: ^0.10.1
   easy_debounce: ^2.0.3
   file_picker: ^8.0.0+1
   firebase_auth: ^4.19.0
   firebase_core: ^2.27.2
   firebase_storage: ^11.6.6
+  flutter:
+    sdk: flutter
   flutter_animate: ^4.5.0
   flutter_bloc: ^8.1.5
   flutter_image_compress: ^2.3.0
@@ -59,6 +59,7 @@ dependencies:
   intrinsic_size_overflow_box: ^0.1.1
   lite_rolling_switch: ^1.0.1
   lottie: ^3.1.0
+  material_segmented_control: ^5.0.1
   page_transition: ^2.1.0
   path_provider: ^2.1.2
   permission_handler: ^11.3.1

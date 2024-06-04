@@ -15,9 +15,13 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
 import '../../features/authentication/application/provider/authenication_provider.dart'
-    as _i16;
+    as _i19;
 import '../../features/authentication/domain/facade/i_auth_facade.dart' as _i14;
 import '../../features/authentication/infrastructure/i_auth_impl.dart' as _i15;
+import '../../features/laboratory/application/provider/lab_provider.dart'
+    as _i18;
+import '../../features/laboratory/domain/facade/i_lab_facade.dart' as _i16;
+import '../../features/laboratory/infrastructure/i_lab_impl.dart' as _i17;
 import '../../features/location_picker/location_picker/application/location_provider.dart'
     as _i13;
 import '../../features/location_picker/location_picker/domain/i_location_facde.dart'
@@ -29,7 +33,7 @@ import '../services/location_service.dart' as _i8;
 import '../services/pdf_picker.dart' as _i9;
 import '../services/url_launcher.dart' as _i10;
 import 'firebase_injectable_module.dart' as _i3;
-import 'general_injectable_module.dart' as _i17;
+import 'general_injectable_module.dart' as _i20;
 
 // initializes the registration of main-scope dependencies inside of GetIt
 Future<_i1.GetIt> init(
@@ -68,11 +72,14 @@ Future<_i1.GetIt> init(
         gh<_i4.FirebaseAuth>(),
         gh<_i6.FirebaseFirestore>(),
       ));
-  gh.factory<_i16.AuthenticationProvider>(
-      () => _i16.AuthenticationProvider(gh<_i14.IAuthFacade>()));
+  gh.lazySingleton<_i16.ILabFacade>(
+      () => _i17.ILabImpl(gh<_i6.FirebaseFirestore>()));
+  gh.factory<_i18.LabProvider>(() => _i18.LabProvider(gh<_i16.ILabFacade>()));
+  gh.factory<_i19.AuthenticationProvider>(
+      () => _i19.AuthenticationProvider(gh<_i14.IAuthFacade>()));
   return getIt;
 }
 
 class _$FirebaseInjecatbleModule extends _i3.FirebaseInjecatbleModule {}
 
-class _$GeneralInjecatbleModule extends _i17.GeneralInjecatbleModule {}
+class _$GeneralInjecatbleModule extends _i20.GeneralInjecatbleModule {}
