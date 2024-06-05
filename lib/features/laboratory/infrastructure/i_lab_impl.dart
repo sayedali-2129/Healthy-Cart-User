@@ -4,7 +4,9 @@ import 'package:healthy_cart_user/core/failures/main_failure.dart';
 import 'package:healthy_cart_user/core/general/firebase_collection.dart';
 import 'package:healthy_cart_user/core/general/typdef.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/facade/i_lab_facade.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_banner_model.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_test_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: ILabFacade)
@@ -55,5 +57,64 @@ class ILabImpl implements ILabFacade {
   void clearData() {
     lastDoc = null;
     noMoreData = false;
+  }
+
+/* ----------------------------- GET LAB BANNERS ---------------------------- */
+  @override
+  FutureResult<List<LabBannerModel>> getLabBanner({required labId}) async {
+    try {
+      final responce = await _firestore
+          .collection(FirebaseCollections.laboratoryBanner)
+          .orderBy('isCreated', descending: true)
+          .where('hospitalId', isEqualTo: labId)
+          .get();
+
+      final bannerList = responce.docs
+          .map((e) => LabBannerModel.fromMap(e.data()).copyWith(id: e.id))
+          .toList();
+      return right(bannerList);
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  /* ---------------------------- GET ALL LAB TESTS --------------------------- */
+
+  @override
+  FutureResult<List<LabTestModel>> getAvailableTests({required labId}) async {
+    try {
+      final responce = await _firestore
+          .collection(FirebaseCollections.laboratoryTests)
+          .orderBy('createdAt', descending: true)
+          .where('labId', isEqualTo: labId)
+          .get();
+
+      final testList = responce.docs
+          .map((e) => LabTestModel.fromMap(e.data()).copyWith(id: e.id))
+          .toList();
+      return right(testList);
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+/* -------------------------- DOOR STEP ONLY TESTS -------------------------- */
+  @override
+  FutureResult<List<LabTestModel>> getDoorStepOnly({required labId}) async {
+    try {
+      final responce = await _firestore
+          .collection(FirebaseCollections.laboratoryTests)
+          .orderBy('createdAt', descending: true)
+          .where(Filter.and(Filter('labId', isEqualTo: labId),
+              Filter('isDoorstepAvailable', isEqualTo: true)))
+          .get();
+
+      final doorStepTestList = responce.docs
+          .map((e) => LabTestModel.fromMap(e.data()).copyWith(id: e.id))
+          .toList();
+      return right(doorStepTestList);
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
   }
 }

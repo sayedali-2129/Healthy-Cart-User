@@ -1,47 +1,52 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
+import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
+import 'package:provider/provider.dart';
 
 class AdSlider extends StatefulWidget {
   const AdSlider({
     super.key,
     required this.screenWidth,
+    required this.labId,
   });
 
   final double screenWidth;
+  final String labId;
 
   @override
   State<AdSlider> createState() => _AdSliderState();
 }
 
 class _AdSliderState extends State<AdSlider> {
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     Provider.of<BannerController>(context, listen: false).fetchBanner();
-  //   });
+  @override
+  void initState() {
+    final labProvider = context.read<LabProvider>();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        labProvider.getLabBanner(labId: widget.labId);
+        log(labProvider.labBannerList.length.toString());
+      },
+    );
+    super.initState();
+  }
 
-  //   super.initState();
-  // }
   int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CarouselSlider.builder(
-          itemCount: 1,
+    return Consumer<LabProvider>(builder: (context, labProvider, _) {
+      if (labProvider.labBannerList.isEmpty) {
+        return const Gap(5);
+      } else {
+        return CarouselSlider.builder(
+          itemCount: labProvider.labBannerList.length,
           itemBuilder: (context, index, realIndex) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
-            child:
-                //  provider.banners.isEmpty ?
-                // Center(
-                //     child: LottieBuilder.asset(
-                //     ConstantIcons.lottieProgress,
-                //     height: 100,
-                //     width: 100,
-                //   )) :
-                Container(
+            child: Container(
               clipBehavior: Clip.antiAlias,
               width: widget.screenWidth,
               height: 202,
@@ -49,15 +54,13 @@ class _AdSliderState extends State<AdSlider> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: CustomCachedNetworkImage(
-                  image:
-                      'https://thumbs.dreamstime.com/b/lab-assistant-studying-samples-to-detect-pathologies-quality-medical-research-stock-video-105848572.jpg'),
+                  image: labProvider.labBannerList[index].image!),
             ),
           ),
           options: CarouselOptions(
             viewportFraction: 1,
             initialPage: 0,
-            autoPlay: true,
-            //  autoPlay: addBannerProvider.bannerList.length <= 1 ? false : true,
+            autoPlay: labProvider.labBannerList.length <= 1 ? false : true,
             autoPlayCurve: Curves.decelerate,
             onPageChanged: (index, reason) {
               setState(() {
@@ -65,13 +68,9 @@ class _AdSliderState extends State<AdSlider> {
               });
             },
           ),
-        ),
-        // DotsIndicator(
-        //   dotsCount: provider.banners.length,
-        //   position: currentIndex,
-        // )
-      ],
-    );
+        );
+      }
+    });
   }
 }
 

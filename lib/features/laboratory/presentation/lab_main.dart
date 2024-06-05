@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
@@ -32,6 +33,12 @@ class _LabMainState extends State<LabMain> {
   }
 
   @override
+  void dispose() {
+    EasyDebounce.cancel('labsearch');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {
       return Scaffold(
@@ -42,7 +49,13 @@ class _LabMainState extends State<LabMain> {
             searchHint: 'Search Pharmacy',
             searchController: labProvider.labSearchController,
             onChanged: (_) {
-              labProvider.searchLabs();
+              EasyDebounce.debounce(
+                'labsearch',
+                const Duration(milliseconds: 500),
+                () {
+                  labProvider.searchLabs();
+                },
+              );
             },
           ),
           if (labProvider.labFetchLoading == true &&
@@ -63,7 +76,10 @@ class _LabMainState extends State<LabMain> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LabDetailsScreen(),
+                          builder: (context) => LabDetailsScreen(
+                            index: index,
+                            labId: labProvider.labList[index].id!,
+                          ),
                         ))),
               ),
             )
