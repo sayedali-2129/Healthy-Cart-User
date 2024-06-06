@@ -10,4 +10,5 @@ abstract class ILabFacade {
   FutureResult<List<LabBannerModel>> getLabBanner({required labId});
   FutureResult<List<LabTestModel>> getAvailableTests({required labId});
   FutureResult<List<LabTestModel>> getDoorStepOnly({required labId});
+  Future<void> playPaymentSound();
 }

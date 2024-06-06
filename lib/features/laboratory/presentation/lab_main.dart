@@ -46,7 +46,7 @@ class _LabMainState extends State<LabMain> {
         controller: scrollController,
         slivers: [
           HomeSliverAppbar(
-            searchHint: 'Search Pharmacy',
+            searchHint: 'Search Laboratory',
             searchController: labProvider.labSearchController,
             onChanged: (_) {
               EasyDebounce.debounce(

@@ -44,6 +44,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
       return PopScope(
         onPopInvoked: (didPop) {
           labProvider.selectedTestIds.clear();
+          labProvider.cartItems.clear();
           labProvider.isBottomContainerPopUp = false;
         },
         child: Scaffold(
@@ -222,19 +223,20 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                 final testList =
                                                     labProvider.testList[index];
                                                 return TestListCard(
+                                                  index: index,
                                                   image: testList.testImage!,
                                                   testName: testList.testName ??
                                                       'No Name',
                                                   testPrice:
                                                       '${testList.testPrice ?? 000}',
                                                   offerPrice:
-                                                      '${testList.offerPrice ?? 000}',
+                                                      '${testList.offerPrice}',
                                                   isSelected: labProvider
                                                       .selectedTestIds
                                                       .contains(testList.id),
                                                   onAdd: () {
                                                     labProvider.testAddButton(
-                                                        testList.id!);
+                                                        testList.id!, testList);
                                                     labProvider
                                                         .bottomPopUpContainer();
                                                     if (labProvider
@@ -267,6 +269,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                 final doorStepList = labProvider
                                                     .doorStepTestList[index];
                                                 return TestListCard(
+                                                  index: index,
                                                   image:
                                                       doorStepList.testImage!,
                                                   testName:
@@ -275,14 +278,15 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                   testPrice:
                                                       '${doorStepList.testPrice ?? 000}',
                                                   offerPrice:
-                                                      '${doorStepList.offerPrice ?? 000}',
+                                                      '${doorStepList.offerPrice}',
                                                   isSelected: labProvider
                                                       .selectedTestIds
                                                       .contains(
                                                           doorStepList.id),
                                                   onAdd: () {
                                                     labProvider.testAddButton(
-                                                        doorStepList.id!);
+                                                        doorStepList.id!,
+                                                        doorStepList);
                                                     if (labProvider
                                                         .selectedTestIds
                                                         .isNotEmpty) {

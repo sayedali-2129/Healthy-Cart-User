@@ -28,6 +28,8 @@ class LabProvider with ChangeNotifier {
   // bool testFetching = false;
   List<String> selectedTestIds = [];
 
+  List<LabTestModel> cartItems = [];
+
   bool isBottomContainerPopUp = false;
 
 /* ------------------------ CHECK OUT CONTAINER POPUP ----------------------- */
@@ -44,6 +46,12 @@ class LabProvider with ChangeNotifier {
   void labTabSelection() {
     isLabOnlySelected = !isLabOnlySelected;
     notifyListeners();
+  }
+
+  /* -------------------------------------------------------------------------- */
+  /* -------------------------- PAYMENT SUCCESS SOUND ------------------------- */
+  Future<void> playPaymentSound() async {
+    await iLabFacade.playPaymentSound();
   }
   /* -------------------------------------------------------------------------- */
 
@@ -149,35 +157,65 @@ class LabProvider with ChangeNotifier {
     );
   }
 
-  /* --------------------------- GET DOOR STEP TESTS -------------------------- */
-  // Future<void> getDoorStepOnly({required String labId}) async {
-  //   doorStepTestList.clear();
-  //   notifyListeners();
-  //   final result = await iLabFacade.getDoorStepOnly(labId: labId);
-  //   result.fold(
-  //     (err) {
-  //       log('error on getDoorStepOnly() :: ${err.errMsg}');
-  //       notifyListeners();
-  //     },
-  //     (success) {
-  //       doorStepTestList = success;
-  //       detailsScreenLoading = false;
-  //       notifyListeners();
-  //     },
-  //   );
-  // }
-
-  void testAddButton(String testId) {
+/* ------------------------- TEST ADD TO CART AND REMOVE BUTTON FUNCTIONS ------------------------ */
+  void testAddButton(String testId, LabTestModel test) {
     if (selectedTestIds.contains(testId)) {
       selectedTestIds.remove(testId);
+      cartItems.removeWhere((item) => item.id == testId);
     } else {
       selectedTestIds.add(testId);
+      cartItems.add(test);
     }
+    bottomPopUpContainer();
     notifyListeners();
   }
 
-  // void testAddButton() {
-  //   isTestSelected = !isTestSelected;
-  //   notifyListeners();
-  // }
+  void removeFromCart(int index) {
+    final removedTest = cartItems[index];
+    selectedTestIds.remove(removedTest.id);
+    cartItems.removeAt(index);
+    bottomPopUpContainer();
+    notifyListeners();
+  }
+  /* -------------------------------------------------------------------------- */
+
+/* ----------------------- CART CALCULATION FUNCTIONS ----------------------- */
+  num claculateTotalAmount() {
+    num totalAmount = 0;
+    for (final item in cartItems) {
+      totalAmount += item.offerPrice ?? item.testPrice!;
+    }
+    log('total amount :: $totalAmount');
+    return totalAmount;
+  }
+
+  num claculateTotalTestFee() {
+    num totalTestfee = 0;
+    for (final item in cartItems) {
+      totalTestfee += item.testPrice!;
+    }
+    log('total amount :: $totalTestfee');
+    return totalTestfee;
+  }
+
+  num claculateTotalOfferPrice() {
+    num totalOfferPrice = 0;
+    for (final item in cartItems) {
+      totalOfferPrice += item.offerPrice ?? 0;
+    }
+    log('total amount :: $totalOfferPrice');
+    return totalOfferPrice;
+  }
+
+  num totalDicount() {
+    return claculateTotalAmount() - claculateTotalTestFee();
+  }
+  /* -------------------------------------------------------------------------- */
+
+  void clearCart() {
+    cartItems.clear();
+    selectedTestIds.clear();
+    bottomPopUpContainer();
+    notifyListeners();
+  }
 }
