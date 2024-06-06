@@ -3,6 +3,7 @@ import 'package:healthy_cart_user/core/di/injection.dart';
 import 'package:healthy_cart_user/core/services/image_picker.dart';
 import 'package:healthy_cart_user/core/services/location_service.dart';
 import 'package:healthy_cart_user/core/services/pdf_picker.dart';
+import 'package:healthy_cart_user/core/services/sound_services.dart';
 import 'package:healthy_cart_user/core/services/url_launcher.dart';
 import 'package:injectable/injectable.dart';
 
@@ -17,4 +18,6 @@ abstract class GeneralInjecatbleModule {
       PdfPickerService(sl<FirebaseStorage>());
   @lazySingleton
   UrlService get urlService => UrlService();
+  @lazySingleton
+  SoundServices get soundServices => SoundServices();
 }

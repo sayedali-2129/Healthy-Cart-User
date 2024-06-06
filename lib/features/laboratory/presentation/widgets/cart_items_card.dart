@@ -5,24 +5,22 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_p
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
-class TestListCard extends StatelessWidget {
-  const TestListCard({
+class CartItemsCard extends StatelessWidget {
+  const CartItemsCard({
     super.key,
-    required this.image,
-    required this.testName,
-    required this.testPrice,
-    this.offerPrice,
-    this.onAdd,
-    required this.isSelected,
     required this.index,
+    this.image,
+    this.testName,
+    this.testPrice,
+    this.offerPrice,
+    this.onDelete,
   });
 
-  final String image;
-  final String testName;
-  final String testPrice;
+  final String? image;
+  final String? testName;
+  final String? testPrice;
   final String? offerPrice;
-  final bool isSelected;
-  final void Function()? onAdd;
+  final void Function()? onDelete;
   final int index;
   @override
   Widget build(BuildContext context) {
@@ -44,7 +42,7 @@ class TestListCard extends StatelessWidget {
                       height: 54,
                       width: 54,
                       decoration: const BoxDecoration(shape: BoxShape.circle),
-                      child: CustomCachedNetworkImage(image: image),
+                      child: CustomCachedNetworkImage(image: image!),
                     ),
                     const Gap(8),
                     Expanded(
@@ -52,7 +50,7 @@ class TestListCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            testName,
+                            testName!,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -60,7 +58,7 @@ class TestListCard extends StatelessWidget {
                           ),
                           const Gap(8),
                           Expanded(
-                            child: labProvider.testList[index].offerPrice ==
+                            child: labProvider.cartItems[index].offerPrice ==
                                     null
                                 ? RichText(
                                     text: TextSpan(
@@ -122,31 +120,15 @@ class TestListCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: GestureDetector(
-                  onTap: onAdd,
-                  child: Container(
-                    height: 26,
-                    width: 26,
-                    decoration: BoxDecoration(
-                        color: !isSelected ? BColors.white : BColors.green,
-                        border: Border.all(color: BColors.green),
-                        borderRadius: BorderRadius.circular(6)),
-                    child: Center(
-                        child: !isSelected
-                            ? const Icon(
-                                Icons.add,
-                                color: BColors.black,
-                                size: 20,
-                              )
-                            : const Icon(
-                                Icons.check,
-                                color: BColors.white,
-                                size: 18,
-                              )),
-                  ),
-                ),
-              )
+                  padding: const EdgeInsets.only(right: 12),
+                  child: GestureDetector(
+                    onTap: onDelete,
+                    child: Text('Remove',
+                        style: TextStyle(
+                            color: BColors.red,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600)),
+                  ))
             ],
           ),
         ),

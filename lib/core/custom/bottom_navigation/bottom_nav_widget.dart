@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:healthy_cart_user/features/home/presentation/home_main.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hospital_main.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/lab_main.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_main.dart';
+import 'package:healthy_cart_user/features/profile/presentation/profile_main.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({
     super.key,
-    required this.text1,
-    required this.text2,
-    required this.text3,
-    required this.text4,
-    required this.text5,
-    required this.tabItems,
+    // required this.text1,
+    // required this.text2,
+    // required this.text3,
+    // required this.text4,
+    // required this.text5,
+    // required this.tabItems,
   });
-  final String text1;
-  final String text2;
-  final String text3;
-  final String text4;
-  final String text5;
+  // final String text1;
+  // final String text2;
+  // final String text3;
+  // final String text4;
+  // final String text5;
 
-  final List<Widget> tabItems;
+  // final List<Widget> tabItems;
   @override
   State<BottomNavigationWidget> createState() => _BottonNavTabState();
 }
@@ -34,7 +39,13 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
         body: TabBarView(
             clipBehavior: Clip.antiAlias,
             physics: const NeverScrollableScrollPhysics(),
-            children: widget.tabItems),
+            children: [
+              HomeMain(),
+              HospitalMain(),
+              LabMain(),
+              PharmacyMain(),
+              ProfileMain(),
+            ]),
         bottomNavigationBar: PhysicalModel(
           color: Colors.white,
           elevation: 10,
@@ -80,10 +91,10 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                             width: 22,
                           ),
                   ),
-                  text: widget.text1,
+                  text: 'Home',
                 ),
                 Tab(
-                  text: widget.text2,
+                  text: 'Hospital',
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: selectedIndex == 1
@@ -100,7 +111,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                   ),
                 ),
                 Tab(
-                  text: widget.text3,
+                  text: 'Lab',
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: selectedIndex == 2
@@ -117,7 +128,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                   ),
                 ),
                 Tab(
-                  text: widget.text4,
+                  text: 'Medicine',
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: selectedIndex == 3
@@ -134,7 +145,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                   ),
                 ),
                 Tab(
-                  text: widget.text5,
+                  text: 'Profile',
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: selectedIndex == 4

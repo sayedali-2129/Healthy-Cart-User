@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/otp_ui.dart';
-import 'package:healthy_cart_user/features/bottom_navigation/presentation/bottom_nav.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
 import 'package:healthy_cart_user/features/user_profile/domain/model/user_model.dart';
 import 'package:injectable/injectable.dart';
@@ -85,7 +85,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyNavigation.pushAndRemoveUntil(
         type: PageTransitionType.bottomToTop,
         context: context,
-        page: const HomeScreen());
+        page: const BottomNavigationWidget());
     notifyListeners();
   }
 
