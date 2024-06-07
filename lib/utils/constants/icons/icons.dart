@@ -19,4 +19,6 @@ class BIcon {
   static const String profileColor =
       'assets/icons/bottom_nav_icons/profile-color.png';
 /* -------------------------------------------------------------------------- */
+
+  static const String logoutIcon = 'assets/icons/logout icon.png';
 }

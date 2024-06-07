@@ -51,7 +51,6 @@ class UserProfileProvider with ChangeNotifier {
 
   Future<void> uploadUserImage() async {
     if (imageFile == null && imageUrl == null) {
-      CustomToast.errorToast(text: 'Please check the image selected');
       return;
     }
     final result = await iUserProfileFacade.uploadUserImage(imageFile!);

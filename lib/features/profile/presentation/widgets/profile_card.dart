@@ -7,11 +7,11 @@ import 'package:healthy_cart_user/utils/constants/images/images.dart';
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
     super.key,
-    this.userIamge,
+    this.userImage,
     this.userName,
     this.userLocation,
   });
-  final String? userIamge;
+  final String? userImage;
   final String? userName;
   final String? userLocation;
   @override
@@ -26,28 +26,30 @@ class ProfileCard extends StatelessWidget {
                 height: 70,
                 width: 70,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: userIamge == null
+                child: userImage == null
                     ? Image.asset(
                         BImage.userAvatar,
                         fit: BoxFit.cover,
                       )
-                    : CustomCachedNetworkImage(image: userIamge!)),
+                    : CustomCachedNetworkImage(image: userImage!)),
             const Gap(10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   userName ?? 'User',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 18,
                       color: BColors.black,
                       fontWeight: FontWeight.w700),
                 ),
-                Text(userLocation ?? '',
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: BColors.black,
-                        fontWeight: FontWeight.w500))
+                userLocation == null
+                    ? const Gap(0)
+                    : Text(userLocation!,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: BColors.black,
+                            fontWeight: FontWeight.w500))
               ],
             )
           ],

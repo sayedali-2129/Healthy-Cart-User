@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
 import 'package:healthy_cart_user/core/general/firebase_collection.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
@@ -81,12 +82,21 @@ class IAuthImpl implements IAuthFacade {
         .doc(uid)
         .get();
     if (user.data() != null) {
-      return;
-    } else {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      final fcmToken = await messaging.getToken();
       await _firestore
           .collection(FirebaseCollections.userCollection)
           .doc(uid)
-          .set(UserModel().copyWith(phoneNo: phoneNo).toMap());
+          .update({'fcmToken': fcmToken});
+    } else {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      final fcmToken = await messaging.getToken();
+      await _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(uid)
+          .set(UserModel()
+              .copyWith(phoneNo: phoneNo, fcmToken: fcmToken, id: uid)
+              .toMap());
     }
   }
 

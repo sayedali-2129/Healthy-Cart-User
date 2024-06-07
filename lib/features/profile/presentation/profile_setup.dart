@@ -9,6 +9,7 @@ import 'package:healthy_cart_user/core/custom/custom_textfields/textfield_widget
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/general/validator.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_profile_provider.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
@@ -147,6 +148,9 @@ class _ProfileSetupState extends State<ProfileSetup> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          context
+                              .read<LocationProvider>()
+                              .getLocationPermisson();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -162,8 +166,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                    // 'Select Location' ??
-                                    "${authProvider.userFetchlDataFetched?.placemark?.localArea}, ${authProvider.userFetchlDataFetched?.placemark?.district}, ${authProvider.userFetchlDataFetched?.placemark?.state}",
+                                    "${authProvider.userFetchlDataFetched?.placemark?.localArea ?? 'Select Location'}, ${authProvider.userFetchlDataFetched?.placemark?.district ?? ''}, ${authProvider.userFetchlDataFetched?.placemark?.state ?? ''}",
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
