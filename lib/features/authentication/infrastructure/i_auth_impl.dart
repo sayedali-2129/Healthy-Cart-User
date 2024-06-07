@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
 import 'package:healthy_cart_user/core/general/firebase_collection.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
-import 'package:healthy_cart_user/features/user_profile/domain/model/user_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IAuthFacade)

@@ -12,6 +12,9 @@ class UserModel {
   List<String>? keywords;
   String? userAge;
   String? gender;
+  String? userEmail;
+
+  String? fcmToken;
   UserModel({
     this.id,
     this.placemark,
@@ -23,6 +26,8 @@ class UserModel {
     this.keywords,
     this.userAge,
     this.gender,
+    this.userEmail,
+    this.fcmToken,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,6 +41,19 @@ class UserModel {
       'createdAt': createdAt,
       'keywords': keywords,
       'userAge': userAge,
+      'gender': gender,
+      'userEmail': userEmail,
+      'fcmToken': fcmToken,
+    };
+  }
+
+  Map<String, dynamic> toEditMap() {
+    return <String, dynamic>{
+      'userName': userName,
+      'image': image,
+      'keywords': keywords,
+      'userAge': userAge,
+      'userEmail': userEmail,
       'gender': gender,
     };
   }
@@ -57,6 +75,8 @@ class UserModel {
           : null,
       userAge: map['userAge'] != null ? map['userAge'] as String : null,
       gender: map['gender'] != null ? map['gender'] as String : null,
+      userEmail: map['userEmail'] != null ? map['userEmail'] as String : null,
+      fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,
     );
   }
 
@@ -71,6 +91,8 @@ class UserModel {
     List<String>? keywords,
     String? userAge,
     String? gender,
+    String? userEmail,
+    String? fcmToken,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -83,6 +105,8 @@ class UserModel {
       keywords: keywords ?? this.keywords,
       userAge: userAge ?? this.userAge,
       gender: gender ?? this.gender,
+      userEmail: userEmail ?? this.userEmail,
+      fcmToken: fcmToken ?? this.fcmToken,
     );
   }
 }
