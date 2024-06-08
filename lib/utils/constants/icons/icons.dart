@@ -20,4 +20,6 @@ class BIcon {
       'assets/icons/bottom_nav_icons/profile-color.png';
   static const String rxIcon = 'assets/icons/rx_icon.png';
 /* -------------------------------------------------------------------------- */
+
+  static const String logoutIcon = 'assets/icons/logout icon.png';
 }

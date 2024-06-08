@@ -43,10 +43,10 @@ class HomeSliverAppbar extends StatelessWidget {
         ),
       ),
       bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(122),
+          preferredSize: const Size.fromHeight(100),
           child: Padding(
             padding:
-                const EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 8),
+                const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

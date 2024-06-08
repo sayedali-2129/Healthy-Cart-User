@@ -20,4 +20,5 @@ class BColors {
   static const Color lightgreen = Color(0xFF9BE5AA);
   static const Color buttonRedShade = Color(0xffDE7F7F);
   static const Color buttonGreen = Color(0xff9BE5AA);
+  static Color profileButtonGrey = Colors.grey[50]!;
 }

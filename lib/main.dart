@@ -3,6 +3,8 @@ import 'package:healthy_cart_user/core/di/injection.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/profile/application/provider/user_profile_provider.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +31,12 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<LabProvider>(),
         ),
         ChangeNotifierProvider(
-          create: (context) => sl<PharmacyProvider>(),
+      
+          create: (context) => sl<LocationProvider>(),
+        ),
+        ChangeNotifierProvider(create: (context) => sl<PharmacyProvider>(),),
+        ChangeNotifierProvider(
+          create: (context) => sl<UserProfileProvider>(),
         ),
       ],
       child: MaterialApp(

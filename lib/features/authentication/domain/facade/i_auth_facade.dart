@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
-import 'package:healthy_cart_user/features/user_profile/domain/model/user_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 
 abstract class IAuthFacade {
   //factory IAuthFacade() => IAuthImpl(FirebaseAuth.instance);

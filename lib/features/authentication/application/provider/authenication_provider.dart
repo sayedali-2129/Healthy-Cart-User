@@ -4,8 +4,8 @@ import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/otp_ui.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
-import 'package:healthy_cart_user/features/user_profile/domain/model/user_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:page_transition/page_transition.dart';
 

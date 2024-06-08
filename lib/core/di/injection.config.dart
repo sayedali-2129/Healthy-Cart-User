@@ -15,11 +15,11 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
 import '../../features/authentication/application/provider/authenication_provider.dart'
-    as _i20;
+    as _i22;
 import '../../features/authentication/domain/facade/i_auth_facade.dart' as _i17;
 import '../../features/authentication/infrastructure/i_auth_impl.dart' as _i18;
 import '../../features/laboratory/application/provider/lab_provider.dart'
-    as _i19;
+    as _i21;
 import '../../features/laboratory/domain/facade/i_lab_facade.dart' as _i14;
 import '../../features/laboratory/infrastructure/i_lab_impl.dart' as _i15;
 import '../../features/location_picker/location_picker/application/location_provider.dart'
@@ -28,13 +28,18 @@ import '../../features/location_picker/location_picker/domain/i_location_facde.d
     as _i12;
 import '../../features/location_picker/location_picker/infrastructure/i_location_impl.dart'
     as _i13;
+import '../../features/profile/application/provider/user_profile_provider.dart'
+    as _i23;
+import '../../features/profile/domain/facade/i_user_profile_facade.dart'
+    as _i19;
+import '../../features/profile/infrastructure/i_user_profile_impl.dart' as _i20;
 import '../services/image_picker.dart' as _i7;
 import '../services/location_service.dart' as _i8;
 import '../services/pdf_picker.dart' as _i9;
 import '../services/sound_services.dart' as _i11;
 import '../services/url_launcher.dart' as _i10;
 import 'firebase_injectable_module.dart' as _i3;
-import 'general_injectable_module.dart' as _i21;
+import 'general_injectable_module.dart' as _i24;
 
 // initializes the registration of main-scope dependencies inside of GetIt
 Future<_i1.GetIt> init(
@@ -79,12 +84,18 @@ Future<_i1.GetIt> init(
         gh<_i4.FirebaseAuth>(),
         gh<_i6.FirebaseFirestore>(),
       ));
-  gh.factory<_i19.LabProvider>(() => _i19.LabProvider(gh<_i14.ILabFacade>()));
-  gh.factory<_i20.AuthenticationProvider>(
-      () => _i20.AuthenticationProvider(gh<_i17.IAuthFacade>()));
+  gh.lazySingleton<_i19.IUserProfileFacade>(() => _i20.IUserProfileImpl(
+        gh<_i6.FirebaseFirestore>(),
+        gh<_i7.ImageService>(),
+      ));
+  gh.factory<_i21.LabProvider>(() => _i21.LabProvider(gh<_i14.ILabFacade>()));
+  gh.factory<_i22.AuthenticationProvider>(
+      () => _i22.AuthenticationProvider(gh<_i17.IAuthFacade>()));
+  gh.factory<_i23.UserProfileProvider>(
+      () => _i23.UserProfileProvider(gh<_i19.IUserProfileFacade>()));
   return getIt;
 }
 
 class _$FirebaseInjecatbleModule extends _i3.FirebaseInjecatbleModule {}
 
-class _$GeneralInjecatbleModule extends _i21.GeneralInjecatbleModule {}
+class _$GeneralInjecatbleModule extends _i24.GeneralInjecatbleModule {}

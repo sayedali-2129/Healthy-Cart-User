@@ -37,56 +37,51 @@ class ButtonWidget extends StatelessWidget {
   }
 }
 
-// //Outline Button
-// class OutlineButtonWidget extends StatelessWidget {
-//   const OutlineButtonWidget({
-//     super.key,
-//     required this.buttonHeight,
-//     required this.buttonWidth,
-//     required this.buttonColor,
-//     required this.buttonText,
-//     this.textColor = ConstantColors.mainThemeBlue,
-//     this.onPressed,
-//     this.borderColor = ConstantColors.mainThemeBlue,
-//   });
+//Outline Button
+class OutlineButtonWidget extends StatelessWidget {
+  const OutlineButtonWidget({
+    super.key,
+    required this.buttonHeight,
+    required this.buttonWidth,
+    required this.buttonColor,
+    this.onPressed,
+    required this.borderColor,
+    required this.buttonWidget,
+  });
 
-//   final double buttonHeight;
-//   final double buttonWidth;
-//   final Color buttonColor;
-//   final String buttonText;
-//   final Color? textColor;
-//   final Color borderColor;
-//   final void Function()? onPressed;
+  final double buttonHeight;
+  final double buttonWidth;
+  final Color buttonColor;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return OutlinedButton(
-//         onPressed: onPressed,
-//         style: ButtonStyle(
-//           backgroundColor: WidgetStatePropertyAll(
-//             buttonColor,
-//           ),
-//           shape: WidgetStatePropertyAll(
-//             RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(10),
-//             ),
-//           ),
-//           side: WidgetStatePropertyAll(
-//             BorderSide(color: borderColor),
-//           ),
-//           fixedSize: WidgetStatePropertyAll(
-//             Size.fromHeight(buttonHeight),
-//           ),
-//           maximumSize: WidgetStatePropertyAll(
-//             Size.fromWidth(buttonWidth),
-//           ),
-//         ),
-//         child: Center(
-//           child: Text(
-//             buttonText,
-//             textAlign: TextAlign.center,
-//             style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
-//           ),
-//         ));
-//   }
-// }
+  final Color borderColor;
+  final void Function()? onPressed;
+  final Widget buttonWidget;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(
+            buttonColor,
+          ),
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          side: WidgetStatePropertyAll(
+            BorderSide(color: borderColor),
+          ),
+          fixedSize: WidgetStatePropertyAll(
+            Size.fromHeight(buttonHeight),
+          ),
+          maximumSize: WidgetStatePropertyAll(
+            Size.fromWidth(buttonWidth),
+          ),
+        ),
+        child: Center(
+          child: buttonWidget,
+        ));
+  }
+}

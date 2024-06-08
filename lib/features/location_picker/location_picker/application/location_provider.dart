@@ -58,10 +58,10 @@ class LocationProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> setLocationByLaboratory(
-      {required BuildContext context,
-      required bool isLaboratoryEditProfile,
-      required int? labRequestedCount}) async {
+  Future<void> setLocationByLaboratory({
+    required BuildContext context,
+    required bool isUserEditProfile,
+  }) async {
     log('Location selected::::$selectedPlaceMark');
     final result = await iLocationFacade.setLocationByUser(selectedPlaceMark!);
     result.fold((failure) {
@@ -75,18 +75,18 @@ class LocationProvider extends ChangeNotifier {
         CustomToast.errorToast(
             text: "Can't able to add location, please try again");
       }, (sucess) {
-        // Navigator.pop(context);
-        // CustomToast.sucessToast(text: 'Location added sucessfully');
-        // (isLaboratoryEditProfile)
-        //     ? Navigator.pop(
-        //         context,
-        //       )
-        //     : EasyNavigation.pushAndRemoveUntil(
-        //         context: context,
-        //         page: (labRequestedCount == 2)
-        //             ? const SplashScreen()
-        //             : const PendingPageScreen());
-        // notifyListeners();
+        Navigator.pop(context);
+        CustomToast.sucessToast(text: 'Location added sucessfully');
+        // (isUserEditProfile)
+        Navigator.pop(
+          context,
+        );
+        // : EasyNavigation.pushAndRemoveUntil(
+        //     context: context,
+        //     page: (labRequestedCount == 2)
+        //         ? const SplashScreen()
+        //         : const PendingPageScreen());
+        notifyListeners();
       });
     });
   }
