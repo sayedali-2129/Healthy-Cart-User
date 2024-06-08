@@ -10,20 +10,8 @@ import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({
     super.key,
-    // required this.text1,
-    // required this.text2,
-    // required this.text3,
-    // required this.text4,
-    // required this.text5,
-    // required this.tabItems,
   });
-  // final String text1;
-  // final String text2;
-  // final String text3;
-  // final String text4;
-  // final String text5;
 
-  // final List<Widget> tabItems;
   @override
   State<BottomNavigationWidget> createState() => _BottonNavTabState();
 }
@@ -36,9 +24,9 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-        body: TabBarView(
+        body: const TabBarView(
             clipBehavior: Clip.antiAlias,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             children: [
               HomeMain(),
               HospitalMain(),

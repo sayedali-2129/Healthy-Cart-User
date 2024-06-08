@@ -18,6 +18,7 @@ class BIcon {
   static const String labColor = 'assets/icons/bottom_nav_icons/lab-color.png';
   static const String profileColor =
       'assets/icons/bottom_nav_icons/profile-color.png';
+  static const String rxIcon = 'assets/icons/rx_icon.png';
 /* -------------------------------------------------------------------------- */
 
   static const String logoutIcon = 'assets/icons/logout icon.png';

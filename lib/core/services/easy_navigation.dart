@@ -6,6 +6,7 @@ class EasyNavigation {
   static Future<void> push({
     required BuildContext context,
     required Widget page,
+    int? duration,
     PageTransitionType type = PageTransitionType.fade,
   }) async {
     await Navigator.push(
@@ -13,7 +14,7 @@ class EasyNavigation {
       PageTransition(
         child: page,
         type: type,
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: duration ?? 500),
         reverseDuration: const Duration(milliseconds: 300),
       ),
     );
@@ -23,13 +24,14 @@ class EasyNavigation {
     required BuildContext context,
     required Widget page,
     PageTransitionType type = PageTransitionType.fade,
+    int? duration,
   }) async {
     await Navigator.pushReplacement(
       context,
       PageTransition(
         child: page,
         type: type,
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: duration ?? 500),
         reverseDuration: const Duration(milliseconds: 300),
       ),
     );
@@ -44,6 +46,7 @@ class EasyNavigation {
   static Future<void> pushAndRemoveUntil({
     required BuildContext context,
     required Widget page,
+    int? duration,
     PageTransitionType type = PageTransitionType.fade,
   }) async {
     await Navigator.pushAndRemoveUntil(
@@ -51,7 +54,7 @@ class EasyNavigation {
       PageTransition(
         child: page,
         type: type,
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: duration ?? 500),
         reverseDuration: const Duration(milliseconds: 300),
       ),
       (Route<dynamic> route) => false,
