@@ -7,7 +7,6 @@ class SliverCustomAppbar extends StatelessWidget {
     required this.title,
     required this.onBackTap,
     this.child,
-
   });
   final String title;
 
@@ -21,8 +20,7 @@ class SliverCustomAppbar extends StatelessWidget {
         pinned: true,
         floating: true,
         forceElevated: true,
-        toolbarHeight:80,
-    
+        toolbarHeight: 60,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(12),
@@ -38,8 +36,7 @@ class SliverCustomAppbar extends StatelessWidget {
         title: Text(title,
             style: const TextStyle(
                 fontFamily: 'Montserrat',
-                
-                fontSize: 18,
+                fontSize: 15,
                 fontWeight: FontWeight.w700,
                 color: BColors.darkblue)),
         bottom: child);

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_details_screen.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/lab_list_card.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class LabMain extends StatefulWidget {
@@ -69,20 +71,20 @@ class _LabMainState extends State<LabMain> {
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverList.separated(
-                separatorBuilder: (context, index) => const Gap(8),
-                itemCount: labProvider.labList.length,
-                itemBuilder: (context, index) => LabListCard(
-                    index: index,
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LabDetailsScreen(
-                            index: index,
-                            labId: labProvider.labList[index].id!,
-                          ),
-                        ))),
-              ),
-            )
+                  separatorBuilder: (context, index) => const Gap(8),
+                  itemCount: labProvider.labList.length,
+                  itemBuilder: (context, index) => LabListCard(
+                      index: index,
+                      onTap: () => EasyNavigation.push(
+                            context: context,
+                            type: PageTransitionType.rightToLeft,
+                            duration: 300,
+                            page: LabDetailsScreen(
+                              index: index,
+                              labId: labProvider.labList[index].id!,
+                            ),
+                          ))),
+            ),
         ],
       ));
     });

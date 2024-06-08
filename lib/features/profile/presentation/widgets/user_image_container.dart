@@ -95,14 +95,16 @@ class UserImageContainer extends StatelessWidget {
                               );
                             },
                             child: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: BColors.red,
-                                child: const Icon(
-                                  Icons.close,
-                                  size: 15,
-                                  color: BColors.white,
-                                )),
-                          ))
+                              radius: 12,
+                              backgroundColor: BColors.red,
+                              child: const Icon(
+                                Icons.close,
+                                size: 15,
+                                color: BColors.white,
+                              ),
+                            ),
+                          ),
+                        )
                 ],
               ),
             ),

@@ -22,6 +22,7 @@ class TextfieldWidget extends StatelessWidget {
     this.suffixIcon,
     this.onTap,
     this.enableHeading = true,
+    this.maxLendth,
   });
   final TextEditingController? controller;
   final bool? readOnly;
@@ -39,6 +40,7 @@ class TextfieldWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final void Function()? onTap;
   final bool? enableHeading;
+  final int? maxLendth;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +62,7 @@ class TextfieldWidget extends StatelessWidget {
           child: SizedBox(
             child: TextFormField(
               onChanged: onChanged,
+              maxLength: maxLendth,
               onTap: onTap,
               textInputAction: textInputAction,
               textCapitalization: TextCapitalization.sentences,
@@ -73,6 +76,7 @@ class TextfieldWidget extends StatelessWidget {
               onFieldSubmitted: onSubmit,
               style: style,
               decoration: InputDecoration(
+                counterText: '',
                 labelStyle: Theme.of(context).textTheme.labelMedium,
                 hintStyle: const TextStyle(
                     fontSize: 14,

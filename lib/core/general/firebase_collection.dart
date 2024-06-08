@@ -6,4 +6,5 @@ class FirebaseCollections {
   static const String laboratoryBanner = 'laboratoryBanner';
   static const String laboratoryTests = 'laboratory_tests';
   static const String counts = 'counts';
+  static const String userAddressCollection = 'addressCollection';
 }
