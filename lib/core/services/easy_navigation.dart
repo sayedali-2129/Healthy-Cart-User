@@ -13,7 +13,7 @@ class EasyNavigation {
       PageTransition(
         child: page,
         type: type,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
         reverseDuration: const Duration(milliseconds: 300),
       ),
     );
@@ -29,7 +29,7 @@ class EasyNavigation {
       PageTransition(
         child: page,
         type: type,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
         reverseDuration: const Duration(milliseconds: 300),
       ),
     );
@@ -51,7 +51,7 @@ class EasyNavigation {
       PageTransition(
         child: page,
         type: type,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
         reverseDuration: const Duration(milliseconds: 300),
       ),
       (Route<dynamic> route) => false,
