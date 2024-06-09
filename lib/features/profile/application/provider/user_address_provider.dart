@@ -71,6 +71,8 @@ class UserAddressProvider with ChangeNotifier {
     result.fold(
       (err) {
         log('Error: ${err.errMsg}');
+        isLoading = false;
+        notifyListeners();
       },
       (addressList) {
         // log(authProvider.userFetchlDataFetched!.id!);
@@ -78,10 +80,10 @@ class UserAddressProvider with ChangeNotifier {
         log('user address fetched');
         userAddressList = addressList;
         log('userAddressList: ${userAddressList.length}');
+        isLoading = false;
+        notifyListeners();
       },
     );
-    isLoading = false;
-    notifyListeners();
   }
 
   /* ----------------------------- UPDATE ADDRESS ----------------------------- */
@@ -120,6 +122,7 @@ class UserAddressProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /* ----------------------------- REMOVE ADDRESS ----------------------------- */
   Future<void> removeAddress(
       {required String userId,
       required String addressId,
@@ -138,6 +141,7 @@ class UserAddressProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /* ---------------------------- ADDRESS EDIT DATA --------------------------- */
   void setEditData(UserAddressModel addressModel) {
     addressController.text = addressModel.address!;
     landmarkController.text = addressModel.landmark!;
@@ -148,6 +152,7 @@ class UserAddressProvider with ChangeNotifier {
     notifyListeners();
   }
 
+/* ------------------------------ CLEAR FIELDS ------------------------------ */
   void clearFields() {
     addressController.clear();
     landmarkController.clear();
@@ -155,6 +160,13 @@ class UserAddressProvider with ChangeNotifier {
     phoneController.clear();
     pincodeController.clear();
     selectedAddressType = null;
+    notifyListeners();
+  }
+
+  UserAddressModel? selectedAddress;
+
+  void setSelectedAddress(UserAddressModel address) {
+    selectedAddress = address;
     notifyListeners();
   }
 }

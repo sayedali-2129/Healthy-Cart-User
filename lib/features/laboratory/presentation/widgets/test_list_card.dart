@@ -15,6 +15,8 @@ class TestListCard extends StatelessWidget {
     this.onAdd,
     required this.isSelected,
     required this.index,
+    this.isDoorstepAvailable,
+    this.doorstepList,
   });
 
   final String image;
@@ -24,6 +26,8 @@ class TestListCard extends StatelessWidget {
   final bool isSelected;
   final void Function()? onAdd;
   final int index;
+  final bool? isDoorstepAvailable;
+  final bool? doorstepList;
   @override
   Widget build(BuildContext context) {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {
@@ -51,12 +55,44 @@ class TestListCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            testName,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w600),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  testName,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                              doorstepList == true
+                                  ? const Gap(0)
+                                  : isDoorstepAvailable == true
+                                      ? Container(
+                                          height: 23,
+                                          width: 118,
+                                          decoration: BoxDecoration(
+                                              color: BColors.grey,
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: Center(
+                                              child: Text(
+                                            'Door Step Available',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium!
+                                                .copyWith(
+                                                    color: BColors.white,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                          )),
+                                        )
+                                      : const Gap(0),
+                            ],
                           ),
                           const Gap(8),
                           Expanded(
