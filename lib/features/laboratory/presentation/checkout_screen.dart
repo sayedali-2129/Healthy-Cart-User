@@ -34,6 +34,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     return Consumer2<LabProvider, UserAddressProvider>(
         builder: (context, labProvider, addressProvider, _) {
+      // log(labProvider.selectedRadio!);
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
