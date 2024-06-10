@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/ad_pharmacy_slider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/details_widgets.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/percentage_shower_widget.dart';
@@ -11,8 +12,8 @@ import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key});
-
+  const ProductDetailsScreen({super.key, required this.productData});
+final PharmacyProductAddModel productData;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +35,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 child: Container(
                   color: BColors.lightGrey,
                   child: const AdPharmacySlider(
-                    labId: '',
+                    pharmacyId: '',
                     screenWidth: double.infinity,
                   ),
                 ),

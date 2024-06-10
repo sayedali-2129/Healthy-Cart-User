@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
-import 'package:provider/provider.dart';
+
 
 class VerticalImageText extends StatelessWidget {
   const VerticalImageText({

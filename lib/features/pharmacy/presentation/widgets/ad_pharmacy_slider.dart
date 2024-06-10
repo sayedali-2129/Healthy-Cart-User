@@ -12,11 +12,11 @@ class AdPharmacySlider extends StatefulWidget {
   const AdPharmacySlider({
     super.key,
     required this.screenWidth,
-    required this.labId,
+    required this.pharmacyId,
   });
 
   final double screenWidth;
-  final String labId;
+  final String pharmacyId;
 
   @override
   State<AdPharmacySlider> createState() => _AdPharmacySliderState();
