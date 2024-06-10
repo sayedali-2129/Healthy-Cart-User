@@ -121,6 +121,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                     itemCount: addressProvider.userAddressList.length,
                     separatorBuilder: (context, index) => const Gap(10),
                     itemBuilder: (context, index) => AddressListCard(
+                      isDeleteAvailable: true,
                       index: index,
                     ),
                   )),

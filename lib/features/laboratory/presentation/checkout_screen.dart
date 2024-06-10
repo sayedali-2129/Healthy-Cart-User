@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/order_request_success.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
@@ -8,13 +12,17 @@ import 'package:healthy_cart_user/features/laboratory/presentation/widgets/addre
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/cart_items_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/order_summary_card.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key, required this.index, required this.userId});
+  const CheckoutScreen(
+      {super.key, required this.index, required this.userId, this.userModel});
   final int index;
   final String userId;
+  final UserModel? userModel;
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -23,10 +31,13 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
+    final provider = context.read<UserAddressProvider>();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = context.read<UserAddressProvider>();
       provider.getUserAddress(userId: widget.userId);
     });
+    // log(provider.selectedAddress!.toMap().toString());
+
     super.initState();
   }
 
@@ -34,7 +45,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     return Consumer2<LabProvider, UserAddressProvider>(
         builder: (context, labProvider, addressProvider, _) {
-      // log(labProvider.selectedRadio!);
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -63,7 +73,41 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       const Gap(8),
                       labProvider.selectedRadio == 'Home'
                           ? const AddressCard()
-                          : const Gap(0),
+                          : Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on_outlined,
+                                  size: 15,
+                                ),
+                                const Gap(5),
+                                Expanded(
+                                    child: RichText(
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 3,
+                                        text: TextSpan(children: [
+                                          TextSpan(
+                                              text:
+                                                  '${labProvider.labList[widget.index].laboratoryName}- ',
+                                              style: const TextStyle(
+                                                color: BColors.black,
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                              )),
+                                          TextSpan(
+                                            text: labProvider
+                                                    .labList[widget.index]
+                                                    .address ??
+                                                'No Address',
+                                            style: const TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                color: BColors.black),
+                                          )
+                                        ])))
+                              ],
+                            ),
+                      const Gap(8),
                       const Divider(),
                       const Gap(8),
                       /* -------------------------------- CART LIST ------------------------------- */
@@ -109,11 +153,36 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
         bottomNavigationBar: GestureDetector(
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const OrderRequestSuccessScreen(),
-                ));
+            log(addressProvider.selectedAddress!.toMap().toString());
+            if (labProvider.selectedRadio == 'Home' &&
+                addressProvider.selectedAddress == null) {
+              CustomToast.errorToast(text: 'Please select address');
+            } else {
+              ConfirmAlertBoxWidget.showAlertConfirmBox(
+                  context: context,
+                  titleText: 'Confirm Order',
+                  subText:
+                      'This will send your order to the laboratory and check the availability of the test. Are you sure you want to proceed?',
+                  confirmButtonTap: () {
+                    labProvider.addLabOrders(
+                      labId: labProvider.labList[widget.index].id!,
+                      userId: widget.userId,
+                      userModel: widget.userModel!,
+                      selectedAddress:
+                          addressProvider.selectedAddress ?? UserAddressModel(),
+                    );
+                    labProvider.clearCart();
+                    labProvider.selectedRadio = null;
+                    addressProvider.selectedAddress = null;
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OrderRequestSuccessScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  });
+            }
           },
           child: Container(
               height: 60,
@@ -132,39 +201,3 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     });
   }
 }
-
-
-
-
-//  Row(
-//                   children: [
-//                     const Icon(
-//                       Icons.location_on_outlined,
-//                       size: 15,
-//                     ),
-//                     const Gap(5),
-//                     Expanded(
-//                         child: RichText(
-//                             overflow: TextOverflow.ellipsis,
-//                             maxLines: 3,
-//                             text: TextSpan(children: [
-//                               TextSpan(
-//                                   text:
-//                                       '${labProvider.labList[index].laboratoryName}- ',
-//                                   style: const TextStyle(
-//                                     color: BColors.black,
-//                                     fontWeight: FontWeight.w600,
-//                                     fontFamily: 'Montserrat',
-//                                   )),
-//                               TextSpan(
-//                                 text: labProvider.labList[index].address ??
-//                                     'No Address',
-//                                 style: const TextStyle(
-//                                     fontFamily: 'Montserrat',
-//                                     fontSize: 12,
-//                                     fontWeight: FontWeight.w500,
-//                                     color: BColors.black),
-//                               )
-//                             ])))
-//                   ],
-//                 ),

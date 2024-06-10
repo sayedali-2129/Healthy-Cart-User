@@ -15,9 +15,11 @@ class AddressListCard extends StatelessWidget {
     super.key,
     required this.index,
     this.onTap,
+    required this.isDeleteAvailable,
   });
   final int index;
   final void Function()? onTap;
+  final bool isDeleteAvailable;
 
   @override
   Widget build(BuildContext context) {
@@ -131,33 +133,35 @@ class AddressListCard extends StatelessWidget {
                             .copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
-                    PopupMenuItem(
-                      onTap: () {
-                        ConfirmAlertBoxWidget.showAlertConfirmBox(
-                            context: context,
-                            confirmButtonTap: () async {
-                              LoadingLottie.showLoading(
-                                  context: context,
-                                  text: 'Removing Address...');
-                              await addressProvider.removeAddress(
-                                  userId:
-                                      authProvider.userFetchlDataFetched!.id!,
-                                  addressId: addressProvider
-                                      .userAddressList[index].id!,
-                                  index: index);
-                              Navigator.pop(context);
-                            },
-                            titleText: 'Remove',
-                            subText: 'Are you sure want to remove the adress?');
-                      },
-                      child: Text(
-                        'Remove',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelLarge!
-                            .copyWith(fontWeight: FontWeight.w500),
-                      ),
-                    )
+                    if (isDeleteAvailable == true)
+                      PopupMenuItem(
+                        onTap: () {
+                          ConfirmAlertBoxWidget.showAlertConfirmBox(
+                              context: context,
+                              confirmButtonTap: () async {
+                                LoadingLottie.showLoading(
+                                    context: context,
+                                    text: 'Removing Address...');
+                                await addressProvider.removeAddress(
+                                    userId:
+                                        authProvider.userFetchlDataFetched!.id!,
+                                    addressId: addressProvider
+                                        .userAddressList[index].id!,
+                                    index: index);
+                                Navigator.pop(context);
+                              },
+                              titleText: 'Remove',
+                              subText:
+                                  'Are you sure want to remove the adress?');
+                        },
+                        child: Text(
+                          'Remove',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      )
                   ],
                 )
               ],

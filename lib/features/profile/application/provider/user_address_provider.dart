@@ -20,6 +20,7 @@ class UserAddressProvider with ChangeNotifier {
 
   UserAddressModel? userAddressModel;
   List<UserAddressModel> userAddressList = [];
+  UserAddressModel? selectedAddress;
 
   bool isLoading = false;
   bool addLoading = false;
@@ -55,6 +56,7 @@ class UserAddressProvider with ChangeNotifier {
       (success) {
         CustomToast.sucessToast(text: 'User added successfully');
         userAddressList.insert(0, success);
+        selectedAddress = success;
         clearFields();
       },
     );
@@ -75,11 +77,12 @@ class UserAddressProvider with ChangeNotifier {
         notifyListeners();
       },
       (addressList) {
-        // log(authProvider.userFetchlDataFetched!.id!);
-        log(addressList.length.toString());
         log('user address fetched');
         userAddressList = addressList;
         log('userAddressList: ${userAddressList.length}');
+        if (userAddressList.isNotEmpty) {
+          selectedAddress = userAddressList.first;
+        }
         isLoading = false;
         notifyListeners();
       },
@@ -163,10 +166,9 @@ class UserAddressProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  UserAddressModel? selectedAddress;
-
   void setSelectedAddress(UserAddressModel address) {
     selectedAddress = address;
+
     notifyListeners();
   }
 }

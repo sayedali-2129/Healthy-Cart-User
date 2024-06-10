@@ -56,9 +56,13 @@ class AddressCard extends StatelessWidget {
                                 context: context,
                                 builder: (context) =>
                                     const AddressBottomSheet(),
+                              ).then(
+                                (value) {
+                                  Navigator.pop(context);
+                                },
                               );
                             },
-                            child: Row(
+                            child: const Row(
                               children: [
                                 Icon(Icons.add),
                                 Text(
@@ -87,6 +91,7 @@ class AddressCard extends StatelessWidget {
                                     addressProvider.userAddressList.length,
                                 itemBuilder: (context, index) =>
                                     AddressListCard(
+                                  isDeleteAvailable: false,
                                   index: index,
                                   onTap: () {
                                     addressProvider.setSelectedAddress(

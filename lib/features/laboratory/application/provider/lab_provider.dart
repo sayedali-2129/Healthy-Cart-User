@@ -1,17 +1,23 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/facade/i_lab_facade.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/facade/i_lab_orders_facade.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_banner_model.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_test_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class LabProvider with ChangeNotifier {
-  LabProvider(this.iLabFacade);
+  LabProvider(this.iLabFacade, this.iLabOrdersFacade);
   final ILabFacade iLabFacade;
+  final ILabOrdersFacade iLabOrdersFacade;
 
   bool isLabOnlySelected = true;
   TextEditingController labSearchController = TextEditingController();
@@ -221,11 +227,44 @@ class LabProvider with ChangeNotifier {
   }
 
   // List<String> radioList = ['Home', 'Lab'];
-
+/* ------------------------------ RADIO BUTTON ------------------------------ */
   String? selectedRadio;
 
   setSelectedRadio(String? value) {
     selectedRadio = value;
+    notifyListeners();
+  }
+
+  LabOrdersModel? labOrderModel;
+  /* ----------------------------- ADD LAB ORDERS ----------------------------- */
+  Future<void> addLabOrders(
+      {required String labId,
+      required String userId,
+      required UserModel userModel,
+      required UserAddressModel selectedAddress}) async {
+    labOrderModel = LabOrdersModel(
+      labId: labId,
+      selectedTest: cartItems,
+      userId: userId,
+      userDetails: userModel,
+      userAddress: selectedAddress,
+      orderAt: Timestamp.now(),
+      totalAmount: claculateTotalAmount(),
+      orderStatus: 0,
+      paymentStatus: 0,
+      testMode: selectedRadio,
+    );
+
+    final result =
+        await iLabOrdersFacade.createLabOrder(labOrdersModel: labOrderModel!);
+    result.fold(
+      (err) {
+        log('error in addLabOrders() :: ${err.errMsg}');
+      },
+      (success) {
+        log('Order Request Send Successfully');
+      },
+    );
     notifyListeners();
   }
 }
