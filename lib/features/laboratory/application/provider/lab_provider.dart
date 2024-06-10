@@ -31,6 +31,7 @@ class LabProvider with ChangeNotifier {
   List<LabTestModel> cartItems = [];
 
   bool isBottomContainerPopUp = false;
+  bool selectedTestType = false;
 
 /* ------------------------ CHECK OUT CONTAINER POPUP ----------------------- */
   void bottomPopUpContainer() {
@@ -185,7 +186,7 @@ class LabProvider with ChangeNotifier {
     for (final item in cartItems) {
       totalAmount += item.offerPrice ?? item.testPrice!;
     }
-    log('total amount :: $totalAmount');
+
     return totalAmount;
   }
 
@@ -194,7 +195,7 @@ class LabProvider with ChangeNotifier {
     for (final item in cartItems) {
       totalTestfee += item.testPrice!;
     }
-    log('total amount :: $totalTestfee');
+
     return totalTestfee;
   }
 
@@ -203,7 +204,7 @@ class LabProvider with ChangeNotifier {
     for (final item in cartItems) {
       totalOfferPrice += item.offerPrice ?? 0;
     }
-    log('total amount :: $totalOfferPrice');
+
     return totalOfferPrice;
   }
 
@@ -216,6 +217,15 @@ class LabProvider with ChangeNotifier {
     cartItems.clear();
     selectedTestIds.clear();
     bottomPopUpContainer();
+    notifyListeners();
+  }
+
+  // List<String> radioList = ['Home', 'Lab'];
+
+  String? selectedRadio;
+
+  setSelectedRadio(String? value) {
+    selectedRadio = value;
     notifyListeners();
   }
 }

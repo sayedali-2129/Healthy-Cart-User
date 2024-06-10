@@ -31,6 +31,8 @@ import '../../features/location_picker/location_picker/infrastructure/i_location
 import '../../features/pharmacy/application/pharmacy_provider.dart' as _i14;
 import '../../features/pharmacy/domain/i_pharmacy_facade.dart' as _i12;
 import '../../features/pharmacy/infrastructure/i_pharmacy_impl.dart' as _i13;
+import '../../features/profile/application/provider/user_address_provider.dart'
+    as _i27;
 import '../../features/profile/application/provider/user_profile_provider.dart'
     as _i26;
 import '../../features/profile/domain/facade/i_user_profile_facade.dart'
@@ -42,7 +44,7 @@ import '../services/pdf_picker.dart' as _i9;
 import '../services/sound_services.dart' as _i11;
 import '../services/url_launcher.dart' as _i10;
 import 'firebase_injectable_module.dart' as _i3;
-import 'general_injectable_module.dart' as _i27;
+import 'general_injectable_module.dart' as _i28;
 
 // initializes the registration of main-scope dependencies inside of GetIt
 Future<_i1.GetIt> init(
@@ -100,9 +102,11 @@ Future<_i1.GetIt> init(
       () => _i25.AuthenticationProvider(gh<_i20.IAuthFacade>()));
   gh.factory<_i26.UserProfileProvider>(
       () => _i26.UserProfileProvider(gh<_i22.IUserProfileFacade>()));
+  gh.factory<_i27.UserAddressProvider>(
+      () => _i27.UserAddressProvider(gh<_i22.IUserProfileFacade>()));
   return getIt;
 }
 
 class _$FirebaseInjecatbleModule extends _i3.FirebaseInjecatbleModule {}
 
-class _$GeneralInjecatbleModule extends _i27.GeneralInjecatbleModule {}
+class _$GeneralInjecatbleModule extends _i28.GeneralInjecatbleModule {}

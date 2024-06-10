@@ -3,11 +3,14 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
+import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/checkout_screen.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_list_card.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_type_radio.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +41,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Consumer<LabProvider>(builder: (context, labProvider, _) {
+    return Consumer2<LabProvider, AuthenticationProvider>(
+        builder: (context, labProvider, authProvider, _) {
       final labList = labProvider.labList[widget.index];
 
       return PopScope(
@@ -223,6 +227,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                 final testList =
                                                     labProvider.testList[index];
                                                 return TestListCard(
+                                                  isDoorstepAvailable: testList
+                                                      .isDoorstepAvailable,
                                                   index: index,
                                                   image: testList.testImage!,
                                                   testName: testList.testName ??
@@ -269,6 +275,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                 final doorStepList = labProvider
                                                     .doorStepTestList[index];
                                                 return TestListCard(
+                                                  doorstepList: true,
+                                                  isDoorstepAvailable: true,
                                                   index: index,
                                                   image:
                                                       doorStepList.testImage!,
@@ -312,13 +320,49 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                 ? bottomPopUp(
                     itemCount: labProvider.selectedTestIds.length,
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CheckoutScreen(
-                              index: widget.index,
-                            ),
-                          ));
+                      // final checkHomeAvailable = labProvider.cartItems
+                      //     .any((item) => item.isDoorstepAvailable == false);
+                      // if (checkHomeAvailable) {
+                      //   Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => CheckoutScreen(
+                      //           userId: authProvider.userFetchlDataFetched!.id!,
+                      //           index: widget.index,
+                      //         ),
+                      //       ));
+                      // } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) => TestTypeRadiopopup(
+                          onConfirm: () {
+                            final checkHomeAvailable = labProvider.cartItems
+                                .any((item) =>
+                                    item.isDoorstepAvailable == false);
+                            if (labProvider.selectedRadio == null) {
+                              CustomToast.errorToast(
+                                  text: 'Please select preferred test type');
+                            } else if (labProvider.selectedRadio == 'Home' &&
+                                checkHomeAvailable) {
+                              CustomToast.errorToast(
+                                  text:
+                                      'One or more tests are not available for door step service');
+                            } else {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CheckoutScreen(
+                                      userId: authProvider
+                                          .userFetchlDataFetched!.id!,
+                                      index: widget.index,
+                                    ),
+                                  ));
+                              // labProvider.selectedRadio = null;
+                            }
+                          },
+                        ),
+                      );
                     },
                   )
                 : null),

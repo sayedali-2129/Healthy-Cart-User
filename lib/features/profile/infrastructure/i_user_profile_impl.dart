@@ -7,6 +7,7 @@ import 'package:healthy_cart_user/core/general/firebase_collection.dart';
 import 'package:healthy_cart_user/core/general/typdef.dart';
 import 'package:healthy_cart_user/core/services/image_picker.dart';
 import 'package:healthy_cart_user/features/profile/domain/facade/i_user_profile_facade.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:injectable/injectable.dart';
 
@@ -81,6 +82,133 @@ class IUserProfileImpl implements IUserProfileFacade {
         });
       });
       return right(unit);
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+/* ---------------------------- ADD USER ADDRESS ---------------------------- */
+  @override
+  FutureResult<UserAddressModel> addUserAddress(
+      {required String userId,
+      required UserAddressModel addressModel,
+      required String addressId}) async {
+    try {
+      Map<String, dynamic> addressMap = addressModel.toMap();
+
+      final docRef = _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.userAddressCollection)
+          .doc('user_addresses');
+
+      DocumentSnapshot snapshot = await docRef.get();
+      Map<String, dynamic> addressData = {};
+      if (snapshot.exists) {
+        addressData = snapshot.data() as Map<String, dynamic>;
+      }
+
+      String newAddressKey = addressId;
+      addressMap['id'] = newAddressKey;
+      addressData[newAddressKey] = addressMap;
+
+      await docRef.set(addressData);
+
+      return right(UserAddressModel.fromMap(addressMap)
+          .copyWith(id: addressId, userId: userId));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+/* ---------------------------- GET USER ADDRESS ---------------------------- */
+  @override
+  FutureResult<List<UserAddressModel>> getUserAddress(
+      {required String userId}) async {
+    try {
+      final docRef = _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.userAddressCollection)
+          .doc('user_addresses');
+
+      DocumentSnapshot snapshot = await docRef.get();
+      Map<String, dynamic> addressData = {};
+      if (snapshot.exists) {
+        addressData = snapshot.data() as Map<String, dynamic>;
+
+        final addressList = addressData.values
+            .map((addressMap) =>
+                UserAddressModel.fromMap(addressMap as Map<String, dynamic>))
+            .toList();
+
+        return right(addressList);
+      } else {
+        return right([]);
+      }
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+/* --------------------------- UPDATE USER ADDRESS -------------------------- */
+
+  @override
+  FutureResult<UserAddressModel> updateUserAddress(
+      {required String userId,
+      required UserAddressModel addressModel,
+      required String addressId}) async {
+    try {
+      Map<String, dynamic> addressMap = addressModel.toEditMap();
+
+      final docRef = _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.userAddressCollection)
+          .doc('user_addresses');
+
+      DocumentSnapshot snapshot = await docRef.get();
+      Map<String, dynamic> addressData = {};
+      if (snapshot.exists) {
+        addressData = snapshot.data() as Map<String, dynamic>;
+      }
+
+      addressMap['id'] = addressId;
+      addressData[addressId] = addressMap;
+
+      await docRef.set(addressData);
+
+      return right(UserAddressModel.fromMap(addressMap)
+          .copyWith(id: addressId, userId: userId));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  /* ----------------------------- REMOVE ADDRESS ----------------------------- */
+  @override
+  FutureResult<String> deleteUserAddress(
+      {required String userId, required String addressId}) async {
+    try {
+      final docRef = _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.userAddressCollection)
+          .doc('user_addresses');
+
+      DocumentSnapshot snapshot = await docRef.get();
+      Map<String, dynamic> addressData = {};
+      if (snapshot.exists) {
+        addressData = snapshot.data() as Map<String, dynamic>;
+      }
+      if (addressData.containsKey(addressId)) {
+        addressData.remove(addressId);
+        await docRef.set(addressData);
+        return right('Address Removed Successfully');
+      } else {
+        return left(
+            const MainFailure.generalException(errMsg: 'Address not found'));
+      }
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }

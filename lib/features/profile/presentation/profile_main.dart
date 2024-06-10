@@ -3,13 +3,16 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/profile/presentation/my_address_screen.dart';
 import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
 import 'package:healthy_cart_user/features/profile/presentation/widgets/profile_buttons.dart';
 import 'package:healthy_cart_user/features/profile/presentation/widgets/profile_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class ProfileMain extends StatelessWidget {
@@ -47,13 +50,14 @@ class ProfileMain extends StatelessWidget {
                 ProfileButtons(
                   buttonName: 'Edit Profile',
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfileSetup(
-                            userModel: authProvider.userFetchlDataFetched,
-                          ),
-                        ));
+                    EasyNavigation.push(
+                      type: PageTransitionType.rightToLeft,
+                      duration: 300,
+                      context: context,
+                      page: ProfileSetup(
+                        userModel: authProvider.userFetchlDataFetched,
+                      ),
+                    );
                   },
                 ),
                 ProfileButtons(
@@ -70,7 +74,15 @@ class ProfileMain extends StatelessWidget {
                 ),
                 ProfileButtons(
                   buttonName: 'My Address',
-                  onPressed: () {},
+                  onPressed: () {
+                    EasyNavigation.push(
+                        type: PageTransitionType.rightToLeft,
+                        duration: 300,
+                        context: context,
+                        page: MyAddressScreen(
+                          userId: authProvider.userFetchlDataFetched!.id!,
+                        ));
+                  },
                 ),
                 const Gap(16),
                 Padding(
