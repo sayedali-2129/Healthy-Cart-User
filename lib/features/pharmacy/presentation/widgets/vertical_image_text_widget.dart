@@ -23,16 +23,22 @@ class VerticalImageText extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8, left: 8),
             child: Column(
               children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
+                Material(
+                  shape:  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(64)
                   ),
-                  child: CustomCachedNetworkImage(
-                    image: image,
+                  elevation: 4,                  
+                  child: Container(
+                    width: 64,
+                    height: 64,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(
+                      color: BColors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: CustomCachedNetworkImage(
+                      image: image,
+                    ),
                   ),
                 ),
                 const Gap(8),
@@ -46,7 +52,7 @@ class VerticalImageText extends StatelessWidget {
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: BColors.black),
-                    maxLines: 3,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 )

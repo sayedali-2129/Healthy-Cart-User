@@ -16,15 +16,18 @@ class PharmacyProvider extends ChangeNotifier {
   bool fetchLoading = false;
   List<PharmacyCategoryModel> pharmacyCategoryList = [];
   List<String> pharmacyCategoryIdList = [];
-  List<PharmacyBannerModel> bannerList = [];
+  List<String> bannerImageList = [];
   List<PharmacyProductAddModel> productCategoryWiseList = [];
   List<PharmacyProductAddModel> productAllList = [];
   PharmacyModel? selectedpharmacyData;
   String? categoryId;
   String? selectedCategory;
   String? pharmacyId;
+  List<String> productImageUrlList = [];
+  bool bottomsheetCart = false;
   final TextEditingController searchController = TextEditingController();
 
+/* --------------------------------- common --------------------------------- */
   void setPharmacyIdAndCategoryList(
       {required String selectedpharmacyId,
       required List<String> categoryIdList,
@@ -34,6 +37,23 @@ class PharmacyProvider extends ChangeNotifier {
     selectedpharmacyData = pharmacy;
     notifyListeners();
   }
+
+  int selectedIndex = 0;
+  void selectedImageIndex(int index) {
+    selectedIndex = index;
+    notifyListeners();
+  }
+
+  void setProductImageList(List<String> productImageList) {
+    productImageUrlList = productImageList;
+    notifyListeners();
+  }
+
+  void bottomsheetSwitch(bool value) {
+    bottomsheetCart = value;
+    notifyListeners();
+  }
+  /* -------------------------------------------------------------------------- */
 /* ---------------------------- Get All Pharmacy ---------------------------- */
 
   Future<void> getAllPharmacy({String? searchText}) async {
@@ -51,26 +71,6 @@ class PharmacyProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-/* -------------------------------------------------------------------------- */
-
-/* --------------------------- Get Pharmacy Banner -------------------------- */
-
-  Future<void> getBanner() async {
-    if (bannerList.isNotEmpty) return;
-    fetchLoading = true;
-    notifyListeners();
-    final result =
-        await _iPharmacyFacade.getPharmacyBanner(pharmacyId: pharmacyId ?? '');
-    result.fold((failure) {
-      log(failure.errMsg);
-      CustomToast.errorToast(text: "Couldn't able to get pharmacy banner");
-    }, (bannerlist) {
-      bannerList.addAll(bannerlist);
-      fetchLoading = false;
-      notifyListeners();
-    });
-  }
-
   void clearPharmacyFetchData() {
     searchController.clear();
     pharmacyList.clear();
@@ -84,6 +84,27 @@ class PharmacyProvider extends ChangeNotifier {
     pharmacyList.clear();
     getAllPharmacy(searchText: searchText);
     notifyListeners();
+  }
+/* -------------------------------------------------------------------------- */
+
+/* --------------------------- Get Pharmacy Banner -------------------------- */
+
+  Future<void> getBanner() async {
+    bannerImageList.clear();
+    fetchLoading = true;
+    notifyListeners();
+    final result =
+        await _iPharmacyFacade.getPharmacyBanner(pharmacyId: pharmacyId ?? '');
+    result.fold((failure) {
+      log(failure.errMsg);
+      CustomToast.errorToast(text: "Couldn't able to get pharmacy banner");
+    }, (bannerlist) {
+      for (var banner in bannerlist) {
+        bannerImageList.add(banner.image ?? '');
+      }
+      fetchLoading = false;
+      notifyListeners();
+    });
   }
 
 /* -------------------------------------------------------------------------- */

@@ -14,7 +14,7 @@ class CustomCachedNetworkImage extends StatelessWidget {
       fit: fit,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
-            image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+            image: DecorationImage(image: imageProvider, fit: fit)),
       ),
       placeholder: (context, url) => Shimmer.fromColors(
         baseColor: Colors.blue,

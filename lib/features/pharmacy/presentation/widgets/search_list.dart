@@ -7,6 +7,7 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/grid_product.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
 
 class ProductSearchListScreen extends StatefulWidget {
@@ -79,28 +80,33 @@ class _ProductSearchListScreenState extends State<ProductSearchListScreen> {
               if (pharmacyProvider.fetchLoading == false &&
                   pharmacyProvider.productAllList.isEmpty)
                 SliverFillRemaining(
-                  child: Center(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.search,
-                        color: BColors.mainlightColor,
-                      ),
-                      const Gap(8),
-                      const Text(
-                        'No similar product found.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: BColors.black),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  )),
+                  child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+            Image.asset(
+              BImage.noDataPng,
+              height: 160,
+              width: 160,
+            ),
+            const Gap(8),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'No similar product found.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: BColors.black),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+                          ],
+                        ),
                 )
             ],
           ),

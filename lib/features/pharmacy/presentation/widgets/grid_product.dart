@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/custom/container/custom_round_container.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/product_details.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/percentage_shower_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 class PostCardVertical extends StatefulWidget {
   const PostCardVertical({
@@ -27,12 +30,15 @@ class _PostCardVerticalState extends State<PostCardVertical> {
 
   @override
   Widget build(BuildContext context) {
+    final pharmacyProvider = Provider.of<PharmacyProvider>(context);
     return Material(
       borderRadius: BorderRadius.circular(12),
       color: BColors.white,
       elevation: 10,
       child: InkWell(
         onTap: () {
+          pharmacyProvider.selectedIndex = 0;// to make the  the first index as 0 of image url list
+          pharmacyProvider.setProductImageList(widget.productData.productImage ?? []);
           EasyNavigation.push(
               context: context,
               type: PageTransitionType.bottomToTop,
@@ -55,10 +61,13 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                     padding: const EdgeInsets.all(12),
                     backgroundColor: BColors.lightGrey,
                     child: RoundedImage(
-                      backgroundColor: BColors.white,
-                      imageUrl:widget.productData.productImage?.first ?? BImage.healthycartText,
-                      onpressed: () {},
-                      applyImageRadius: true,
+                      backgroundColor: BColors.white,   
+                      applyBorderRadius: true,
+                       child: CustomCachedNetworkImage(
+            image: widget.productData.productImage?.first ??
+                          BImage.healthycartText,
+            fit: BoxFit.fitHeight,
+          )
                     ),
                   ),
                   Padding(
@@ -118,8 +127,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                     color: BColors.textLightBlack),
                               ),
                               TextSpan(
-                                text: 
-                                    'Energy',
+                                text: 'Energy',
                                 style: TextStyle(
                                     fontFamily: 'Montserrat',
                                     fontSize: 13,
@@ -128,7 +136,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                               ),
                             ])),
                         const Gap(8),
-              
+
                         (widget.productData.productDiscountRate == null)
                             ? Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +144,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                 children: [
                                   RichText(
                                     text: TextSpan(children: [
-                                     const TextSpan(
+                                      const TextSpan(
                                         text: 'Our price  :  ',
                                         style: TextStyle(
                                             fontFamily: 'Montserrat',
@@ -144,7 +152,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                             fontWeight: FontWeight.w600,
                                             color: BColors.textLightBlack),
                                       ),
-                                     const TextSpan(
+                                      const TextSpan(
                                           text: "₹ ",
                                           style: TextStyle(
                                             fontFamily: 'Montserrat',
@@ -170,18 +178,20 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   RichText(
-                                    text:const TextSpan(children: [
-                                      TextSpan(
-                                        text: 'Our price  :  ',
-                                        style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: BColors.textLightBlack),
-                                      )])),
+                                      text: const TextSpan(children: [
+                                    TextSpan(
+                                      text: 'Our price  :  ',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: BColors.textLightBlack),
+                                    )
+                                  ])),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         RichText(
                                             text: TextSpan(children: [
@@ -193,7 +203,8 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                                 color: BColors.green,
                                               )),
                                           TextSpan(
-                                            text:  '${widget.productData.productDiscountRate ?? 0}',
+                                            text:
+                                                '${widget.productData.productDiscountRate ?? 0}',
                                             style: TextStyle(
                                                 fontFamily: 'Montserrat',
                                                 fontSize: 13,
@@ -204,22 +215,25 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                         RichText(
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            text:  TextSpan(children: [
-                                            const  TextSpan(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
                                                   text: "₹ ",
                                                   style: TextStyle(
                                                       fontFamily: 'Montserrat',
                                                       fontSize: 13,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       color: BColors.black,
                                                       decoration: TextDecoration
                                                           .lineThrough)),
                                               TextSpan(
-                                                  text:  '${widget.productData.productMRPRate ?? 0}',
+                                                  text:
+                                                      '${widget.productData.productMRPRate ?? 0}',
                                                   style: const TextStyle(
                                                       fontFamily: 'Montserrat',
                                                       fontSize: 13,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       color: BColors.textBlack,
                                                       decoration: TextDecoration
                                                           .lineThrough)),
@@ -232,112 +246,26 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                       ],
                     ),
                   ),
-                     
                 ],
               ),
-               if(widget.productData.productDiscountRate != null)
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 8, left: 12),
-                            child: PercentageShowContainerWidget(
-                              text: '${widget.productData.discountPercentage ?? 0} %',
-                              textColor: BColors.textWhite,
-                              boxColor: BColors.offRed,
-                              width: 64,
-                              height: 24,
-                            ),
-                          ),
-                        )
+              if (widget.productData.productDiscountRate != null)
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8, left: 12),
+                    child: PercentageShowContainerWidget(
+                      
+                      text: '${widget.productData.discountPercentage ?? 0}% off',
+                      textColor: BColors.textWhite,
+                      boxColor: BColors.offRed,
+                      width: 80,
+                      height: 32,
+                    ),
+                  ),
+                )
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class RoundedContainer extends StatelessWidget {
-  const RoundedContainer(
-      {super.key,
-      this.width,
-      this.height,
-      this.radius = 14,
-      this.child,
-      this.showBorder = false,
-      this.borderColor = BColors.black,
-      this.backgroundColor = BColors.white,
-      this.padding,
-      this.margin});
-
-  final double? width;
-  final double? height;
-  final double radius;
-  final Widget? child;
-  final bool showBorder;
-  final Color borderColor;
-  final Color backgroundColor;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      padding: padding,
-      margin: margin,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(radius),
-        border: showBorder ? Border.all(color: borderColor) : null,
-      ),
-      child: child,
-    );
-  }
-}
-
-class RoundedImage extends StatelessWidget {
-  const RoundedImage(
-      {super.key,
-      required this.imageUrl,
-      this.width = 150,
-      this.height = 150,
-      this.applyImageRadius = false,
-      this.border,
-      this.backgroundColor = BColors.grey,
-      this.padding,
-     
-      required this.onpressed,
-      this.borderRadius = 12});
-
-  final String imageUrl;
-  final double? width;
-  final double? height;
-  final bool applyImageRadius;
-  final BoxBorder? border;
-  final Color backgroundColor;
-  final EdgeInsetsGeometry? padding;
- 
-  final VoidCallback onpressed;
-  final double borderRadius;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onpressed,
-      child: Container(
-        width: width,
-        height: height,
-        padding: padding,
-        decoration: BoxDecoration(
-            border: border,
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(borderRadius)),
-        child: ClipRRect(
-            borderRadius: applyImageRadius
-                ? BorderRadius.circular(10)
-                : BorderRadius.zero,
-            child: CustomCachedNetworkImage(image: imageUrl, fit: BoxFit.scaleDown, )),
       ),
     );
   }

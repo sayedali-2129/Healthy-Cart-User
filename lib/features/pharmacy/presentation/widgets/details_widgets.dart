@@ -33,6 +33,7 @@ class ProductInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           text1,
@@ -60,3 +61,40 @@ class ProductInfoWidget extends StatelessWidget {
     );
   }
 }
+
+
+
+class ProductDetailsStraightWidget extends StatelessWidget {
+  const ProductDetailsStraightWidget({
+    super.key,
+    required this.title,
+    required this.text,
+  });
+  final String title;
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+        overflow: TextOverflow.ellipsis,
+        maxLines: 6,
+        text: TextSpan(children: [
+          TextSpan(
+            text: title, // remeber to put space
+            style: const TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: BColors.textLightBlack),
+          ),
+          TextSpan(
+            text: text,
+            style: const TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: BColors.textBlack),
+          ),
+        ]));
+  }
+}
+
