@@ -10,6 +10,7 @@ import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_banner
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_user_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/phrmacy_cart_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IPharmacyFacade)
@@ -219,5 +220,17 @@ class IPharmacyImpl implements IPharmacyFacade {
     } catch (e) {
       return left(MainFailure.firebaseException(errMsg: e.toString()));
     }
+  }
+
+  @override
+  FutureResult<PharmacyCartModel> createProductOrderDetails({required PharmacyCartModel cartProducts}) {
+    // TODO: implement createProductOrderDetails
+    throw UnimplementedError();
+  }
+
+  @override
+  FutureResult<PharmacyCartModel> getProductOrderDetails({required String userId, required String pharmacyId}) {
+    // TODO: implement getProductOrderDetails
+    throw UnimplementedError();
   }
 }

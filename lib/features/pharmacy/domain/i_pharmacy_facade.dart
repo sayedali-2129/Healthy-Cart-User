@@ -3,29 +3,36 @@ import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_banner
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_user_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/phrmacy_cart_model.dart';
 
-abstract class IPharmacyFacade{
-    FutureResult<List<PharmacyProductAddModel>> getPharmacyAllProductDetails({
+abstract class IPharmacyFacade {
+  FutureResult<List<PharmacyProductAddModel>> getPharmacyAllProductDetails({
     required String? pharmacyId,
     required String? searchText,
   });
-  FutureResult<List<PharmacyProductAddModel>> getPharmacyCategoryProductDetails({
+  FutureResult<List<PharmacyProductAddModel>>
+      getPharmacyCategoryProductDetails({
     required String? categoryId,
     required String? pharmacyId,
     required String? searchText,
   });
-    void clearPharmacyFetchData();
-    void clearPharmacyAllProductFetchData();
-     void clearPharmacyCategoryProductFetchData();
+  void clearPharmacyFetchData();
+  void clearPharmacyAllProductFetchData();
+  void clearPharmacyCategoryProductFetchData();
 
-    FutureResult<List<PharmacyModel>> getAllPharmacy({
+  FutureResult<List<PharmacyModel>> getAllPharmacy({
     required String? searchText,
   });
-    FutureResult<List<PharmacyCategoryModel>> getpharmacyCategory({
+  FutureResult<List<PharmacyCategoryModel>> getpharmacyCategory({
     required List<String> categoryIdList,
   });
 
   FutureResult<List<PharmacyBannerModel>> getPharmacyBanner({
     required String pharmacyId,
   });
+
+  FutureResult<PharmacyCartModel> createProductOrderDetails({ required PharmacyCartModel cartProducts});
+  
+
+  FutureResult<PharmacyCartModel> getProductOrderDetails({ required String userId,  required String pharmacyId });
 }
