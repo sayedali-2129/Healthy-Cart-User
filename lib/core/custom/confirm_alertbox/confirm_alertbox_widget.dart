@@ -15,6 +15,7 @@ class ConfirmAlertBoxWidget {
           width: 260,
           height: 300,
           child: AlertDialog(
+            backgroundColor: BColors.white,
             title:
                 Text(titleText, style: Theme.of(context).textTheme.bodyLarge),
             content: Text(subText,

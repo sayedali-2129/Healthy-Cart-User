@@ -5,13 +5,16 @@ import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/checkout_screen.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_list_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_type_radio.dart';
+import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class LabDetailsScreen extends StatefulWidget {
@@ -41,8 +44,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Consumer2<LabProvider, AuthenticationProvider>(
-        builder: (context, labProvider, authProvider, _) {
+    return Consumer3<LabProvider, AuthenticationProvider, UserAddressProvider>(
+        builder: (context, labProvider, authProvider, addressProvider, _) {
       final labList = labProvider.labList[widget.index];
 
       return PopScope(
@@ -349,15 +352,18 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                       'One or more tests are not available for door step service');
                             } else {
                               Navigator.pop(context);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CheckoutScreen(
-                                      userId: authProvider
-                                          .userFetchlDataFetched!.id!,
-                                      index: widget.index,
-                                    ),
-                                  ));
+                              EasyNavigation.push(
+                                type: PageTransitionType.rightToLeft,
+                                duration: 300,
+                                context: context,
+                                page: CheckoutScreen(
+                                  userId:
+                                      authProvider.userFetchlDataFetched!.id!,
+                                  index: widget.index,
+                                  userModel:
+                                      authProvider.userFetchlDataFetched!,
+                                ),
+                              );
                               // labProvider.selectedRadio = null;
                             }
                           },
