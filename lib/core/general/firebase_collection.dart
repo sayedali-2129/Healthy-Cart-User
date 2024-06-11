@@ -6,6 +6,12 @@ class FirebaseCollections {
   static const String laboratoryBanner = 'laboratoryBanner';
   static const String laboratoryTests = 'laboratory_tests';
   static const String counts = 'counts';
+  static const String pharmacy = 'pharmacy';
+  static const String pharmacyProduct = 'pharmacy_product';
+  static const String pharmacycategory = 'pharmacy_category';
+  static const String pharmacyLocation = 'pharmacy_locations';
+  static const String pharmacyBanner = 'pharmacy_banner';
+  static const String pharmacyOrder = 'pharmacy_order';
   static const String userAddressCollection = 'addressCollection';
   static const String labOrdersCollection = 'lab_orders';
 }

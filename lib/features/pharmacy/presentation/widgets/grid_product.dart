@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/custom/container/custom_round_container.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/product_details.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/percentage_shower_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 class PostCardVertical extends StatefulWidget {
   const PostCardVertical({
+    required this.productData,
     super.key,
   });
-
+  final PharmacyProductAddModel productData;
   @override
   State<PostCardVertical> createState() => _PostCardVerticalState();
 }
 
 class _PostCardVerticalState extends State<PostCardVertical> {
-  bool? isLiked;
-
   @override
   void initState() {
     super.initState();
@@ -27,302 +30,242 @@ class _PostCardVerticalState extends State<PostCardVertical> {
 
   @override
   Widget build(BuildContext context) {
+    final pharmacyProvider = Provider.of<PharmacyProvider>(context);
     return Material(
       borderRadius: BorderRadius.circular(12),
       color: BColors.white,
       elevation: 10,
       child: InkWell(
         onTap: () {
-          EasyNavigation.push(context: context,type: PageTransitionType.bottomToTop, page: ProductDetailsScreen());
+          pharmacyProvider.selectedIndex = 0;// to make the  the first index as 0 of image url list
+          pharmacyProvider.setProductImageList(widget.productData.productImage ?? []);
+          EasyNavigation.push(
+              context: context,
+              type: PageTransitionType.bottomToTop,
+              page: ProductDetailsScreen(
+                productData: widget.productData,
+              ));
         },
         child: Container(
           width: 180,
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.only(top: 12, left: 6, right: 6, bottom: 8),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              RoundedContainer(
-                height: 144,
-                padding: const EdgeInsets.all(12),
-                backgroundColor: BColors.lightGrey,
-                child: Stack(
-                  children: [
-                    //thumbnail Image
-                    RoundedImage(
-                      backgroundColor: BColors.white,
-                      imageUrl: BImage.appBarImage,
-                      onpressed: () {},
-                      applyImageRadius: true,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RoundedContainer(
+                    height: 152,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    backgroundColor: BColors.lightGrey,
+                    child: RoundedImage(
+                      backgroundColor: BColors.white,   
+                      applyBorderRadius: true,
+                       child: CustomCachedNetworkImage(
+            image: widget.productData.productImage?.first ??
+                          BImage.healthycartText,
+            fit: BoxFit.fitHeight,
+          )
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //Title of the vertical widget
-                    const Text(
-                      'Gelusul 500 ml',
-                      style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: BColors.black),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      textAlign: TextAlign.left,
-                    ),
-                    const Gap(8),
-                    RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        text: const TextSpan(children: [
-                          TextSpan(
-                            text: 'by  ', // remeber to put space
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: BColors.textLightBlack),
-                          ),
-                          TextSpan(
-                            text: 'Cipla Pvt LTD',
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: BColors.black),
-                          ),
-                        ])),
-                    const Gap(8),
-                    RichText(
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        text: const TextSpan(children: [
-                          TextSpan(
-                            text: 'Category  : ', // remeber to put space
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: BColors.textLightBlack),
-                          ),
-                          TextSpan(
-                            text: 'Energy',
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: BColors.black),
-                          ),
-                        ])),
-                    const Gap(8),
-                    //  (pharmacyProvider
-                    //                                               .productList[
-                    //                                                   index]
-                    //                                               .productDiscountRate ==
-                    //                                           null)
-                    (false)
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              RichText(
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                    text: 'Our price : ',
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: BColors.textLightBlack),
-                                  ),
-                                  TextSpan(
-                                      text: "₹ ",
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: BColors.black,
-                                      )),
-                                  TextSpan(
-                                    text: "30000",
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: BColors.black),
-                                  ),
-                                ]),
-                              ),
-                            ],
-                          )
-                        : Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Our price : ',
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Title of the vertical widget
+                        Text(
+                          widget.productData.productName ?? 'Unknown Name',
+                          style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: BColors.black),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlign: TextAlign.left,
+                        ),
+                        const Gap(8),
+                        RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            text: TextSpan(children: [
+                              const TextSpan(
+                                text: 'by  ', // remeber to put space
                                 style: TextStyle(
                                     fontFamily: 'Montserrat',
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                     color: BColors.textLightBlack),
                               ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      TextSpan(
+                              TextSpan(
+                                text: widget.productData.productBrandName ??
+                                    'Unknown Brand',
+                                style: const TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.black),
+                              ),
+                            ])),
+                        const Gap(8),
+                        RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: const TextSpan(children: [
+                              TextSpan(
+                                text: 'Category  :  ', // remeber to put space
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.textLightBlack),
+                              ),
+                              TextSpan(
+                                text: 'Energy',
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.black),
+                              ),
+                            ])),
+                        const Gap(8),
+
+                        (widget.productData.productDiscountRate == null)
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(children: [
+                                      const TextSpan(
+                                        text: 'Our price  :  ',
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: BColors.textLightBlack),
+                                      ),
+                                      const TextSpan(
                                           text: "₹ ",
                                           style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: BColors.green,
-                                          )),
-                                      TextSpan(
-                                        text: "25000",
-                                        style: TextStyle(
                                             fontFamily: 'Montserrat',
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
-                                            color: BColors.green),
+                                            color: BColors.black,
+                                          )),
+                                      TextSpan(
+                                        text:
+                                            '${widget.productData.productMRPRate ?? 0}',
+                                        style: const TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: BColors.black),
                                       ),
-                                    ])),
-                                    RichText(
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        text: const TextSpan(children: [
+                                    ]),
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  RichText(
+                                      text: const TextSpan(children: [
+                                    TextSpan(
+                                      text: 'Our price  :  ',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: BColors.textLightBlack),
+                                    )
+                                  ])),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                            text: TextSpan(children: [
                                           TextSpan(
                                               text: "₹ ",
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: BColors.black,
-                                                  decoration: TextDecoration
-                                                      .lineThrough)),
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                                color: BColors.green,
+                                              )),
                                           TextSpan(
-                                              text: "30000",
-                                              style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: BColors.textBlack,
-                                                  decoration: TextDecoration
-                                                      .lineThrough)),
+                                            text:
+                                                '${widget.productData.productDiscountRate ?? 0}',
+                                            style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                                color: BColors.green),
+                                          ),
                                         ])),
-                                  ],
-                                ),
+                                        RichText(
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                  text: "₹ ",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: BColors.black,
+                                                      decoration: TextDecoration
+                                                          .lineThrough)),
+                                              TextSpan(
+                                                  text:
+                                                      '${widget.productData.productMRPRate ?? 0}',
+                                                  style: const TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: BColors.textBlack,
+                                                      decoration: TextDecoration
+                                                          .lineThrough)),
+                                            ])),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                    const Gap(8),
-                    PercentageShowContainerWidget(
-                      text: '25 %',
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              if (widget.productData.productDiscountRate != null)
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8, left: 12),
+                    child: PercentageShowContainerWidget(
+                      
+                      text: '${widget.productData.discountPercentage ?? 0}% off',
                       textColor: BColors.textWhite,
                       boxColor: BColors.offRed,
-                      width: 64,
-                      height: 24,
-                    )
-                  ],
-                ),
-              ),
+                      width: 80,
+                      height: 32,
+                    ),
+                  ),
+                )
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class RoundedContainer extends StatelessWidget {
-  const RoundedContainer(
-      {super.key,
-      this.width,
-      this.height,
-      this.radius = 14,
-      this.child,
-      this.showBorder = false,
-      this.borderColor = BColors.black,
-      this.backgroundColor = BColors.white,
-      this.padding,
-      this.margin});
-
-  final double? width;
-  final double? height;
-  final double radius;
-  final Widget? child;
-  final bool showBorder;
-  final Color borderColor;
-  final Color backgroundColor;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      padding: padding,
-      margin: margin,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(radius),
-        border: showBorder ? Border.all(color: borderColor) : null,
-      ),
-      child: child,
-    );
-  }
-}
-
-class RoundedImage extends StatelessWidget {
-  const RoundedImage(
-      {super.key,
-      required this.imageUrl,
-      this.width = 150,
-      this.height = 150,
-      this.applyImageRadius = false,
-      this.border,
-      this.backgroundColor = BColors.grey,
-      this.padding,
-      this.fit = BoxFit.contain,
-      required this.onpressed,
-      this.borderRadius = 12});
-
-  final String imageUrl;
-  final double? width;
-  final double? height;
-  final bool applyImageRadius;
-  final BoxBorder? border;
-  final Color backgroundColor;
-  final EdgeInsetsGeometry? padding;
-  final BoxFit? fit;
-  final VoidCallback onpressed;
-  final double borderRadius;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onpressed,
-      child: Container(
-        width: width,
-        height: height,
-        padding: padding,
-        decoration: BoxDecoration(
-            border: border,
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(borderRadius)),
-        child: ClipRRect(
-            borderRadius: applyImageRadius
-                ? BorderRadius.circular(10)
-                : BorderRadius.zero,
-            child: CustomCachedNetworkImage(image: imageUrl)),
       ),
     );
   }

@@ -71,19 +71,21 @@ class _LabMainState extends State<LabMain> {
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverList.separated(
-                  separatorBuilder: (context, index) => const Gap(8),
-                  itemCount: labProvider.labList.length,
-                  itemBuilder: (context, index) => LabListCard(
+                separatorBuilder: (context, index) => const Gap(8),
+                itemCount: labProvider.labList.length,
+                itemBuilder: (context, index) => LabListCard(
+                  index: index,
+                  onTap: () => EasyNavigation.push(
+                    context: context,
+                    type: PageTransitionType.rightToLeft,
+                    duration: 300,
+                    page: LabDetailsScreen(
                       index: index,
-                      onTap: () => EasyNavigation.push(
-                            context: context,
-                            type: PageTransitionType.rightToLeft,
-                            duration: 300,
-                            page: LabDetailsScreen(
-                              index: index,
-                              labId: labProvider.labList[index].id!,
-                            ),
-                          ))),
+                      labId: labProvider.labList[index].id!,
+                    ),
+                  ),
+                ),
+              ),
             ),
         ],
       ));
