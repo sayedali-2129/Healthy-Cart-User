@@ -82,6 +82,7 @@ class UserAddressProvider with ChangeNotifier {
         log('userAddressList: ${userAddressList.length}');
         if (userAddressList.isNotEmpty) {
           selectedAddress = userAddressList.first;
+          // log(selectedAddress!.toMap().toString());
         }
         isLoading = false;
         notifyListeners();
