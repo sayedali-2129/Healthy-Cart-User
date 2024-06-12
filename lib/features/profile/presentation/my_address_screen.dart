@@ -35,117 +35,122 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
   Widget build(BuildContext context) {
     return Consumer2<AuthenticationProvider, UserAddressProvider>(
         builder: (context, provider, addressProvider, _) {
-      return Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverCustomAppbar(
-              title: 'Saved Addresses',
-              onBackTap: () {
-                EasyNavigation.pop(context: context);
+      return PopScope(
+        onPopInvoked: (didPop) {
+          addressProvider.selectedAddress = null;
+        },
+        child: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              SliverCustomAppbar(
+                title: 'Saved Addresses',
+                onBackTap: () {
+                  EasyNavigation.pop(context: context);
+                },
+              ),
+              const SliverGap(16),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    Container(
+                      clipBehavior: Clip.antiAlias,
+                      height: 80,
+                      width: 80,
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                      child: provider.userFetchlDataFetched!.image == null
+                          ? Image.asset(
+                              BImage.userAvatar,
+                              fit: BoxFit.cover,
+                            )
+                          : CustomCachedNetworkImage(
+                              image: provider.userFetchlDataFetched!.image!,
+                            ),
+                    ),
+                    const Gap(8),
+                    Text(
+                      provider.userFetchlDataFetched!.userName ?? 'User',
+                      style: const TextStyle(
+                          fontSize: 18,
+                          color: BColors.black,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    provider.userFetchlDataFetched!.placemark == null
+                        ? const Gap(0)
+                        : Text(
+                            '${provider.userFetchlDataFetched!.placemark?.localArea}, ${provider.userFetchlDataFetched!.placemark?.district}',
+                            style: const TextStyle(
+                                fontSize: 14,
+                                color: BColors.black,
+                                fontWeight: FontWeight.w500))
+                  ],
+                ),
+              ),
+              const SliverGap(10),
+              const SliverToBoxAdapter(
+                child: Divider(),
+              ),
+              if (addressProvider.isLoading == true &&
+                  addressProvider.userAddressList.isEmpty)
+                const SliverFillRemaining(
+                  child: Center(
+                    child: LoadingIndicater(),
+                  ),
+                )
+              else if (addressProvider.userAddressList.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        BImage.noDataPng,
+                        scale: 2.5,
+                      ),
+                      const Gap(15),
+                      const Text(
+                        'No Saved Address Found!',
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: BColors.black,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  )),
+                )
+              else
+                SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    sliver: SliverList.separated(
+                      itemCount: addressProvider.userAddressList.length,
+                      separatorBuilder: (context, index) => const Gap(10),
+                      itemBuilder: (context, index) => AddressListCard(
+                        isDeleteAvailable: true,
+                        index: index,
+                      ),
+                    )),
+            ],
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(16),
+            child: ButtonWidget(
+              buttonHeight: 40,
+              buttonWidth: double.infinity,
+              buttonColor: BColors.mainlightColor,
+              buttonWidget: const Text(
+                'Add New +',
+                style: TextStyle(color: BColors.white),
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  backgroundColor: BColors.white,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  context: context,
+                  builder: (context) => const AddressBottomSheet(),
+                );
               },
             ),
-            const SliverGap(16),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  Container(
-                    clipBehavior: Clip.antiAlias,
-                    height: 80,
-                    width: 80,
-                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                    child: provider.userFetchlDataFetched!.image == null
-                        ? Image.asset(
-                            BImage.userAvatar,
-                            fit: BoxFit.cover,
-                          )
-                        : CustomCachedNetworkImage(
-                            image: provider.userFetchlDataFetched!.image!,
-                          ),
-                  ),
-                  const Gap(8),
-                  Text(
-                    provider.userFetchlDataFetched!.userName ?? 'User',
-                    style: const TextStyle(
-                        fontSize: 18,
-                        color: BColors.black,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  provider.userFetchlDataFetched!.placemark == null
-                      ? const Gap(0)
-                      : Text(
-                          '${provider.userFetchlDataFetched!.placemark?.localArea}, ${provider.userFetchlDataFetched!.placemark?.district}',
-                          style: const TextStyle(
-                              fontSize: 14,
-                              color: BColors.black,
-                              fontWeight: FontWeight.w500))
-                ],
-              ),
-            ),
-            const SliverGap(10),
-            const SliverToBoxAdapter(
-              child: Divider(),
-            ),
-            if (addressProvider.isLoading == true &&
-                addressProvider.userAddressList.isEmpty)
-              const SliverFillRemaining(
-                child: Center(
-                  child: LoadingIndicater(),
-                ),
-              )
-            else if (addressProvider.userAddressList.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      BImage.noDataPng,
-                      scale: 2.5,
-                    ),
-                    const Gap(15),
-                    const Text(
-                      'No Saved Address Found!',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: BColors.black,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                )),
-              )
-            else
-              SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverList.separated(
-                    itemCount: addressProvider.userAddressList.length,
-                    separatorBuilder: (context, index) => const Gap(10),
-                    itemBuilder: (context, index) => AddressListCard(
-                      isDeleteAvailable: true,
-                      index: index,
-                    ),
-                  )),
-          ],
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(16),
-          child: ButtonWidget(
-            buttonHeight: 40,
-            buttonWidth: double.infinity,
-            buttonColor: BColors.mainlightColor,
-            buttonWidget: const Text(
-              'Add New +',
-              style: TextStyle(color: BColors.white),
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                backgroundColor: BColors.white,
-                isScrollControlled: true,
-                useSafeArea: true,
-                context: context,
-                builder: (context) => const AddressBottomSheet(),
-              );
-            },
           ),
         ),
       );

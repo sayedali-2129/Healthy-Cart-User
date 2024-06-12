@@ -253,6 +253,8 @@ class LabProvider with ChangeNotifier {
       orderStatus: 0,
       paymentStatus: 0,
       testMode: selectedRadio,
+      finalAmount: 0,
+      doorStepCharge: 0,
     );
 
     final result =

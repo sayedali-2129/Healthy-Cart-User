@@ -87,6 +87,11 @@ class _LabMainState extends State<LabMain> {
                 ),
               ),
             ),
+          SliverToBoxAdapter(
+              child: (labProvider.labFetchLoading == true &&
+                      labProvider.labList.isNotEmpty)
+                  ? const Center(child: LoadingIndicater())
+                  : const Gap(0)),
         ],
       ));
     });

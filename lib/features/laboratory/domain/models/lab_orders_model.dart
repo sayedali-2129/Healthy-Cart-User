@@ -18,6 +18,9 @@ class LabOrdersModel {
   String? paymentMethod;
   List<LabTestModel>? selectedTest;
   num? doorStepCharge;
+  num? finalAmount;
+  String? rejectionReason;
+
   LabOrdersModel({
     this.id,
     this.labId,
@@ -33,6 +36,8 @@ class LabOrdersModel {
     this.paymentMethod,
     this.selectedTest,
     this.doorStepCharge,
+    this.finalAmount,
+    this.rejectionReason,
   });
 
   Map<String, dynamic> toMap() {
@@ -51,6 +56,8 @@ class LabOrdersModel {
       'paymentMethod': paymentMethod,
       'selectedTest': selectedTest?.map((x) => x.toMap()).toList(),
       'doorStepCharge': doorStepCharge,
+      'finalAmount': finalAmount,
+      'rejectionReason': rejectionReason
     };
   }
 
@@ -85,6 +92,11 @@ class LabOrdersModel {
           : null,
       doorStepCharge:
           map['doorStepCharge'] != null ? map['doorStepCharge'] as num : null,
+      finalAmount:
+          map['finalAmount'] != null ? map['finalAmount'] as num : null,
+      rejectionReason: map['rejectionReason'] != null
+          ? map['rejectionReason'] as String
+          : null,
     );
   }
 
@@ -103,6 +115,8 @@ class LabOrdersModel {
     String? paymentMethod,
     List<LabTestModel>? selectedTest,
     num? doorStepCharge,
+    num? finalAmount,
+    String? rejectionReason,
   }) {
     return LabOrdersModel(
       id: id ?? this.id,
@@ -119,6 +133,8 @@ class LabOrdersModel {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       selectedTest: selectedTest ?? this.selectedTest,
       doorStepCharge: doorStepCharge ?? this.doorStepCharge,
+      finalAmount: finalAmount ?? this.finalAmount,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
     );
   }
 }
