@@ -54,7 +54,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                   fontFamily: 'Montserrat'),
               labelStyle: const TextStyle(
                   fontSize: 10,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   fontFamily: 'Montserrat'),
               labelColor: BColors.mainlightColor,
               unselectedLabelColor: BColors.black,
@@ -70,8 +70,8 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                     child: selectedIndex == 0
                         ? Image.asset(
                             BIcon.homeColor,
-                            height: 22,
-                            width: 22,
+                            height: 24,
+                            width: 24,
                           )
                         : Image.asset(
                             BIcon.homeBlack,
@@ -88,8 +88,8 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                     child: selectedIndex == 1
                         ? Image.asset(
                             BIcon.hospitalColor,
-                            height: 22,
-                            width: 22,
+                            height: 24,
+                            width: 24,
                           )
                         : Image.asset(
                             BIcon.hospitalBlack,
@@ -105,8 +105,8 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                     child: selectedIndex == 2
                         ? Image.asset(
                             BIcon.labColor,
-                            height: 22,
-                            width: 22,
+                            height: 24,
+                            width: 24,
                           )
                         : Image.asset(
                             BIcon.labBlack,
@@ -122,8 +122,8 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                     child: selectedIndex == 3
                         ? Image.asset(
                             BIcon.medicineColor,
-                            height: 22,
-                            width: 22,
+                            height: 24,
+                            width: 24,
                           )
                         : Image.asset(
                             BIcon.medicineBlack,
@@ -139,8 +139,8 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                     child: selectedIndex == 4
                         ? Image.asset(
                             BIcon.profileColor,
-                            height: 24,
-                            width: 24,
+                            height: 26,
+                            width: 26,
                           )
                         : Image.asset(
                             BIcon.profileBlack,

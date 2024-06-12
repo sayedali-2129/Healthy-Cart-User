@@ -38,6 +38,7 @@ final TextEditingController controller;
           onChanged:searchOnChanged ,
           controller:controller ,
           showCursor: false,
+          autofocus: true,
           cursorColor: BColors.black,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),

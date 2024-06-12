@@ -179,6 +179,23 @@ class PharmacyProductAddModel {
       'keywords': keywords,
     };
   }
+   Map<String, dynamic> toCartMap() {
+    return <String, dynamic>{
+      'id': id,
+      'pharmacyId': pharmacyId,
+      'categoryId': categoryId,
+      'typeOfProduct': typeOfProduct,
+      'productMRPRate': productMRPRate,
+      'productDiscountRate': productDiscountRate,
+      'discountPercentage': discountPercentage,
+      'productImage': productImage,
+      'productName': productName,
+      'productBrandName': productBrandName,
+      'productFormNumber': productFormNumber,
+      'productPackageNumber': productPackageNumber,
+      'productMeasurementNumber': productMeasurementNumber,
+    };
+  }
   Map<String, dynamic> toEquipmentMap() {
     return <String, dynamic>{
       'id': id,

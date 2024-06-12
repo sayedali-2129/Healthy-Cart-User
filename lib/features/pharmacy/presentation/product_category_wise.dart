@@ -1,13 +1,12 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
+import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/grid_product.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
-import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
 
 class PharmacyCategoryWiseProductScreen extends StatefulWidget {
@@ -62,42 +61,42 @@ class _PharmacyCategoryWiseProductScreenState
             EasyNavigation.pop(context: context);
           },
           child: PreferredSize(
-              preferredSize: const Size.fromHeight(64),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: pharmacyProvider.searchController,
-                  onChanged: (searchText) {
-                    EasyDebounce.debounce(
-                      'productcategorysearch',
-                      const Duration(milliseconds: 500),
-                      () {
-                        pharmacyProvider.searchCategoryWiseProduct(
-                          searchText: searchText,
-                        );
-                      },
-                    );
-                  },
-                  showCursor: false,
-                  cursorColor: BColors.black,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
-                    hintText: 'Search products',
-                    hintStyle: const TextStyle(fontSize: 14),
-                    suffixIcon: const Icon(
-                      Icons.search_outlined,
-                      color: BColors.darkblue,
-                    ),
-                    filled: true,
-                    fillColor: BColors.white,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.circular(26),
-                    ),
+            preferredSize: const Size.fromHeight(64),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: pharmacyProvider.searchController,
+                onChanged: (searchText) {
+                  EasyDebounce.debounce(
+                    'productcategorysearch',
+                    const Duration(milliseconds: 500),
+                    () {
+                      pharmacyProvider.searchCategoryWiseProduct(
+                        searchText: searchText,
+                      );
+                    },
+                  );
+                },
+                showCursor: false,
+                cursorColor: BColors.black,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
+                  hintText: 'Search products',
+                  hintStyle: const TextStyle(fontSize: 14),
+                  suffixIcon: const Icon(
+                    Icons.search_outlined,
+                    color: BColors.darkblue,
+                  ),
+                  filled: true,
+                  fillColor: BColors.white,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(26),
                   ),
                 ),
               ),
-              ),
+            ),
+          ),
         ),
         (pharmacyProvider.fetchLoading == true &&
                 pharmacyProvider.productCategoryWiseList.isEmpty)
@@ -126,35 +125,7 @@ class _PharmacyCategoryWiseProductScreenState
               ),
         if (pharmacyProvider.fetchLoading == false &&
             pharmacyProvider.productCategoryWiseList.isEmpty)
-          SliverFillRemaining(
-            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-            Image.asset(
-              BImage.noDataPng,
-              height: 160,
-              width: 160,
-            ),
-            const Gap(8),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'No similar product found.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: BColors.black),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-                          ],
-                        ),
-          ),
+                      const ErrorOrNoDataPage(text: 'No products found in this category.' ), 
         SliverToBoxAdapter(
             child: (pharmacyProvider.fetchLoading == true &&
                     pharmacyProvider.productCategoryWiseList.isNotEmpty)

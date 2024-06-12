@@ -36,7 +36,7 @@ class SliverCustomAppbar extends StatelessWidget {
         title: Text(title,
             style: const TextStyle(
                 fontFamily: 'Montserrat',
-                fontSize: 15,
+                fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: BColors.darkblue)),
         bottom: child);

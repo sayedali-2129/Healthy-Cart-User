@@ -17,7 +17,9 @@ class GalleryImagePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<PharmacyProvider>(builder: (context, pharmacyProvider, _) {
-      return Column(children: [
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
         AdPharmacySlider(
           imageUrlList: pharmacyProvider.productImageUrlList,
           autoPlay: false,

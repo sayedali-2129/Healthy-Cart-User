@@ -4,7 +4,7 @@ import 'package:shimmer/shimmer.dart';
 
 
 class CustomCachedNetworkImage extends StatelessWidget {
-  const CustomCachedNetworkImage({super.key, required this.image,  this.fit = BoxFit.contain,});
+  const CustomCachedNetworkImage({super.key, required this.image,  this.fit = BoxFit.cover,});
   final String image;
   final BoxFit? fit;
   @override

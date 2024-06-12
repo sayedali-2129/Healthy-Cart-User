@@ -72,7 +72,8 @@ class _ProductSearchListScreenState extends State<ProductSearchListScreen> {
                         ),
                         itemBuilder: (context, index) {
                           return PostCardVertical(
-                            productData: pharmacyProvider.productAllList[index],
+                            productData:
+                                pharmacyProvider.productAllList[index],
                           );
                         },
                       ),
@@ -81,32 +82,32 @@ class _ProductSearchListScreenState extends State<ProductSearchListScreen> {
                   pharmacyProvider.productAllList.isEmpty)
                 SliverFillRemaining(
                   child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-            Image.asset(
-              BImage.noDataPng,
-              height: 160,
-              width: 160,
-            ),
-            const Gap(8),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'No similar product found.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: BColors.black),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-                          ],
-                        ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        BImage.noDataPng,
+                        height: 160,
+                        width: 160,
+                      ),
+                      const Gap(8),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'No similar product found.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: BColors.black),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 )
             ],
           ),
