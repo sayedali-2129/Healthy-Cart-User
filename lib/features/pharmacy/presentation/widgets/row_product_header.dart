@@ -24,79 +24,83 @@ class RowProductCategoryWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Category',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat'),
-                  ),
-                  ButtonWidget(
-                    buttonColor: BColors.buttonGreen,
-                    onPressed: () {},
-                    buttonHeight: 36,
-                    buttonWidth: 176,
-                    buttonWidget: const Row(
+              child: (pharmacyProvider.pharmacyCategoryList.isNotEmpty)
+                  ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          Icons.maps_ugc_outlined,
-                          color: BColors.textBlack,
-                          size: 24,
-                        ),
-                        Text(
-                          'Prescription',
+                        const Text(
+                          'Categories',
                           style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              fontFamily: 'Montserrat',
-                              color: BColors.textBlack),
+                              fontFamily: 'Montserrat'),
+                        ),
+                        ButtonWidget(
+                          buttonColor: BColors.buttonGreen,
+                          onPressed: () {},
+                          buttonHeight: 36,
+                          buttonWidth: 176,
+                          buttonWidget: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(
+                                Icons.maps_ugc_outlined,
+                                color: BColors.textBlack,
+                                size: 24,
+                              ),
+                              Text(
+                                'Prescription',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Montserrat',
+                                    color: BColors.textBlack),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              ),
+                    )
+                  : const SizedBox(),
             ),
-            (pharmacyProvider.pharmacyCategoryList.isNotEmpty)? ///&& pharmacyProvider.pharmacyCategoryList.length>=4
-            Padding(
-              padding: const EdgeInsets.only(right: 24, bottom: 4),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: InkWell(
-                  onTap: () {
-                    EasyNavigation.push(
-                        context: context,
-                        type: PageTransitionType.leftToRight,
-                        page:const PharmacyCategoriesScreen( ));
-                  },
-                  child:  Material(
-                    color: BColors.white,
-                    surfaceTintColor:BColors.white ,
-                    elevation: 2,
-                    borderRadius: BorderRadius.circular(8),
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'View All',
-                        style: TextStyle(
-                            decorationColor: BColors.darkblue,
-                            fontFamily: 'Montserrat',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: BColors.darkblue),
+            (pharmacyProvider.pharmacyCategoryList.isNotEmpty &&
+                    pharmacyProvider.pharmacyCategoryList.length >= 4)
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 24, bottom: 4),
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        onTap: () {
+                          EasyNavigation.push(
+                              context: context,
+                              type: PageTransitionType.leftToRight,
+                              page: const PharmacyCategoriesScreen());
+                        },
+                        child: Material(
+                          color: BColors.white,
+                          surfaceTintColor: BColors.white,
+                          elevation: 2,
+                          borderRadius: BorderRadius.circular(8),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'View All',
+                              style: TextStyle(
+                                  decorationColor: BColors.darkblue,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: BColors.darkblue),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-            ): const SizedBox(),
+                  )
+                : const SizedBox(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
-              child: SizedBox( 
+              child: SizedBox(
                 height: 120,
                 child: ListView.builder(
                   padding: const EdgeInsets.all(0),
@@ -107,17 +111,19 @@ class RowProductCategoryWidget extends StatelessWidget {
                       duration: const Duration(milliseconds: 500),
                       child: VerticalImageText(
                           onTap: () {
-                        pharmacyProvider.setCategoryId(
-                            selectedCategoryId:
-                                pharmacyProvider.pharmacyCategoryList[index].id ??'',
-                            selectedCategoryName: pharmacyProvider
-                                .pharmacyCategoryList[index].category);
-                        EasyNavigation.push(
-                            context: context,
-                            page: const PharmacyCategoryWiseProductScreen());
-                      },
-                          image:
-                              pharmacyProvider.pharmacyCategoryList[index].image,
+                            pharmacyProvider.setCategoryId(
+                                selectedCategoryId: pharmacyProvider
+                                        .pharmacyCategoryList[index].id ??
+                                    '',
+                                selectedCategoryName: pharmacyProvider
+                                    .pharmacyCategoryList[index].category);
+                            EasyNavigation.push(
+                                context: context,
+                                page:
+                                    const PharmacyCategoryWiseProductScreen());
+                          },
+                          image: pharmacyProvider
+                              .pharmacyCategoryList[index].image,
                           title: pharmacyProvider
                               .pharmacyCategoryList[index].category),
                     );

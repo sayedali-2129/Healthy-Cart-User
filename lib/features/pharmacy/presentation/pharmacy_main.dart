@@ -2,6 +2,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
@@ -65,7 +66,8 @@ class _PharmacyMainState extends State<PharmacyMain> {
                   const Duration(milliseconds: 500),
                   () {
                     pharmacyProvider.searchPharmacy(
-                        searchText: searchText,);
+                      searchText: searchText,
+                    );
                   },
                 );
               },
@@ -90,10 +92,11 @@ class _PharmacyMainState extends State<PharmacyMain> {
                                 selectedpharmacyId:
                                     pharmacyProvider.pharmacyList[index].id ??
                                         '',
-                                categoryIdList: pharmacyProvider.pharmacyList[index]
+                                categoryIdList: pharmacyProvider
+                                        .pharmacyList[index]
                                         .selectedCategoryId ??
                                     [],
-                                    pharmacy:pharmacyProvider.pharmacyList[index] );
+                                pharmacy: pharmacyProvider.pharmacyList[index]);
                             EasyNavigation.push(
                                 type: PageTransitionType.rightToLeft,
                                 context: context,
@@ -103,13 +106,16 @@ class _PharmacyMainState extends State<PharmacyMain> {
                       },
                     ),
                   ),
-            SliverToBoxAdapter(
-                child: (pharmacyProvider.fetchLoading == true &&
-                        pharmacyProvider.pharmacyList.isNotEmpty)
-                    ? const Center(
-                        child: LoadingIndicater(),
-                      )
-                    : null),
+
+             SliverToBoxAdapter(
+              child: (pharmacyProvider.fetchLoading == true &&
+                      pharmacyProvider.pharmacyList.isNotEmpty)
+                  ? const Center(
+                      child: LoadingIndicater(),
+                    )
+                  : null),
+              if ( pharmacyProvider.pharmacyList.isEmpty)
+             const ErrorOrNoDataPage(text: 'No similar pharmacies found, please try again later.', ),
           ],
         ),
       );

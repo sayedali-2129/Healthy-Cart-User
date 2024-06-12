@@ -1,11 +1,14 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
+import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/product_cart.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/details_widgets.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/image_gallery_widget.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/percentage_shower_widget.dart';
@@ -31,12 +34,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         pharmacyProvider.bottomsheetSwitch(false);
+        if (pharmacyProvider.cartProductMap
+            .containsKey((widget.productData.id))) {
+          pharmacyProvider.bottomsheetCart = true;
+          pharmacyProvider.quantityCount =
+              pharmacyProvider.cartProductMap[widget.productData.id];
+        } else {
+          pharmacyProvider.quantityCount = 1;
+        }
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final pharmacyProvider = Provider.of<PharmacyProvider>(context);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -145,7 +157,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         color: BColors.green),
                                   ),
                                   TextSpan(
-                                    text: "${2000}",
+                                    text:
+                                        "${widget.productData.productMRPRate}",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -181,7 +194,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             color: BColors.green),
                                       ),
                                       TextSpan(
-                                        text: "${2000}",
+                                        text:
+                                            "${widget.productData.productDiscountRate}",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
@@ -200,9 +214,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             fontFamily: 'Montserrat',
                                             color: BColors.textBlack),
                                       ),
-                                      const TextSpan(
-                                        text: "3000",
-                                        style: TextStyle(
+                                      TextSpan(
+                                        text:
+                                            "${widget.productData.productMRPRate}",
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             decoration:
                                                 TextDecoration.lineThrough,
@@ -220,47 +235,55 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   child: PercentageShowContainerWidget(
                                       width: 80,
                                       height: 32,
-                                      text: '41% off',
+                                      text:
+                                          '${widget.productData.discountPercentage}% off',
                                       textColor: BColors.white,
                                       boxColor: BColors.offRed)),
                             ],
                           ),
                     const Gap(16),
-                    const ProductDetailsStraightWidget(
-                      title: 'Product type : ',
-                      text: 'Diabetes Monitoring',
-                    ),
+                    if (widget.productData.productType != null)
+                      ProductDetailsStraightWidget(
+                        title: 'Product type : ',
+                        text: '${widget.productData.productType}',
+                      ),
                     const Gap(24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ProductInfoWidget(
-                            text1: 'Product Form :',
-                            text2: (widget.productData.productFormNumber
-                                        .toString()
-                                        .isEmpty ||
-                                    widget.productData.productFormNumber
-                                            .toString() ==
-                                        '1')
-                                ? widget.productData.productForm ?? ''
-                                : '${widget.productData.productFormNumber ?? ''} ${widget.productData.productForm ?? ''}'),
-                        ProductInfoWidget(
-                          text1: 'Product Package :',
-                          text2: (widget.productData.productPackageNumber
-                                      .toString()
-                                      .isEmpty ||
-                                  widget.productData.productPackageNumber
-                                          .toString() ==
-                                      '1')
-                              ? widget.productData.productPackage ?? ''
-                              : '${widget.productData.productPackageNumber ?? ''} ${widget.productData.productPackage ?? ''}',
-                        ),
-                        ProductInfoWidget(
-                          text1: 'Ideal For :',
-                          text2: widget.productData.idealFor ?? 'Everyone',
-                        ),
-                      ],
-                    ),
+                    (widget.productData.typeOfProduct != "Equipment")
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ProductInfoWidget(
+                                  text1: 'Product Form :',
+                                  text2: (widget.productData.productFormNumber
+                                              .toString()
+                                              .isEmpty ||
+                                          widget.productData.productFormNumber
+                                                  .toString() ==
+                                              '1')
+                                      ? widget.productData.productForm ?? ''
+                                      : '${widget.productData.productFormNumber ?? ''} ${widget.productData.productForm ?? ''}'),
+                              ProductInfoWidget(
+                                text1: 'Product Package :',
+                                text2: (widget.productData.productPackageNumber
+                                            .toString()
+                                            .isEmpty ||
+                                        widget.productData.productPackageNumber
+                                                .toString() ==
+                                            '1')
+                                    ? widget.productData.productPackage ?? ''
+                                    : '${widget.productData.productPackageNumber ?? ''} ${widget.productData.productPackage ?? ''}',
+                              ),
+                              ProductInfoWidget(
+                                text1: 'Ideal For :',
+                                text2:
+                                    widget.productData.idealFor ?? 'Everyone',
+                              ),
+                            ],
+                          )
+                        : ProductDetailsStraightWidget(
+                            title: 'Ideal For : ',
+                            text: widget.productData.idealFor ?? 'Everyone',
+                          ),
                     const Gap(16),
                   ],
                 ),
@@ -313,6 +336,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
           ),
+         if (widget.productData.requirePrescription == null || widget.productData.requirePrescription == false)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
@@ -353,23 +377,34 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               padding: const EdgeInsets.only(top: 8),
               child: Container(
                 color: BColors.lightGrey.withOpacity(.5),
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      (widget.productData.expiryDate == null)
+                          ? ProductInfoWidget(
+                              text1: 'Warranty Period :',
+                              text2:
+                                  '${widget.productData.equipmentWarrantyNumber} ${widget.productData.equipmentWarranty}',
+                            )
+                          : ProductInfoWidget(
+                              text1: 'Expiry Date :',
+                              text2: pharmacyProvider.expiryDateSetterFetched(
+                                  widget.productData.expiryDate ??
+                                      Timestamp.now()),
+                            ),
                       ProductInfoWidget(
-                        text1: 'Expiry Date :',
-                        text2: '06-2025',
+                        text1: 'Measured Quantity :',
+                        text2:
+                            '${widget.productData.productMeasurementNumber}  ${widget.productData.productMeasurement}',
                       ),
-                      ProductInfoWidget(
-                        text1: 'Measurement :',
-                        text2: '50 - mg',
-                      ),
-                      ProductInfoWidget(
-                        text1: 'Store Below :',
-                        text2: '30 C',
-                      ),
+                      if (widget.productData.storingDegree != null)
+                        ProductInfoWidget(
+                          text1: 'Store Below :',
+                          text2:
+                              '${widget.productData.storingDegree ?? 'Not mentioned'} °C',
+                        ),
                     ],
                   ),
                 ),
@@ -415,53 +450,55 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ],
       ),
-      bottomSheet:
-          Consumer<PharmacyProvider>(builder: (context, pharmacyProvider, _) {
-        return Container(
-                width: double.infinity,
-                height: 72,
-                decoration: const BoxDecoration(
-                    color: BColors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        topRight: Radius.circular(8))),
-                child:(!pharmacyProvider.bottomsheetCart)? Padding(
-                  padding: const EdgeInsets.only(bottom: 16, top: 8, right: 24),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: ButtonWidget(
-                      onPressed: () {
-                        pharmacyProvider.bottomsheetSwitch(true);
-                      },
-                      buttonHeight: 48,
-                      buttonWidth: 160,
-                      buttonColor: BColors.offRed,
-                      buttonWidget: const Text(
-                        'Add to Cart',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Montserrat',
-                            color: BColors.white),
-                      ),
-                    ),
-                  ),
-                ):Padding(
-                  padding: const EdgeInsets.only(bottom: 16, top: 8, right: 24, left: 16),
+      bottomSheet: BottomSheetAddToCart(
+        productId: widget.productData.id ?? '',
+      ),
+    );
+  }
+}
+
+class BottomSheetAddToCart extends StatelessWidget {
+  const BottomSheetAddToCart({
+    super.key,
+    required this.productId,
+  });
+  final String productId;
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PharmacyProvider>(builder: (context, pharmacyProvider, _) {
+      return Container(
+          width: double.infinity,
+          height: 80,
+          decoration: const BoxDecoration(
+              color: BColors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8), topRight: Radius.circular(8))),
+          child: (pharmacyProvider.bottomsheetCart)
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 16, top: 8, right: 24,left: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                     const QuantityCountWidget(),
+                      SizedBox(
+                        width: 200,
+                        child: ProductInfoWidget(
+                             fontSize1: 11,
+                             fontSize2: 12,
+                              text1: 'Quantity in cart : ',
+                              text2: (pharmacyProvider.quantityCount == 1)?'${pharmacyProvider.quantityCount} product already in your cart':
+                                  '${pharmacyProvider.quantityCount} products already in your cart',
+                            ),
+                      ),
                       ButtonWidget(
                         onPressed: () {
-                          pharmacyProvider.bottomsheetSwitch(false);
+                          EasyNavigation.push(
+                              context: context, page: const ProductCartScreen());
                         },
                         buttonHeight: 48,
                         buttonWidth: 160,
                         buttonColor: BColors.darkblue,
                         buttonWidget: const Text(
-                          'Go to Cart',
+                          'View Cart',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 16,
@@ -473,9 +510,49 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ],
                   ),
                 )
-              );
-            
-      }),
-    );
+              : Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 16, top: 8, right: 24, left: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      QuantityCountWidget(
+                        incrementTap: () {
+                          pharmacyProvider.increment();
+                        },
+                        decrementTap: () {
+                          pharmacyProvider.decrement();
+                        },
+                        quantityValue: pharmacyProvider.quantityCount,
+                      ),
+                      ButtonWidget(
+                        onPressed: () {
+                          LoadingLottie.showLoading(
+                              context: context, text: 'Adding to cart');
+                          pharmacyProvider
+                              .addProductToUserCart(productId: productId)
+                              .then(
+                            (value) {
+                              EasyNavigation.pop(context: context);
+                            },
+                          );
+                        },
+                        buttonHeight: 48,
+                        buttonWidth: 160,
+                        buttonColor: BColors.offRed,
+                        buttonWidget: const Text(
+                          'Add to Cart',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Montserrat',
+                              color: BColors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ));
+    });
   }
 }

@@ -25,11 +25,15 @@ class ProductDetailsHeading extends StatelessWidget {
 class ProductInfoWidget extends StatelessWidget {
   const ProductInfoWidget({
     super.key,
+    this.fontSize2 = 13,
+    this.fontSize1 = 12,
     required this.text1,
     required this.text2,
   });
   final String text1;
   final String text2;
+ final double? fontSize1;
+ final double? fontSize2;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -39,20 +43,19 @@ class ProductInfoWidget extends StatelessWidget {
           text1,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-              fontSize: 12,
+          style:  TextStyle(
+              fontSize: fontSize1,
               fontWeight: FontWeight.w600,
               fontFamily: 'Montserrat',
               color: BColors.textLightBlack),
         ),
         const Gap(2),
-        
         Text(
           text2,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-              fontSize: 13,
+          style:  TextStyle(
+              fontSize: fontSize2,
               fontWeight: FontWeight.w600,
               fontFamily: 'Montserrat',
               color: BColors.textBlack),
@@ -61,8 +64,6 @@ class ProductInfoWidget extends StatelessWidget {
     );
   }
 }
-
-
 
 class ProductDetailsStraightWidget extends StatelessWidget {
   const ProductDetailsStraightWidget({
@@ -97,4 +98,3 @@ class ProductDetailsStraightWidget extends StatelessWidget {
         ]));
   }
 }
-

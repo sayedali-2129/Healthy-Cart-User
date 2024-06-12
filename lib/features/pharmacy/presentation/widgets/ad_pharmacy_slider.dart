@@ -21,20 +21,8 @@ class AdPharmacySlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<PharmacyProvider>(builder: (context, pharmacyProvider, _) {
-      return (pharmacyProvider.fetchLoading)
-          ? Container(
-              clipBehavior: Clip.antiAlias,
-              width: double.infinity,
-              height: 202,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: BColors.darkblue,
-                ),
-              ))
-          : CarouselSlider.builder(
+      return 
+         CarouselSlider.builder(
               itemCount: imageUrlList.length,
               itemBuilder: (context, index, realIndex) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
@@ -42,7 +30,7 @@ class AdPharmacySlider extends StatelessWidget {
                   color: BColors.white,
                   surfaceTintColor: BColors.white,
                   borderRadius: BorderRadius.circular(16),
-                  elevation: 3,
+                  elevation: 5,
                   child: Container(
                       clipBehavior: Clip.antiAlias,
                       width: double.infinity,

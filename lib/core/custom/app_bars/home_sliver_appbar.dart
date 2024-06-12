@@ -56,7 +56,7 @@ class HomeSliverAppbar extends StatelessWidget {
                     Text(
                       'Nilambur, Malappuram, Kerala',
                       style: TextStyle(
-                          decoration: TextDecoration.underline,
+                 
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: BColors.darkblue),

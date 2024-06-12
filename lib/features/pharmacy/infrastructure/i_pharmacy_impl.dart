@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
@@ -10,7 +9,7 @@ import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_banner
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_user_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/phrmacy_cart_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_cart_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IPharmacyFacade)
@@ -138,7 +137,7 @@ class IPharmacyImpl implements IPharmacyFacade {
           .orderBy('createdAt', descending: true)
           .where('pharmacyId', isEqualTo: pharmacyId)
           .where('categoryId', isEqualTo: categoryId);
-   log('Category Id from Implementation  $categoryId');
+      log('Category Id from Implementation  $categoryId');
       if (searchText != null && searchText.isNotEmpty) {
         query =
             query.where('keywords', arrayContains: searchText.toLowerCase());
@@ -222,15 +221,180 @@ class IPharmacyImpl implements IPharmacyFacade {
     }
   }
 
+/* ------------------------- order and cart section ------------------------- */
   @override
-  FutureResult<PharmacyCartModel> createProductOrderDetails({required PharmacyCartModel cartProducts}) {
-    // TODO: implement createProductOrderDetails
-    throw UnimplementedError();
+  FutureResult<PharmacyCartModel> createProductOrderDetails(
+      {required PharmacyCartModel orderProducts,
+      required String? productId}) async {
+    try {
+      if (productId == null) {
+        final id = _firebaseFirestore
+            .collection(FirebaseCollections.pharmacyOrder)
+            .doc()
+            .id;
+        orderProducts.id = id;
+        await _firebaseFirestore
+            .collection(FirebaseCollections.pharmacyOrder)
+            .doc(id)
+            .set(orderProducts.toMap());
+        return right(orderProducts.copyWith(id: id));
+      } else {
+        await _firebaseFirestore
+            .collection(FirebaseCollections.pharmacyOrder)
+            .doc(productId)
+            .update(orderProducts.toMap());
+        return right(orderProducts.copyWith(id: productId));
+      }
+    } on FirebaseException catch (e) {
+      log(e.message!);
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  DocumentSnapshot<Map<String, dynamic>>? lastProductOrderDoc;
+  bool noMoreProductOrderData = false;
+  @override
+  FutureResult<List<PharmacyCartModel>> getProductOrderDetails(
+      {required String userId, required String pharmacyId}) async {
+    try {
+      if (noMoreProductOrderData) return right([]);
+      Query query = _firebaseFirestore
+          .collection(FirebaseCollections.pharmacyOrder)
+          .orderBy('createdAt', descending: true)
+          .where('pharmacyId', isEqualTo: pharmacyId)
+          .where('userId', isEqualTo: userId);
+      log('Category Id from Implementation  $userId');
+      if (lastProductOrderDoc != null) {
+        query = query.startAfterDocument(lastProductOrderDoc!);
+        log(lastProductOrderDoc!.id.toString());
+      }
+      final snapshots = await query.limit(6).get();
+      if (snapshots.docs.length < 6 || snapshots.docs.isEmpty) {
+        noMoreProductOrderData = true;
+      } else {
+        lastProductOrderDoc =
+            snapshots.docs.last as DocumentSnapshot<Map<String, dynamic>>;
+      }
+      final List<PharmacyCartModel> productOrderList = snapshots.docs
+          .map((e) =>
+              PharmacyCartModel.fromMap(e.data() as Map<String, dynamic>)
+                  .copyWith(id: e.id))
+          .toList();
+      return right(productOrderList);
+    } on FirebaseException catch (e) {
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
   }
 
   @override
-  FutureResult<PharmacyCartModel> getProductOrderDetails({required String userId, required String pharmacyId}) {
-    // TODO: implement getProductOrderDetails
-    throw UnimplementedError();
+  void clearProductOrderFetchData() {
+    lastProductOrderDoc = null;
+    noMoreProductOrderData = false;
+  }
+
+  @override
+  FutureResult<PharmacyCartModel> updateProductOrderDetails(
+      {required String orderProductId,
+      required PharmacyCartModel orderProducts}) async {
+    log(orderProductId);
+    try {
+      await _firebaseFirestore
+          .collection(FirebaseCollections.pharmacyOrder)
+          .doc(orderProductId)
+          .update(orderProducts.toMap());
+
+      return right(orderProducts.copyWith(id: orderProductId));
+    } on FirebaseException catch (e) {
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  FutureResult<Map<String, int>> addProductToUserCart({
+    required Map<String, int> cartProduct,
+    required String pharmacyId,
+    required String userId,
+  }) async {
+    try {
+      final docRef = _firebaseFirestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.pharmacyCart)
+          .doc(pharmacyId);
+      // Update the Firestore document with the modified list
+      await docRef
+          .set({'productDetails': cartProduct}, SetOptions(merge: true));
+      return right(cartProduct);
+    } on FirebaseException catch (e) {
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  FutureResult<Map<String, dynamic>> createOrGetProductToUserCart({
+    required String pharmacyId,
+    required String userId,
+  }) async {
+    try {
+      final docRef = _firebaseFirestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.pharmacyCart)
+          .doc(pharmacyId);
+      final snapshot = await docRef.get();
+      if (snapshot.exists) {
+        final productDetails = snapshot.data();
+        Map<String, dynamic> productData = productDetails?['productDetails'];
+        return right(productData);
+      } else {
+        await _firebaseFirestore
+            .collection(FirebaseCollections.userCollection)
+            .doc(userId)
+            .collection(FirebaseCollections.pharmacyCart)
+            .doc(pharmacyId)
+            .set({'productDetails': {}});
+        return right({});
+      }
+    } on FirebaseException catch (e) {
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  FutureResult<List<PharmacyProductAddModel>> getpharmcyCartProduct(
+      {required List<String> productCartIdList}) async {
+    try {
+      List<Future<DocumentSnapshot<Map<String, dynamic>>>> futures = [];
+      for (var element in productCartIdList) {
+        futures.add(_firebaseFirestore
+            .collection(FirebaseCollections.pharmacyProduct)
+            .doc(element)
+            .get());
+      }
+
+      List<DocumentSnapshot<Map<String, dynamic>>> results =
+          await Future.wait<DocumentSnapshot<Map<String, dynamic>>>(futures);
+
+      final cartProductList = results
+          .map<PharmacyProductAddModel>((e) =>
+              PharmacyProductAddModel.fromMap(e.data() as Map<String, dynamic>)
+                  .copyWith(id: e.id))
+          .toList();
+      return right(cartProductList);
+    } on FirebaseException catch (e) {
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
   }
 }

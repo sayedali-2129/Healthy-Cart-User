@@ -17,12 +17,15 @@ class ConfirmAlertBoxWidget {
           child: AlertDialog(
             backgroundColor: BColors.white,
             title:
-                Text(titleText, style: Theme.of(context).textTheme.bodyLarge),
+                Text(titleText, style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Montserrat')),
             content: Text(subText,
-                style: Theme.of(context)
-                    .textTheme
-                    .labelMedium!
-                    .copyWith(fontSize: 13, fontWeight: FontWeight.w600)),
+                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Montserrat')),
             actions: [
               TextButton(
                   onPressed: () {
@@ -30,7 +33,11 @@ class ConfirmAlertBoxWidget {
                   },
                   child: const Text(
                     'No',
-                    style: TextStyle(color: BColors.darkblue),
+                    style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Montserrat',
+                                  color: BColors.darkblue),
                   )),
               ElevatedButton(
                 onPressed: () {
@@ -41,11 +48,12 @@ class ConfirmAlertBoxWidget {
                     backgroundColor: BColors.mainlightColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8))),
-                child: Text('Yes',
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelLarge!
-                        .copyWith(color: Colors.white)),
+                child:const Text('Yes',
+                    style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Montserrat',
+                                  color: BColors.textWhite)),
               ),
             ],
           ),
