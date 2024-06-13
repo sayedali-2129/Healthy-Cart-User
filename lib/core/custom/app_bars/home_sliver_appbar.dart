@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/features/notifications/presentation/notification_screen.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomeSliverAppbar extends StatelessWidget {
   const HomeSliverAppbar({
@@ -56,7 +59,6 @@ class HomeSliverAppbar extends StatelessWidget {
                     Text(
                       'Nilambur, Malappuram, Kerala',
                       style: TextStyle(
-                 
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: BColors.darkblue),
@@ -94,14 +96,23 @@ class HomeSliverAppbar extends StatelessWidget {
                       ),
                     ),
                     const Gap(3),
-                    const Stack(
+                    Stack(
                       children: [
-                        Icon(
-                          Icons.notifications_outlined,
-                          color: BColors.buttonDarkColor,
-                          size: 35,
+                        GestureDetector(
+                          onTap: () {
+                            EasyNavigation.push(
+                                context: context,
+                                type: PageTransitionType.topToBottom,
+                                duration: 400,
+                                page: const NotificationScreen());
+                          },
+                          child: const Icon(
+                            Icons.notifications_outlined,
+                            color: BColors.buttonDarkColor,
+                            size: 35,
+                          ),
                         ),
-                        Positioned(
+                        const Positioned(
                           right: 2,
                           top: 2,
                           child: CircleAvatar(

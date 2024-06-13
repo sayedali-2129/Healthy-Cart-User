@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/di/injection.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_profile_provider.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<UserAddressProvider>(),
         ),
         ChangeNotifierProvider(
-          create: (context) => sl<LabOrdersProvider>(),
+          create: (context) => NotificationProvider(),
         ),
       ],
       child: MaterialApp(

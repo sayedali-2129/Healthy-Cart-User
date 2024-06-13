@@ -15,11 +15,9 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
 import '../../features/authentication/application/provider/authenication_provider.dart'
-    as _i28;
+    as _i27;
 import '../../features/authentication/domain/facade/i_auth_facade.dart' as _i22;
 import '../../features/authentication/infrastructure/i_auth_impl.dart' as _i23;
-import '../../features/laboratory/application/provider/lab_orders_provider.dart'
-    as _i27;
 import '../../features/laboratory/application/provider/lab_provider.dart'
     as _i26;
 import '../../features/laboratory/domain/facade/i_lab_facade.dart' as _i17;
@@ -38,9 +36,9 @@ import '../../features/pharmacy/application/pharmacy_provider.dart' as _i14;
 import '../../features/pharmacy/domain/i_pharmacy_facade.dart' as _i12;
 import '../../features/pharmacy/infrastructure/i_pharmacy_impl.dart' as _i13;
 import '../../features/profile/application/provider/user_address_provider.dart'
-    as _i29;
+    as _i28;
 import '../../features/profile/application/provider/user_profile_provider.dart'
-    as _i30;
+    as _i29;
 import '../../features/profile/domain/facade/i_user_profile_facade.dart'
     as _i24;
 import '../../features/profile/infrastructure/i_user_profile_impl.dart' as _i25;
@@ -50,7 +48,7 @@ import '../services/pdf_picker.dart' as _i9;
 import '../services/sound_services.dart' as _i11;
 import '../services/url_launcher.dart' as _i10;
 import 'firebase_injectable_module.dart' as _i3;
-import 'general_injectable_module.dart' as _i31;
+import 'general_injectable_module.dart' as _i30;
 
 // initializes the registration of main-scope dependencies inside of GetIt
 Future<_i1.GetIt> init(
@@ -93,8 +91,10 @@ Future<_i1.GetIt> init(
         gh<_i6.FirebaseFirestore>(),
         gh<_i11.SoundServices>(),
       ));
-  gh.lazySingleton<_i19.ILabOrdersFacade>(
-      () => _i20.ILabOrdersImpl(gh<_i6.FirebaseFirestore>()));
+  gh.lazySingleton<_i19.ILabOrdersFacade>(() => _i20.ILabOrdersImpl(
+        gh<_i6.FirebaseFirestore>(),
+        gh<_i7.ImageService>(),
+      ));
   gh.factory<_i21.LocationProvider>(
       () => _i21.LocationProvider(gh<_i15.ILocationFacade>()));
   gh.lazySingleton<_i22.IAuthFacade>(() => _i23.IAuthImpl(
@@ -109,17 +109,15 @@ Future<_i1.GetIt> init(
         gh<_i17.ILabFacade>(),
         gh<_i19.ILabOrdersFacade>(),
       ));
-  gh.lazySingleton<_i27.LabOrdersProvider>(
-      () => _i27.LabOrdersProvider(gh<_i19.ILabOrdersFacade>()));
-  gh.factory<_i28.AuthenticationProvider>(
-      () => _i28.AuthenticationProvider(gh<_i22.IAuthFacade>()));
-  gh.factory<_i29.UserAddressProvider>(
-      () => _i29.UserAddressProvider(gh<_i24.IUserProfileFacade>()));
-  gh.factory<_i30.UserProfileProvider>(
-      () => _i30.UserProfileProvider(gh<_i24.IUserProfileFacade>()));
+  gh.factory<_i27.AuthenticationProvider>(
+      () => _i27.AuthenticationProvider(gh<_i22.IAuthFacade>()));
+  gh.factory<_i28.UserAddressProvider>(
+      () => _i28.UserAddressProvider(gh<_i24.IUserProfileFacade>()));
+  gh.factory<_i29.UserProfileProvider>(
+      () => _i29.UserProfileProvider(gh<_i24.IUserProfileFacade>()));
   return getIt;
 }
 
 class _$FirebaseInjecatbleModule extends _i3.FirebaseInjecatbleModule {}
 
-class _$GeneralInjecatbleModule extends _i31.GeneralInjecatbleModule {}
+class _$GeneralInjecatbleModule extends _i30.GeneralInjecatbleModule {}

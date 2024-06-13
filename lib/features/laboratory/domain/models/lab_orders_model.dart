@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_test_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
@@ -19,7 +20,13 @@ class LabOrdersModel {
   List<LabTestModel>? selectedTest;
   num? doorStepCharge;
   num? finalAmount;
-  String? rejectionReason;
+  String? rejectReason;
+  Timestamp? acceptedAt;
+  Timestamp? rejectedAt;
+  String? timeSlot;
+  Timestamp? completedAt;
+  LabModel? labDetails;
+  String? prescription;
 
   LabOrdersModel({
     this.id,
@@ -37,7 +44,13 @@ class LabOrdersModel {
     this.selectedTest,
     this.doorStepCharge,
     this.finalAmount,
-    this.rejectionReason,
+    this.rejectReason,
+    this.acceptedAt,
+    this.rejectedAt,
+    this.timeSlot,
+    this.completedAt,
+    this.labDetails,
+    this.prescription,
   });
 
   Map<String, dynamic> toMap() {
@@ -57,7 +70,13 @@ class LabOrdersModel {
       'selectedTest': selectedTest?.map((x) => x.toMap()).toList(),
       'doorStepCharge': doorStepCharge,
       'finalAmount': finalAmount,
-      'rejectionReason': rejectionReason
+      'rejectReason': rejectReason,
+      'acceptedAt': acceptedAt,
+      'rejectedAt': rejectedAt,
+      'timeSlot': timeSlot,
+      'completedAt': completedAt,
+      'labDetails': labDetails!.toMap(),
+      'prescription': prescription,
     };
   }
 
@@ -94,9 +113,20 @@ class LabOrdersModel {
           map['doorStepCharge'] != null ? map['doorStepCharge'] as num : null,
       finalAmount:
           map['finalAmount'] != null ? map['finalAmount'] as num : null,
-      rejectionReason: map['rejectionReason'] != null
-          ? map['rejectionReason'] as String
+      rejectReason:
+          map['rejectReason'] != null ? map['rejectReason'] as String : null,
+      acceptedAt:
+          map['acceptedAt'] != null ? map['acceptedAt'] as Timestamp : null,
+      rejectedAt:
+          map['rejectedAt'] != null ? map['rejectedAt'] as Timestamp : null,
+      timeSlot: map['timeSlot'] != null ? map['timeSlot'] as String : null,
+      completedAt:
+          map['completedAt'] != null ? map['completedAt'] as Timestamp : null,
+      labDetails: map['labDetails'] != null
+          ? LabModel.fromMap(map['labDetails'] as Map<String, dynamic>)
           : null,
+      prescription:
+          map['prescription'] != null ? map['prescription'] as String : null,
     );
   }
 
@@ -116,7 +146,13 @@ class LabOrdersModel {
     List<LabTestModel>? selectedTest,
     num? doorStepCharge,
     num? finalAmount,
-    String? rejectionReason,
+    String? rejectReason,
+    Timestamp? acceptedAt,
+    Timestamp? rejectedAt,
+    String? timeSlot,
+    Timestamp? completedAt,
+    LabModel? labDetails,
+    String? prescription,
   }) {
     return LabOrdersModel(
       id: id ?? this.id,
@@ -134,7 +170,13 @@ class LabOrdersModel {
       selectedTest: selectedTest ?? this.selectedTest,
       doorStepCharge: doorStepCharge ?? this.doorStepCharge,
       finalAmount: finalAmount ?? this.finalAmount,
-      rejectionReason: rejectionReason ?? this.rejectionReason,
+      rejectReason: rejectReason ?? this.rejectReason,
+      acceptedAt: acceptedAt ?? this.acceptedAt,
+      rejectedAt: rejectedAt ?? this.rejectedAt,
+      timeSlot: timeSlot ?? this.timeSlot,
+      completedAt: completedAt ?? this.completedAt,
+      labDetails: labDetails ?? this.labDetails,
+      prescription: prescription ?? this.prescription,
     );
   }
 }

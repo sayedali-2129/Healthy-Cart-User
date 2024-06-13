@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
+import 'package:healthy_cart_user/core/custom/custom_tab_bar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
@@ -53,6 +54,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
           labProvider.selectedTestIds.clear();
           labProvider.cartItems.clear();
           labProvider.isBottomContainerPopUp = false;
+          labProvider.isLabOnlySelected = true;
         },
         child: Scaffold(
             appBar: AppBar(
@@ -102,29 +104,29 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                         color: BColors.black),
                                   ),
                                   /* --------------------------- Prescription Button -------------------------- */
-                                  ButtonWidget(
-                                    buttonHeight: 36,
-                                    buttonWidth: 160,
-                                    buttonColor: BColors.buttonGreen,
-                                    buttonWidget: const Row(
-                                      children: [
-                                        Icon(
-                                          Icons.maps_ugc_outlined,
-                                          color: BColors.black,
-                                          size: 19,
-                                        ),
-                                        Gap(5),
-                                        Text(
-                                          'Prescription',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                              color: BColors.black),
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {},
-                                  )
+                                  // ButtonWidget(
+                                  //   buttonHeight: 36,
+                                  //   buttonWidth: 160,
+                                  //   buttonColor: BColors.buttonGreen,
+                                  //   buttonWidget: const Row(
+                                  //     children: [
+                                  //       Icon(
+                                  //         Icons.maps_ugc_outlined,
+                                  //         color: BColors.black,
+                                  //         size: 19,
+                                  //       ),
+                                  //       Gap(5),
+                                  //       Text(
+                                  //         'Prescription',
+                                  //         style: TextStyle(
+                                  //             fontSize: 13,
+                                  //             fontWeight: FontWeight.w700,
+                                  //             color: BColors.black),
+                                  //       )
+                                  //     ],
+                                  //   ),
+                                  //   onPressed: () {},
+                                  // )
                                   /* -------------------------------------------------------------------------- */
                                 ],
                               ),
@@ -150,63 +152,20 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 labId: widget.labId,
                               ),
                               const Gap(8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        labProvider.labTabSelection();
-                                      },
-                                      child: Container(
-                                        width: screenWidth / 2,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            color: labProvider.isLabOnlySelected
-                                                ? BColors.mainlightColor
-                                                : BColors.white,
-                                            border: Border.all(width: 0.5),
-                                            borderRadius:
-                                                const BorderRadius.horizontal(
-                                                    left: Radius.circular(8))),
-                                        child: const Center(
-                                          child: Text(
-                                            'All',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        labProvider.labTabSelection();
-                                      },
-                                      child: Container(
-                                        width: screenWidth / 2,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            color: labProvider.isLabOnlySelected
-                                                ? BColors.white
-                                                : BColors.mainlightColor,
-                                            border: Border.all(width: 0.5),
-                                            borderRadius:
-                                                const BorderRadius.horizontal(
-                                                    right: Radius.circular(8))),
-                                        child: const Center(
-                                          child: Text(
-                                            'Door Step',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              CustomTabBar(
+                                screenWidth: screenWidth,
+                                text1: 'All Tests',
+                                text2: 'Door Step Tests',
+                                tab1Color: labProvider.isLabOnlySelected
+                                    ? BColors.mainlightColor
+                                    : BColors.white,
+                                tab2Color: labProvider.isLabOnlySelected
+                                    ? BColors.white
+                                    : BColors.mainlightColor,
+                                onTapTab1: () =>
+                                    labProvider.labTabSelection(true),
+                                onTapTab2: () =>
+                                    labProvider.labTabSelection(false),
                               ),
                               const Gap(8),
                               /* -------------------------------- ALL TESTS ------------------------------- */

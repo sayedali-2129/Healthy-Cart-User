@@ -1,10 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthy_cart_user/core/custom/image_view/image_view.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/order_request_success.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
@@ -15,6 +21,7 @@ import 'package:healthy_cart_user/features/profile/application/provider/user_add
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -41,7 +48,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         provider.getUserAddress(userId: widget.userId);
       }
     });
-    // log(provider.selectedAddress!.toMap().toString());
 
     super.initState();
   }
@@ -55,6 +61,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       return PopScope(
         onPopInvoked: (didPop) {
           addressProvider.selectedAddress = null;
+          labProvider.prescriptionFile = null;
+          labProvider.prescriptionUrl = null;
         },
         child: Scaffold(
           appBar: AppBar(
@@ -154,8 +162,123 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           discount: labProvider.totalDicount(),
                           totalAmount: labProvider.claculateTotalAmount(),
                         ),
-                        /* --------------------------------- BANNER --------------------------------- */
                         const Gap(12),
+                        /* ------------------------------ PRESCRIPTION ------------------------------ */
+                        labProvider.cartItems
+                                .any((item) => item.prescriptionNeeded == true)
+                            ? Column(
+                                children: [
+                                  const Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Icon(Icons.priority_high_rounded,
+                                          color: Colors.red, size: 18),
+                                      Expanded(
+                                        child: Text(
+                                          'One or more tests in your list require prescription, Kindly upload the prescription to proceed',
+                                          style: TextStyle(
+                                              color: BColors.black,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Gap(8),
+                                  labProvider.prescriptionFile == null
+                                      ? ButtonWidget(
+                                          buttonHeight: 36,
+                                          buttonWidth: 160,
+                                          buttonColor: BColors.buttonGreen,
+                                          buttonWidget: const Row(
+                                            children: [
+                                              Icon(
+                                                Icons.maps_ugc_outlined,
+                                                color: BColors.black,
+                                                size: 19,
+                                              ),
+                                              Gap(5),
+                                              Text(
+                                                'Prescription',
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: BColors.black),
+                                              )
+                                            ],
+                                          ),
+                                          onPressed: () {
+                                            labProvider.pickPrescription();
+                                          },
+                                        )
+                                      : Column(
+                                          children: [
+                                            SizedBox(
+                                              width: 110,
+                                              height: 130,
+                                              child: Stack(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      EasyNavigation.push(
+                                                        context: context,
+                                                        type: PageTransitionType
+                                                            .rightToLeft,
+                                                        duration: 200,
+                                                        page: ImageView(
+                                                          imageFile: labProvider
+                                                              .prescriptionFile!,
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      clipBehavior:
+                                                          Clip.antiAlias,
+                                                      height: 120,
+                                                      width: 100,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      child: Image.file(
+                                                        labProvider
+                                                            .prescriptionFile!,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    top: 0,
+                                                    right: 0,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundColor:
+                                                          BColors.red,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          labProvider
+                                                              .clearImageFile();
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.close_rounded,
+                                                          color: BColors.white,
+                                                          size: 20,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                ],
+                              )
+                            : const Gap(0),
+                        const Gap(12),
+                        /* --------------------------------- BANNER --------------------------------- */
                         AdSlider(
                             screenWidth: double.infinity,
                             labId: labProvider.labList[widget.index].id!)
@@ -165,23 +288,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
           bottomNavigationBar: GestureDetector(
             onTap: () {
-              // if (labProvider.selectedRadio != null) {
-              //   log(addressProvider.selectedAddress!.toMap().toString());
-              // } else {
-              //   log('null');
-              // }
-
+              bool checkPrescription = labProvider.cartItems
+                  .any((item) => item.prescriptionNeeded == true);
               if (labProvider.selectedRadio == 'Home' &&
                   addressProvider.selectedAddress == null) {
                 CustomToast.errorToast(text: 'Please select address');
+              } else if (checkPrescription &&
+                  labProvider.prescriptionFile == null) {
+                CustomToast.errorToast(text: 'Please upload prescription');
               } else {
                 ConfirmAlertBoxWidget.showAlertConfirmBox(
                     context: context,
                     titleText: 'Confirm Order',
                     subText:
                         'This will send your order to the laboratory and check the availability of the test. Are you sure you want to proceed?',
-                    confirmButtonTap: () {
-                      labProvider.addLabOrders(
+                    confirmButtonTap: () async {
+                      LoadingLottie.showLoading(
+                          context: context, text: 'Please wait...');
+
+                      if (labProvider.prescriptionFile != null) {
+                        await labProvider.uploadPrescription();
+                      }
+                      await labProvider.addLabOrders(
+                        labModel: labProvider.labList[widget.index],
                         labId: labProvider.labList[widget.index].id!,
                         userId: widget.userId,
                         userModel: widget.userModel!,
@@ -199,6 +328,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         (route) => false,
                       );
+                      labProvider.prescriptionFile = null;
+                      labProvider.prescriptionUrl = null;
                     });
               }
             },

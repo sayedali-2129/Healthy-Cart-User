@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,9 @@ class LabProvider with ChangeNotifier {
   bool isBottomContainerPopUp = false;
   bool selectedTestType = false;
 
+  String? prescriptionUrl;
+  File? prescriptionFile;
+
 /* ------------------------ CHECK OUT CONTAINER POPUP ----------------------- */
   void bottomPopUpContainer() {
     if (selectedTestIds.isNotEmpty) {
@@ -50,8 +54,8 @@ class LabProvider with ChangeNotifier {
   }
 
 /* ----------------------------- TEST SELECTION ----------------------------- */
-  void labTabSelection() {
-    isLabOnlySelected = !isLabOnlySelected;
+  void labTabSelection(bool isSelected) {
+    isLabOnlySelected = isSelected;
     notifyListeners();
   }
 
@@ -241,6 +245,7 @@ class LabProvider with ChangeNotifier {
       {required String labId,
       required String userId,
       required UserModel userModel,
+      required LabModel labModel,
       required UserAddressModel selectedAddress}) async {
     labOrderModel = LabOrdersModel(
       labId: labId,
@@ -255,6 +260,8 @@ class LabProvider with ChangeNotifier {
       testMode: selectedRadio,
       finalAmount: 0,
       doorStepCharge: 0,
+      labDetails: labModel,
+      prescription: prescriptionUrl,
     );
 
     final result =
@@ -267,6 +274,39 @@ class LabProvider with ChangeNotifier {
         log('Order Request Send Successfully');
       },
     );
+    notifyListeners();
+  }
+
+  /* ---------------------------- PICK PRESCRIPTION --------------------------- */
+  Future<void> pickPrescription() async {
+    final result = await iLabOrdersFacade.pickPrescription();
+    result.fold(
+      (err) {
+        log('error in pickPrescription() :: ${err.errMsg}');
+      },
+      (success) {
+        prescriptionFile = success;
+        notifyListeners();
+      },
+    );
+  }
+
+  /* --------------------------- UPLOAD PRESCRIPTION -------------------------- */
+  Future<void> uploadPrescription() async {
+    final result = await iLabOrdersFacade.uploadPrescription(prescriptionFile!);
+    result.fold(
+      (err) {
+        log('error in uploadPrescription() :: ${err.errMsg}');
+      },
+      (success) {
+        prescriptionUrl = success;
+        notifyListeners();
+      },
+    );
+  }
+
+  void clearImageFile() {
+    prescriptionFile = null;
     notifyListeners();
   }
 }
