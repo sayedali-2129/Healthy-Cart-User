@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
@@ -35,6 +36,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         labProvider.getAllTests(labId: widget.labId);
+        labProvider.getLabBanner(labId: widget.labId);
+
         // await labProvider.getDoorStepOnly(labId: widget.labId);
       },
     );
@@ -79,14 +82,17 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                 : SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
-                          height: 234,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                        FadeInDown(
+                          duration: const Duration(milliseconds: 500),
+                          child: Container(
+                            height: 234,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child:
+                                CustomCachedNetworkImage(image: labList.image!),
                           ),
-                          child:
-                              CustomCachedNetworkImage(image: labList.image!),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(16),
@@ -96,12 +102,15 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    labList.laboratoryName ?? 'No Name',
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: BColors.black),
+                                  FadeInDown(
+                                    duration: const Duration(milliseconds: 500),
+                                    child: Text(
+                                      labList.laboratoryName ?? 'No Name',
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          color: BColors.black),
+                                    ),
                                   ),
                                   /* --------------------------- Prescription Button -------------------------- */
                                   // ButtonWidget(
@@ -131,25 +140,31 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 ],
                               ),
                               const Gap(10),
-                              Row(
-                                children: [
-                                  const Icon(Icons.location_on_outlined),
-                                  const Gap(5),
-                                  Expanded(
-                                    child: Text(
-                                      labList.address ?? 'No Address',
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 3,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )
-                                ],
+                              FadeInDown(
+                                duration: const Duration(milliseconds: 500),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.location_on_outlined),
+                                    const Gap(5),
+                                    Expanded(
+                                      child: Text(
+                                        labList.address ?? 'No Address',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 3,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                               const Divider(),
-                              AdSlider(
-                                screenWidth: double.infinity,
-                                labId: widget.labId,
+                              FadeInRight(
+                                duration: const Duration(milliseconds: 500),
+                                child: AdSlider(
+                                  screenWidth: double.infinity,
+                                  labId: widget.labId,
+                                ),
                               ),
                               const Gap(8),
                               CustomTabBar(

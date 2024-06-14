@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -22,17 +20,16 @@ class AdSlider extends StatefulWidget {
 }
 
 class _AdSliderState extends State<AdSlider> {
-  @override
-  void initState() {
-    final labProvider = context.read<LabProvider>();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        labProvider.getLabBanner(labId: widget.labId);
-        log(labProvider.labBannerList.length.toString());
-      },
-    );
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   final labProvider = context.read<LabProvider>();
+  //   WidgetsBinding.instance.addPostFrameCallback(
+  //     (_) {
+  //       log(labProvider.labBannerList.length.toString());
+  //     },
+  //   );
+  //   super.initState();
+  // }
 
   int currentIndex = 0;
 

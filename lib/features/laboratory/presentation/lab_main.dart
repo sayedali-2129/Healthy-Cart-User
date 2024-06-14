@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_details_screen.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/lab_orders_screen.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/lab_list_card.dart';
+import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -45,55 +49,72 @@ class _LabMainState extends State<LabMain> {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {
       return Scaffold(
           body: CustomScrollView(
-        controller: scrollController,
-        slivers: [
-          HomeSliverAppbar(
-            searchHint: 'Search Laboratory',
-            searchController: labProvider.labSearchController,
-            onChanged: (_) {
-              EasyDebounce.debounce(
-                'labsearch',
-                const Duration(milliseconds: 500),
-                () {
-                  labProvider.searchLabs();
+            controller: scrollController,
+            slivers: [
+              HomeSliverAppbar(
+                searchHint: 'Search Laboratory',
+                searchController: labProvider.labSearchController,
+                onChanged: (_) {
+                  EasyDebounce.debounce(
+                    'labsearch',
+                    const Duration(milliseconds: 500),
+                    () {
+                      labProvider.searchLabs();
+                    },
+                  );
                 },
-              );
-            },
-          ),
-          if (labProvider.labFetchLoading == true &&
-              labProvider.labList.isEmpty)
-            const SliverFillRemaining(
-              child: Center(
-                child: LoadingIndicater(),
               ),
-            )
-          else
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: SliverList.separated(
-                separatorBuilder: (context, index) => const Gap(8),
-                itemCount: labProvider.labList.length,
-                itemBuilder: (context, index) => LabListCard(
-                  index: index,
-                  onTap: () => EasyNavigation.push(
-                    context: context,
-                    type: PageTransitionType.rightToLeft,
-                    duration: 300,
-                    page: LabDetailsScreen(
+              if (labProvider.labFetchLoading == true &&
+                  labProvider.labList.isEmpty)
+                const SliverFillRemaining(
+                  child: Center(
+                    child: LoadingIndicater(),
+                  ),
+                )
+              else if (labProvider.labList.isEmpty)
+                const ErrorOrNoDataPage(text: 'No Laboratories Found')
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.all(16),
+                  sliver: SliverList.separated(
+                    separatorBuilder: (context, index) => const Gap(8),
+                    itemCount: labProvider.labList.length,
+                    itemBuilder: (context, index) => LabListCard(
                       index: index,
-                      labId: labProvider.labList[index].id!,
+                      onTap: () => EasyNavigation.push(
+                        context: context,
+                        type: PageTransitionType.rightToLeft,
+                        duration: 300,
+                        page: LabDetailsScreen(
+                          index: index,
+                          labId: labProvider.labList[index].id!,
+                        ),
+                      ),
                     ),
                   ),
                 ),
+              SliverToBoxAdapter(
+                  child: (labProvider.labFetchLoading == true &&
+                          labProvider.labList.isNotEmpty)
+                      ? const Center(child: LoadingIndicater())
+                      : const Gap(0)),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: BColors.darkblue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
+              child: Image.asset(
+                BIcon.labIconWhite,
+                scale: 3.5,
               ),
-            ),
-          SliverToBoxAdapter(
-              child: (labProvider.labFetchLoading == true &&
-                      labProvider.labList.isNotEmpty)
-                  ? const Center(child: LoadingIndicater())
-                  : const Gap(0)),
-        ],
-      ));
+              onPressed: () {
+                EasyNavigation.push(
+                    context: context,
+                    page: LabOrdersScreen(),
+                    type: PageTransitionType.bottomToTop,
+                    duration: 200);
+              }));
     });
   }
 }

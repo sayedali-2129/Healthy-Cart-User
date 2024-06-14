@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +16,12 @@ class ILabOrdersImpl implements ILabOrdersFacade {
   ILabOrdersImpl(this._firestore, this._imageService);
   final FirebaseFirestore _firestore;
   final ImageService _imageService;
+
+  StreamSubscription? labOrderSubscription;
+
+  StreamController<Either<MainFailure, List<LabOrdersModel>>>
+      labOrderController =
+      StreamController<Either<MainFailure, List<LabOrdersModel>>>.broadcast();
 
 /* ---------------------------- CREATE LAB ORDER ---------------------------- */
   @override
@@ -41,5 +48,29 @@ class ILabOrdersImpl implements ILabOrdersFacade {
   FutureResult<String> uploadPrescription(File imageFile) async {
     return await _imageService.saveImage(
         folderName: 'lab_prescription', imageFile: imageFile);
+  }
+
+  /* ----------------------------- GET LAB ORDERS ----------------------------- */
+
+  @override
+  Stream<Either<MainFailure, List<LabOrdersModel>>> getLabOrders() async* {
+    try {
+      labOrderSubscription = _firestore
+          .collection(FirebaseCollections.labOrdersCollection)
+          .where('orderStatus', isEqualTo: 0)
+          .orderBy('acceptedAt', descending: true)
+          .snapshots()
+          .listen(
+        (doc) {
+          labOrderController.add(right(doc.docs
+              .map((e) => LabOrdersModel.fromMap(e.data()).copyWith(id: e.id))
+              .toList()));
+        },
+      );
+    } catch (e) {
+      labOrderController
+          .add(left(MainFailure.generalException(errMsg: e.toString())));
+    }
+    yield* labOrderController.stream;
   }
 }

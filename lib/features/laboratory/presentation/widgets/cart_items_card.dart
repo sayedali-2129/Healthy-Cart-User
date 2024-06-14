@@ -22,6 +22,7 @@ class CartItemsCard extends StatelessWidget {
   final String? offerPrice;
   final void Function()? onDelete;
   final int index;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {

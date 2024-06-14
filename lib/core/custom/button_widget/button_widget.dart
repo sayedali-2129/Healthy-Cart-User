@@ -59,29 +59,27 @@ class OutlineButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(
-            buttonColor,
-          ),
-          shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      height: buttonHeight,
+      width: buttonWidth,
+      child: OutlinedButton(
+          onPressed: onPressed,
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(
+              buttonColor,
+            ),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            side: WidgetStatePropertyAll(
+              BorderSide(color: borderColor),
             ),
           ),
-          side: WidgetStatePropertyAll(
-            BorderSide(color: borderColor),
-          ),
-          fixedSize: WidgetStatePropertyAll(
-            Size.fromHeight(buttonHeight),
-          ),
-          maximumSize: WidgetStatePropertyAll(
-            Size.fromWidth(buttonWidth),
-          ),
-        ),
-        child: Center(
-          child: buttonWidget,
-        ));
+          child: Center(
+            child: buttonWidget,
+          )),
+    );
   }
 }

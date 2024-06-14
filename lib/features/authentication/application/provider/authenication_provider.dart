@@ -38,7 +38,7 @@ class AuthenticationProvider extends ChangeNotifier {
     });
   }
 
-  bool labStreamFetchedData({required String labId}) {
+  bool userStreamFetchedData({required String labId}) {
     bool result = false;
     iAuthFacade.userStreamFetchData(labId).listen((event) {
       event.fold((failure) {
@@ -53,7 +53,7 @@ class AuthenticationProvider extends ChangeNotifier {
     return result;
   }
 
-  void navigationLaboratoryFuction({required BuildContext context}) async {
+  void navigationUserFuction({required BuildContext context}) async {
     // if (userFetchlDataFetched?.address == null ||
     //     userFetchlDataFetched?.image == null ||
     //     userFetchlDataFetched?.laboratoryName == null ||
@@ -73,15 +73,7 @@ class AuthenticationProvider extends ChangeNotifier {
     //     page: const LocationPage(),
     //   );
     //   notifyListeners();
-    // } else if ((userFetchlDataFetched?.requested == 0 ||
-    //         userFetchlDataFetched?.requested == 1) &&
-    //     userFetchlDataFetched?.placemark != null) {
-    //   EasyNavigation.pushReplacement(
-    //       type: PageTransitionType.bottomToTop,
-    //       context: context,
-    //       page: const PendingPageScreen());
-    //   notifyListeners();
-    // } else {
+    // }  else {
     EasyNavigation.pushAndRemoveUntil(
         type: PageTransitionType.bottomToTop,
         context: context,

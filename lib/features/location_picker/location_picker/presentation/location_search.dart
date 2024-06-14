@@ -87,7 +87,7 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
               if (locationProvider.selectedPlaceMark == null) return;
               LoadingLottie.showLoading(
                   context: context, text: 'Getting Location..');
-              await locationProvider.setLocationByLaboratory(
+              await locationProvider.setLocationByUser(
                 context: context,
                 isUserEditProfile: widget.isHospitaEditProfile ?? false,
               );

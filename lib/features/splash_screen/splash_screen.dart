@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
-import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
 
@@ -23,19 +21,28 @@ class _SplashScreenState extends State<SplashScreen> {
       if (labId != null) {
         context
             .read<AuthenticationProvider>()
-            .labStreamFetchedData(labId: labId);
+            .userStreamFetchedData(labId: labId);
       }
     });
-    Future.delayed(const Duration(seconds: 4)).then((value) {
-      if (labId == null) {
-        EasyNavigation.pushReplacement(
-            context: context, page: const LoginScreen());
-      } else {
+    Future.delayed(const Duration(seconds: 4)).then(
+      (value) {
         context
             .read<AuthenticationProvider>()
-            .navigationLaboratoryFuction(context: context);
-      }
-    });
+            .navigationUserFuction(context: context);
+      },
+    );
+
+    /* ------------------------------ OLD FUNCTION ------------------------------ */
+    // Future.delayed(const Duration(seconds: 4)).then((value) {
+    //   if (labId == null) {
+    //     EasyNavigation.pushReplacement(
+    //         context: context, page: const LoginScreen());
+    //   } else {
+    //     context
+    //         .read<AuthenticationProvider>()
+    //         .navigationUserFuction(context: context);
+    //   }
+    // });
     super.initState();
   }
 

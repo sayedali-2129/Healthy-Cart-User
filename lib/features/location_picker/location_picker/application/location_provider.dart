@@ -58,7 +58,7 @@ class LocationProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> setLocationByLaboratory({
+  Future<void> setLocationByUser({
     required BuildContext context,
     required bool isUserEditProfile,
   }) async {

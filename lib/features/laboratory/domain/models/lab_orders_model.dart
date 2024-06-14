@@ -104,7 +104,7 @@ class LabOrdersModel {
           map['paymentMethod'] != null ? map['paymentMethod'] as String : null,
       selectedTest: map['selectedTest'] != null
           ? List<LabTestModel>.from(
-              (map['selectedTest'] as List<int>).map<LabTestModel?>(
+              (map['selectedTest'] as List<dynamic>).map<LabTestModel?>(
                 (x) => LabTestModel.fromMap(x as Map<String, dynamic>),
               ),
             )

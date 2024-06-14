@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/facade/i_lab_facade.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/facade/i_lab_orders_facade.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_banner_model.dart';
@@ -77,19 +78,13 @@ class LabProvider with ChangeNotifier {
     result.fold(
       (err) {
         log(err.errMsg);
-        labFetchLoading = false;
+        CustomToast.errorToast(
+            text: "Couldn't able to show pharmacies near you.");
+
         notifyListeners();
       },
       (success) {
-        final uniqueLabs = success
-            .where(
-              (labs) => !labIds.contains(labs.id),
-            )
-            .toList();
-        labIds.addAll(uniqueLabs.map(
-          (labs) => labs.id!,
-        ));
-        labList.addAll(uniqueLabs);
+        labList.addAll(success);
         notifyListeners();
         log('labs fetched successfully');
       },
@@ -126,7 +121,7 @@ class LabProvider with ChangeNotifier {
 
   /* ----------------------------- GET LAB BANNER ----------------------------- */
   Future<void> getLabBanner({required String labId}) async {
-    // detailsScreenLoading = true;
+    detailsScreenLoading = true;
     labBannerList.clear();
     notifyListeners();
     final result = await iLabFacade.getLabBanner(labId: labId);

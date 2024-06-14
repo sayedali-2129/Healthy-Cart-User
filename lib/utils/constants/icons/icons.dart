@@ -22,4 +22,5 @@ class BIcon {
 /* -------------------------------------------------------------------------- */
 
   static const String logoutIcon = 'assets/icons/logout icon.png';
+  static const String labIconWhite = 'assets/icons/lab-icon-white.png';
 }
