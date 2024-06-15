@@ -27,6 +27,7 @@ class LabOrdersModel {
   Timestamp? completedAt;
   LabModel? labDetails;
   String? prescription;
+  bool? isUserAccepted;
 
   LabOrdersModel({
     this.id,
@@ -51,6 +52,7 @@ class LabOrdersModel {
     this.completedAt,
     this.labDetails,
     this.prescription,
+    this.isUserAccepted,
   });
 
   Map<String, dynamic> toMap() {
@@ -77,6 +79,7 @@ class LabOrdersModel {
       'completedAt': completedAt,
       'labDetails': labDetails!.toMap(),
       'prescription': prescription,
+      'isUserAccepted': isUserAccepted
     };
   }
 
@@ -127,6 +130,8 @@ class LabOrdersModel {
           : null,
       prescription:
           map['prescription'] != null ? map['prescription'] as String : null,
+      isUserAccepted:
+          map['isUserAccepted'] != null ? map['isUserAccepted'] as bool : null,
     );
   }
 
@@ -153,6 +158,7 @@ class LabOrdersModel {
     Timestamp? completedAt,
     LabModel? labDetails,
     String? prescription,
+    bool? isUserAccepted,
   }) {
     return LabOrdersModel(
       id: id ?? this.id,
@@ -177,6 +183,7 @@ class LabOrdersModel {
       completedAt: completedAt ?? this.completedAt,
       labDetails: labDetails ?? this.labDetails,
       prescription: prescription ?? this.prescription,
+      isUserAccepted: isUserAccepted ?? this.isUserAccepted,
     );
   }
 }

@@ -9,5 +9,8 @@ abstract class ILabOrdersFacade {
   FutureResult<String> createLabOrder({required LabOrdersModel labOrdersModel});
   FutureResult<File> pickPrescription();
   FutureResult<String> uploadPrescription(File imageFile);
-  Stream<Either<MainFailure, List<LabOrdersModel>>> getLabOrders();
+  Stream<Either<MainFailure, List<LabOrdersModel>>> getLabOrders(
+      {required String userId});
+  FutureResult<String> acceptOrder({required String orderId});
+  FutureResult<String> cancelOrder({required String orderId});
 }

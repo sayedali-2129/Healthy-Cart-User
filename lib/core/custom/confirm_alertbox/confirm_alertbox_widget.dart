@@ -7,6 +7,7 @@ class ConfirmAlertBoxWidget {
       {required BuildContext context,
       required VoidCallback confirmButtonTap,
       required String titleText,
+      double titleSize = 15,
       required String subText}) {
     showDialog(
       context: context,
@@ -16,16 +17,16 @@ class ConfirmAlertBoxWidget {
           height: 300,
           child: AlertDialog(
             backgroundColor: BColors.white,
-            title:
-                Text(titleText, style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat')),
+            title: Text(titleText,
+                style: TextStyle(
+                    fontSize: titleSize,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat')),
             content: Text(subText,
                 style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat')),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat')),
             actions: [
               TextButton(
                   onPressed: () {
@@ -34,10 +35,10 @@ class ConfirmAlertBoxWidget {
                   child: const Text(
                     'No',
                     style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat',
-                                  color: BColors.darkblue),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Montserrat',
+                        color: BColors.darkblue),
                   )),
               ElevatedButton(
                 onPressed: () {
@@ -48,12 +49,12 @@ class ConfirmAlertBoxWidget {
                     backgroundColor: BColors.mainlightColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8))),
-                child:const Text('Yes',
+                child: const Text('Yes',
                     style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat',
-                                  color: BColors.textWhite)),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Montserrat',
+                        color: BColors.textWhite)),
               ),
             ],
           ),

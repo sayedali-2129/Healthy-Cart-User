@@ -53,12 +53,12 @@ class ILabOrdersImpl implements ILabOrdersFacade {
   /* ----------------------------- GET LAB ORDERS ----------------------------- */
 
   @override
-  Stream<Either<MainFailure, List<LabOrdersModel>>> getLabOrders() async* {
+  Stream<Either<MainFailure, List<LabOrdersModel>>> getLabOrders(
+      {required String userId}) async* {
     try {
       labOrderSubscription = _firestore
           .collection(FirebaseCollections.labOrdersCollection)
-          .where('orderStatus', isEqualTo: 0)
-          .orderBy('acceptedAt', descending: true)
+          .where('userId', isEqualTo: userId)
           .snapshots()
           .listen(
         (doc) {
@@ -72,5 +72,33 @@ class ILabOrdersImpl implements ILabOrdersFacade {
           .add(left(MainFailure.generalException(errMsg: e.toString())));
     }
     yield* labOrderController.stream;
+  }
+
+  /* ---------------------------- UPDATE ORDER STATUS TO ON PROCESS -------------------------- */
+/* -------------------------------------------------------------------------- */
+  @override
+  FutureResult<String> acceptOrder({required String orderId}) async {
+    try {
+      await _firestore
+          .collection(FirebaseCollections.labOrdersCollection)
+          .doc(orderId)
+          .update({'isUserAccepted': true});
+      return right('Booking Accepted Successfully');
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  FutureResult<String> cancelOrder({required String orderId}) async {
+    try {
+      await _firestore
+          .collection(FirebaseCollections.labOrdersCollection)
+          .doc(orderId)
+          .update({'orderStatus': 3, 'rejectedAt': Timestamp.now()});
+      return right('Booking Cancelled Successfully');
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
   }
 }
