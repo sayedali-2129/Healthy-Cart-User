@@ -15,6 +15,16 @@ class LabOrdersProvider with ChangeNotifier {
   Set<String> labOrderIds = {};
   List<LabOrdersModel> ordersList = [];
 
+  String? paymentType;
+
+  /* ------------------------------ PAYMENT TYPE ------------------------------ */
+
+  void setPaymentType(String? value) {
+    paymentType = value;
+    notifyListeners();
+  }
+
+/* -------------------------- GET LAB ORDERS STREAM ------------------------- */
   void getLabOrder({required String userId}) {
     isLoading = true;
     notifyListeners();

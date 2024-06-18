@@ -49,7 +49,7 @@ class _OrderRequestSuccessScreenState extends State<OrderRequestSuccessScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 LottieBuilder.asset(
-                  BLottie.paymentSuccess,
+                  BLottie.bookingSuccess,
                   controller: _controller,
                   onLoaded: (composition) {
                     _controller
