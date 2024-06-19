@@ -126,7 +126,9 @@ class LabPaymentScreen extends StatelessWidget {
                                         'Doorstep Payment') {
                                       EasyNavigation.push(
                                           context: context,
-                                          page: const PaymentSuccessScreen(),
+                                          page: PaymentSuccessScreen(
+                                            index: index,
+                                          ),
                                           type: PageTransitionType.rightToLeft,
                                           duration: 200);
                                       // Navigator.pop(context);

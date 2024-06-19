@@ -85,64 +85,59 @@ class ProfileMain extends StatelessWidget {
                   },
                 ),
                 const Gap(16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      OutlineButtonWidget(
-                        buttonHeight: 40,
-                        buttonWidth: 160,
-                        buttonColor: Colors.transparent,
-                        borderColor: BColors.black,
-                        onPressed: () {},
-                        buttonWidget: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_ic_call_sharp,
-                              color: BColors.black,
-                            ),
-                            Gap(5),
-                            Text(
-                              'Contact Us',
-                              style: TextStyle(color: BColors.black),
-                            )
-                          ],
-                        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    OutlineButtonWidget(
+                      buttonHeight: 40,
+                      buttonWidth: 160,
+                      buttonColor: Colors.transparent,
+                      borderColor: BColors.black,
+                      onPressed: () {},
+                      buttonWidget: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            Icons.add_ic_call_sharp,
+                            color: BColors.black,
+                          ),
+                          Text(
+                            'Contact Us',
+                            style: TextStyle(color: BColors.black),
+                          )
+                        ],
                       ),
-                      ButtonWidget(
-                        buttonHeight: 40,
-                        buttonWidth: 160,
-                        buttonColor: BColors.mainlightColor,
-                        onPressed: () {
-                          ConfirmAlertBoxWidget.showAlertConfirmBox(
-                              context: context,
-                              confirmButtonTap: () async {
-                                LoadingLottie.showLoading(
-                                    context: context, text: 'Logging Out...');
-                                await authProvider.userLogOut(context: context);
-                              },
-                              titleText: 'Log Out',
-                              subText: 'Are you sure want to logout?');
-                        },
-                        buttonWidget: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Log Out',
-                              style: TextStyle(color: BColors.white),
-                            ),
-                            const Gap(5),
-                            Image.asset(
-                              BIcon.logoutIcon,
-                              scale: 4,
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    ButtonWidget(
+                      buttonHeight: 40,
+                      buttonWidth: 160,
+                      buttonColor: BColors.mainlightColor,
+                      onPressed: () {
+                        ConfirmAlertBoxWidget.showAlertConfirmBox(
+                            context: context,
+                            confirmButtonTap: () async {
+                              LoadingLottie.showLoading(
+                                  context: context, text: 'Logging Out...');
+                              await authProvider.userLogOut(context: context);
+                            },
+                            titleText: 'Log Out',
+                            subText: 'Are you sure want to logout?');
+                      },
+                      buttonWidget: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const Text(
+                            'Log Out',
+                            style: TextStyle(color: BColors.white),
+                          ),
+                          Image.asset(
+                            BIcon.logoutIcon,
+                            scale: 4,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 )
               ],
             ),

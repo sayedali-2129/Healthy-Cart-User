@@ -83,11 +83,11 @@ class IAuthImpl implements IAuthFacade {
         .get();
     if (user.data() != null) {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-      final fcmToken = await messaging.getToken();
+      // final fcmToken = await messaging.getToken();
       await _firestore
           .collection(FirebaseCollections.userCollection)
           .doc(uid)
-          .update({'fcmToken': fcmToken});
+          .update({'fcmToken': ''});
     } else {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       final fcmToken = await messaging.getToken();

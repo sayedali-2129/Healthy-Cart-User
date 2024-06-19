@@ -38,9 +38,9 @@ class AuthenticationProvider extends ChangeNotifier {
     });
   }
 
-  bool userStreamFetchedData({required String labId}) {
+  bool userStreamFetchedData({required String userId}) {
     bool result = false;
-    iAuthFacade.userStreamFetchData(labId).listen((event) {
+    iAuthFacade.userStreamFetchData(userId).listen((event) {
       event.fold((failure) {
         result = false;
       }, (snapshot) {
