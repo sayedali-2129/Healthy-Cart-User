@@ -21,7 +21,7 @@ class PendingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<LabOrdersProvider>(builder: (context, ordersProvider, _) {
-      final orders = ordersProvider.ordersList[index];
+      final orders = ordersProvider.pendingOrders[index];
       return Container(
         width: screenWidth,
         decoration: BoxDecoration(
@@ -197,7 +197,8 @@ class PendingCard extends StatelessWidget {
                         confirmButtonTap: () async {
                           LoadingLottie.showLoading(
                               context: context, text: 'Cancelling...');
-                          await ordersProvider.cancelOrder(orderId: orders.id!);
+                          await ordersProvider.cancelOrder(
+                              orderId: orders.id!, index: index);
                           // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         },
@@ -253,7 +254,7 @@ class OrderSummaryCard extends StatelessWidget {
             ),
             const Gap(8),
             Consumer<LabOrdersProvider>(builder: (context, value, _) {
-              if (value.ordersList[index].selectedTest![index].offerPrice ==
+              if (value.pendingOrders[index].selectedTest![index].offerPrice ==
                   null) {
                 return const Gap(0);
               } else {

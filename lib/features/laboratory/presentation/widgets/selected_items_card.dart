@@ -59,7 +59,7 @@ class SelectedItemsCard extends StatelessWidget {
                           ),
                           const Gap(8),
                           Expanded(
-                            child: ordersProvider.ordersList[index]
+                            child: ordersProvider.approvedOrders[index]
                                         .selectedTest![index].offerPrice ==
                                     null
                                 ? RichText(

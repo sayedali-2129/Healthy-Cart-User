@@ -23,6 +23,11 @@ class ILabOrdersImpl implements ILabOrdersFacade {
       labOrderController =
       StreamController<Either<MainFailure, List<LabOrdersModel>>>.broadcast();
 
+  DocumentSnapshot<Map<String, dynamic>>? cancelledLastDoc;
+  bool cancelledNoMoreData = false;
+  DocumentSnapshot<Map<String, dynamic>>? completedLastDoc;
+  bool completedNoMoreData = false;
+
 /* ---------------------------- CREATE LAB ORDER ---------------------------- */
   @override
   FutureResult<String> createLabOrder(
@@ -58,7 +63,11 @@ class ILabOrdersImpl implements ILabOrdersFacade {
     try {
       labOrderSubscription = _firestore
           .collection(FirebaseCollections.labOrdersCollection)
-          .where('userId', isEqualTo: userId)
+          .where(Filter.and(
+            Filter('userId', isEqualTo: userId),
+            Filter('orderStatus', isEqualTo: 1),
+          ))
+          .orderBy('acceptedAt', descending: true)
           .snapshots()
           .listen(
         (doc) {
@@ -74,15 +83,111 @@ class ILabOrdersImpl implements ILabOrdersFacade {
     yield* labOrderController.stream;
   }
 
+/* ---------------------------- GET PENDIG ORDERS --------------------------- */
+  @override
+  FutureResult<List<LabOrdersModel>> getPendingOrders(
+      {required String userId}) async {
+    try {
+      final responce = await _firestore
+          .collection(FirebaseCollections.labOrdersCollection)
+          .where(Filter.and(Filter('userId', isEqualTo: userId),
+              Filter('orderStatus', isEqualTo: 0)))
+          .orderBy('orderAt', descending: true)
+          .get();
+
+      return right(responce.docs
+          .map((e) => LabOrdersModel.fromMap(e.data()).copyWith(id: e.id))
+          .toList());
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  /* -------------------------- GET CANCELLED ORDERS -------------------------- */
+
+  @override
+  FutureResult<List<LabOrdersModel>> getCancelledOrders(
+      {required String userId}) async {
+    if (cancelledNoMoreData) return right([]);
+    try {
+      Query query = _firestore
+          .collection(FirebaseCollections.labOrdersCollection)
+          .where(Filter.and(Filter('userId', isEqualTo: userId),
+              Filter('orderStatus', isEqualTo: 3)))
+          .orderBy('rejectedAt', descending: true);
+      if (cancelledLastDoc != null) {
+        query = query.startAfterDocument(cancelledLastDoc!);
+      }
+      final snapshot = await query.limit(10).get();
+      if (snapshot.docs.length < 10 || snapshot.docs.isEmpty) {
+        cancelledNoMoreData = true;
+      } else {
+        cancelledLastDoc =
+            snapshot.docs.last as DocumentSnapshot<Map<String, dynamic>>;
+      }
+      return right(snapshot.docs
+          .map((e) => LabOrdersModel.fromMap(e.data() as Map<String, dynamic>)
+              .copyWith(id: e.id))
+          .toList());
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  void clearCancelledData() {
+    cancelledNoMoreData = false;
+    cancelledLastDoc = null;
+  }
+  /* -------------------------------------------------------------------------- */
+
+  /* -------------------------- GET COMPLETED ORDERS -------------------------- */
+  @override
+  FutureResult<List<LabOrdersModel>> getCompletedOrders(
+      {required String userId}) async {
+    if (completedNoMoreData) return right([]);
+    try {
+      Query query = _firestore
+          .collection(FirebaseCollections.labOrdersCollection)
+          .where(Filter.and(Filter('userId', isEqualTo: userId),
+              Filter('orderStatus', isEqualTo: 2)))
+          .orderBy('completedAt', descending: true);
+      if (completedLastDoc != null) {
+        query = query.startAfterDocument(completedLastDoc!);
+      }
+      final snapshot = await query.limit(10).get();
+      if (snapshot.docs.length < 10 || snapshot.docs.isEmpty) {
+        completedNoMoreData = true;
+      } else {
+        completedLastDoc =
+            snapshot.docs.last as DocumentSnapshot<Map<String, dynamic>>;
+      }
+
+      return right(snapshot.docs
+          .map((e) => LabOrdersModel.fromMap(e.data() as Map<String, dynamic>)
+              .copyWith(id: e.id))
+          .toList());
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  void clearCompletedOrderData() {
+    completedNoMoreData = false;
+    completedLastDoc = null;
+  }
+
   /* ---------------------------- UPDATE ORDER STATUS TO ON PROCESS -------------------------- */
 /* -------------------------------------------------------------------------- */
   @override
-  FutureResult<String> acceptOrder({required String orderId}) async {
+  FutureResult<String> acceptOrder(
+      {required String orderId, required String paymentMethod}) async {
     try {
       await _firestore
           .collection(FirebaseCollections.labOrdersCollection)
           .doc(orderId)
-          .update({'isUserAccepted': true});
+          .update({'isUserAccepted': true, 'paymentMethod': paymentMethod});
       return right('Booking Accepted Successfully');
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));

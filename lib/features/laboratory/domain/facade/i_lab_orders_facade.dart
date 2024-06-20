@@ -11,6 +11,14 @@ abstract class ILabOrdersFacade {
   FutureResult<String> uploadPrescription(File imageFile);
   Stream<Either<MainFailure, List<LabOrdersModel>>> getLabOrders(
       {required String userId});
-  FutureResult<String> acceptOrder({required String orderId});
+  FutureResult<String> acceptOrder(
+      {required String orderId, required String paymentMethod});
   FutureResult<String> cancelOrder({required String orderId});
+  FutureResult<List<LabOrdersModel>> getPendingOrders({required String userId});
+  FutureResult<List<LabOrdersModel>> getCancelledOrders(
+      {required String userId});
+  FutureResult<List<LabOrdersModel>> getCompletedOrders(
+      {required String userId});
+  void clearCancelledData();
+  void clearCompletedOrderData();
 }

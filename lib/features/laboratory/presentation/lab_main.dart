@@ -7,7 +7,7 @@ import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_details_screen.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/lab_orders_screen.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/lab_orders_tab.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/lab_list_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
@@ -105,13 +105,14 @@ class _LabMainState extends State<LabMain> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50)),
               child: Image.asset(
-                BIcon.labIconWhite,
-                scale: 3.5,
+                color: BColors.white,
+                BIcon.calenderIcon,
+                scale: 3.2,
               ),
               onPressed: () {
                 EasyNavigation.push(
                     context: context,
-                    page: LabOrdersScreen(),
+                    page: LabOrdersTab(),
                     type: PageTransitionType.bottomToTop,
                     duration: 200);
               }));

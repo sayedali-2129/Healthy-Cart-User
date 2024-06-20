@@ -9,6 +9,7 @@ import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provide
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_profile_provider.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
+import 'package:healthy_cart_user/utils/app_details.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        title: AppDetails.appName,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             scaffoldBackgroundColor: BColors.white, fontFamily: 'Montserrat'),

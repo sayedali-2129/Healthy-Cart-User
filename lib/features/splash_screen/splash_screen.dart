@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     final userId = FirebaseAuth.instance.currentUser?.uid;
+    final auth = FirebaseAuth.instance;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (userId != null) {
         context
@@ -26,9 +28,19 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
-        context
-            .read<AuthenticationProvider>()
-            .navigationUserFuction(context: context);
+        if (auth.currentUser == null) {
+          context
+              .read<AuthenticationProvider>()
+              .navigationUserFuction(context: context);
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomNavigationWidget(),
+            ),
+            (route) => false,
+          );
+        }
       },
     );
 

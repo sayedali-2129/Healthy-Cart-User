@@ -58,11 +58,11 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen>
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
               const Gap(5),
-              Text(
-                ordersProvider.ordersList[widget.index].id!,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-              ),
+              // Text(
+              //   ordersProvider.approvedOrders[widget.index].id!,
+              //   style:
+              //       const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              // ),
               const Gap(25),
               Padding(
                 padding: const EdgeInsets.all(16.0),

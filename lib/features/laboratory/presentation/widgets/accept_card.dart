@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
+import 'package:healthy_cart_user/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthy_cart_user/core/custom/launch_dialer.dart';
+import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
@@ -22,7 +25,7 @@ class AcceptCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<LabOrdersProvider>(builder: (context, ordersProvider, _) {
-      final orders = ordersProvider.ordersList[index];
+      final orders = ordersProvider.approvedOrders[index];
       return Container(
         width: screenWidth,
         decoration: BoxDecoration(
@@ -123,59 +126,122 @@ class AcceptCard extends StatelessWidget {
                 ],
               ),
               const Gap(10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  OutlineButtonWidget(
-                    buttonHeight: 35,
-                    buttonWidth: 140,
-                    buttonColor: BColors.white,
-                    borderColor: BColors.black,
-                    buttonWidget: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                          color: BColors.black, fontWeight: FontWeight.w600),
-                    ),
-                    onPressed: () {},
-                  ),
-                  ButtonWidget(
-                    buttonHeight: 35,
-                    buttonWidth: 140,
-                    buttonColor: BColors.buttonGreen,
-                    buttonWidget: const Text(
-                      'Accept',
-                      style: TextStyle(
-                          color: BColors.black, fontWeight: FontWeight.w600),
-                    ),
-                    onPressed: () {
-                      EasyNavigation.push(
-                          context: context,
-                          type: PageTransitionType.fade,
-                          duration: 200,
-                          page: LabPaymentScreen(
-                            index: index,
-                          ));
-                    },
-                  ),
-                ],
-              ),
-              const Gap(10),
-              orders.timeSlot != null
+              orders.isUserAccepted == false
                   ? Column(
                       children: [
-                        const Text(
-                          'Laboratory will reach you on :',
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            OutlineButtonWidget(
+                              buttonHeight: 35,
+                              buttonWidth: 140,
+                              buttonColor: BColors.white,
+                              borderColor: BColors.black,
+                              buttonWidget: const Text(
+                                'Cancel',
+                                style: TextStyle(
+                                    color: BColors.black,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              onPressed: () {
+                                ConfirmAlertBoxWidget.showAlertConfirmBox(
+                                  context: context,
+                                  titleSize: 18,
+                                  titleText: 'Cancel',
+                                  subText:
+                                      'Are you sure you want to cancel this order?',
+                                  confirmButtonTap: () async {
+                                    LoadingLottie.showLoading(
+                                        context: context,
+                                        text: 'Cancelling...');
+                                    await ordersProvider.cancelOrder(
+                                        orderId: orders.id!, index: index);
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                            ),
+                            ButtonWidget(
+                              buttonHeight: 35,
+                              buttonWidth: 140,
+                              buttonColor: BColors.buttonGreen,
+                              buttonWidget: const Text(
+                                'Accept',
+                                style: TextStyle(
+                                    color: BColors.black,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              onPressed: () {
+                                EasyNavigation.push(
+                                    context: context,
+                                    type: PageTransitionType.fade,
+                                    duration: 200,
+                                    page: LabPaymentScreen(
+                                      index: index,
+                                    ));
+                              },
+                            ),
+                          ],
                         ),
-                        const Gap(5),
-                        Text(
-                          orders.timeSlot ?? '',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 15),
-                        )
+                        const Gap(10),
+                        orders.timeSlot != null
+                            ? Column(
+                                children: [
+                                  const Text(
+                                    'Laboratory will reach you on :',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  const Gap(5),
+                                  Text(
+                                    orders.timeSlot ?? '',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15),
+                                  )
+                                ],
+                              )
+                            : const Gap(0),
                       ],
                     )
-                  : const Gap(0),
+                  : Column(
+                      children: [
+                        const Text(
+                          'Your Test is on Processing...',
+                          style: TextStyle(
+                              color: Color(0xffEB9025),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15),
+                        ),
+                        const Gap(10),
+                        OutlineButtonWidget(
+                            onPressed: () async {
+                              await LaunchDialer.lauchDialer(
+                                  phoneNumber: orders.labDetails!.phoneNo!);
+                            },
+                            borderColor: BColors.black,
+                            buttonHeight: 38,
+                            buttonWidth: 140,
+                            buttonColor: BColors.white,
+                            buttonWidget: const Row(
+                              children: [
+                                Icon(
+                                  Icons.call,
+                                  color: BColors.black,
+                                  size: 18,
+                                ),
+                                Gap(10),
+                                Text(
+                                  'Call Lab',
+                                  style: TextStyle(
+                                      color: BColors.black,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ))
+                      ],
+                    ),
             ],
           ),
         ),

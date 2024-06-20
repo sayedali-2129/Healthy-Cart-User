@@ -1,6 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
+import 'package:healthy_cart_user/core/custom/launch_dialer.dart';
+import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/payment_success_screen.dart';
@@ -18,7 +24,7 @@ class LabPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<LabOrdersProvider>(
       builder: (context, ordersProvider, _) {
-        final orders = ordersProvider.ordersList[index];
+        final orders = ordersProvider.approvedOrders[index];
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -120,23 +126,56 @@ class LabPaymentScreen extends StatelessWidget {
                         showDialog(
                             context: context,
                             builder: (context) => PaymentTypeRadio(
-                                  onConfirm: () {
-                                    // log(ordersProvider.paymentType ?? 'null');
+                                  onConfirm: () async {
+                                    log(ordersProvider.paymentType ?? 'null');
+                                    LoadingLottie.showLoading(
+                                        context: context, text: 'Loading...');
                                     if (ordersProvider.paymentType ==
                                         'Doorstep Payment') {
-                                      EasyNavigation.push(
+                                      await ordersProvider.acceptOrder(
+                                          orderId: orders.id!);
+
+                                      await EasyNavigation.push(
                                           context: context,
                                           page: PaymentSuccessScreen(
                                             index: index,
                                           ),
                                           type: PageTransitionType.rightToLeft,
                                           duration: 200);
-                                      // Navigator.pop(context);
-                                      // ordersProvider.paymentType == null;
+                                      ordersProvider.paymentType == null;
+
+                                      Navigator.pop(context);
                                     } else {}
+
+                                    Navigator.pop(context);
                                   },
                                 ));
                       }),
+                  const Gap(20),
+                  ButtonWidget(
+                      onPressed: () async {
+                        await LaunchDialer.lauchDialer(
+                            phoneNumber: orders.labDetails!.phoneNo!);
+                      },
+                      buttonHeight: 42,
+                      buttonWidth: 140,
+                      buttonColor: BColors.mainlightColor,
+                      buttonWidget: const Row(
+                        children: [
+                          Icon(
+                            Icons.call,
+                            color: BColors.white,
+                            size: 18,
+                          ),
+                          Gap(10),
+                          Text(
+                            'Call Lab',
+                            style: TextStyle(
+                                color: BColors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ))
                 ],
               ),
             ),
@@ -205,9 +244,9 @@ class OrderSummaryCardPayment extends StatelessWidget {
             ),
             const Gap(8),
             Consumer<LabOrdersProvider>(builder: (context, value, _) {
-              if (value.ordersList[index].testMode == 'Home') {
-                return (value.ordersList[index].doorStepCharge == 0 ||
-                        value.ordersList[index].doorStepCharge == null)
+              if (value.approvedOrders[index].testMode == 'Home') {
+                return (value.approvedOrders[index].doorStepCharge == 0 ||
+                        value.approvedOrders[index].doorStepCharge == null)
                     ? AmountRow(
                         text: 'Door Step Charge',
                         amountValue: 'Free Service',

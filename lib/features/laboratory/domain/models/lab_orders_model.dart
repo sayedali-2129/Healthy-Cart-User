@@ -28,6 +28,7 @@ class LabOrdersModel {
   LabModel? labDetails;
   String? prescription;
   bool? isUserAccepted;
+  String? resultUrl;
 
   LabOrdersModel({
     this.id,
@@ -53,6 +54,7 @@ class LabOrdersModel {
     this.labDetails,
     this.prescription,
     this.isUserAccepted,
+    this.resultUrl,
   });
 
   Map<String, dynamic> toMap() {
@@ -79,7 +81,8 @@ class LabOrdersModel {
       'completedAt': completedAt,
       'labDetails': labDetails!.toMap(),
       'prescription': prescription,
-      'isUserAccepted': isUserAccepted
+      'isUserAccepted': isUserAccepted,
+      'resultUrl': resultUrl,
     };
   }
 
@@ -130,6 +133,7 @@ class LabOrdersModel {
           : null,
       prescription:
           map['prescription'] != null ? map['prescription'] as String : null,
+      resultUrl: map['resultUrl'] != null ? map['resultUrl'] as String : null,
       isUserAccepted:
           map['isUserAccepted'] != null ? map['isUserAccepted'] as bool : null,
     );
@@ -159,6 +163,7 @@ class LabOrdersModel {
     LabModel? labDetails,
     String? prescription,
     bool? isUserAccepted,
+    String? resultUrl,
   }) {
     return LabOrdersModel(
       id: id ?? this.id,
@@ -184,6 +189,7 @@ class LabOrdersModel {
       labDetails: labDetails ?? this.labDetails,
       prescription: prescription ?? this.prescription,
       isUserAccepted: isUserAccepted ?? this.isUserAccepted,
+      resultUrl: resultUrl ?? this.resultUrl,
     );
   }
 }
