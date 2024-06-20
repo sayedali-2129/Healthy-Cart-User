@@ -11,6 +11,8 @@ class LabModel {
   List<String>? keywords;
   Timestamp? createdAt;
   bool? isLabotaroryOn;
+  String? fcmToken;
+
   LabModel({
     this.id,
     this.address,
@@ -22,6 +24,7 @@ class LabModel {
     this.keywords,
     this.createdAt,
     this.isLabotaroryOn,
+    this.fcmToken,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,6 +39,7 @@ class LabModel {
       'keywords': keywords,
       'createdAt': createdAt,
       'isLabotaroryOn': isLabotaroryOn,
+      'fcmToken': fcmToken
     };
   }
 
@@ -48,6 +52,7 @@ class LabModel {
           : null,
       image: map['image'] != null ? map['image'] as String : null,
       phoneNo: map['phoneNo'] != null ? map['phoneNo'] as String : null,
+      fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,
       requested: map['requested'] != null ? map['requested'] as int : null,
       isActive: map['isActive'] != null ? map['isActive'] as bool : null,
       keywords: map['keywords'] != null
@@ -60,29 +65,29 @@ class LabModel {
     );
   }
 
-  LabModel copyWith({
-    String? id,
-    String? address,
-    String? laboratoryName,
-    String? image,
-    String? phoneNo,
-    int? requested,
-    bool? isActive,
-    List<String>? keywords,
-    Timestamp? createdAt,
-    bool? isLabotaroryOn,
-  }) {
+  LabModel copyWith(
+      {String? id,
+      String? address,
+      String? laboratoryName,
+      String? image,
+      String? phoneNo,
+      int? requested,
+      bool? isActive,
+      List<String>? keywords,
+      Timestamp? createdAt,
+      bool? isLabotaroryOn,
+      String? fcmToken}) {
     return LabModel(
-      id: id ?? this.id,
-      address: address ?? this.address,
-      laboratoryName: laboratoryName ?? this.laboratoryName,
-      image: image ?? this.image,
-      phoneNo: phoneNo ?? this.phoneNo,
-      requested: requested ?? this.requested,
-      isActive: isActive ?? this.isActive,
-      keywords: keywords ?? this.keywords,
-      createdAt: createdAt ?? this.createdAt,
-      isLabotaroryOn: isLabotaroryOn ?? this.isLabotaroryOn,
-    );
+        id: id ?? this.id,
+        address: address ?? this.address,
+        laboratoryName: laboratoryName ?? this.laboratoryName,
+        image: image ?? this.image,
+        phoneNo: phoneNo ?? this.phoneNo,
+        requested: requested ?? this.requested,
+        isActive: isActive ?? this.isActive,
+        keywords: keywords ?? this.keywords,
+        createdAt: createdAt ?? this.createdAt,
+        isLabotaroryOn: isLabotaroryOn ?? this.isLabotaroryOn,
+        fcmToken: fcmToken ?? this.fcmToken);
   }
 }

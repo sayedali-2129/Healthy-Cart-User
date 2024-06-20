@@ -133,6 +133,10 @@ class LabPaymentScreen extends StatelessWidget {
                                     if (ordersProvider.paymentType ==
                                         'Doorstep Payment') {
                                       await ordersProvider.acceptOrder(
+                                          fcmtoken: ordersProvider
+                                              .approvedOrders[index]
+                                              .labDetails!
+                                              .fcmToken!,
                                           orderId: orders.id!);
 
                                       await EasyNavigation.push(

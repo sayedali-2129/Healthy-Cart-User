@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final auth = FirebaseAuth.instance;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    final notiProvider = context.read<NotificationProvider>();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await notiProvider.notificationPermission();
       if (userId != null) {
         context
             .read<AuthenticationProvider>()

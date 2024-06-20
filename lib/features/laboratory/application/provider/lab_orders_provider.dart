@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/send_fcm_message.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/facade/i_lab_orders_facade.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:injectable/injectable.dart';
@@ -72,7 +73,8 @@ class LabOrdersProvider with ChangeNotifier {
   }
 
   /* ---------------------------- USER ACCEPT ORDER --------------------------- */
-  Future<void> acceptOrder({required String orderId}) async {
+  Future<void> acceptOrder(
+      {required String orderId, required String fcmtoken}) async {
     final result = await iLabOrdersFacade.acceptOrder(
         orderId: orderId, paymentMethod: paymentType!);
     result.fold((err) {
@@ -80,6 +82,11 @@ class LabOrdersProvider with ChangeNotifier {
       log('Error :: ${err.errMsg}');
     }, (success) {
       CustomToast.sucessToast(text: success);
+      sendFcmMessage(
+          token: fcmtoken,
+          body: 'User Accepted An order',
+          title: 'User Accepted An order');
+      log(fcmtoken);
     });
   }
 
