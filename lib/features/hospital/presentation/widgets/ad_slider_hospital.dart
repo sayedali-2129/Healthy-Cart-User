@@ -2,11 +2,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
+import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
 import 'package:provider/provider.dart';
 
-class AdSlider extends StatefulWidget {
-  const AdSlider({
+class AdSliderHospital extends StatefulWidget {
+  const AdSliderHospital({
     super.key,
     required this.screenWidth,
     required this.labId,
@@ -16,20 +16,20 @@ class AdSlider extends StatefulWidget {
   final String labId;
 
   @override
-  State<AdSlider> createState() => _AdSliderState();
+  State<AdSliderHospital> createState() => _AdSliderHospitalState();
 }
 
-class _AdSliderState extends State<AdSlider> {
+class _AdSliderHospitalState extends State<AdSliderHospital> {
   int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LabProvider>(builder: (context, labProvider, _) {
-      if (labProvider.labBannerList.isEmpty) {
+    return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
+      if (hospitalProvider.hospitalBanner.isEmpty) {
         return const Gap(5);
       } else {
         return CarouselSlider.builder(
-          itemCount: labProvider.labBannerList.length,
+          itemCount: hospitalProvider.hospitalBanner.length,
           itemBuilder: (context, index, realIndex) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Container(
@@ -40,13 +40,14 @@ class _AdSliderState extends State<AdSlider> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: CustomCachedNetworkImage(
-                  image: labProvider.labBannerList[index].image!),
+                  image: hospitalProvider.hospitalBanner[index].image!),
             ),
           ),
           options: CarouselOptions(
             viewportFraction: 1,
             initialPage: 0,
-            autoPlay: labProvider.labBannerList.length <= 1 ? false : true,
+            autoPlay:
+                hospitalProvider.hospitalBanner.length <= 1 ? false : true,
             autoPlayCurve: Curves.decelerate,
             onPageChanged: (index, reason) {
               setState(() {

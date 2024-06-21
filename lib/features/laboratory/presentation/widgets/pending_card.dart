@@ -198,7 +198,10 @@ class PendingCard extends StatelessWidget {
                           LoadingLottie.showLoading(
                               context: context, text: 'Cancelling...');
                           await ordersProvider.cancelOrder(
-                              orderId: orders.id!, index: index);
+                              fcmtoken: orders.labDetails!.fcmToken ?? '',
+                              userName: orders.userDetails!.userName ?? 'User',
+                              orderId: orders.id!,
+                              index: index);
                           // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         },

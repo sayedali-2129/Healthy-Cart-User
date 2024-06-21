@@ -112,31 +112,6 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                           color: BColors.black),
                                     ),
                                   ),
-                                  /* --------------------------- Prescription Button -------------------------- */
-                                  // ButtonWidget(
-                                  //   buttonHeight: 36,
-                                  //   buttonWidth: 160,
-                                  //   buttonColor: BColors.buttonGreen,
-                                  //   buttonWidget: const Row(
-                                  //     children: [
-                                  //       Icon(
-                                  //         Icons.maps_ugc_outlined,
-                                  //         color: BColors.black,
-                                  //         size: 19,
-                                  //       ),
-                                  //       Gap(5),
-                                  //       Text(
-                                  //         'Prescription',
-                                  //         style: TextStyle(
-                                  //             fontSize: 13,
-                                  //             fontWeight: FontWeight.w700,
-                                  //             color: BColors.black),
-                                  //       )
-                                  //     ],
-                                  //   ),
-                                  //   onPressed: () {},
-                                  // )
-                                  /* -------------------------------------------------------------------------- */
                                 ],
                               ),
                               const Gap(10),

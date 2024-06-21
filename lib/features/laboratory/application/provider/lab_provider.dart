@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/send_fcm_message.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/facade/i_lab_facade.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/facade/i_lab_orders_facade.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_banner_model.dart';
@@ -236,12 +237,15 @@ class LabProvider with ChangeNotifier {
 
   LabOrdersModel? labOrderModel;
   /* ----------------------------- ADD LAB ORDERS ----------------------------- */
-  Future<void> addLabOrders(
-      {required String labId,
-      required String userId,
-      required UserModel userModel,
-      required LabModel labModel,
-      required UserAddressModel selectedAddress}) async {
+  Future<void> addLabOrders({
+    required String labId,
+    required String userId,
+    required UserModel userModel,
+    required LabModel labModel,
+    required UserAddressModel selectedAddress,
+    required String fcmtoken,
+    required String userName,
+  }) async {
     labOrderModel = LabOrdersModel(
       labId: labId,
       selectedTest: cartItems,
@@ -266,6 +270,11 @@ class LabProvider with ChangeNotifier {
         log('error in addLabOrders() :: ${err.errMsg}');
       },
       (success) {
+        sendFcmMessage(
+            token: fcmtoken,
+            body:
+                'New Booking Received from $userName. Please check the details and accept the order',
+            title: 'New Booking Received!!!');
         log('Order Request Send Successfully');
       },
     );
