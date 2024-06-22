@@ -17,4 +17,5 @@ class FirebaseCollections {
   static const String labOrdersCollection = 'lab_orders';
   static const String hospitalCollection = 'hospitals';
   static const String hospitalBannerCollection = 'hospital_banner';
+  static const String homeBannerCollection = 'banners';
 }

@@ -9,4 +9,6 @@ class BImage {
   static const String userAvatar = 'assets/images/user avatar.png';
   static const String noDataPng = 'assets/images/no data.png';
   static const String hospitalSample = 'assets/images/hospital-sample.png';
+  static const String currentlyUnavailable =
+      'assets/images/currently-unavailable.png';
 }

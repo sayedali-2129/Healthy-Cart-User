@@ -47,6 +47,7 @@ class _LabMainState extends State<LabMain> {
   @override
   Widget build(BuildContext context) {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {
+      final screenwidth = MediaQuery.of(context).size.width;
       return Scaffold(
           body: CustomScrollView(
             controller: scrollController,
@@ -80,6 +81,7 @@ class _LabMainState extends State<LabMain> {
                     separatorBuilder: (context, index) => const Gap(8),
                     itemCount: labProvider.labList.length,
                     itemBuilder: (context, index) => LabListCard(
+                      screenwidth: screenwidth,
                       index: index,
                       onTap: () => EasyNavigation.push(
                         context: context,
@@ -112,7 +114,7 @@ class _LabMainState extends State<LabMain> {
               onPressed: () {
                 EasyNavigation.push(
                     context: context,
-                    page: LabOrdersTab(),
+                    page: const LabOrdersTab(),
                     type: PageTransitionType.bottomToTop,
                     duration: 200);
               }));

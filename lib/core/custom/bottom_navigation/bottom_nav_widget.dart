@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/features/home/presentation/home_main.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_main.dart';
@@ -16,19 +18,42 @@ class BottomNavigationWidget extends StatefulWidget {
   State<BottomNavigationWidget> createState() => _BottonNavTabState();
 }
 
-class _BottonNavTabState extends State<BottomNavigationWidget> {
-  int selectedIndex = 0;
+class _BottonNavTabState extends State<BottomNavigationWidget>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 5, vsync: this);
+  }
+
+  void navigateToHospitalTab() {
+    setState(() {
+      _tabController.index = 1;
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-        body: const TabBarView(
+        body: TabBarView(
+            controller: _tabController,
             clipBehavior: Clip.antiAlias,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              HomeMain(),
+              HomeMain(
+                currentTab: _tabController.index,
+                onNavigateToHospitalTab: navigateToHospitalTab,
+              ),
               HospitalMain(),
               LabMain(),
               PharmacyMain(),
@@ -38,6 +63,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
           color: Colors.white,
           elevation: 10,
           child: TabBar(
+              controller: _tabController,
               indicatorSize: TabBarIndicatorSize.tab,
               indicator: UnderlineTabIndicator(
                 borderSide:
@@ -59,15 +85,17 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
               labelColor: BColors.mainlightColor,
               unselectedLabelColor: BColors.black,
               onTap: (index) {
+                log("$index");
                 setState(() {
-                  selectedIndex = index;
+                  _tabController.index = index;
+                  log(_tabController.index.toString());
                 });
               },
               tabs: [
                 Tab(
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: selectedIndex == 0
+                    child: _tabController.index == 0
                         ? Image.asset(
                             BIcon.homeColor,
                             height: 24,
@@ -85,7 +113,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                   text: 'Hospital',
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: selectedIndex == 1
+                    child: _tabController.index == 1
                         ? Image.asset(
                             BIcon.hospitalColor,
                             height: 24,
@@ -102,7 +130,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                   text: 'Lab',
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: selectedIndex == 2
+                    child: _tabController.index == 2
                         ? Image.asset(
                             BIcon.labColor,
                             height: 24,
@@ -119,7 +147,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                   text: 'Medicine',
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: selectedIndex == 3
+                    child: _tabController.index == 3
                         ? Image.asset(
                             BIcon.medicineColor,
                             height: 24,
@@ -136,7 +164,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget> {
                   text: 'Profile',
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6),
-                    child: selectedIndex == 4
+                    child: _tabController.index == 4
                         ? Image.asset(
                             BIcon.profileColor,
                             height: 26,
