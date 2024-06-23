@@ -83,6 +83,9 @@ class _HospitalMainState extends State<HospitalMain> {
                         duration: 250,
                         page: HospitalDetails(
                           hospitalId: hospitalProvider.hospitalList[index].id!,
+                          categoryIdList: hospitalProvider
+                                  .hospitalList[index].selectedCategoryId ??
+                              [],
                           index: index,
                         ));
                   },

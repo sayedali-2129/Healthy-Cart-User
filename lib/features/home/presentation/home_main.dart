@@ -130,6 +130,9 @@ class _HomeMainState extends State<HomeMain> {
                                     page: HospitalDetails(
                                       hospitalId: hospitalProvier
                                           .hospitalList[index].id!,
+                                      categoryIdList: hospitalProvier
+                                          .hospitalList[index]
+                                          .selectedCategoryId,
                                       index: index,
                                     ));
                           },

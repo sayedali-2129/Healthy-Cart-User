@@ -66,7 +66,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget>
             child: TabBarView(
                 controller: _tabController,
                 clipBehavior: Clip.antiAlias,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   HomeMain(
                     currentTab: _tabController.index,
@@ -74,10 +74,10 @@ class _BottonNavTabState extends State<BottomNavigationWidget>
                     onNavigateToLaboratoryTab: navigateToLaboratoryTab,
                     onNavigateToPharmacyTab: navigateToPharmacyTab,
                   ),
-                  HospitalMain(),
-                  LabMain(),
-                  PharmacyMain(),
-                  ProfileMain(),
+                  const HospitalMain(),
+                  const LabMain(),
+                  const PharmacyMain(),
+                  const ProfileMain(),
                 ]),
           ),
           bottomNavigationBar: PhysicalModel(

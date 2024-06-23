@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/features/hospital/domain/facade/i_hospital_facade.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_banner_model.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/hospital_category_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
 import 'package:injectable/injectable.dart';
 
@@ -16,6 +18,8 @@ class HospitalProvider with ChangeNotifier {
 
   List<HospitalModel> hospitalList = [];
   List<HospitalBannerModel> hospitalBanner = [];
+  List<HospitalCategoryModel> hospitalCategoryList = [];
+  List<DoctorModel> doctorsList = [];
 
   bool hospitalFetchLoading = false;
   bool isLoading = true;
@@ -73,6 +77,41 @@ class HospitalProvider with ChangeNotifier {
       log('ERROR :: ${err.errMsg}');
     }, (success) {
       hospitalBanner = success;
+    });
+    isLoading = false;
+    notifyListeners();
+  }
+
+  /* -------------------------- GET HOSPITAL CATEGORY ------------------------- */
+  Future<void> getHospitalCategory(
+      {required List<String> categoryIdList}) async {
+    isLoading = true;
+    hospitalCategoryList.clear();
+    notifyListeners();
+
+    final result = await iHospitalFacade.getHospitalCategory(
+        categoryIdList: categoryIdList);
+    result.fold((err) {
+      CustomToast.errorToast(text: "Couldn't able to fetch category");
+      log('ERROR IN CATEGORY :: ${err.errMsg}');
+    }, (success) {
+      hospitalCategoryList = success;
+    });
+    isLoading = false;
+    notifyListeners();
+  }
+
+  /* ------------------------------- GET DOCTORS ------------------------------ */
+  Future<void> getDoctors({required String hospitalId}) async {
+    isLoading = true;
+    notifyListeners();
+    final result = await iHospitalFacade.getDoctors(hospitalId: hospitalId);
+
+    result.fold((err) {
+      CustomToast.errorToast(text: 'Unable to get doctors');
+      log('ERROR IN GET DOCTOR :: ${err.errMsg}');
+    }, (success) {
+      doctorsList = success;
     });
     isLoading = false;
     notifyListeners();

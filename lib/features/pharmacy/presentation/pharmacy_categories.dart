@@ -34,10 +34,13 @@ class PharmacyCategoriesScreen extends StatelessWidget {
                   mainAxisExtent: 128),
               itemBuilder: (context, index) {
                 return VerticalImageText(
+                    leftPadding: 8,
+                    rightPadding: 8,
                     onTap: () {
                       pharmacyProvider.setCategoryId(
                           selectedCategoryId:
-                              pharmacyProvider.pharmacyCategoryList[index].id ??'',
+                              pharmacyProvider.pharmacyCategoryList[index].id ??
+                                  '',
                           selectedCategoryName: pharmacyProvider
                               .pharmacyCategoryList[index].category);
                       EasyNavigation.push(
