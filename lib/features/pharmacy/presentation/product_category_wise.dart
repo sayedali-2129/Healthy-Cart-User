@@ -125,7 +125,9 @@ class _PharmacyCategoryWiseProductScreenState
               ),
         if (pharmacyProvider.fetchLoading == false &&
             pharmacyProvider.productCategoryWiseList.isEmpty)
-                      const ErrorOrNoDataPage(text: 'No products found in this category.' ), 
+          const ErrorOrNoDataPage(
+            text: 'No products found in this category.',
+          ),
         SliverToBoxAdapter(
             child: (pharmacyProvider.fetchLoading == true &&
                     pharmacyProvider.productCategoryWiseList.isNotEmpty)

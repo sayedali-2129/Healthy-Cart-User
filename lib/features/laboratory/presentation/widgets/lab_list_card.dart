@@ -64,7 +64,7 @@ class LabListCard extends StatelessWidget {
                                 maxLines: 2,
                                 style: const TextStyle(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w600,
                                     color: BColors.black),
                               ),
                               const Gap(5),

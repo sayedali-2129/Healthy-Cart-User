@@ -4,9 +4,13 @@ import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/list_card_pharmacy.dart';
+import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -117,6 +121,23 @@ class _PharmacyMainState extends State<PharmacyMain> {
                       : null),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: BColors.darkblue,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          child: Image.asset(
+            color: BColors.white,
+            BIcon.calenderIcon,
+            scale: 3.2,
+          ),
+          onPressed: () {
+            EasyNavigation.push(
+                context: context,
+                page: const PharmacyOrdersTab(),
+                type: PageTransitionType.bottomToTop,
+                duration: 200);
+          },
         ),
       );
     });

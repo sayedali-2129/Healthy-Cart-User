@@ -56,7 +56,7 @@ class PendingCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Your Booking is on Pending',
                           style: TextStyle(
                               color: Color(0xffEB9025),

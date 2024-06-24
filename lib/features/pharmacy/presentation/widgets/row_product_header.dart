@@ -4,6 +4,7 @@ import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_categories.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/prescription_page.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/product_category_wise.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/vertical_image_text_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -37,7 +38,13 @@ class RowProductCategoryWidget extends StatelessWidget {
                         ),
                         ButtonWidget(
                           buttonColor: BColors.buttonGreen,
-                          onPressed: () {},
+                          onPressed: () {
+                            EasyNavigation.push(
+                              context: context,
+                              page: const PrescriptionScreen(),
+                              type: PageTransitionType.leftToRight,
+                            );
+                          },
                           buttonHeight: 36,
                           buttonWidth: 176,
                           buttonWidget: const Row(

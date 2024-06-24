@@ -37,12 +37,14 @@ class PharmacyCategoriesScreen extends StatelessWidget {
                     onTap: () {
                       pharmacyProvider.setCategoryId(
                           selectedCategoryId:
-                              pharmacyProvider.pharmacyCategoryList[index].id ??'',
+                              pharmacyProvider.pharmacyCategoryList[index].id ??
+                                  '',
                           selectedCategoryName: pharmacyProvider
                               .pharmacyCategoryList[index].category);
                       EasyNavigation.push(
-                          context: context,
-                          page: const PharmacyCategoryWiseProductScreen());
+                        context: context,
+                        page: const PharmacyCategoryWiseProductScreen(),
+                      );
                     },
                     image: pharmacyProvider.pharmacyCategoryList[index].image,
                     title:

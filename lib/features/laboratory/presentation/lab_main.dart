@@ -112,10 +112,11 @@ class _LabMainState extends State<LabMain> {
               onPressed: () {
                 EasyNavigation.push(
                     context: context,
-                    page: LabOrdersTab(),
+                    page: const LabOrdersTab(),
                     type: PageTransitionType.bottomToTop,
                     duration: 200);
-              }));
+              }),
+              );
     });
   }
 }

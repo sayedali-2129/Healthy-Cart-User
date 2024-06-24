@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_user_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 
 class PharmacyListCard extends StatelessWidget {
@@ -64,7 +64,7 @@ class PharmacyListCard extends StatelessWidget {
                                 maxLines: 2,
                                 style: const TextStyle(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w600,
                                     color: BColors.black),
                               ),
                               const Gap(5),

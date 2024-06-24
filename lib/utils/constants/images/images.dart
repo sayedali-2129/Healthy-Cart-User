@@ -8,4 +8,5 @@ class BImage {
   static const String labSample = 'assets/images/lab sample.jpeg';
   static const String userAvatar = 'assets/images/user avatar.png';
   static const String noDataPng = 'assets/images/no data.png';
+  static const String prescriptionImage = 'assets/images/medical-report.png';
 }
