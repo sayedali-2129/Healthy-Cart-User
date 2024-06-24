@@ -23,4 +23,6 @@ class BColors {
   static Color profileButtonGrey = Colors.grey[50]!;
   static Color acceptButtonGreen = const Color(0xff039E00);
   static const Color buttonLightBlue = Color(0xff367CBD);
+  static const Color doctorTextGreen = Color(0xff1C665E);
+  static const Color textGrey = Color(0xff333333);
 }

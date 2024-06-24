@@ -23,6 +23,13 @@ class HospitalProvider with ChangeNotifier {
 
   bool hospitalFetchLoading = false;
   bool isLoading = true;
+  String? selectedSlot;
+
+  void setTimeSlot(String selectedTimeSlot) {
+    selectedSlot = selectedTimeSlot;
+    log(selectedSlot!);
+    notifyListeners();
+  }
 
 /* ------------------------ GET HOSPITALS AND SEARCH ------------------------ */
 

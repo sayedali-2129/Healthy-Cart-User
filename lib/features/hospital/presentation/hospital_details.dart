@@ -4,11 +4,14 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/doctor_details_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/ad_slider_hospital.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/doctor_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/vertical_image_text_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class HospitalDetails extends StatefulWidget {
@@ -200,8 +203,20 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                             shrinkWrap: true,
                             separatorBuilder: (context, index) => const Gap(10),
                             itemCount: hospitalProvider.doctorsList.length,
-                            itemBuilder: (context, index) => DoctorCard(
-                              index: index,
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                EasyNavigation.push(
+                                    context: context,
+                                    page: DoctorDetailsScreen(
+                                      index: index,
+                                      hospitalAddress: hospital.address!,
+                                    ),
+                                    type: PageTransitionType.rightToLeft,
+                                    duration: 250);
+                              },
+                              child: DoctorCard(
+                                index: index,
+                              ),
                             ),
                           )
                         ],
