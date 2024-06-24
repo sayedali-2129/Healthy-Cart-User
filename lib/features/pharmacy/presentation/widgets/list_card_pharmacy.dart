@@ -4,105 +4,156 @@ import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:healthy_cart_user/utils/constants/images/images.dart';
 
 class PharmacyListCard extends StatelessWidget {
   const PharmacyListCard({
     super.key,
+    required this.screenwidth,
     this.onTap,
     required this.pharmacy,
   });
+
   final void Function()? onTap;
+
+  final double screenwidth;
   final PharmacyModel pharmacy;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (pharmacy.isPharmacyON == false)
+      onTap: pharmacy.isPharmacyON == false
           ? () {
-              CustomToast.sucessToast(
-                  text: 'This Pharmacy is not available right now!');
+              CustomToast.errorToast(
+                  text: 'This Laboratory is not available now!');
             }
           : onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Stack(
-          children: [
-            Container(
-              height: 104,
-              width: double.infinity,
-              decoration: BoxDecoration(boxShadow: [
+      child: Stack(
+        children: [
+          Container(
+            width: screenwidth,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: BColors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
                 BoxShadow(
-                    blurRadius: 5,
-                    spreadRadius: 0,
-                    blurStyle: BlurStyle.outer,
-                    color: BColors.black.withOpacity(0.3))
-              ], border: Border.all(), borderRadius: BorderRadius.circular(16)),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.antiAlias,
-                          height: 52,
-                          width: 52,
-                          decoration:
-                              const BoxDecoration(shape: BoxShape.circle),
+                    color: BColors.black.withOpacity(0.1),
+                    blurRadius: 7,
+                    spreadRadius: 5),
+              ],
+            ),
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 200,
+                  width: screenwidth,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(16),
+                          topLeft: Radius.circular(16))),
+                  child: Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: [
+                      Positioned.fill(
                           child: CustomCachedNetworkImage(
-                              image: pharmacy.pharmacyImage ?? ''),
-                        ),
-                        const Gap(8),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                pharmacy.pharmacyName ??
-                                    'Unknown Pharmacy Name',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: BColors.black),
-                              ),
-                              const Gap(5),
-                              Text(
-                                pharmacy.pharmacyAddress ?? 'Unknown Address',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w500),
-                              )
+                              image: pharmacy.pharmacyImage!)),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              BColors.black.withOpacity(0.5),
+                              Colors.transparent
                             ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.center,
                           ),
                         ),
-                      ],
-                    ),
-                    const Gap(5),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              pharmacy.pharmacyName!.toUpperCase(),
+                              style: const TextStyle(
+                                  color: BColors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: BColors.buttonGreen),
+                            child: const Padding(
+                              padding: EdgeInsets.all(3),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '4.54',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Icon(
+                                    Icons.star,
+                                    size: 14,
+                                    color: BColors.black,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Gap(5),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on,
+                            size: 20,
+                          ),
+                          const Gap(3),
+                          Expanded(
+                            child: Text(
+                              '${pharmacy.pharmacyAddress}',
+                              style: const TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
-            if (pharmacy.isPharmacyON == false)
-              Container(
-                height: 104,
-                width: double.infinity,
+          ),
+          if (pharmacy.isPharmacyON == false)
+            Container(
+                height: 200,
+                width: screenwidth,
                 decoration: BoxDecoration(
-                    color: BColors.white.withOpacity(0.7),
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(16)),
-                child: const Center(
-                    // child: Text(
-                    //   'This Laboratory is not available right now!',
-                    //   style: TextStyle(
-                    //       color: BColors.black, fontWeight: FontWeight.w600),
-                    // ),
-                    ),
-              )
-          ],
-        ),
+                    color: BColors.white.withOpacity(0.6),
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(16),
+                        topLeft: Radius.circular(16))),
+                child: Image.asset(
+                  BImage.currentlyUnavailable,
+                  scale: 3,
+                )),
+        ],
       ),
     );
   }

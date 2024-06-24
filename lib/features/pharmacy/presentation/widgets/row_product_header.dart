@@ -117,6 +117,8 @@ class RowProductCategoryWidget extends StatelessWidget {
                     return FadeInRight(
                       duration: const Duration(milliseconds: 500),
                       child: VerticalImageText(
+                          rightPadding: 8,
+                          leftPadding: 8,
                           onTap: () {
                             pharmacyProvider.setCategoryId(
                                 selectedCategoryId: pharmacyProvider

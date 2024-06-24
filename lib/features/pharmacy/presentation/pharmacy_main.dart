@@ -1,5 +1,6 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
@@ -54,6 +55,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
   @override
   Widget build(BuildContext context) {
     return Consumer<PharmacyProvider>(builder: (context, pharmacyProvider, _) {
+      final screenwidth = MediaQuery.of(context).size.width;
       return Scaffold(
         body: PopScope(
           onPopInvoked: (didPop) {
@@ -90,10 +92,12 @@ class _PharmacyMainState extends State<PharmacyMain> {
                 SliverPadding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  sliver: SliverList.builder(
+                  sliver: SliverList.separated(
+                    separatorBuilder: (context, index) => const Gap(10),
                     itemCount: pharmacyProvider.pharmacyList.length,
                     itemBuilder: (context, index) {
                       return PharmacyListCard(
+                        screenwidth: screenwidth,
                         pharmacy: pharmacyProvider.pharmacyList[index],
                         onTap: () {
                           pharmacyProvider.setPharmacyIdAndCategoryList(

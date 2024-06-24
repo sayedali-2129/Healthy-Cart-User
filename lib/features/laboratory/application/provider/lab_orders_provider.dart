@@ -74,7 +74,9 @@ class LabOrdersProvider with ChangeNotifier {
 
   /* ---------------------------- USER ACCEPT ORDER --------------------------- */
   Future<void> acceptOrder(
-      {required String orderId, required String fcmtoken}) async {
+      {required String orderId,
+      required String fcmtoken,
+      required String userName}) async {
     final result = await iLabOrdersFacade.acceptOrder(
         orderId: orderId, paymentMethod: paymentType!);
     result.fold((err) {
@@ -84,7 +86,8 @@ class LabOrdersProvider with ChangeNotifier {
       CustomToast.sucessToast(text: success);
       sendFcmMessage(
           token: fcmtoken,
-          body: 'User Accepted An order',
+          body:
+              '$userName accepted an order, Please check the status. Booking ID : $orderId',
           title: 'User Accepted An order');
       log(fcmtoken);
     });
@@ -92,13 +95,20 @@ class LabOrdersProvider with ChangeNotifier {
 
   /* ------------------------------ CANCEL ORDER ------------------------------ */
   Future<void> cancelOrder(
-      {required String orderId, required int index}) async {
+      {required String orderId,
+      required int index,
+      required String fcmtoken,
+      required userName}) async {
     final result = await iLabOrdersFacade.cancelOrder(orderId: orderId);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to cancel booking');
       log(err.errMsg);
     }, (success) {
       pendingOrders.removeAt(index);
+      sendFcmMessage(
+          token: fcmtoken,
+          body: 'A Booking is cancelled by $userName, Booking ID : $orderId',
+          title: 'Booking Cancelled!!');
       CustomToast.sucessToast(text: success);
     });
     notifyListeners();

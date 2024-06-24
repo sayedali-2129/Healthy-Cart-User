@@ -34,6 +34,8 @@ class PharmacyCategoriesScreen extends StatelessWidget {
                   mainAxisExtent: 128),
               itemBuilder: (context, index) {
                 return VerticalImageText(
+                    leftPadding: 8,
+                    rightPadding: 8,
                     onTap: () {
                       pharmacyProvider.setCategoryId(
                           selectedCategoryId:

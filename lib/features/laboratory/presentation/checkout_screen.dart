@@ -312,13 +312,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         await labProvider.uploadPrescription();
                       }
                       await labProvider.addLabOrders(
-                        labModel: labProvider.labList[widget.index],
-                        labId: labProvider.labList[widget.index].id!,
-                        userId: widget.userId,
-                        userModel: widget.userModel!,
-                        selectedAddress: addressProvider.selectedAddress ??
-                            UserAddressModel(),
-                      );
+                          labModel: labProvider.labList[widget.index],
+                          labId: labProvider.labList[widget.index].id!,
+                          userId: widget.userId,
+                          userModel: widget.userModel!,
+                          selectedAddress: addressProvider.selectedAddress ??
+                              UserAddressModel(),
+                          fcmtoken: labProvider.labList[widget.index].fcmToken!,
+                          userName: widget.userModel!.userName!);
                       labProvider.clearCart();
                       labProvider.selectedRadio = null;
                       addressProvider.selectedAddress = null;

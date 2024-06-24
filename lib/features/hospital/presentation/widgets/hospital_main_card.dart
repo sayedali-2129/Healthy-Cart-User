@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
+import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
 
-class LabListCard extends StatelessWidget {
-  const LabListCard({
+class HospitalMainCard extends StatelessWidget {
+  const HospitalMainCard({
     super.key,
     required this.screenwidth,
     required this.index,
@@ -21,13 +21,13 @@ class LabListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LabProvider>(builder: (context, labProvider, _) {
-      final labs = labProvider.labList[index];
+    return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
+      final hospitals = hospitalProvider.hospitalList[index];
       return GestureDetector(
-        onTap: labs.isLabotaroryOn == false
+        onTap: hospitals.ishospitalON == false
             ? () {
                 CustomToast.errorToast(
-                    text: 'This Laboratory is not available now!');
+                    text: 'This Hospital is not available now!');
               }
             : onTap,
         child: Stack(
@@ -60,42 +60,9 @@ class LabListCard extends StatelessWidget {
                       alignment: Alignment.bottomLeft,
                       children: [
                         Positioned.fill(
-                            child:
-                                CustomCachedNetworkImage(image: labs.image!)),
+                            child: CustomCachedNetworkImage(
+                                image: hospitals.image!)),
                         Container(
-<<<<<<< HEAD
-                          clipBehavior: Clip.antiAlias,
-                          height: 52,
-                          width: 52,
-                          decoration:
-                              const BoxDecoration(shape: BoxShape.circle),
-                          child:
-                              CustomCachedNetworkImage(image: labList.image!),
-                        ),
-                        const Gap(8),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                labList.laboratoryName ?? 'No Name',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: BColors.black),
-                              ),
-                              const Gap(5),
-                              Text(
-                                labList.address ?? 'No Adress',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w500),
-                              )
-                            ],
-=======
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -105,7 +72,6 @@ class LabListCard extends StatelessWidget {
                               begin: Alignment.bottomCenter,
                               end: Alignment.center,
                             ),
->>>>>>> ea14e3d792cc0f6f90cb22502fa8659c61c761b6
                           ),
                         ),
                       ],
@@ -121,7 +87,7 @@ class LabListCard extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                labs.laboratoryName!.toUpperCase(),
+                                hospitals.hospitalName!.toUpperCase(),
                                 style: const TextStyle(
                                     color: BColors.black,
                                     fontSize: 16,
@@ -163,7 +129,7 @@ class LabListCard extends StatelessWidget {
                             const Gap(3),
                             Expanded(
                               child: Text(
-                                '${labs.address}',
+                                '${hospitals.address}',
                                 style: const TextStyle(
                                     fontSize: 13, fontWeight: FontWeight.w500),
                               ),
@@ -176,7 +142,7 @@ class LabListCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (labs.isLabotaroryOn == false)
+            if (hospitals.ishospitalON == false)
               Container(
                   height: 200,
                   width: screenwidth,
