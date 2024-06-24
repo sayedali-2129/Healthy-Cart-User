@@ -6,6 +6,7 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicat
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/all_doctors_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/doctor_details_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/ad_slider_hospital.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/doctor_card.dart';
@@ -17,10 +18,10 @@ import 'package:provider/provider.dart';
 class HospitalDetails extends StatefulWidget {
   const HospitalDetails(
       {super.key,
-      required this.index,
+      required this.hospitalIndex,
       required this.hospitalId,
       required this.categoryIdList});
-  final int index;
+  final int hospitalIndex;
   final String hospitalId;
   final List<String>? categoryIdList;
 
@@ -45,7 +46,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
   @override
   Widget build(BuildContext context) {
     return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
-      final hospital = hospitalProvider.hospitalList[widget.index];
+      final hospital = hospitalProvider.hospitalList[widget.hospitalIndex];
       return Scaffold(
           body: CustomScrollView(slivers: [
         SliverCustomAppbar(
@@ -153,7 +154,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: hospitalProvider
                                         .hospitalCategoryList.length,
-                                    itemBuilder: (context, index) {
+                                    itemBuilder: (context, categoryIndex) {
                                       return FadeInRight(
                                         duration:
                                             const Duration(milliseconds: 500),
@@ -167,10 +168,12 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                               //         const PharmacyCategoryWiseProductScreen());
                                             },
                                             image: hospitalProvider
-                                                .hospitalCategoryList[index]
+                                                .hospitalCategoryList[
+                                                    categoryIndex]
                                                 .image!,
                                             title: hospitalProvider
-                                                .hospitalCategoryList[index]
+                                                .hospitalCategoryList[
+                                                    categoryIndex]
                                                 .category!),
                                       );
                                     },
@@ -186,7 +189,16 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                     fontSize: 16, fontWeight: FontWeight.w600),
                               ),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  EasyNavigation.push(
+                                      context: context,
+                                      type: PageTransitionType.rightToLeft,
+                                      duration: 250,
+                                      page: AllDoctorsScreen(
+                                        hospitalIndex: widget.hospitalIndex,
+                                        hospitalId: widget.hospitalId,
+                                      ));
+                                },
                                 child: const Text(
                                   'View all',
                                   style: TextStyle(
@@ -199,23 +211,27 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                             ],
                           ),
                           ListView.separated(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             separatorBuilder: (context, index) => const Gap(10),
-                            itemCount: hospitalProvider.doctorsList.length,
-                            itemBuilder: (context, index) => GestureDetector(
+                            itemCount: hospitalProvider.doctorsList.length > 5
+                                ? 5
+                                : hospitalProvider.doctorsList.length,
+                            itemBuilder: (context, doctorIndex) =>
+                                GestureDetector(
                               onTap: () {
                                 EasyNavigation.push(
                                     context: context,
                                     page: DoctorDetailsScreen(
-                                      index: index,
+                                      hospitalIndex: widget.hospitalIndex,
+                                      doctorIndex: doctorIndex,
                                       hospitalAddress: hospital.address!,
                                     ),
                                     type: PageTransitionType.rightToLeft,
                                     duration: 250);
                               },
                               child: DoctorCard(
-                                index: index,
+                                index: doctorIndex,
                               ),
                             ),
                           )

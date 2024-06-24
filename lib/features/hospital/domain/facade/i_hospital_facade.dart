@@ -10,6 +10,8 @@ abstract class IHospitalFacade {
       {required String hospitalId});
   FutureResult<List<HospitalCategoryModel>> getHospitalCategory(
       {required List<String> categoryIdList});
-  FutureResult<List<DoctorModel>> getDoctors({required String hospitalId});
+  FutureResult<List<DoctorModel>> getDoctors(
+      {required String hospitalId, required String? doctorSearch});
   void clearHospitalData();
+  void clearDoctorData();
 }

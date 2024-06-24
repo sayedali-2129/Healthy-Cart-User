@@ -12,14 +12,18 @@ import 'package:provider/provider.dart';
 
 class DoctorDetailsScreen extends StatelessWidget {
   const DoctorDetailsScreen(
-      {super.key, required this.index, required this.hospitalAddress});
-  final int index;
+      {super.key,
+      required this.doctorIndex,
+      required this.hospitalAddress,
+      required this.hospitalIndex});
+  final int doctorIndex;
   final String hospitalAddress;
+  final int hospitalIndex;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
-      final doctors = hospitalProvider.doctorsList[index];
+      final doctors = hospitalProvider.doctorsList[doctorIndex];
       return Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -54,7 +58,9 @@ class DoctorDetailsScreen extends StatelessWidget {
                     onPressed: () {
                       EasyNavigation.push(
                           context: context,
-                          page: DoctorBookingScreen(index: index),
+                          page: DoctorBookingScreen(
+                              hospitalIndex: hospitalIndex,
+                              doctorIndex: doctorIndex),
                           type: PageTransitionType.rightToLeft,
                           duration: 250);
                     },

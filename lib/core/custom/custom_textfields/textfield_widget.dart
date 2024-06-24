@@ -53,7 +53,7 @@ class TextfieldWidget extends StatelessWidget {
                 style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: BColors.grey),
+                    color: BColors.black),
               )
             : const Gap(0),
         const Gap(8),

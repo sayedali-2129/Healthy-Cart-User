@@ -86,7 +86,7 @@ class _HospitalMainState extends State<HospitalMain> {
                           categoryIdList: hospitalProvider
                                   .hospitalList[index].selectedCategoryId ??
                               [],
-                          index: index,
+                          hospitalIndex: index,
                         ));
                   },
                 ),

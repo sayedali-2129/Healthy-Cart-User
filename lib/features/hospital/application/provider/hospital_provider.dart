@@ -1,18 +1,23 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/features/hospital/domain/facade/i_hospital_booking_facade.dart';
 import 'package:healthy_cart_user/features/hospital/domain/facade/i_hospital_facade.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_banner_model.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_category_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class HospitalProvider with ChangeNotifier {
-  HospitalProvider(this.iHospitalFacade);
+  HospitalProvider(this.iHospitalFacade, this.iHospitalBookingFacade);
   final IHospitalFacade iHospitalFacade;
+  final IHospitalBookingFacade iHospitalBookingFacade;
 
   TextEditingController hospitalSearch = TextEditingController();
 
@@ -23,11 +28,26 @@ class HospitalProvider with ChangeNotifier {
 
   bool hospitalFetchLoading = false;
   bool isLoading = true;
-  String? selectedSlot;
 
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final doctorSearchController = TextEditingController();
+
+  /* ---------------------------- TEXT CONTROLLERS ---------------------------- */
+  TextEditingController nameController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController placeController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
+  String? genderDropdownValue;
+  //booking date
+  String? seletedBookingDate;
+  //booking time
+  String? selectedSlot;
+/* -------------------------------------------------------------------------- */
+
+/* ------------------------------ SET TIME SLOT ----------------------------- */
   void setTimeSlot(String selectedTimeSlot) {
     selectedSlot = selectedTimeSlot;
-    log(selectedSlot!);
+
     notifyListeners();
   }
 
@@ -112,15 +132,120 @@ class HospitalProvider with ChangeNotifier {
   Future<void> getDoctors({required String hospitalId}) async {
     isLoading = true;
     notifyListeners();
-    final result = await iHospitalFacade.getDoctors(hospitalId: hospitalId);
+    final result = await iHospitalFacade.getDoctors(
+        hospitalId: hospitalId, doctorSearch: doctorSearchController.text);
 
     result.fold((err) {
       CustomToast.errorToast(text: 'Unable to get doctors');
       log('ERROR IN GET DOCTOR :: ${err.errMsg}');
     }, (success) {
-      doctorsList = success;
+      doctorsList.addAll(success);
     });
     isLoading = false;
+    notifyListeners();
+  }
+
+  void searchDoctor({required String hospitalId}) {
+    clearDoctorData();
+    getDoctors(hospitalId: hospitalId);
+    notifyListeners();
+  }
+
+  void clearDoctorData() {
+    iHospitalFacade.clearDoctorData();
+    doctorsList = [];
+    notifyListeners();
+  }
+
+  void doctorinit(
+      {required ScrollController scrollController,
+      required String hospitalId}) {
+    scrollController.addListener(
+      () {
+        if (scrollController.position.atEdge &&
+            scrollController.position.pixels != 0 &&
+            isLoading == false) {
+          getDoctors(hospitalId: hospitalId);
+        }
+      },
+    );
+  }
+  /* -------------------------------------------------------------------------- */
+
+/* ----------------------------- GET ALL SUNDAY ----------------------------- */
+  List<DateTime> findAllSundaysFromNow(int daysCount) {
+    List<DateTime> sundays = [];
+    DateTime currentDate = DateTime.now();
+
+    for (int i = 0; i < daysCount; i++) {
+      DateTime date = currentDate.add(Duration(days: i));
+      if (date.weekday == DateTime.sunday) {
+        sundays.add(date);
+      }
+    }
+
+    return sundays;
+  }
+
+  HospitalBookingModel? hospitalBookingModel;
+  /* ------------------------- CREATE HOSPITAL BOOKING ------------------------ */
+  Future<void> addHospitalBooking(
+      {required String hospitalId,
+      required String userId,
+      required UserModel userModel,
+      required HospitalModel hospitalModel,
+      required int totalAmount,
+      required DoctorModel selectedDoctor
+      // required String fcmtoken,
+
+      }) async {
+    hospitalBookingModel = HospitalBookingModel(
+      hospitalId: hospitalId,
+      bookedAt: Timestamp.now(),
+      patientName: nameController.text,
+      patientAge: ageController.text,
+      patientGender: genderDropdownValue,
+      patientNumber: numberController.text,
+      patientPlace: placeController.text,
+      orderStatus: 0,
+      paymentStatus: 0,
+      totalAmount: totalAmount,
+      userDetails: userModel,
+      hospitalDetails: hospitalModel,
+      isUserAccepted: false,
+      selectedDate: seletedBookingDate,
+      selectedTimeSlot: selectedSlot,
+      selectedDoctor: selectedDoctor,
+      userId: userId,
+    );
+
+    final result = await iHospitalBookingFacade.createHospitalBooking(
+        hospitalBookingModel: hospitalBookingModel!);
+    result.fold(
+      (err) {
+        log('error in addHospitalOrders() :: ${err.errMsg}');
+      },
+      (success) {
+        // sendFcmMessage(
+        //     token: fcmtoken,
+        //     body:
+        //         'New Booking Received from $userName. Please check the details and accept the order',
+        //     title: 'New Booking Received!!!');
+        CustomToast.sucessToast(text: success);
+        log('Order Request Send Successfully');
+      },
+    );
+    notifyListeners();
+  }
+
+  void clearControllerData() {
+    nameController.clear();
+    ageController.clear();
+    placeController.clear();
+    numberController.clear();
+    genderDropdownValue = null;
+    selectedSlot = null;
+    seletedBookingDate = null;
     notifyListeners();
   }
 }

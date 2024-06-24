@@ -108,21 +108,43 @@ class IHospitalImpl implements IHospitalFacade {
   }
 
 /* ------------------------------- GET DOCTRS ------------------------------- */
+
+  DocumentSnapshot<Map<String, dynamic>>? lastDoc;
+  bool noMoreData = false;
   @override
   FutureResult<List<DoctorModel>> getDoctors(
-      {required String hospitalId}) async {
+      {required String hospitalId, required String? doctorSearch}) async {
     try {
-      final responce = await _firestore
+      Query query = _firestore
           .collection(FirebaseCollections.doctorCollection)
           .where('hospitalId', isEqualTo: hospitalId)
-          .orderBy('createdAt', descending: true)
-          .get();
+          .orderBy('createdAt', descending: true);
 
-      return right(responce.docs
-          .map((e) => DoctorModel.fromMap(e.data()).copyWith(id: e.id))
+      if (doctorSearch != null && doctorSearch.isNotEmpty) {
+        query =
+            query.where('keywords', arrayContains: doctorSearch.toLowerCase());
+      }
+      if (lastDoc != null) {
+        query = query.startAfterDocument(lastDoc!);
+      }
+      final snapshot = await query.limit(12).get();
+      if (snapshot.docs.length < 12 || snapshot.docs.isEmpty) {
+        noMoreData = true;
+      } else {
+        lastDoc = snapshot.docs.last as DocumentSnapshot<Map<String, dynamic>>;
+      }
+      return right(snapshot.docs
+          .map((e) => DoctorModel.fromMap(e.data() as Map<String, dynamic>)
+              .copyWith(id: e.id))
           .toList());
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
+  }
+
+  @override
+  void clearDoctorData() {
+    lastDoc = null;
+    noMoreData = false;
   }
 }
