@@ -117,7 +117,8 @@ class _LabMainState extends State<LabMain> {
                     page: const LabOrdersTab(),
                     type: PageTransitionType.bottomToTop,
                     duration: 200);
-              }));
+              }),
+              );
     });
   }
 }

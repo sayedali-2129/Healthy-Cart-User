@@ -47,7 +47,7 @@ class ProductInfoWidget extends StatelessWidget {
               fontSize: fontSize1,
               fontWeight: FontWeight.w600,
               fontFamily: 'Montserrat',
-              color: BColors.textLightBlack),
+              color: BColors.textLightBlack,),
         ),
         const Gap(2),
         Text(
@@ -58,7 +58,8 @@ class ProductInfoWidget extends StatelessWidget {
               fontSize: fontSize2,
               fontWeight: FontWeight.w600,
               fontFamily: 'Montserrat',
-              color: BColors.textBlack),
+              color: BColors.textBlack,
+              ),
         ),
       ],
     );

@@ -25,7 +25,7 @@ class NoDataImageWidget extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(
-              fontSize: 14, color: BColors.black, fontWeight: FontWeight.w500),
+              fontSize: 14, color: BColors.textLightBlack, fontWeight: FontWeight.w500),
         ),
       ],
     ));
@@ -57,7 +57,7 @@ final String text;
                  fontFamily: 'Montserrat',
                  fontSize: 14,
                  fontWeight: FontWeight.w500,
-                 color: BColors.black),
+                 color: BColors.textLightBlack),
              maxLines: 1,
              overflow: TextOverflow.ellipsis,
            ),

@@ -9,8 +9,11 @@ class VerticalImageText extends StatelessWidget {
     required this.image,
     required this.title,
     this.onTap,
+<<<<<<< HEAD
+=======
     required this.rightPadding,
     required this.leftPadding,
+>>>>>>> ea14e3d792cc0f6f90cb22502fa8659c61c761b6
   });
   final String title;
   final void Function()? onTap;
@@ -22,7 +25,11 @@ class VerticalImageText extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
+<<<<<<< HEAD
+        padding: const EdgeInsets.only(right: 8, left: 8),
+=======
         padding: EdgeInsets.only(right: rightPadding, left: leftPadding),
+>>>>>>> ea14e3d792cc0f6f90cb22502fa8659c61c761b6
         child: Column(
           children: [
             Material(

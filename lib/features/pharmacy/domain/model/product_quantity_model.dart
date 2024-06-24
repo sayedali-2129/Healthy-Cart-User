@@ -6,12 +6,10 @@ import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_produc
 class ProductAndQuantityModel {
   final String? productId;
   final int? quantity;
-  final Timestamp? createdAt;
   final PharmacyProductAddModel? productData;
   ProductAndQuantityModel({
     this.productId,
     this.quantity,
-    this.createdAt,
     this.productData,
   });
 
@@ -24,7 +22,6 @@ class ProductAndQuantityModel {
     return ProductAndQuantityModel(
       productId: productId ?? this.productId,
       quantity: quantity ?? this.quantity,
-      createdAt: createdAt ?? this.createdAt,
       productData: productData ?? this.productData,
     );
   }
@@ -33,21 +30,14 @@ class ProductAndQuantityModel {
     return <String, dynamic>{
       'productId': productId,
       'quantity': quantity,
-      'createdAt': createdAt,
       'productData': productData?.toCartMap(),
     };
   }
-  Map<String, dynamic> toUserMap() {
-    return <String, dynamic>{
-      'productId': productId,
-      'quantity': quantity,
-    };
-  }
+
   factory ProductAndQuantityModel.fromMap(Map<String, dynamic> map) {
     return ProductAndQuantityModel(
       productId: map['productId'] != null ? map['productId'] as String : null,
       quantity: map['quantity'] != null ? map['quantity'] as int : null,
-      createdAt: map['createdAt'] != null ? map['createdAt'] as Timestamp : null,
       productData: map['productData'] != null ? PharmacyProductAddModel.fromMap(map['productData'] as Map<String,dynamic>) : null,
     );
   }

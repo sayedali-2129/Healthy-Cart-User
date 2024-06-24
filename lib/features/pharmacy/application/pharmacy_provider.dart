@@ -1,15 +1,21 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/i_pharmacy_facade.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_user_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_cart_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/product_quantity_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +23,6 @@ import 'package:intl/intl.dart';
 class PharmacyProvider extends ChangeNotifier {
   PharmacyProvider(this._iPharmacyFacade);
   final IPharmacyFacade _iPharmacyFacade;
-  String? userId = FirebaseAuth.instance.currentUser?.uid;
   List<PharmacyModel> pharmacyList = [];
   bool fetchLoading = false;
   List<PharmacyCategoryModel> pharmacyCategoryList = [];
@@ -32,6 +37,45 @@ class PharmacyProvider extends ChangeNotifier {
   List<String> productImageUrlList = [];
   bool bottomsheetCart = false;
   final TextEditingController searchController = TextEditingController();
+  String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+/* ---------------------------------- prescription image --------------------------------- */
+  String? prescriptionImageUrl;
+  File? prescriptionImageFile;
+  Future<void> getImage({required ImageSource imagesource}) async {
+    final result = await _iPharmacyFacade.getImage(imagesource: imagesource);
+    notifyListeners();
+    result.fold((failure) {
+      CustomToast.errorToast(text: failure.errMsg);
+    }, (imageFilesucess) async {
+      prescriptionImageFile = imageFilesucess;
+      notifyListeners();
+    });
+  }
+
+  Future<void> saveImage() async {
+    if (prescriptionImageFile == null) {
+      CustomToast.errorToast(text: 'Please check the image selected.');
+      return;
+    }
+    fetchLoading = true;
+
+    /// fetch loading is true because I am using this function along with add function
+    notifyListeners();
+    final result =
+        await _iPharmacyFacade.saveImage(imageFile: prescriptionImageFile!);
+    result.fold((failure) {
+      CustomToast.errorToast(text: failure.errMsg);
+    }, (imageurlGet) {
+      prescriptionImageUrl = imageurlGet;
+      notifyListeners();
+    });
+  }
+
+  void clearImageFile() {
+    prescriptionImageFile = null;
+    notifyListeners();
+  }
 
 /* --------------------------------- common --------------------------------- */
   void setPharmacyIdAndCategoryList(
@@ -229,29 +273,59 @@ class PharmacyProvider extends ChangeNotifier {
   List<int> countOfProduct = [];
   int quantityCount = 1;
   Map<String, dynamic> cartProductMap = {};
-  Map<String, int> productCartData = {};
+  Map<String, int> productCartDataAdded = {};
   List<int> productCartQuantityList = [];
   List<String> productCartIdList = [];
   List<PharmacyProductAddModel> pharmacyCartProducts = [];
   List<ProductAndQuantityModel> productAndQuantityDetails = [];
-  PharmacyCartModel? orderProducts;
-  PharmacyCartModel? orderProductsAdded;
+  PharmacyOrderModel? orderProducts;
+  PharmacyOrderModel? orderProductsAdded;
   UserAddressModel? userAddress;
-
+  UserModel? userDetails;
+  num totalAmount = 0;
+  num totalFinalAmount = 0;
+  // increment of the quantity from product details page
   void increment() {
     quantityCount++;
     notifyListeners();
   }
 
+  // decrement of the quantity from product details page
   void decrement() {
     if (quantityCount <= 1) return;
     quantityCount--;
     notifyListeners();
   }
 
+  // increment of the quantity from product cart page
+  void incrementInCart(
+      {required int index,
+      required num productMRPRate,
+      required num productDiscountRate}) {
+    productCartQuantityList[index]++;
+    totalFinalAmount += productDiscountRate;
+    totalAmount += productMRPRate;
+    notifyListeners();
+  }
+
+  // decrement of the quantity from product cart page
+  void decrementInCart(
+      {required int index,
+      required num productMRPRate,
+      required num productDiscountRate}) {
+    if (productCartQuantityList[index] <= 1) {
+      return CustomToast.sucessToast(
+          text:
+              "If you want to remove the product please remove from the cart. ");
+    }
+    productCartQuantityList[index]--;
+    totalFinalAmount -= productDiscountRate;
+    totalAmount -= productMRPRate;
+    notifyListeners();
+  }
+
+// creating a cart or getting the product cart id and quantity from user document
   Future<void> createOrGetProductToUserCart() async {
-    // fetchLoading = true;
-    // notifyListeners();
     final result = await _iPharmacyFacade.createOrGetProductToUserCart(
       pharmacyId: pharmacyId!,
       userId: userId!,
@@ -274,9 +348,10 @@ class PharmacyProvider extends ChangeNotifier {
     );
   }
 
+// getting cart full product details from user pharmacy
   Future<void> getpharmcyCartProduct() async {
-    if (pharmacyCartProducts.isNotEmpty) return;
-     fetchLoading = true;
+    pharmacyCartProducts.clear();
+    fetchLoading = true;
     notifyListeners();
     final result = await _iPharmacyFacade.getpharmcyCartProduct(
         productCartIdList: productCartIdList);
@@ -284,11 +359,11 @@ class PharmacyProvider extends ChangeNotifier {
       CustomToast.errorToast(text: "Couldn't able to fetch categories");
       fetchLoading = false;
       notifyListeners();
-    }, (castProductList) {
-      pharmacyCartProducts.addAll(castProductList);
+    }, (cartProductList) {
+      pharmacyCartProducts.addAll(cartProductList);
+      fetchLoading = false;
+      notifyListeners();
     });
-    fetchLoading = false;
-    notifyListeners();
   }
 
   void clearCartData() {
@@ -299,81 +374,190 @@ class PharmacyProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addProductToUserCart({required String productId}) async {
-    productCartData = {productId: quantityCount};
+// adding pharmacy cart in
+  Future<void> addProductToUserCart(
+      {required String productId,
+      required int selectedQuantityCount,
+      required bool? cartQuantityIncrement}) async {
+    productCartDataAdded = {productId: selectedQuantityCount};
 
     final result = await _iPharmacyFacade.addProductToUserCart(
-        cartProduct: productCartData, pharmacyId: pharmacyId!, userId: userId!);
+        cartProduct: productCartDataAdded,
+        pharmacyId: pharmacyId ?? '',
+        userId: userId ?? '');
     result.fold(
       (failure) {
         CustomToast.errorToast(text: failure.errMsg);
       },
       (productData) {
-        productCartData = productData;
-        if (productCartData.isNotEmpty) {
-          productCartData.forEach(
+        productCartDataAdded = productData;
+        if (productCartDataAdded.isNotEmpty) {
+          productCartDataAdded.forEach(
             (key, value) {
               productCartQuantityList.add(value);
               productCartIdList.add(key);
             },
           );
+        } // here when the prodct is incremented from the cart it will show the toast accordingly
+        if (cartQuantityIncrement == true) {
+          CustomToast.sucessToast(text: "One quantity added.");
+        } else if (cartQuantityIncrement == false) {
+          CustomToast.sucessToast(text: "One quantity removed.");
+        } else {
+          CustomToast.sucessToast(text: "Product added to cart.");
         }
-        CustomToast.sucessToast(text: "Added to cart");
         bottomsheetSwitch(true);
         notifyListeners();
       },
     );
   }
 
-  Future<void> createProductOrderDetails({String? productId}) async {
-    cartProductsDetails();
-    final result = await _iPharmacyFacade.createProductOrderDetails(
-        orderProducts: orderProducts!, productId: productId);
+  Future<void> removeProductFromUserCart({
+    required PharmacyProductAddModel productData,
+    required int index,
+  }) async {
+    final result = await _iPharmacyFacade.removeProductFromUserCart(
+        cartProductId: productData.id ?? '',
+        pharmacyId: pharmacyId ?? '',
+        userId: userId ?? '');
     result.fold(
       (failure) {
         CustomToast.errorToast(text: failure.errMsg);
       },
+      (sucess) {
+        pharmacyCartProducts.removeAt(index);
+        totalAmount -= productData.productMRPRate!;
+        if (productData.productDiscountRate != null) {
+          totalFinalAmount -= productData.productDiscountRate!;
+        } else {
+          totalFinalAmount -= productData.productMRPRate!;
+        }
+        cartProductMap.remove(productData.id);
+        productCartQuantityList.removeAt(index);
+        productCartIdList.removeAt(index);
+        notifyListeners();
+        CustomToast.sucessToast(text: 'Removed sucessfully');
+      },
+    );
+  }
+
+/* ---------------------------- PRICE CALCULATOR ---------------------------- */
+  void totalAmountCalclator() {
+    totalAmount = 0;
+    totalFinalAmount = 0;
+    num totalDiscountAmount = 0;
+    num totalMRPAmount = 0;
+
+    for (int i = 0; i < pharmacyCartProducts.length; i++) {
+      if (pharmacyCartProducts[i].productDiscountRate == null) {
+        totalDiscountAmount = productCartQuantityList[i] *
+            pharmacyCartProducts[i].productMRPRate!;
+      } else {
+        totalDiscountAmount = productCartQuantityList[i] *
+            pharmacyCartProducts[i].productDiscountRate!;
+      }
+      totalMRPAmount =
+          productCartQuantityList[i] * pharmacyCartProducts[i].productMRPRate!;
+
+      totalAmount += totalMRPAmount;
+      totalFinalAmount += totalDiscountAmount;
+    }
+
+    log("totalAmount  :$totalAmount");
+
+    notifyListeners();
+  }
+/* -------------------------------------------------------------------------- */
+
+/* ------------------------------ RADIO BUTTON ------------------------------ */
+  String? selectedRadio;
+
+  setSelectedRadio(String? value) {
+    selectedRadio = value;
+    notifyListeners();
+  }
+
+  /* -------------------------------------------------------------------------- */
+/* -------------------------- ORDER CREATE SECTION -------------------------- */
+  Future<void> createProductOrderDetails(
+      {required BuildContext context}) async {
+    cartProductsDetails();
+    final result = await _iPharmacyFacade.createProductOrderDetails(
+      pharmacyId: pharmacyId ?? '',
+      userId: userId ?? '',
+      orderProducts: orderProducts!,
+    );
+    result.fold(
+      (failure) {
+        CustomToast.errorToast(text: failure.errMsg);
+        EasyNavigation.pop(context: context);
+      },
       (orderProduct) {
         orderProductsAdded = orderProduct;
-        CustomToast.sucessToast(text: "Added to cart");
         notifyListeners();
+        clearImageFile();
+        EasyNavigation.pop(context: context);
+        EasyNavigation.push(
+            context: context,
+            page: const OrderRequestSuccessScreen(
+              title: 'Your order is in review, we will notify you soon.',
+            ));
+        clearProductAndUserInCheckOutDetails();
+        CustomToast.sucessToast(text: "The order is in review");
       },
     );
   }
 
   void cartProductsDetails() {
-    orderProducts = PharmacyCartModel(
+    orderProducts = PharmacyOrderModel(
       pharmacyId: pharmacyId,
       userId: userId,
+      userDetails: userDetails,
+      addresss: userAddress,
       productId: productIdList,
-      productDetails: productAndQuantityDetails,
+      productDetails: productAndQuantityDetails.toList(),
       orderStatus: 0,
-      addresss: userAddress ?? UserAddressModel(),
+      paymentStatus: 0,
+      pharmacyDetails:selectedpharmacyData ,
+      deliveryType: selectedRadio,
+      totalAmount: totalFinalAmount,
       createdAt: Timestamp.now(),
+      prescription:
+          (prescriptionImageUrl != null) ? prescriptionImageUrl : null,
     );
   }
 
-  String? selectedCartProductId;
-  void setCartProductId(String id) {
-    selectedCartProductId = id;
-  }
-
-  void productDetailsPage( // call in add to cart place
-      {
+  void productDetails({
     required int quantity,
     required PharmacyProductAddModel productToCartDetails,
+    required String id, // call in add to cart place
   }) {
+    log('Called::: here');
     final value = ProductAndQuantityModel(
-        createdAt: Timestamp.now(),
-        quantity: quantity,
-        productId: selectedCartProductId,
-        productData: productToCartDetails);
+      quantity: quantity,
+      productId: id,
+      productData: productToCartDetails,
+    );
 
-    productIdList.add(productToCartDetails.id ?? '');
+    productIdList.add(id);
     productAndQuantityDetails.add(value);
   }
 
-  void setDeliveryAddress({required UserAddressModel address}) {
-    userAddress = address;
+  void clearProductAndUserInCheckOutDetails() {
+    userAddress = null;
+    userDetails = null;
+    prescriptionImageFile = null;
+    productIdList.clear();
+    productAndQuantityDetails.clear();
   }
+
+  void setDeliveryAddressAndUserData({
+    required UserAddressModel? address,
+    required UserModel userData,
+  }) {
+    userAddress = address;
+    userDetails = userData;
+  }
+
+  /* -------------------------------------------------------------------------- */
 }

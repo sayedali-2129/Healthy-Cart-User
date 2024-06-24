@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
@@ -12,7 +11,7 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/order_request_success.dart';
+import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/address_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/cart_items_card.dart';
@@ -123,7 +122,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                   fontWeight: FontWeight.w500,
                                                   color: BColors.black),
                                             )
-                                          ])))
+                                          ],
+                                          ),
+                                          ),
+                                          )
                                 ],
                               ),
                         const Gap(8),
@@ -325,7 +327,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              const OrderRequestSuccessScreen(),
+                              const OrderRequestSuccessScreen( title: 'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',),
                         ),
                         (route) => false,
                       );
@@ -345,7 +347,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         fontWeight: FontWeight.w600,
                         color: BColors.white),
                   ),
-                )),
+                ),
+                ),
           ),
         ),
       );

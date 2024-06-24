@@ -7,7 +7,6 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/product_cart.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/ad_pharmacy_slider.dart';
-import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/grid_product.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_product_header.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/search_list.dart';
@@ -37,7 +36,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
           ..getpharmacyCategory()
           ..getBanner()
           ..getPharmacyAllProductDetails()
-          ..createOrGetProductToUserCart();
+          ..createOrGetProductToUserCart();   
       },
     );
     _scrollController.addListener(
@@ -99,7 +98,8 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                       ),
                     ),
                   ),
-                )),
+                ),
+                ),
           ),
           const RowProductCategoryWidget(),
           if (pharmacyProvider.bannerImageList.isNotEmpty)
@@ -131,31 +131,35 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                 ),
               ),
             ),
-          (pharmacyProvider.fetchLoading == true &&
-                  pharmacyProvider.productAllList.isEmpty)
-              ? const SliverFillRemaining(
-                  child: Center(
-                    child: LoadingIndicater(),
-                  ),
-                )
-              : SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: SliverGrid.builder(
-                    itemCount: pharmacyProvider.productAllList.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 6,
-                      mainAxisSpacing: 6,
-                      mainAxisExtent: 360,
-                    ),
-                    itemBuilder: (context, index) {
-                      return PostCardVertical(
-                        productData: pharmacyProvider.productAllList[index],
-                      );
-                    },
-                  ),
+          if (pharmacyProvider.fetchLoading == true &&
+              pharmacyProvider.productAllList.isEmpty)
+            const SliverFillRemaining(
+              child: Center(
+                child: LoadingIndicater(),
+              ),
+            )
+
+          else 
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverGrid.builder(
+                itemCount: pharmacyProvider.productAllList.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 6,
+                  mainAxisExtent: 360,
                 ),
+                itemBuilder: (context, index) {
+                  return FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    child: PostCardVertical(
+                      productData: pharmacyProvider.productAllList[index],
+                    ),
+                  );
+                },
+              ),
+            ),
 
           SliverToBoxAdapter(
               child: (pharmacyProvider.fetchLoading == true &&
@@ -164,16 +168,13 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                       child: LoadingIndicater(),
                     )
                   : null),
-           if (pharmacyProvider.productAllList.isEmpty)
-            const ErrorOrNoDataPage(
-                text: 'No products found, please try again later.'),     
         ],
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 40, right: 8),
         child: SizedBox(
-          height: 64,
-          width: 64,
+          height: 56,
+          width: 56,
           child: FloatingActionButton(
             elevation: 12,
             tooltip: 'Add to cart',
@@ -189,7 +190,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
             child: const Icon(
               Icons.shopping_cart_outlined,
               color: BColors.white,
-              size: 40,
+              size: 32,
             ),
           ),
         ),

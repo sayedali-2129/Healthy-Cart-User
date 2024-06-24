@@ -11,11 +11,11 @@ class ImageService {
 
   final FirebaseStorage _storage;
   final ImagePicker picker = ImagePicker();
-  Future<Either<MainFailure, File>> getGalleryImage() async {
+  Future<Either<MainFailure, File>> getGalleryImage({required ImageSource imagesource}) async {
     final XFile? pickedImageFile;
     final File? imageFile;
     try {
-      pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
+      pickedImageFile = await picker.pickImage(source: imagesource);
       if (pickedImageFile != null) {
         imageFile = File(pickedImageFile.path);
         return right(imageFile);
