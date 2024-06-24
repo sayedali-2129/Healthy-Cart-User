@@ -44,8 +44,9 @@ class PharmacyCategoriesScreen extends StatelessWidget {
                           selectedCategoryName: pharmacyProvider
                               .pharmacyCategoryList[index].category);
                       EasyNavigation.push(
-                          context: context,
-                          page: const PharmacyCategoryWiseProductScreen());
+                        context: context,
+                        page: const PharmacyCategoryWiseProductScreen(),
+                      );
                     },
                     image: pharmacyProvider.pharmacyCategoryList[index].image,
                     title:

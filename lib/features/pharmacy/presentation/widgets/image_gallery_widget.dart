@@ -11,9 +11,8 @@ import 'package:provider/provider.dart';
 class GalleryImagePicker extends StatelessWidget {
   const GalleryImagePicker({
     super.key,
-    this.isEditing,
   });
-  final bool? isEditing;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PharmacyProvider>(builder: (context, pharmacyProvider, _) {

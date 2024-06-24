@@ -7,6 +7,7 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_profile_provider.dart';
@@ -54,11 +55,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => sl<LabOrdersProvider>(),
         ),
+<<<<<<< HEAD
+         ChangeNotifierProvider(
+          create: (context) => sl<PharmacyOrderProvider>(),
+=======
         ChangeNotifierProvider(
           create: (context) => sl<HospitalProvider>(),
         ),
         ChangeNotifierProvider(
           create: (context) => sl<HomeProvider>(),
+>>>>>>> ea14e3d792cc0f6f90cb22502fa8659c61c761b6
         ),
       ],
       child: MaterialApp(

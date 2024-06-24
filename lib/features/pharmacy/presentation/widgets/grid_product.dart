@@ -44,7 +44,9 @@ class _PostCardVerticalState extends State<PostCardVertical> {
               type: PageTransitionType.bottomToTop,
               page: ProductDetailsScreen(
                 productData: widget.productData,
-              ));
+                fromCart: true,
+              ),
+              );
         },
         child: Container(
           width: 180,
@@ -152,22 +154,22 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                             fontWeight: FontWeight.w600,
                                             color: BColors.textLightBlack),
                                       ),
-                                      const TextSpan(
+                                       TextSpan(
                                           text: "₹ ",
                                           style: TextStyle(
                                             fontFamily: 'Montserrat',
-                                            fontSize: 13,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w600,
-                                            color: BColors.black,
+                                           color: BColors.green,
                                           )),
                                       TextSpan(
                                         text:
                                             '${widget.productData.productMRPRate ?? 0}',
-                                        style: const TextStyle(
+                                        style:  TextStyle(
                                             fontFamily: 'Montserrat',
-                                            fontSize: 13,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w600,
-                                            color: BColors.black),
+                                            color: BColors.green),
                                       ),
                                     ]),
                                   ),
@@ -198,7 +200,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                           TextSpan(
                                               text: "₹ ",
                                               style: TextStyle(
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 fontWeight: FontWeight.w600,
                                                 color: BColors.green,
                                               )),
@@ -207,7 +209,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                                 '${widget.productData.productDiscountRate ?? 0}',
                                             style: TextStyle(
                                                 fontFamily: 'Montserrat',
-                                                fontSize: 13,
+                                                fontSize: 14,
                                                 fontWeight: FontWeight.w600,
                                                 color: BColors.green),
                                           ),

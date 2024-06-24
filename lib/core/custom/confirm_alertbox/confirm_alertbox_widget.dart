@@ -7,7 +7,7 @@ class ConfirmAlertBoxWidget {
       {required BuildContext context,
       required VoidCallback confirmButtonTap,
       required String titleText,
-      double titleSize = 15,
+      double titleSize = 16,
       required String subText}) {
     showDialog(
       context: context,
@@ -25,7 +25,7 @@ class ConfirmAlertBoxWidget {
             content: Text(subText,
                 style: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                     fontFamily: 'Montserrat')),
             actions: [
               TextButton(

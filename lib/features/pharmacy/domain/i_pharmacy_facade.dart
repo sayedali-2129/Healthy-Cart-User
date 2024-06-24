@@ -1,12 +1,22 @@
 
+import 'dart:io';
+
+import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/general/typdef.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_banner_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_user_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_cart_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 abstract class IPharmacyFacade {
+
+  FutureResult<File> getImage({required ImageSource imagesource});
+  FutureResult<String>saveImage({
+    required File imageFile,
+  });
+
   FutureResult<List<PharmacyProductAddModel>> getPharmacyAllProductDetails({
     required String? pharmacyId,
     required String? searchText,
@@ -35,26 +45,33 @@ abstract class IPharmacyFacade {
     required String pharmacyId,
     required String userId,
   });
+
   FutureResult<Map<String, int>> addProductToUserCart({
     required Map<String, int> cartProduct,
     required String pharmacyId,
     required String userId,
   });
-  FutureResult<PharmacyCartModel> createProductOrderDetails({
-    required PharmacyCartModel orderProducts,
-    required String? productId,
+    FutureResult<Unit> removeProductFromUserCart({
+    required String cartProductId,
+    required String pharmacyId,
+    required String userId,
   });
 
-  FutureResult<List<PharmacyCartModel>> getProductOrderDetails({
+  FutureResult<PharmacyOrderModel> createProductOrderDetails({
+    required PharmacyOrderModel orderProducts, required String pharmacyId,
+    required String userId,
+  });
+
+  FutureResult<List<PharmacyOrderModel>> getProductOrderDetails({
     required String userId,
     required String pharmacyId,
   });
 
   void clearProductOrderFetchData();
 
-  FutureResult<PharmacyCartModel> updateProductOrderDetails({
+  FutureResult<PharmacyOrderModel> updateProductOrderDetails({
     required String orderProductId,
-    required PharmacyCartModel orderProducts,
+    required PharmacyOrderModel orderProducts,
   });
 
   FutureResult<List<PharmacyProductAddModel>> getpharmcyCartProduct({

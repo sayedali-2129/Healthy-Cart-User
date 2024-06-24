@@ -20,6 +20,7 @@ class PharmacyModel {
   final String? rejectionReason;
   final String? fcmToken;
   final String? email;
+  
   PharmacyModel({
     this.id,
     this.phoneNo,
@@ -98,20 +99,17 @@ class PharmacyModel {
       'createdAt': createdAt,
       'pharmacyKeywords': pharmacyKeywords,
       'email': email,
-    //  'fcmToken': fcmToken,
       'rejectionReason': rejectionReason,
     };
   }
 
-  Map<String, dynamic> toEditMap() {
+
+  Map<String, dynamic> toProductMap() {
     return <String, dynamic>{
       'pharmacyName': pharmacyName,
       'pharmacyAddress': pharmacyAddress,
-      'pharmacyownerName': pharmacyownerName,
-      'pharmacyDocumentLicense': pharmacyDocumentLicense,
       'pharmacyImage': pharmacyImage,
-       'email': email,
-      'pharmacyKeywords': pharmacyKeywords,
+      'email': email,
     };
   }
 

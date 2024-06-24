@@ -63,6 +63,39 @@ class LabListCard extends StatelessWidget {
                             child:
                                 CustomCachedNetworkImage(image: labs.image!)),
                         Container(
+<<<<<<< HEAD
+                          clipBehavior: Clip.antiAlias,
+                          height: 52,
+                          width: 52,
+                          decoration:
+                              const BoxDecoration(shape: BoxShape.circle),
+                          child:
+                              CustomCachedNetworkImage(image: labList.image!),
+                        ),
+                        const Gap(8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                labList.laboratoryName ?? 'No Name',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.black),
+                              ),
+                              const Gap(5),
+                              Text(
+                                labList.address ?? 'No Adress',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w500),
+                              )
+                            ],
+=======
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -72,6 +105,7 @@ class LabListCard extends StatelessWidget {
                               begin: Alignment.bottomCenter,
                               end: Alignment.center,
                             ),
+>>>>>>> ea14e3d792cc0f6f90cb22502fa8659c61c761b6
                           ),
                         ),
                       ],

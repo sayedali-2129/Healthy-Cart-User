@@ -9,6 +9,7 @@ import 'package:healthy_cart_user/core/services/image_picker.dart';
 import 'package:healthy_cart_user/features/profile/domain/facade/i_user_profile_facade.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IUserProfileFacade)
@@ -56,7 +57,7 @@ class IUserProfileImpl implements IUserProfileFacade {
   /* ---------------------------- PICK USER IMAGE ---------------------------- */
   @override
   FutureResult<File> pickUserImage() async {
-    return await _imageService.getGalleryImage();
+    return await _imageService.getGalleryImage(imagesource: ImageSource.gallery);
   }
 
 /* ----------------------------- SAVE USER IMAGE ---------------------------- */
