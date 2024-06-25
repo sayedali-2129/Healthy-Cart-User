@@ -91,7 +91,12 @@ class _HospitalMainState extends State<HospitalMain> {
                   },
                 ),
               ),
-            )
+            ),
+          SliverToBoxAdapter(
+              child: (hospitalProvider.hospitalFetchLoading == true &&
+                      hospitalProvider.hospitalList.isNotEmpty)
+                  ? const Center(child: LoadingIndicater())
+                  : const Gap(0)),
         ],
       ));
     });

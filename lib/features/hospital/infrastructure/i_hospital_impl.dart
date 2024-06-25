@@ -98,7 +98,8 @@ class IHospitalImpl implements IHospitalFacade {
 
       final categoryList = result
           .map<HospitalCategoryModel>((e) =>
-              HospitalCategoryModel.fromMap(e.data() as Map<String, dynamic>))
+              HospitalCategoryModel.fromMap(e.data() as Map<String, dynamic>)
+                  .copyWith(id: e.id))
           .toList();
 
       return right(categoryList);
@@ -113,12 +114,18 @@ class IHospitalImpl implements IHospitalFacade {
   bool noMoreData = false;
   @override
   FutureResult<List<DoctorModel>> getDoctors(
-      {required String hospitalId, required String? doctorSearch}) async {
+      {required String hospitalId,
+      String? doctorSearch,
+      String? categoryId}) async {
+    if (noMoreData) return right([]);
     try {
       Query query = _firestore
           .collection(FirebaseCollections.doctorCollection)
           .where('hospitalId', isEqualTo: hospitalId)
           .orderBy('createdAt', descending: true);
+      if (categoryId != null) {
+        query = query.where('categoryId', isEqualTo: categoryId);
+      }
 
       if (doctorSearch != null && doctorSearch.isNotEmpty) {
         query =

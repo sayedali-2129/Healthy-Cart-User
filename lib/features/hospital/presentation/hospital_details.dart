@@ -6,6 +6,7 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicat
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/all_categories_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/all_doctors_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/doctor_details_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/ad_slider_hospital.dart';
@@ -37,6 +38,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
         context.read<HospitalProvider>()
           ..getHospitalBanner(hospitalId: widget.hospitalId)
           ..getHospitalCategory(categoryIdList: widget.categoryIdList ?? [])
+          ..clearDoctorData()
           ..getDoctors(hospitalId: widget.hospitalId);
       },
     );
@@ -131,7 +133,18 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        EasyNavigation.push(
+                                            context: context,
+                                            type:
+                                                PageTransitionType.rightToLeft,
+                                            duration: 250,
+                                            page: AllCategoriesScreen(
+                                              hospitalId: widget.hospitalId,
+                                              hospitalIndex:
+                                                  widget.hospitalIndex,
+                                            ));
+                                      },
                                       child: const Text(
                                         'View all',
                                         style: TextStyle(
@@ -153,7 +166,11 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                     padding: const EdgeInsets.all(0),
                                     scrollDirection: Axis.horizontal,
                                     itemCount: hospitalProvider
-                                        .hospitalCategoryList.length,
+                                                .hospitalCategoryList.length >
+                                            5
+                                        ? 5
+                                        : hospitalProvider
+                                            .hospitalCategoryList.length,
                                     itemBuilder: (context, categoryIndex) {
                                       return FadeInRight(
                                         duration:
@@ -162,10 +179,24 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                             rightPadding: 8,
                                             leftPadding: 0,
                                             onTap: () {
-                                              // EasyNavigation.push(
-                                              //     context: context,
-                                              //     page:
-                                              //         const PharmacyCategoryWiseProductScreen());
+                                              EasyNavigation.push(
+                                                  context: context,
+                                                  type: PageTransitionType
+                                                      .rightToLeft,
+                                                  duration: 250,
+                                                  page: AllDoctorsScreen(
+                                                    categoryId: hospitalProvider
+                                                        .hospitalCategoryList[
+                                                            categoryIndex]
+                                                        .id,
+                                                    isCategoryWise: true,
+                                                    categoryIndex:
+                                                        categoryIndex,
+                                                    hospitalIndex:
+                                                        widget.hospitalIndex,
+                                                    hospitalId:
+                                                        widget.hospitalId,
+                                                  ));
                                             },
                                             image: hospitalProvider
                                                 .hospitalCategoryList[
@@ -195,6 +226,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                       type: PageTransitionType.rightToLeft,
                                       duration: 250,
                                       page: AllDoctorsScreen(
+                                        isCategoryWise: false,
                                         hospitalIndex: widget.hospitalIndex,
                                         hospitalId: widget.hospitalId,
                                       ));

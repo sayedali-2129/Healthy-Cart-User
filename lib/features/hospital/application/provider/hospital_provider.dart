@@ -25,6 +25,7 @@ class HospitalProvider with ChangeNotifier {
   List<HospitalBannerModel> hospitalBanner = [];
   List<HospitalCategoryModel> hospitalCategoryList = [];
   List<DoctorModel> doctorsList = [];
+  Set<String> doctorIds = {};
 
   bool hospitalFetchLoading = false;
   bool isLoading = true;
@@ -129,17 +130,25 @@ class HospitalProvider with ChangeNotifier {
   }
 
   /* ------------------------------- GET DOCTORS ------------------------------ */
-  Future<void> getDoctors({required String hospitalId}) async {
+  Future<void> getDoctors(
+      {required String hospitalId, String? categoryId}) async {
     isLoading = true;
     notifyListeners();
+
     final result = await iHospitalFacade.getDoctors(
-        hospitalId: hospitalId, doctorSearch: doctorSearchController.text);
+        hospitalId: hospitalId,
+        doctorSearch: doctorSearchController.text,
+        categoryId: categoryId);
 
     result.fold((err) {
       CustomToast.errorToast(text: 'Unable to get doctors');
       log('ERROR IN GET DOCTOR :: ${err.errMsg}');
     }, (success) {
-      doctorsList.addAll(success);
+      final uniqueDoctors =
+          success.where((doctor) => !doctorIds.contains(doctor.id)).toList();
+      doctorIds.addAll(uniqueDoctors.map((doctor) => doctor.id!));
+      doctorsList.addAll(uniqueDoctors);
+      notifyListeners();
     });
     isLoading = false;
     notifyListeners();
@@ -153,6 +162,7 @@ class HospitalProvider with ChangeNotifier {
 
   void clearDoctorData() {
     iHospitalFacade.clearDoctorData();
+    doctorIds.clear();
     doctorsList = [];
     notifyListeners();
   }
@@ -169,6 +179,13 @@ class HospitalProvider with ChangeNotifier {
         }
       },
     );
+  }
+
+  void getCategoryWiseDoctor(
+      {required String hospitalId, required String categoryId}) {
+    clearDoctorData();
+    getDoctors(hospitalId: hospitalId, categoryId: categoryId);
+    notifyListeners();
   }
   /* -------------------------------------------------------------------------- */
 
