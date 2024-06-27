@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 
-
 class PharmacyModel {
   String? id;
   final String? phoneNo;
@@ -20,7 +19,7 @@ class PharmacyModel {
   final String? rejectionReason;
   final String? fcmToken;
   final String? email;
-  
+
   PharmacyModel({
     this.id,
     this.phoneNo,
@@ -68,7 +67,7 @@ class PharmacyModel {
       pharmacyAddress: pharmacyAddress ?? this.pharmacyAddress,
       pharmacyownerName: pharmacyownerName ?? this.pharmacyownerName,
       pharmacyDocumentLicense:
-      pharmacyDocumentLicense ?? this.pharmacyDocumentLicense,
+          pharmacyDocumentLicense ?? this.pharmacyDocumentLicense,
       pharmacyImage: pharmacyImage ?? this.pharmacyImage,
       selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
       pharmacyRequested: pharmacyRequested ?? this.pharmacyRequested,
@@ -99,16 +98,18 @@ class PharmacyModel {
       'createdAt': createdAt,
       'pharmacyKeywords': pharmacyKeywords,
       'email': email,
+      'fcmToken': fcmToken,
       'rejectionReason': rejectionReason,
     };
   }
-
 
   Map<String, dynamic> toProductMap() {
     return <String, dynamic>{
       'pharmacyName': pharmacyName,
       'pharmacyAddress': pharmacyAddress,
       'pharmacyImage': pharmacyImage,
+      'phoneNo': phoneNo,
+      'fcmToken': fcmToken,
       'email': email,
     };
   }

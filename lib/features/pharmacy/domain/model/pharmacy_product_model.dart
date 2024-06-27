@@ -192,8 +192,11 @@ class PharmacyProductAddModel {
       'productName': productName,
       'productBrandName': productBrandName,
       'productFormNumber': productFormNumber,
-      'productPackageNumber': productPackageNumber,
       'productMeasurementNumber': productMeasurementNumber,
+      'productPackageNumber': productPackageNumber,
+      'productForm': productForm,
+      'productMeasurement': productMeasurement,
+      'productPackage': productPackage,
     };
   }
   Map<String, dynamic> toEquipmentMap() {
