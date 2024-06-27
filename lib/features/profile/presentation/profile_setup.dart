@@ -125,7 +125,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                         style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: BColors.grey),
+                            color: BColors.black),
                       ),
                     ],
                   ),

@@ -55,9 +55,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => sl<LabOrdersProvider>(),
         ),
-         ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => sl<PharmacyOrderProvider>(),
-         ),
+        ),
         ChangeNotifierProvider(
           create: (context) => sl<HospitalProvider>(),
         ),

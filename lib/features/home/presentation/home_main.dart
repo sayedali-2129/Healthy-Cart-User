@@ -131,7 +131,7 @@ class _HomeMainState extends State<HomeMain> {
                                     categoryIdList: hospitalProvier
                                         .hospitalList[index]
                                         .selectedCategoryId,
-                                    index: index,
+                                    hospitalIndex: index,
                                   ));
                         },
                         child: HospitalsHorizontalCard(

@@ -41,7 +41,7 @@ class DoctorCard extends StatelessWidget {
                   children: [
                     ///////////////DOCTOR NAME///////////////
                     Text(
-                      '${hospitalProvider.doctorsList[index].doctorName} (${hospitalProvider.doctorsList[index].doctorQualification})',
+                      'Dr. ${hospitalProvider.doctorsList[index].doctorName} (${hospitalProvider.doctorsList[index].doctorQualification})',
                       style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -57,6 +57,14 @@ class DoctorCard extends StatelessWidget {
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: BColors.black),
+                    ),
+                    const Gap(4),
+                    Text(
+                      'Time ${hospitalProvider.doctorsList[index].doctorTotalTime ?? ""}',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: BColors.green),
                     ),
                   ],
                 )

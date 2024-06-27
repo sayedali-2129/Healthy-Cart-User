@@ -3,15 +3,17 @@ import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 
 class CustomSliverSearchAppBar extends StatelessWidget {
   const CustomSliverSearchAppBar({
-    super.key, required this.onTapBackButton, required this.searchOnChanged, required this.controller,
+    super.key,
+    required this.onTapBackButton,
+    required this.searchOnChanged,
+    this.controller,
   });
-final VoidCallback onTapBackButton;
-final void Function(String) searchOnChanged;
-final TextEditingController controller;
+  final VoidCallback onTapBackButton;
+  final void Function(String) searchOnChanged;
+  final TextEditingController? controller;
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      
       backgroundColor: BColors.mainlightColor,
       titleSpacing: -1,
       pinned: true,
@@ -24,19 +26,19 @@ final TextEditingController controller;
           bottomLeft: Radius.circular(12),
         ),
       ),
-      leading:  GestureDetector(
-        onTap:onTapBackButton ,
-        child:const Icon(
-              Icons.arrow_back_ios,
-              color: BColors.darkblue,
-            ),
+      leading: GestureDetector(
+        onTap: onTapBackButton,
+        child: const Icon(
+          Icons.arrow_back_ios,
+          color: BColors.darkblue,
+        ),
       ),
-        centerTitle: true,
+      centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(right: 8,bottom: 8, top: 8),
+        padding: const EdgeInsets.only(right: 8, bottom: 8, top: 8),
         child: TextField(
-          onChanged:searchOnChanged ,
-          controller:controller ,
+          onChanged: searchOnChanged,
+          controller: controller,
           showCursor: false,
           autofocus: true,
           cursorColor: BColors.black,

@@ -74,27 +74,30 @@ class _HospitalMainState extends State<HospitalMain> {
               sliver: SliverList.separated(
                 separatorBuilder: (context, index) => const Gap(8),
                 itemCount: hospitalProvider.hospitalList.length,
-                itemBuilder: (context, index) => FadeInUp(
-                  child: HospitalMainCard(
-                    screenwidth: screenwidth,
-                    index: index,
-                    onTap: () {
-                      EasyNavigation.push(
-                          context: context,
-                          type: PageTransitionType.rightToLeft,
-                          duration: 250,
-                          page: HospitalDetails(
-                            hospitalId: hospitalProvider.hospitalList[index].id!,
-                            categoryIdList: hospitalProvider
-                                    .hospitalList[index].selectedCategoryId ??
-                                [],
-                            index: index,
-                          ));
-                    },
-                  ),
+                itemBuilder: (context, index) => HospitalMainCard(
+                  screenwidth: screenwidth,
+                  index: index,
+                  onTap: () {
+                    EasyNavigation.push(
+                        context: context,
+                        type: PageTransitionType.rightToLeft,
+                        duration: 250,
+                        page: HospitalDetails(
+                          hospitalId: hospitalProvider.hospitalList[index].id!,
+                          categoryIdList: hospitalProvider
+                                  .hospitalList[index].selectedCategoryId ??
+                              [],
+                          hospitalIndex: index,
+                        ));
+                  },
                 ),
               ),
-            )
+            ),
+          SliverToBoxAdapter(
+              child: (hospitalProvider.hospitalFetchLoading == true &&
+                      hospitalProvider.hospitalList.isNotEmpty)
+                  ? const Center(child: LoadingIndicater())
+                  : const Gap(0)),
         ],
       ));
     });

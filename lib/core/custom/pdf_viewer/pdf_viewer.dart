@@ -55,6 +55,12 @@ class ViewPdfScreen extends StatelessWidget {
                             FileDownloader.downloadFile(
                                 url: pdfUrl,
                                 name: pdfName,
+                                onProgress: (fileName, progress) {
+                                  if (progress == 0) {
+                                    CustomToast.sucessToast(
+                                        text: "Downloading...");
+                                  }
+                                },
                                 onDownloadCompleted: (path) {
                                   CustomToast.sucessToast(
                                       text: 'Result Downloaded Successfully');

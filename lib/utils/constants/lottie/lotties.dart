@@ -1,5 +1,6 @@
 class BLottie {
   static const String mainLoadingLottie = 'assets/lottie/hc-user-lottie.json';
+  // static const String mainLoadingLottie = 'assets/lottie/aa.json';
   static const String circularLoadingLottie =
       'assets/lottie/lottie-progress-indicator.json';
   static const String paymentFailed = 'assets/lottie/payment-failed.json';
