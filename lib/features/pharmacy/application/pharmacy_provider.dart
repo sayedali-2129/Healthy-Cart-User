@@ -55,7 +55,6 @@ class PharmacyProvider extends ChangeNotifier {
 
   Future<void> saveImage() async {
     if (prescriptionImageFile == null) {
-      CustomToast.errorToast(text: 'Please check the image selected.');
       return;
     }
     fetchLoading = true;
@@ -316,7 +315,7 @@ class PharmacyProvider extends ChangeNotifier {
     if (productCartQuantityList[index] <= 1) {
       return CustomToast.sucessToast(
           text:
-              "If you want to remove the product please remove from the cart. ");
+              "If you want to remove the product please remove from the cart.");
     }
     productCartQuantityList[index]--;
     totalFinalAmount -= productDiscountRate;
@@ -518,9 +517,10 @@ class PharmacyProvider extends ChangeNotifier {
       productDetails: productAndQuantityDetails.toList(),
       orderStatus: 0,
       paymentStatus: 0,
-      pharmacyDetails:selectedpharmacyData ,
+      pharmacyDetails: selectedpharmacyData,
       deliveryType: selectedRadio,
-      totalAmount: totalFinalAmount,
+      totalDiscountAmount: totalFinalAmount,
+      totalAmount: totalAmount,
       createdAt: Timestamp.now(),
       prescription:
           (prescriptionImageUrl != null) ? prescriptionImageUrl : null,
@@ -532,7 +532,6 @@ class PharmacyProvider extends ChangeNotifier {
     required PharmacyProductAddModel productToCartDetails,
     required String id, // call in add to cart place
   }) {
-    log('Called::: here');
     final value = ProductAndQuantityModel(
       quantity: quantity,
       productId: id,
@@ -546,6 +545,7 @@ class PharmacyProvider extends ChangeNotifier {
   void clearProductAndUserInCheckOutDetails() {
     userAddress = null;
     userDetails = null;
+    prescriptionImageUrl = null;
     prescriptionImageFile = null;
     productIdList.clear();
     productAndQuantityDetails.clear();

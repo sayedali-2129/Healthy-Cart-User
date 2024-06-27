@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -80,16 +81,18 @@ class _LabMainState extends State<LabMain> {
                   sliver: SliverList.separated(
                     separatorBuilder: (context, index) => const Gap(8),
                     itemCount: labProvider.labList.length,
-                    itemBuilder: (context, index) => LabListCard(
-                      screenwidth: screenwidth,
-                      index: index,
-                      onTap: () => EasyNavigation.push(
-                        context: context,
-                        type: PageTransitionType.rightToLeft,
-                        duration: 300,
-                        page: LabDetailsScreen(
-                          index: index,
-                          labId: labProvider.labList[index].id!,
+                    itemBuilder: (context, index) => FadeInUp(
+                      child: LabListCard(
+                        screenwidth: screenwidth,
+                        index: index,
+                        onTap: () => EasyNavigation.push(
+                          context: context,
+                          type: PageTransitionType.rightToLeft,
+                          duration: 300,
+                          page: LabDetailsScreen(
+                            index: index,
+                            labId: labProvider.labList[index].id!,
+                          ),
                         ),
                       ),
                     ),

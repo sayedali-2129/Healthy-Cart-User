@@ -55,16 +55,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => sl<LabOrdersProvider>(),
         ),
-<<<<<<< HEAD
          ChangeNotifierProvider(
           create: (context) => sl<PharmacyOrderProvider>(),
-=======
+         ),
         ChangeNotifierProvider(
           create: (context) => sl<HospitalProvider>(),
         ),
         ChangeNotifierProvider(
           create: (context) => sl<HomeProvider>(),
->>>>>>> ea14e3d792cc0f6f90cb22502fa8659c61c761b6
         ),
       ],
       child: MaterialApp(

@@ -19,6 +19,7 @@ class PharmacyOrderModel {
   final num? deliveryCharge;
   final String? deliveryType;
   final num? totalAmount;
+    final num? totalDiscountAmount;
   final num? finalAmount;
   final String? rejectReason;
   final Timestamp? createdAt;
@@ -42,6 +43,7 @@ class PharmacyOrderModel {
     this.deliveryCharge,
     this.deliveryType,
     this.totalAmount,
+    this.totalDiscountAmount,
     this.finalAmount,
     this.rejectReason,
     this.createdAt,
@@ -67,6 +69,7 @@ class PharmacyOrderModel {
     num? deliveryCharge,
     String? deliveryType,
     num? totalAmount,
+    num? totalDiscountAmount,
     num? finalAmount,
     String? rejectReason,
     Timestamp? createdAt,
@@ -91,6 +94,7 @@ class PharmacyOrderModel {
       deliveryCharge: deliveryCharge ?? this.deliveryCharge,
       deliveryType: deliveryType ?? this.deliveryType,
       totalAmount: totalAmount ?? this.totalAmount,
+      totalDiscountAmount: totalDiscountAmount ?? this.totalDiscountAmount,
       finalAmount: finalAmount ?? this.finalAmount,
       rejectReason: rejectReason ?? this.rejectReason,
       createdAt: createdAt ?? this.createdAt,
@@ -118,6 +122,7 @@ class PharmacyOrderModel {
       'deliveryCharge': deliveryCharge,
       'deliveryType': deliveryType,
       'totalAmount': totalAmount,
+      'totalDiscountAmount': totalDiscountAmount,
       'finalAmount': finalAmount,
       'rejectReason': rejectReason,
       'createdAt': createdAt,
@@ -167,6 +172,8 @@ class PharmacyOrderModel {
           map['deliveryType'] != null ? map['deliveryType'] as String : null,
       totalAmount:
           map['totalAmount'] != null ? map['totalAmount'] as num : null,
+            totalDiscountAmount:
+          map['totalDiscountAmount'] != null ? map['totalDiscountAmount'] as num : null,    
       finalAmount:
           map['finalAmount'] != null ? map['finalAmount'] as num : null,
       rejectReason:

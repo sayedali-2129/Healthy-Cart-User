@@ -58,14 +58,16 @@ class PharmacyOrdersTab extends StatelessWidget {
                 ),
               ),
               const SliverFillRemaining(
-                child: TabBarView(children: [
+                child: TabBarView(
+                  children: [
                   PharmacyPendingTab(),
                   AcceptedTab(),
                   CompletedTab(),
                   CancelledTab(),
                 ]),
               )
-            ]),
+            ]
+            ),
       ),
     );
   }

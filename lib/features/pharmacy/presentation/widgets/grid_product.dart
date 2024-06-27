@@ -145,7 +145,8 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   RichText(
-                                    text: TextSpan(children: [
+                                    text: TextSpan(
+                                      children: [
                                       const TextSpan(
                                         text: 'Our price  :  ',
                                         style: TextStyle(

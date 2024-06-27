@@ -267,7 +267,7 @@ class ProductListWidget extends StatelessWidget {
                                 },
                               );
                             },
-                            titleText: 'Want to remove this product from cart',
+                            titleText: 'Remove this item from cart',
                             subText: 'Are you sure you want to proceed ?');
                       },
                       icon: Icon(

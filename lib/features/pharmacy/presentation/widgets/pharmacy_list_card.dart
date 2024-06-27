@@ -25,7 +25,7 @@ class PharmacyListCard extends StatelessWidget {
       onTap: pharmacy.isPharmacyON == false
           ? () {
               CustomToast.errorToast(
-                  text: 'This Laboratory is not available now!');
+                  text: 'This Pharmacy is not available now!');
             }
           : onTap,
       child: Stack(
@@ -47,8 +47,7 @@ class PharmacyListCard extends StatelessWidget {
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 200,
-                  width: screenwidth,
+                  height: 160,                  width: screenwidth,
                   clipBehavior: Clip.antiAlias,
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
