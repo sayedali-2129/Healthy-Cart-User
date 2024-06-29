@@ -49,76 +49,88 @@ class _LabMainState extends State<LabMain> {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {
       final screenwidth = MediaQuery.of(context).size.width;
       return Scaffold(
-          body: CustomScrollView(
-            controller: scrollController,
-            slivers: [
-              HomeSliverAppbar(
-                searchHint: 'Search Laboratory',
-                searchController: labProvider.labSearchController,
-                onChanged: (_) {
-                  EasyDebounce.debounce(
-                    'labsearch',
-                    const Duration(milliseconds: 500),
-                    () {
-                      labProvider.searchLabs();
-                    },
-                  );
-                },
-              ),
-              if (labProvider.labFetchLoading == true &&
-                  labProvider.labList.isEmpty)
-                const SliverFillRemaining(
-                  child: Center(
-                    child: LoadingIndicater(),
-                  ),
-                )
-              else if (labProvider.labList.isEmpty)
-                const ErrorOrNoDataPage(text: 'No Laboratories Found')
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: SliverList.separated(
-                    separatorBuilder: (context, index) => const Gap(8),
-                    itemCount: labProvider.labList.length,
-                    itemBuilder: (context, index) => LabListCard(
-                      screenwidth: screenwidth,
-                      index: index,
-                      onTap: () => EasyNavigation.push(
-                        context: context,
-                        type: PageTransitionType.rightToLeft,
-                        duration: 300,
-                        page: LabDetailsScreen(
-                          index: index,
-                          labId: labProvider.labList[index].id!,
-                        ),
+        body: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            HomeSliverAppbar(
+              searchHint: 'Search Laboratory',
+              searchController: labProvider.labSearchController,
+              onChanged: (_) {
+                EasyDebounce.debounce(
+                  'labsearch',
+                  const Duration(milliseconds: 500),
+                  () {
+                    labProvider.searchLabs();
+                  },
+                );
+              },
+            ),
+            if (labProvider.labFetchLoading == true &&
+                labProvider.labList.isEmpty)
+              const SliverFillRemaining(
+                child: Center(
+                  child: LoadingIndicater(),
+                ),
+              )
+            else if (labProvider.labList.isEmpty)
+              const ErrorOrNoDataPage(text: 'No Laboratories Found')
+            else
+              SliverPadding(
+                padding: const EdgeInsets.all(16),
+                sliver: SliverList.separated(
+                  separatorBuilder: (context, index) => const Gap(8),
+                  itemCount: labProvider.labList.length,
+                  itemBuilder: (context, index) => LabListCard(
+                    screenwidth: screenwidth,
+                    index: index,
+                    onTap: () => EasyNavigation.push(
+                      context: context,
+                      type: PageTransitionType.rightToLeft,
+                      duration: 300,
+                      page: LabDetailsScreen(
+                        index: index,
+                        labId: labProvider.labList[index].id!,
                       ),
                     ),
                   ),
                 ),
-              SliverToBoxAdapter(
-                  child: (labProvider.labFetchLoading == true &&
-                          labProvider.labList.isNotEmpty)
-                      ? const Center(child: LoadingIndicater())
-                      : const Gap(0)),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-              backgroundColor: BColors.darkblue,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
-              child: Image.asset(
-                color: BColors.white,
-                BIcon.calenderIcon,
-                scale: 3.2,
               ),
-              onPressed: () {
-                EasyNavigation.push(
-                    context: context,
-                    page: const LabOrdersTab(),
-                    type: PageTransitionType.bottomToTop,
-                    duration: 200);
-              }),
-              );
+            SliverToBoxAdapter(
+                child: (labProvider.labFetchLoading == true &&
+                        labProvider.labList.isNotEmpty)
+                    ? const Center(child: LoadingIndicater())
+                    : const Gap(0)),
+          ],
+        ),
+        floatingActionButton: Stack(
+          children: [
+            FloatingActionButton(
+                backgroundColor: BColors.darkblue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
+                child: Image.asset(
+                  color: BColors.white,
+                  BIcon.calenderIcon,
+                  scale: 3.2,
+                ),
+                onPressed: () {
+                  EasyNavigation.push(
+                      context: context,
+                      page: const LabOrdersTab(),
+                      type: PageTransitionType.bottomToTop,
+                      duration: 200);
+                }),
+            const Positioned(
+              right: 2,
+              top: 2,
+              child: CircleAvatar(
+                radius: 8,
+                backgroundColor: Colors.yellow,
+              ),
+            ),
+          ],
+        ),
+      );
     });
   }
 }
