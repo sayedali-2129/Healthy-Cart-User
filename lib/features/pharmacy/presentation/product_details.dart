@@ -126,7 +126,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                     color: BColors.textLightBlack),
                               ),
-                            ])),
+                            ]),),
                         const Gap(12),
                         (productData.productDiscountRate == null)
                             ? Row(children: [

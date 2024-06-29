@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
+import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -78,13 +79,16 @@ class _HomeMainState extends State<HomeMain> {
             const SliverFillRemaining(child: Center(child: LoadingIndicater()))
           else
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    FadeInRight(child: AdSliderHome(screenWidth: screenwidth)),
-                    const Gap(10),
-                    Row(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: FadeInRight(child: AdSliderHome(screenWidth: screenwidth)),
+                  ),
+                 
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
@@ -92,58 +96,54 @@ class _HomeMainState extends State<HomeMain> {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
-                        GestureDetector(
+                        ViewAllButton(
                           onTap: () {
                             widget.onNavigateToHospitalTab();
                           },
-                          child: const Text(
-                            'View all',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: BColors.buttonLightBlue,
-                                decoration: TextDecoration.underline),
-                          ),
-                        )
+                        ),
                       ],
                     ),
-                    const Gap(10),
-                    SizedBox(
-                      height: 230,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: hospitalProvier.hospitalList.length > 5
-                            ? 5
-                            : hospitalProvier.hospitalList.length,
-                        separatorBuilder: (context, index) => const Gap(10),
-                        itemBuilder: (context, index) => FadeInRight(
-                            child: GestureDetector(
-                          onTap: () {
-                            hospitalProvier.hospitalList[index].ishospitalON ==
-                                    false
-                                ? CustomToast.errorToast(
-                                    text: 'This Hospital is not available now!')
-                                : EasyNavigation.push(
-                                    context: context,
-                                    type: PageTransitionType.rightToLeft,
-                                    duration: 250,
-                                    page: HospitalDetails(
-                                      hospitalId: hospitalProvier
-                                          .hospitalList[index].id!,
-                                      categoryIdList: hospitalProvier
-                                          .hospitalList[index]
-                                          .selectedCategoryId,
-                                      hospitalIndex: index,
-                                    ));
-                          },
-                          child: HospitalsHorizontalCard(
-                            index: index,
-                          ),
-                        )),
-                      ),
+                  ),
+               
+                  SizedBox(
+                    height: 230,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: hospitalProvier.hospitalList.length > 5
+                          ? 5
+                          : hospitalProvier.hospitalList.length,
+                      separatorBuilder: (context, index) => const Gap(10),
+                      itemBuilder: (context, index) => FadeInRight(
+                          child: GestureDetector(
+                        onTap: () {
+                          hospitalProvier.hospitalList[index].ishospitalON ==
+                                  false
+                              ? CustomToast.errorToast(
+                                  text: 'This Hospital is not available now!')
+                              : EasyNavigation.push(
+                                  context: context,
+                                  type: PageTransitionType.rightToLeft,
+                                  duration: 250,
+                                  page: HospitalDetails(
+                                    hospitalId: hospitalProvier
+                                        .hospitalList[index].id!,
+                                    categoryIdList: hospitalProvier
+                                        .hospitalList[index]
+                                        .selectedCategoryId,
+                                    hospitalIndex: index,
+                                  ));
+                        },
+                        child: HospitalsHorizontalCard(
+                          index: index,
+                        ),
+                      )),
                     ),
-                    const Gap(8),
-                    Row(
+                  ),
+                 
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
@@ -151,60 +151,56 @@ class _HomeMainState extends State<HomeMain> {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
-                        GestureDetector(
+                        ViewAllButton(
                           onTap: () {
                             widget.onNavigateToPharmacyTab();
                           },
-                          child: const Text(
-                            'View all',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: BColors.buttonLightBlue,
-                                decoration: TextDecoration.underline),
-                          ),
                         )
                       ],
                     ),
-                    const Gap(8),
-                    SizedBox(
-                      height: 230,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: pharmacyProvider.pharmacyList.length > 5
-                            ? 5
-                            : pharmacyProvider.pharmacyList.length,
-                        separatorBuilder: (context, index) => const Gap(10),
-                        itemBuilder: (context, index) => FadeInRight(
-                            child: GestureDetector(
-                          onTap: () {
-                            pharmacyProvider.pharmacyList[index].isPharmacyON ==
-                                    false
-                                ? CustomToast.errorToast(
-                                    text: 'This Pharmacy is not available now!')
-                                : pharmacyProvider.setPharmacyIdAndCategoryList(
-                                    selectedpharmacyId: pharmacyProvider
-                                            .pharmacyList[index].id ??
-                                        '',
-                                    categoryIdList: pharmacyProvider
-                                            .pharmacyList[index]
-                                            .selectedCategoryId ??
-                                        [],
-                                    pharmacy:
-                                        pharmacyProvider.pharmacyList[index]);
-                            EasyNavigation.push(
-                                type: PageTransitionType.rightToLeft,
-                                context: context,
-                                page: const PharmacyProductScreen());
-                          },
-                          child: PharmacyHorizontalCard(
-                            index: index,
-                          ),
-                        )),
-                      ),
+                  ),
+                 
+                  SizedBox(
+                    height: 230,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: pharmacyProvider.pharmacyList.length > 5
+                          ? 5
+                          : pharmacyProvider.pharmacyList.length,
+                      separatorBuilder: (context, index) => const Gap(10),
+                      itemBuilder: (context, index) => FadeInRight(
+                          child: GestureDetector(
+                        onTap: () {
+                          pharmacyProvider.pharmacyList[index].isPharmacyON ==
+                                  false
+                              ? CustomToast.errorToast(
+                                  text: 'This Pharmacy is not available now!')
+                              : pharmacyProvider.setPharmacyIdAndCategoryList(
+                                  selectedpharmacyId: pharmacyProvider
+                                          .pharmacyList[index].id ??
+                                      '',
+                                  categoryIdList: pharmacyProvider
+                                          .pharmacyList[index]
+                                          .selectedCategoryId ??
+                                      [],
+                                  pharmacy:
+                                      pharmacyProvider.pharmacyList[index]);
+                          EasyNavigation.push(
+                              type: PageTransitionType.rightToLeft,
+                              context: context,
+                              page: const PharmacyProductScreen());
+                        },
+                        child: PharmacyHorizontalCard(
+                          index: index,
+                        ),
+                      )),
                     ),
-                    const Gap(8),
-                    Row(
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
@@ -212,47 +208,41 @@ class _HomeMainState extends State<HomeMain> {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
-                        GestureDetector(
+                        
+                        ViewAllButton(
                           onTap: () {
-                            widget.onNavigateToLaboratoryTab();
+                           widget.onNavigateToLaboratoryTab();
                           },
-                          child: const Text(
-                            'View all',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: BColors.buttonLightBlue,
-                                decoration: TextDecoration.underline),
-                          ),
                         )
                       ],
                     ),
-
-                    /* ---------------------------------- LABS ---------------------------------- */
-                    ListView.separated(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: labProvider.labList.length > 5
-                            ? 5
-                            : labProvider.labList.length,
-                        separatorBuilder: (context, index) => const Gap(10),
-                        itemBuilder: (context, index) => FadeInRight(
-                              child: LabListCardHome(
-                                index: index,
-                                onTap: () {
-                                  EasyNavigation.push(
-                                      context: context,
-                                      type: PageTransitionType.rightToLeft,
-                                      duration: 250,
-                                      page: LabDetailsScreen(
-                                        labId: labProvider.labList[index].id!,
-                                        index: index,
-                                      ));
-                                },
-                              ),
-                            )),
-                  ],
-                ),
+                  ),
+                
+                  /* ---------------------------------- LABS ---------------------------------- */
+                  ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: labProvider.labList.length > 5
+                          ? 5
+                          : labProvider.labList.length,
+                      separatorBuilder: (context, index) => const Gap(10),
+                      itemBuilder: (context, index) => FadeInRight(
+                            child: LabListCardHome(
+                              index: index,
+                              onTap: () {
+                                EasyNavigation.push(
+                                    context: context,
+                                    type: PageTransitionType.rightToLeft,
+                                    duration: 250,
+                                    page: LabDetailsScreen(
+                                      labId: labProvider.labList[index].id!,
+                                      index: index,
+                                    ));
+                              },
+                            ),
+                          )),
+                ],
               ),
             )
         ],

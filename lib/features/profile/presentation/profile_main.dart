@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
@@ -41,104 +42,113 @@ class ProfileMain extends StatelessWidget {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                ProfileCard(
-                  userName: authProvider.userFetchlDataFetched!.userName,
-                  userLocation:
-                      '${authProvider.userFetchlDataFetched!.placemark?.localArea}, ${authProvider.userFetchlDataFetched!.placemark?.district}',
-                  userImage: authProvider.userFetchlDataFetched!.image,
+                FadeInRight(
+                  child: ProfileCard(
+                    userName: authProvider.userFetchlDataFetched!.userName,
+                    userLocation:
+                        '${authProvider.userFetchlDataFetched!.placemark?.localArea}, ${authProvider.userFetchlDataFetched!.placemark?.district}',
+                    userImage: authProvider.userFetchlDataFetched!.image,
+                  ),
                 ),
-                ProfileButtons(
-                  buttonName: 'Edit Profile',
-                  onPressed: () {
-                    EasyNavigation.push(
-                      type: PageTransitionType.rightToLeft,
-                      duration: 300,
-                      context: context,
-                      page: ProfileSetup(
-                        userModel: authProvider.userFetchlDataFetched,
-                      ),
-                    );
-                  },
-                ),
-                ProfileButtons(
-                  buttonName: 'My Appointments',
-                  onPressed: () {},
-                ),
-                ProfileButtons(
-                  buttonName: 'My Orders',
-                  onPressed: () {},
-                ),
-                ProfileButtons(
-                  buttonName: 'My Cart',
-                  onPressed: () {},
-                ),
-                ProfileButtons(
-                  buttonName: 'My Address',
-                  onPressed: () {
-                    EasyNavigation.push(
-                        type: PageTransitionType.rightToLeft,
-                        duration: 300,
-                        context: context,
-                        page: MyAddressScreen(
-                          userId: authProvider.userFetchlDataFetched!.id!,
-                        ));
-                  },
-                ),
-                const Gap(16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    OutlineButtonWidget(
-                      buttonHeight: 40,
-                      buttonWidth: 160,
-                      buttonColor: Colors.transparent,
-                      borderColor: BColors.black,
-                      onPressed: () {},
-                      buttonWidget: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.add_ic_call_sharp,
-                            color: BColors.black,
-                          ),
-                          Text(
-                            'Contact Us',
-                            style: TextStyle(color: BColors.black),
-                          )
-                        ],
-                      ),
-                    ),
-                    ButtonWidget(
-                      buttonHeight: 40,
-                      buttonWidth: 160,
-                      buttonColor: BColors.mainlightColor,
-                      onPressed: () {
-                        ConfirmAlertBoxWidget.showAlertConfirmBox(
+                FadeInUp(
+                  child: Column(
+                    children: [
+                      ProfileButtons(
+                        buttonName: 'Edit Profile',
+                        onPressed: () {
+                          EasyNavigation.push(
+                            type: PageTransitionType.rightToLeft,
+                            duration: 300,
                             context: context,
-                            confirmButtonTap: () async {
-                              LoadingLottie.showLoading(
-                                  context: context, text: 'Logging Out...');
-                              await authProvider.userLogOut(context: context);
-                            },
-                            titleText: 'Log Out',
-                            subText: 'Are you sure want to logout?');
-                      },
-                      buttonWidget: Row(
+                            page: ProfileSetup(
+                              userModel: authProvider.userFetchlDataFetched,
+                            ),
+                          );
+                        },
+                      ),
+                      ProfileButtons(
+                        buttonName: 'My Appointments',
+                        onPressed: () {},
+                      ),
+                      ProfileButtons(
+                        buttonName: 'My Orders',
+                        onPressed: () {},
+                      ),
+                      ProfileButtons(
+                        buttonName: 'My Cart',
+                        onPressed: () {},
+                      ),
+                      ProfileButtons(
+                        buttonName: 'My Address',
+                        onPressed: () {
+                          EasyNavigation.push(
+                              type: PageTransitionType.rightToLeft,
+                              duration: 300,
+                              context: context,
+                              page: MyAddressScreen(
+                                userId: authProvider.userFetchlDataFetched!.id!,
+                              ));
+                        },
+                      ),
+                      const Gap(16),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const Text(
-                            'Log Out',
-                            style: TextStyle(color: BColors.white),
+                          OutlineButtonWidget(
+                            buttonHeight: 40,
+                            buttonWidth: 160,
+                            buttonColor: Colors.transparent,
+                            borderColor: BColors.black,
+                            onPressed: () {},
+                            buttonWidget: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  Icons.add_ic_call_sharp,
+                                  color: BColors.black,
+                                ),
+                                Text(
+                                  'Contact Us',
+                                  style: TextStyle(color: BColors.black),
+                                )
+                              ],
+                            ),
                           ),
-                          Image.asset(
-                            BIcon.logoutIcon,
-                            scale: 4,
+                          ButtonWidget(
+                            buttonHeight: 40,
+                            buttonWidth: 160,
+                            buttonColor: BColors.mainlightColor,
+                            onPressed: () {
+                              ConfirmAlertBoxWidget.showAlertConfirmBox(
+                                  context: context,
+                                  confirmButtonTap: () async {
+                                    LoadingLottie.showLoading(
+                                        context: context, text: 'Logging Out...');
+                                    await authProvider.userLogOut(
+                                        context: context);
+                                  },
+                                  titleText: 'Log Out',
+                                  subText: 'Are you sure want to logout?');
+                            },
+                            buttonWidget: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                const Text(
+                                  'Log Out',
+                                  style: TextStyle(color: BColors.white),
+                                ),
+                                Image.asset(
+                                  BIcon.logoutIcon,
+                                  scale: 4,
+                                )
+                              ],
+                            ),
                           )
                         ],
-                      ),
-                    )
-                  ],
-                )
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
           ));

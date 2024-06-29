@@ -49,7 +49,7 @@ class HospitalMainCard extends StatelessWidget {
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 200,
+                    height: 160,
                     width: screenwidth,
                     clipBehavior: Clip.antiAlias,
                     decoration: const BoxDecoration(

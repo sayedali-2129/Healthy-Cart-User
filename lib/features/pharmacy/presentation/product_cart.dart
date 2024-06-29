@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
@@ -32,7 +33,6 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
         pharmacyProvider.getpharmcyCartProduct().whenComplete(
           () {
             pharmacyProvider.totalAmountCalclator();
-
           },
         );
       },
@@ -126,87 +126,98 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                                   ),
                                 ),
                                 const Gap(2),
-                                (pharmacyProvider.totalFinalAmount == pharmacyProvider.totalAmount)?
-                                RichText(
-                                      text: TextSpan(children: [
-                                        const TextSpan(
-                                          text: 'Our price : ',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.textBlack),
-                                        ),
-                                        TextSpan(
-                                          text: "₹ ",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.green),
-                                        ),
-                                        TextSpan(
-                                          text:
-                                              '${pharmacyProvider.totalAmount}',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.green),
-                                        ),
-                                      ]),
-                                    ):
-                                RichText(
-                                  text: TextSpan(children: [
-                                    TextSpan(
-                                        text: "₹ ",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: 'Montserrat',
-                                            color: BColors.green)),
-                                    TextSpan(
-                                      text:
-                                          "${pharmacyProvider.totalFinalAmount}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Montserrat',
-                                          color: BColors.green),
-                                    ),
-                                    const TextSpan(text: '  '),
-                                    const TextSpan(
-                                        text: "₹ ",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                            fontFamily: 'Montserrat',
-                                            color: BColors.textBlack)),
-                                    TextSpan(
-                                      text: "${pharmacyProvider.totalAmount}",
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          decoration:
-                                              TextDecoration.lineThrough,
-                                          fontFamily: 'Montserrat',
-                                          color: BColors.textBlack),
-                                    ),
-                                  ]),
-                                ),
+                                (pharmacyProvider.totalFinalAmount ==
+                                        pharmacyProvider.totalAmount)
+                                    ? RichText(
+                                        text: TextSpan(children: [
+                                          const TextSpan(
+                                            text: 'Our price : ',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Montserrat',
+                                                color: BColors.textBlack),
+                                          ),
+                                          TextSpan(
+                                            text: "₹ ",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                                color: BColors.green),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                '${pharmacyProvider.totalAmount}',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                                color: BColors.green),
+                                          ),
+                                        ]),
+                                      )
+                                    : RichText(
+                                        text: TextSpan(children: [
+                                          TextSpan(
+                                              text: "₹ ",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Montserrat',
+                                                  color: BColors.green)),
+                                          TextSpan(
+                                            text:
+                                                "${pharmacyProvider.totalFinalAmount}",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                                color: BColors.green),
+                                          ),
+                                          const TextSpan(text: '  '),
+                                          const TextSpan(
+                                              text: "₹ ",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  fontFamily: 'Montserrat',
+                                                  color: BColors.textBlack)),
+                                          TextSpan(
+                                            text:
+                                                "${pharmacyProvider.totalAmount}",
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                fontFamily: 'Montserrat',
+                                                color: BColors.textBlack),
+                                          ),
+                                        ]),
+                                      ),
                               ],
                             ),
                           ),
                           ButtonWidget(
                             onPressed: () {
+                              pharmacyProvider.selectedRadio = null;
                               showDialog(
                                 context: context,
                                 builder: (context) {
                                   return DeliveryTypeRadiopopup(
                                     onConfirm: () {
+                                      if (pharmacyProvider.selectedRadio ==
+                                          null) {
+                                        CustomToast.errorToast(
+                                            text:
+                                                'Please select a delivery type.');
+                                        return;
+                                      }
                                       EasyNavigation.pop(context: context);
+
                                       EasyNavigation.push(
                                         context: context,
                                         page: const PharmacyCheckOutScreen(),

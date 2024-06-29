@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -9,7 +10,7 @@ import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_p
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/list_card_pharmacy.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmacy_list_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 import 'package:page_transition/page_transition.dart';
@@ -96,22 +97,24 @@ class _PharmacyMainState extends State<PharmacyMain> {
                     separatorBuilder: (context, index) => const Gap(10),
                     itemCount: pharmacyProvider.pharmacyList.length,
                     itemBuilder: (context, index) {
-                      return PharmacyListCard(
-                        screenwidth: screenwidth,
-                        pharmacy: pharmacyProvider.pharmacyList[index],
-                        onTap: () {
-                          pharmacyProvider.setPharmacyIdAndCategoryList(
-                              selectedpharmacyId:
-                                  pharmacyProvider.pharmacyList[index].id ?? '',
-                              categoryIdList: pharmacyProvider
-                                      .pharmacyList[index].selectedCategoryId ??
-                                  [],
-                              pharmacy: pharmacyProvider.pharmacyList[index]);
-                          EasyNavigation.push(
-                              type: PageTransitionType.rightToLeft,
-                              context: context,
-                              page: const PharmacyProductScreen());
-                        },
+                      return FadeInUp(
+                        child: PharmacyListCard(
+                          screenwidth: screenwidth,
+                          pharmacy: pharmacyProvider.pharmacyList[index],
+                          onTap: () {
+                            pharmacyProvider.setPharmacyIdAndCategoryList(
+                                selectedpharmacyId:
+                                    pharmacyProvider.pharmacyList[index].id ?? '',
+                                categoryIdList: pharmacyProvider
+                                        .pharmacyList[index].selectedCategoryId ??
+                                    [],
+                                pharmacy: pharmacyProvider.pharmacyList[index]);
+                            EasyNavigation.push(
+                                type: PageTransitionType.rightToLeft,
+                                context: context,
+                                page: const PharmacyProductScreen());
+                          },
+                        ),
                       );
                     },
                   ),

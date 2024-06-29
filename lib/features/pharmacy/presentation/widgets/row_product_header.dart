@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
+import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_categories.dart';
@@ -76,31 +77,13 @@ class RowProductCategoryWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 24, bottom: 4),
                     child: Align(
                       alignment: Alignment.bottomRight,
-                      child: InkWell(
+                      child: ViewAllButton(
                         onTap: () {
                           EasyNavigation.push(
                               context: context,
                               type: PageTransitionType.leftToRight,
                               page: const PharmacyCategoriesScreen());
                         },
-                        child: Material(
-                          color: BColors.white,
-                          surfaceTintColor: BColors.white,
-                          elevation: 2,
-                          borderRadius: BorderRadius.circular(8),
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'View All',
-                              style: TextStyle(
-                                  decorationColor: BColors.darkblue,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: BColors.darkblue),
-                            ),
-                          ),
-                        ),
                       ),
                     ),
                   )
@@ -146,3 +129,5 @@ class RowProductCategoryWidget extends StatelessWidget {
     });
   }
 }
+
+

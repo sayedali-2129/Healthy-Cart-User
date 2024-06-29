@@ -6,6 +6,7 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/checkout_item_card.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/quantity_container.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
