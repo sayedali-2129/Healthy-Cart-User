@@ -6,7 +6,7 @@ import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
-import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
+import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
@@ -55,7 +55,8 @@ class _PharmacyMainState extends State<PharmacyMain> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PharmacyProvider>(builder: (context, pharmacyProvider, _) {
+    return Consumer2<PharmacyProvider, AuthenticationProvider>(
+        builder: (context, pharmacyProvider, authProvider, _) {
       final screenwidth = MediaQuery.of(context).size.width;
       return Scaffold(
         body: PopScope(
@@ -104,9 +105,11 @@ class _PharmacyMainState extends State<PharmacyMain> {
                           onTap: () {
                             pharmacyProvider.setPharmacyIdAndCategoryList(
                                 selectedpharmacyId:
-                                    pharmacyProvider.pharmacyList[index].id ?? '',
+                                    pharmacyProvider.pharmacyList[index].id ??
+                                        '',
                                 categoryIdList: pharmacyProvider
-                                        .pharmacyList[index].selectedCategoryId ??
+                                        .pharmacyList[index]
+                                        .selectedCategoryId ??
                                     [],
                                 pharmacy: pharmacyProvider.pharmacyList[index]);
                             EasyNavigation.push(
@@ -129,23 +132,25 @@ class _PharmacyMainState extends State<PharmacyMain> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: BColors.darkblue,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          child: Image.asset(
-            color: BColors.white,
-            BIcon.calenderIcon,
-            scale: 3.2,
-          ),
-          onPressed: () {
-            EasyNavigation.push(
-                context: context,
-                page: const PharmacyOrdersTab(),
-                type: PageTransitionType.bottomToTop,
-                duration: 200);
-          },
-        ),
+        floatingActionButton: authProvider.userFetchlDataFetched == null
+            ? null
+            : FloatingActionButton(
+                backgroundColor: BColors.darkblue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
+                child: Image.asset(
+                  color: BColors.white,
+                  BIcon.calenderIcon,
+                  scale: 3.2,
+                ),
+                onPressed: () {
+                  EasyNavigation.push(
+                      context: context,
+                      page: const PharmacyOrdersTab(),
+                      type: PageTransitionType.bottomToTop,
+                      duration: 200);
+                },
+              ),
       );
     });
   }

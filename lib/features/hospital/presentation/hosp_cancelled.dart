@@ -3,23 +3,23 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/cancelled_card.dart';
+import 'package:healthy_cart_user/features/hospital/application/provider/hosp_booking_provider.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/widgets/hosp_cancelled_card.dart';
 import 'package:provider/provider.dart';
 
-class LabCancelledTab extends StatefulWidget {
-  const LabCancelledTab({super.key});
+class HospCancelled extends StatefulWidget {
+  const HospCancelled({super.key});
 
   @override
-  State<LabCancelledTab> createState() => _CancelledTabState();
+  State<HospCancelled> createState() => _CancelledTabState();
 }
 
-class _CancelledTabState extends State<LabCancelledTab> {
+class _CancelledTabState extends State<HospCancelled> {
   final scrollController = ScrollController();
   @override
   void initState() {
     final authProvider = context.read<AuthenticationProvider>();
-    final ordersProvider = context.read<LabOrdersProvider>();
+    final ordersProvider = context.read<HospitalBookingProivder>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         ordersProvider
@@ -35,29 +35,30 @@ class _CancelledTabState extends State<LabCancelledTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LabOrdersProvider>(builder: (context, ordersProvider, _) {
+    return Consumer<HospitalBookingProivder>(
+        builder: (context, ordersProvider, _) {
       final screenWidth = MediaQuery.of(context).size.width;
 
       return CustomScrollView(
         controller: scrollController,
         slivers: [
           if (ordersProvider.isLoading == true &&
-              ordersProvider.cancelledOrders.isEmpty)
+              ordersProvider.cancelledHospBooking.isEmpty)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
               ),
             )
-          else if (ordersProvider.cancelledOrders.isEmpty)
+          else if (ordersProvider.cancelledHospBooking.isEmpty)
             const ErrorOrNoDataPage(text: 'No Cancelled Bookings Found!')
           else
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverList.separated(
                 separatorBuilder: (context, index) => const Gap(12),
-                itemCount: ordersProvider.cancelledOrders.length,
+                itemCount: ordersProvider.cancelledHospBooking.length,
                 itemBuilder: (context, index) {
-                  return CancelledCard(
+                  return HospCancelledCard(
                     screenWidth: screenWidth,
                     index: index,
                   );
@@ -66,7 +67,7 @@ class _CancelledTabState extends State<LabCancelledTab> {
             ),
           SliverToBoxAdapter(
               child: (ordersProvider.isLoading == true &&
-                      ordersProvider.cancelledOrders.isNotEmpty)
+                      ordersProvider.cancelledHospBooking.isNotEmpty)
                   ? const Center(child: LoadingIndicater())
                   : const Gap(0)),
         ],

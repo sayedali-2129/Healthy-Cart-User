@@ -46,7 +46,8 @@ class ILabOrdersImpl implements ILabOrdersFacade {
 /* ---------------------------- PICK PRESCRIPTION --------------------------- */
   @override
   FutureResult<File> pickPrescription() async {
-    return await _imageService.getGalleryImage(imagesource: ImageSource.gallery);
+    return await _imageService.getGalleryImage(
+        imagesource: ImageSource.gallery);
   }
 
 /* ---------------------------- SAVE PRESCRIPTION --------------------------- */
@@ -195,6 +196,7 @@ class ILabOrdersImpl implements ILabOrdersFacade {
     }
   }
 
+/* -------------------------- CANCEL ORDER BY USER -------------------------- */
   @override
   FutureResult<String> cancelOrder({required String orderId}) async {
     try {

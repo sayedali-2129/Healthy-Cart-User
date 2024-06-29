@@ -58,6 +58,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
           labProvider.cartItems.clear();
           labProvider.isBottomContainerPopUp = false;
           labProvider.isLabOnlySelected = true;
+          labProvider.selectedRadio = null;
         },
         child: Scaffold(
             appBar: AppBar(
@@ -292,7 +293,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 .any((item) =>
                                     item.isDoorstepAvailable == false);
                             if (labProvider.selectedRadio == null) {
-                              CustomToast.errorToast(
+                              CustomToast.infoToast(
                                   text: 'Please select preferred test type');
                             } else if (labProvider.selectedRadio == 'Home' &&
                                 checkHomeAvailable) {

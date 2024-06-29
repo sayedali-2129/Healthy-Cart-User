@@ -258,6 +258,8 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                       hospitalIndex: widget.hospitalIndex,
                                       doctorIndex: doctorIndex,
                                       hospitalAddress: hospital.address!,
+                                      doctorModel: hospitalProvider
+                                          .doctorsList[doctorIndex],
                                     ),
                                     type: PageTransitionType.rightToLeft,
                                     duration: 250);

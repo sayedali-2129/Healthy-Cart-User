@@ -112,14 +112,14 @@ class HomeSliverAppbar extends StatelessWidget {
                             size: 35,
                           ),
                         ),
-                        const Positioned(
-                          right: 2,
-                          top: 2,
-                          child: CircleAvatar(
-                            radius: 7,
-                            backgroundColor: Colors.yellow,
-                          ),
-                        ),
+                        // const Positioned(
+                        //   right: 2,
+                        //   top: 2,
+                        //   child: CircleAvatar(
+                        //     radius: 7,
+                        //     backgroundColor: Colors.yellow,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

@@ -32,114 +32,119 @@ class LabListCard extends StatelessWidget {
             : onTap,
         child: Stack(
           children: [
-            Container(
-              width: screenwidth,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                color: BColors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                      color: BColors.black.withOpacity(0.1),
-                      blurRadius: 7,
-                      spreadRadius: 5),
-                ],
-              ),
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 160,
-                    width: screenwidth,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(16),
-                            topLeft: Radius.circular(16))),
-                    child: Stack(
-                      alignment: Alignment.bottomLeft,
-                      children: [
-                        Positioned.fill(
-                            child:
-                                CustomCachedNetworkImage(image: labs.image!)),
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                BColors.black.withOpacity(0.5),
-                                Colors.transparent
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.center,
+            Material(
+              elevation: 5,
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                width: screenwidth,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  color: BColors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //       color: BColors.black.withOpacity(0.1),
+                  //       blurRadius: 7,
+                  //       spreadRadius: 5),
+                  // ],
+                ),
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 160,
+                      width: screenwidth,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(16),
+                              topLeft: Radius.circular(16))),
+                      child: Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: [
+                          Positioned.fill(
+                              child:
+                                  CustomCachedNetworkImage(image: labs.image!)),
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  BColors.black.withOpacity(0.5),
+                                  Colors.transparent
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.center,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                labs.laboratoryName!.toUpperCase(),
-                                style: const TextStyle(
-                                    color: BColors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: BColors.buttonGreen),
-                              child: const Padding(
-                                padding: EdgeInsets.all(3),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '4.54',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Icon(
-                                      Icons.star,
-                                      size: 14,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  labs.laboratoryName!.toUpperCase(),
+                                  style: const TextStyle(
                                       color: BColors.black,
-                                    ),
-                                  ],
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Gap(5),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              size: 20,
-                            ),
-                            const Gap(3),
-                            Expanded(
-                              child: Text(
-                                '${labs.address}',
-                                style: const TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.w500),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: BColors.buttonGreen),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(3),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        '4.54',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Icon(
+                                        Icons.star,
+                                        size: 14,
+                                        color: BColors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                            ],
+                          ),
+                          const Gap(5),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                size: 20,
+                              ),
+                              const Gap(3),
+                              Expanded(
+                                child: Text(
+                                  '${labs.address}',
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             if (labs.isLabotaroryOn == false)

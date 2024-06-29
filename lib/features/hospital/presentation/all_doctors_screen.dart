@@ -149,6 +149,8 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
                               doctorIndex: doctorIndex,
                               hospitalAddress: hospitalProvider
                                   .hospitalList[widget.hospitalIndex].address!,
+                              doctorModel:
+                                  hospitalProvider.doctorsList[doctorIndex],
                             ),
                             type: PageTransitionType.rightToLeft,
                             duration: 250);

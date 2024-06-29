@@ -7,14 +7,14 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/accept_card.dart';
 import 'package:provider/provider.dart';
 
-class AcceptedTab extends StatefulWidget {
-  const AcceptedTab({super.key});
+class LabAccepted extends StatefulWidget {
+  const LabAccepted({super.key});
 
   @override
-  State<AcceptedTab> createState() => _AcceptedTabState();
+  State<LabAccepted> createState() => _AcceptedTabState();
 }
 
-class _AcceptedTabState extends State<AcceptedTab> {
+class _AcceptedTabState extends State<LabAccepted> {
   @override
   void initState() {
     final authProvider = context.read<AuthenticationProvider>();

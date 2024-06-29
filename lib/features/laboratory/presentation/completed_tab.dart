@@ -7,14 +7,14 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/completed_card.dart';
 import 'package:provider/provider.dart';
 
-class CompletedTab extends StatefulWidget {
-  const CompletedTab({super.key});
+class LabCompleted extends StatefulWidget {
+  const LabCompleted({super.key});
 
   @override
-  State<CompletedTab> createState() => _CompletedTabState();
+  State<LabCompleted> createState() => _CompletedTabState();
 }
 
-class _CompletedTabState extends State<CompletedTab> {
+class _CompletedTabState extends State<LabCompleted> {
   final scrollController = ScrollController();
   @override
   void initState() {
