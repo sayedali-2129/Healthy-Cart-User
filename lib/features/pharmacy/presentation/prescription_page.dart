@@ -4,15 +4,19 @@ import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/prescription_bottom_sheet/precription_bottomsheet.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/prescription_address_select.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/prescription_image_widget.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/type_of_service_radio.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class PrescriptionScreen extends StatelessWidget {
@@ -21,8 +25,6 @@ class PrescriptionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pharmacyProvider = Provider.of<PharmacyProvider>(context);
-    final addressProvider = Provider.of<UserAddressProvider>(context);
-    final authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
       body: Scaffold(
         body: CustomScrollView(
@@ -33,6 +35,33 @@ class PrescriptionScreen extends StatelessWidget {
                 EasyNavigation.pop(context: context);
               },
             ),
+             if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, top: 16, right: 16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.info_outline_rounded,
+                          color: BColors.offRed,
+                        ),
+                        const Gap(6),
+                        const Expanded(
+                          child: Text(
+                            "At this time, our pharmacy only offers order pickup and does not provide home delivery services.",
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: BColors.textLightBlack,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Montserrat'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverToBoxAdapter(
@@ -106,19 +135,41 @@ class PrescriptionScreen extends StatelessWidget {
                           )
                         : ButtonWidget(
                             onPressed: () {
-                              pharmacyProvider.setDeliveryAddressAndUserData(
-                                  userData:
-                                      authProvider.userFetchlDataFetched ??
-                                          UserModel(),
-                                  address: addressProvider.selectedAddress);
-                              LoadingLottie.showLoading(
-                                  context: context, text: 'Please wait...');
-                              pharmacyProvider.saveImage().whenComplete(
-                                () {
-                                  pharmacyProvider.createProductOrderDetails(
-                                      context: context);
-                                },
-                              );
+                              if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false) {
+                                pharmacyProvider.selectedRadio = 'Pharmacy';
+                                LoadingLottie.showLoading(
+                                    context: context, text: 'Please wait...');
+                                pharmacyProvider.saveImage().whenComplete(
+                                  () {
+                                    pharmacyProvider.createProductOrderDetails(
+                                        context: context);
+                                  },
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return DeliveryTypeRadiopopup(
+                                      onConfirm: () {
+                                        if (pharmacyProvider.selectedRadio ==
+                                            null) {
+                                          CustomToast.errorToast(
+                                              text:
+                                                  'Select a delivery type to send for review.');
+                                          return;
+                                        }
+                                        EasyNavigation.pop(context: context);
+                                        
+                                        EasyNavigation.push(
+                                          type:  PageTransitionType.rightToLeft,
+                                          context: context,
+                                          page: const PrescriptionOrderAddressScreen(),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              }
                             },
                             buttonHeight: 40,
                             buttonWidth: double.infinity,
@@ -129,7 +180,7 @@ class PrescriptionScreen extends StatelessWidget {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'Montserrat',
-                                  color: BColors.black),
+                                  color: BColors.black,),
                             ),
                           ),
                     const Gap(24),

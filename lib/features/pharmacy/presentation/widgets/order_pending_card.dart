@@ -1,49 +1,60 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
-import 'package:healthy_cart_user/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthy_cart_user/core/custom/custom_alertbox/textfield_alertbox.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/checkout_item_card.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/quantity_container.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/date_and_order_id.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmacy_detail_container.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/product_view_container.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
 class PharmacyPendingCard extends StatelessWidget {
   const PharmacyPendingCard({
     super.key,
-    required this.screenWidth,
+    required this.pendingorderData,
     required this.index,
   });
 
-  final double screenWidth;
+  final PharmacyOrderModel pendingorderData;
   final int index;
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<PharmacyOrderProvider>(
-        builder: (context, ordersProvider, _) {
-      final orders = ordersProvider.pendingOrders[index];
-      return Container(
-        width: screenWidth,
+    final orderProvider = Provider.of<PharmacyOrderProvider>(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Container(
+        width: double.infinity,
         decoration: BoxDecoration(
           color: BColors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
             BoxShadow(
-              color: BColors.black.withOpacity(0.3),
-              blurRadius: 5,
+              color: Colors.grey,
+              blurRadius: 6.0,
             ),
           ],
         ),
         child:
             //MAIN COLUMN
             Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              OrderIDAndDateSection(
+                orderData: pendingorderData,
+                date: orderProvider.dateFromTimeStamp(
+                    pendingorderData.createdAt ?? Timestamp.now()),
+              ),
+              const Gap(8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -53,7 +64,9 @@ class PharmacyPendingCard extends StatelessWidget {
                       clipBehavior: Clip.antiAlias,
                       decoration: const BoxDecoration(shape: BoxShape.circle),
                       child: CustomCachedNetworkImage(
-                          image: orders.pharmacyDetails?.pharmacyImage ?? '')),
+                          image:
+                              pendingorderData.pharmacyDetails?.pharmacyImage ??
+                                  '')),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -66,137 +79,68 @@ class PharmacyPendingCard extends StatelessWidget {
                             style: TextStyle(
                                 color: Color(0xffEB9025),
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14),
+                                fontSize: 15),
                           ),
                           const Gap(6),
-                          const Text(
-                            'Items Ordered :',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 13),
-                          ),
+                          (pendingorderData.productDetails!.isNotEmpty &&
+                                  pendingorderData.productDetails != null)
+                              ? const Text(
+                                  'Items Ordered :',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13),
+                                )
+                              : const Text(
+                                  'Prescription is on review.',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13),
+                                ),
                           const Gap(6),
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(),
-                                borderRadius: BorderRadius.circular(8)),
+                          if (pendingorderData.productDetails!.isNotEmpty)
+                            ProductShowContainer(orderData: pendingorderData),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ListView.builder(
-                                  padding: const EdgeInsets.only(
-                                    left: 6,
-                                    right: 8,
-                                    top: 8,
+                                 RowTextContainerWidget(
+                                    text1: 'Delivery : ',
+                                    text2: orderProvider.deliveryType(
+                                              pendingorderData.deliveryType ?? ''),
+                                        
+                                    text1Color: BColors.textLightBlack,
+                                    fontSizeText1: 12,
+                                    fontSizeText2: 12,
+                                    fontWeightText1: FontWeight.w600,
+                                    text2Color: BColors.textBlack,
                                   ),
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: orders.productDetails?.length,
-                                  itemBuilder: (context, index) {
-                                    return Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Flexible(
-                                              flex: 2,
-                                              child: Text(
-                                                '${orders.productDetails?[index].productData?.productName}',
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 12),
-                                              ),
-                                            ),
-                                            Flexible(
-                                                flex: 1,
-                                                child: QuantitiyBox(
-                                                    productQuantity: orders
-                                                        .productDetails?[index]
-                                                        .quantity
-                                                        .toString())),
-                                          ],
-                                        ),
-                                        const Gap(6),
-                                      ],
-                                    );
-                                  },
-                                ),
-                                RichText(
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 3,
-                                  text: TextSpan(
-                                    children: [
-                                      const TextSpan(
-                                          text: 'Amount to be paid : ',
-                                          style: TextStyle(
-                                            color: BColors.black,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 12,
-                                            fontFamily: 'Montserrat',
-                                          )),
-                                      TextSpan(
-                                        text: '₹ ${orders.totalAmount}',
-                                        style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: BColors.green),
-                                      ),
-                                    ],
+                                  const Gap(6),
+                                if (pendingorderData.productDetails!.isNotEmpty)
+                                  RowTextContainerWidget(
+                                    text1: 'Amount to be paid : ',
+                                    text2:
+                                        '₹ ${pendingorderData.totalDiscountAmount}',
+                                    text1Color: BColors.textLightBlack,
+                                    fontSizeText1: 13,
+                                    fontSizeText2: 13,
+                                    fontWeightText1: FontWeight.w600,
+                                    text2Color: BColors.green,
                                   ),
-                                ),
-                                const Gap(6),
+                                const Divider(),
                               ],
                             ),
                           ),
-                          const Gap(4),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.all(2),
-                                child: Icon(
-                                  Icons.location_on_outlined,
-                                  size: 14,
-                                ),
-                              ),
-                              Expanded(
-                                child: RichText(
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 3,
-                                  text: TextSpan(children: [
-                                    TextSpan(
-                                        text:
-                                            '${orders.pharmacyDetails?.pharmacyName} ',
-                                        style: const TextStyle(
-                                          color: BColors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13,
-                                          fontFamily: 'Montserrat',
-                                        )),
-                                    TextSpan(
-                                      text: orders
-                                          .pharmacyDetails!.pharmacyAddress,
-                                      style: const TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: BColors.black),
-                                    )
-                                  ]),
-                                ),
-                              ),
-                            ],
-                          ),
+                        
+                          PharmacyDetailsContainer(
+                              pharmacyData: pendingorderData.pharmacyDetails!),
                         ],
                       ),
                     ),
                   )
                 ],
               ),
-              const Gap(10),
+              const Gap(12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -211,18 +155,20 @@ class PharmacyPendingCard extends StatelessWidget {
                           color: BColors.black, fontWeight: FontWeight.w600),
                     ),
                     onPressed: () {
-                      ConfirmAlertBoxWidget.showAlertConfirmBox(
+                      orderProvider.rejectionReasonController.clear();
+                      TextFieldAlertBoxWidget.showAlertTextFieldBox(
                         context: context,
-                        titleSize: 18,
-                        titleText: 'Cancel',
-                        subText: 'Are you sure you want to cancel this order?',
+                        controller: orderProvider.rejectionReasonController,
+                        maxlines: 3,
+                        hintText: 'Let us know more about cancellation.',
+                        titleText: 'Confrim to cancel !',
+                        subText: 'Are you sure you want to confirm the cancellation of this order?',
                         confirmButtonTap: () {
                           LoadingLottie.showLoading(
                               context: context, text: 'Cancelling...');
-                          ordersProvider
+                          orderProvider
                               .cancelPendingOrder(
-                                  index: index,
-                                  orderProductId: orders.id ?? '')
+                                  index: index, orderData: pendingorderData)
                               .whenComplete(() => Navigator.pop(context));
                         },
                       );
@@ -230,10 +176,11 @@ class PharmacyPendingCard extends StatelessWidget {
                   ),
                 ],
               ),
+              const Gap(8)
             ],
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

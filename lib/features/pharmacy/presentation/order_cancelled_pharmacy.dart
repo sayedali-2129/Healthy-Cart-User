@@ -2,71 +2,71 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
-import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/cancelled_card.dart';
+import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_cancelled_card.dart';
 import 'package:provider/provider.dart';
 
-class CancelledTab extends StatefulWidget {
-  const CancelledTab({super.key});
+class PharmacyCancelledTab extends StatefulWidget {
+  const PharmacyCancelledTab({super.key});
 
   @override
-  State<CancelledTab> createState() => _CancelledTabState();
+  State<PharmacyCancelledTab> createState() => _PharmacyCancelledTabState();
 }
 
-class _CancelledTabState extends State<CancelledTab> {
+class _PharmacyCancelledTabState extends State<PharmacyCancelledTab> {
   final scrollController = ScrollController();
+  final ScrollController _scrollcontroller = ScrollController();
   @override
   void initState() {
-    final authProvider = context.read<AuthenticationProvider>();
-    final ordersProvider = context.read<LabOrdersProvider>();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        ordersProvider
-          ..clearCancelledData()
-          ..getCancelledOrders(userId: authProvider.userFetchlDataFetched!.id!);
-      },
-    );
-    ordersProvider.cancelledInit(
-        scrollController: scrollController,
-        userId: authProvider.userFetchlDataFetched!.id!);
+    final orderProvider = context.read<PharmacyOrderProvider>();
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+      orderProvider.clearCancelledOrderFetchData();
+      orderProvider.getCancelledOrderDetails();
+    });
+
+    _scrollcontroller.addListener(() {
+      if (_scrollcontroller.position.atEdge &&
+          _scrollcontroller.position.pixels != 0 &&
+          orderProvider.fetchLoading == false) {
+        orderProvider.getCancelledOrderDetails();
+      }
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LabOrdersProvider>(builder: (context, ordersProvider, _) {
-      final screenWidth = MediaQuery.of(context).size.width;
-
+    return Consumer<PharmacyOrderProvider>(
+        builder: (context, ordersProvider, _) {
       return CustomScrollView(
         controller: scrollController,
         slivers: [
-          if (ordersProvider.isLoading == true &&
-              ordersProvider.cancelledOrders.isEmpty)
+          if (ordersProvider.fetchLoading == true &&
+              ordersProvider.cancelledOrderList.isEmpty)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
               ),
             )
-          else if (ordersProvider.cancelledOrders.isEmpty)
-            const ErrorOrNoDataPage(text: 'No Cancelled Bookings Found!')
+          else if (ordersProvider.cancelledOrderList.isEmpty)
+            const ErrorOrNoDataPage(text: 'No Cancelled Orders Found!')
           else
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverList.separated(
                 separatorBuilder: (context, index) => const Gap(12),
-                itemCount: ordersProvider.cancelledOrders.length,
+                itemCount: ordersProvider.cancelledOrderList.length,
                 itemBuilder: (context, index) {
-                  return CancelledCard(
-                    screenWidth: screenWidth,
-                    index: index,
-                  );
+                  return PharmacyCancelledCard(
+                      cancelledOrderData:
+                          ordersProvider.cancelledOrderList[index]);
                 },
               ),
             ),
           SliverToBoxAdapter(
-              child: (ordersProvider.isLoading == true &&
-                      ordersProvider.cancelledOrders.isNotEmpty)
+              child: (ordersProvider.fetchLoading == true &&
+                      ordersProvider.cancelledOrderList.isNotEmpty)
                   ? const Center(child: LoadingIndicater())
                   : const Gap(0)),
         ],

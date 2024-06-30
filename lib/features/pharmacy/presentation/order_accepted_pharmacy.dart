@@ -2,27 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
-import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/accept_card.dart';
+import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_accept_card.dart';
 import 'package:provider/provider.dart';
 
-class AcceptedTab extends StatefulWidget {
-  const AcceptedTab({super.key});
+class PharmacyAcceptedTab extends StatefulWidget {
+  const PharmacyAcceptedTab({super.key});
 
   @override
-  State<AcceptedTab> createState() => _AcceptedTabState();
+  State<PharmacyAcceptedTab> createState() => _PharmacyAcceptedTabState();
 }
 
-class _AcceptedTabState extends State<AcceptedTab> {
+class _PharmacyAcceptedTabState extends State<PharmacyAcceptedTab> {
   @override
   void initState() {
-    final authProvider = context.read<AuthenticationProvider>();
+    final orderProvider = context.read<PharmacyOrderProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        context
-            .read<LabOrdersProvider>()
-            .getLabOrder(userId: authProvider.userFetchlDataFetched!.id!);
+      (timeStamp) {
+        orderProvider.getpharmacyApprovedOrderData();
       },
     );
     super.initState();
@@ -30,30 +27,29 @@ class _AcceptedTabState extends State<AcceptedTab> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    return Consumer<LabOrdersProvider>(builder: (context, ordersProvider, _) {
+    return Consumer<PharmacyOrderProvider>(
+        builder: (context, ordersProvider, _) {
       return CustomScrollView(
         slivers: [
-          if (ordersProvider.isLoading == true &&
-              ordersProvider.approvedOrders.isEmpty)
+          if (ordersProvider.fetchLoading == true &&
+              ordersProvider.approvedOrderList.isEmpty)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
               ),
             )
-          else if (ordersProvider.approvedOrders.isEmpty)
-            const ErrorOrNoDataPage(text: 'No Bookings Found!')
+          else if (ordersProvider.approvedOrderList.isEmpty)
+            const ErrorOrNoDataPage(text: 'No Approved Orders Found!')
           else
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverList.separated(
                   separatorBuilder: (context, index) => const Gap(12),
-                  itemCount: ordersProvider.approvedOrders.length,
+                  itemCount: ordersProvider.approvedOrderList.length,
                   itemBuilder: (context, index) {
-                    return AcceptCard(
-                      screenWidth: screenWidth,
-                      index: index,
-                    );
+                    return PharmacyAcceptedCard(
+                        onProcessOrderData:
+                            ordersProvider.approvedOrderList[index]);
                   }),
             )
         ],

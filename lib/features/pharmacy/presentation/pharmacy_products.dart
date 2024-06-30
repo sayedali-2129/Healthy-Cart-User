@@ -148,7 +148,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 6,
                   mainAxisSpacing: 6,
-                  mainAxisExtent: 360,
+                  mainAxisExtent: 368,
                 ),
                 itemBuilder: (context, index) {
                   return FadeInUp(

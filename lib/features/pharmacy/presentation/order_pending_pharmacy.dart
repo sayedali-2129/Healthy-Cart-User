@@ -22,9 +22,9 @@ class _PendingTabState extends State<PharmacyPendingTab> {
     final authProvider = context.read<AuthenticationProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        context.read<PharmacyOrderProvider>().getPendingOrders(
-              userId: authProvider.userFetchlDataFetched!.id!,
-            );
+        final orderProvider = context.read<PharmacyOrderProvider>();
+        orderProvider.setUserId(authProvider.userFetchlDataFetched?.id ?? '');
+       orderProvider.getPendingOrders( );
       },
     );
     super.initState();
@@ -34,11 +34,10 @@ class _PendingTabState extends State<PharmacyPendingTab> {
   Widget build(BuildContext context) {
     return Consumer<PharmacyOrderProvider>(
         builder: (context, ordersProvider, _) {
-      final screenWidth = MediaQuery.of(context).size.width;
 
       return CustomScrollView(
         slivers: [
-          if (ordersProvider.isLoading == true &&
+          if (ordersProvider.fetchLoading == true &&
               ordersProvider.pendingOrders.isEmpty)
             const SliverFillRemaining(
               child: Center(
@@ -55,7 +54,7 @@ class _PendingTabState extends State<PharmacyPendingTab> {
                 itemCount: ordersProvider.pendingOrders.length,
                 itemBuilder: (context, index) {
                   return PharmacyPendingCard(
-                    screenWidth: screenWidth,
+                    pendingorderData: ordersProvider.pendingOrders[index],
                     index: index,
                   );
                 },

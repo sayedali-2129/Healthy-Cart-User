@@ -1,9 +1,9 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/accepted_tab.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/cancelled_tab.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/completed_tab.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/order_accepted_pharmacy.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/order_cancelled_pharmacy.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/order_completed_pharmacy.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/order_pending_pharmacy.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 
@@ -22,7 +22,7 @@ class PharmacyOrdersTab extends StatelessWidget {
                   title: 'Pharmacy Orders', onBackTap: () => Navigator.pop(context)),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: ButtonsTabBar(
                       height: 42,
                       unselectedLabelStyle: const TextStyle(
@@ -37,6 +37,7 @@ class PharmacyOrdersTab extends StatelessWidget {
                       unselectedBackgroundColor: BColors.white,
                       unselectedBorderColor: BColors.darkblue,
                       borderWidth: 1,
+                      elevation: 3,
                       contentPadding: const EdgeInsets.all(8),
                       radius: 12,
                       duration: 50,
@@ -61,9 +62,9 @@ class PharmacyOrdersTab extends StatelessWidget {
                 child: TabBarView(
                   children: [
                   PharmacyPendingTab(),
-                  AcceptedTab(),
-                  CompletedTab(),
-                  CancelledTab(),
+                  PharmacyAcceptedTab(),
+                  PharmacyCompletedTab(),
+                  PharmacyCancelledTab(),
                 ]),
               )
             ]

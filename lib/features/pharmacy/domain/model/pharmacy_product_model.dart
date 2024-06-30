@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class PharmacyProductAddModel {
   String? id;
   final String? pharmacyId;
   final String? categoryId;
+  final String? category;
   final String? typeOfProduct;
   final num? productMRPRate;
   final num? productDiscountRate;
@@ -29,6 +31,7 @@ class PharmacyProductAddModel {
   final String? productBoxContains;
   final String? productPackage;
   final bool? requirePrescription;
+  final bool? inStock;
   final String? productType;
   final String? keyBenefits;
   final String? specification;
@@ -38,6 +41,7 @@ class PharmacyProductAddModel {
     this.id,
     this.pharmacyId,
     this.categoryId,
+    this.category,
     this.typeOfProduct,
     this.productMRPRate,
     this.productDiscountRate,
@@ -63,6 +67,7 @@ class PharmacyProductAddModel {
     this.productBoxContains,
     this.productPackage,
     this.requirePrescription,
+     this.inStock,
     this.productType,
     this.keyBenefits,
     this.specification,
@@ -74,6 +79,7 @@ class PharmacyProductAddModel {
     String? id,
     String? pharmacyId,
     String? categoryId,
+    String? category,
     String? typeOfProduct,
     num? productMRPRate,
     num? productDiscountRate,
@@ -99,6 +105,7 @@ class PharmacyProductAddModel {
     String? productBoxContains,
     String? productPackage,//// want to change
     bool? requirePrescription,
+     bool? inStock,
     String? productType,
     String? keyBenefits,
     String? specification,
@@ -109,6 +116,7 @@ class PharmacyProductAddModel {
       id: id ?? this.id,
       pharmacyId: pharmacyId ?? this.pharmacyId,
       categoryId: categoryId ?? this.categoryId,
+       category: category ?? this.category,
       typeOfProduct: typeOfProduct ?? this.typeOfProduct,
       productMRPRate: productMRPRate ?? this.productMRPRate,
       productDiscountRate: productDiscountRate ?? this.productDiscountRate,
@@ -134,6 +142,7 @@ class PharmacyProductAddModel {
       productBoxContains: productBoxContains ?? this.productBoxContains,
       productPackage: productPackage ?? this.productPackage,
       requirePrescription: requirePrescription ?? this.requirePrescription,
+      inStock: inStock ?? this.inStock,
       productType: productType ?? this.productType,
       keyBenefits: keyBenefits ?? this.keyBenefits,
       specification: specification ?? this.specification,
@@ -147,6 +156,7 @@ class PharmacyProductAddModel {
       'id': id,
       'pharmacyId': pharmacyId,
       'categoryId': categoryId,
+      'category': category,
       'typeOfProduct': typeOfProduct,
       'productMRPRate': productMRPRate,
       'productDiscountRate': productDiscountRate,
@@ -172,6 +182,7 @@ class PharmacyProductAddModel {
       'productBoxContains': productBoxContains,
       'productPackage': productPackage,
       'requirePrescription': requirePrescription,
+      'inStock': inStock,
       'productType': productType,
       'keyBenefits': keyBenefits,
       'specification': specification,
@@ -179,11 +190,13 @@ class PharmacyProductAddModel {
       'keywords': keywords,
     };
   }
+  
    Map<String, dynamic> toCartMap() {
     return <String, dynamic>{
       'id': id,
       'pharmacyId': pharmacyId,
       'categoryId': categoryId,
+      'category': category,
       'typeOfProduct': typeOfProduct,
       'productMRPRate': productMRPRate,
       'productDiscountRate': productDiscountRate,
@@ -192,11 +205,12 @@ class PharmacyProductAddModel {
       'productName': productName,
       'productBrandName': productBrandName,
       'productFormNumber': productFormNumber,
-      'productMeasurementNumber': productMeasurementNumber,
       'productPackageNumber': productPackageNumber,
-      'productForm': productForm,
+      'productMeasurementNumber': productMeasurementNumber,
       'productMeasurement': productMeasurement,
-      'productPackage': productPackage,
+      'productForm': productForm,
+       'productPackage': productPackage,
+        'productType': productType,
     };
   }
   Map<String, dynamic> toEquipmentMap() {
@@ -204,6 +218,7 @@ class PharmacyProductAddModel {
       'id': id,
       'pharmacyId': pharmacyId,
       'categoryId': categoryId,
+      'category': category,
       'typeOfProduct': typeOfProduct,
       'productMRPRate': productMRPRate,
       'productDiscountRate': productDiscountRate,
@@ -222,6 +237,7 @@ class PharmacyProductAddModel {
       'productBoxContains': productBoxContains,
       'productMeasurement': productMeasurement,
       'requirePrescription': requirePrescription,
+      'inStock': inStock,
       'productType': productType,
       'specification': specification,
       'equipmentWarranty': equipmentWarranty,
@@ -233,6 +249,7 @@ class PharmacyProductAddModel {
       'id': id,
       'pharmacyId': pharmacyId,
       'categoryId': categoryId,
+      'category': category,
       'typeOfProduct': typeOfProduct,
       'productMRPRate': productMRPRate,
       'productDiscountRate': productDiscountRate,
@@ -256,6 +273,7 @@ class PharmacyProductAddModel {
       'directionToUse': directionToUse,
       'safetyInformation': safetyInformation,
       'requirePrescription': requirePrescription,
+      'inStock': inStock,
       'keyBenefits': keyBenefits,
       'keywords': keywords,
     };
@@ -265,6 +283,7 @@ class PharmacyProductAddModel {
       'id': id,
       'pharmacyId': pharmacyId,
       'categoryId': categoryId,
+      'category': category,
       'typeOfProduct': typeOfProduct,
       'productMRPRate': productMRPRate,
       'productDiscountRate': productDiscountRate,
@@ -284,6 +303,7 @@ class PharmacyProductAddModel {
       'productForm': productForm,
       'productMeasurement': productMeasurement,
       'productInformation': productInformation,
+      'inStock': inStock,
       'productPackage': productPackage,
       'keyIngrdients': keyIngrdients,
       'directionToUse': directionToUse,
@@ -300,6 +320,8 @@ class PharmacyProductAddModel {
           map['pharmacyId'] != null ? map['pharmacyId'] as String : null,
       categoryId:
           map['categoryId'] != null ? map['categoryId'] as String : null,
+      category:
+          map['category'] != null ? map['category'] as String : null,     
       typeOfProduct:
           map['typeOfProduct'] != null ? map['typeOfProduct'] as String : null,
       productMRPRate:
@@ -361,6 +383,9 @@ class PharmacyProductAddModel {
       requirePrescription: map['requirePrescription'] != null
           ? map['requirePrescription'] as bool
           : null,
+       inStock: map['inStock'] != null
+          ? map['inStock'] as bool
+          : null,    
       productType:
           map['productType'] != null ? map['productType'] as String : null,
       keyBenefits:

@@ -40,10 +40,11 @@ class RowProductCategoryWidget extends StatelessWidget {
                         ButtonWidget(
                           buttonColor: BColors.buttonGreen,
                           onPressed: () {
+                            pharmacyProvider. clearProductAndUserInCheckOutDetails();
                             EasyNavigation.push(
                               context: context,
                               page: const PrescriptionScreen(),
-                              type: PageTransitionType.leftToRight,
+                              type: PageTransitionType.rightToLeft,
                             );
                           },
                           buttonHeight: 36,

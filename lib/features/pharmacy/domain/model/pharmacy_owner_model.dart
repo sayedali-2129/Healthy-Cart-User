@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 
+
 class PharmacyModel {
   String? id;
   final String? phoneNo;
@@ -12,6 +13,7 @@ class PharmacyModel {
   final String? pharmacyImage;
   final int? pharmacyRequested;
   final bool? isActive;
+  final bool? isHomeDelivery;
   final bool? isPharmacyON;
   final Timestamp? createdAt;
   final List<String>? selectedCategoryId;
@@ -19,7 +21,6 @@ class PharmacyModel {
   final String? rejectionReason;
   final String? fcmToken;
   final String? email;
-
   PharmacyModel({
     this.id,
     this.phoneNo,
@@ -31,6 +32,7 @@ class PharmacyModel {
     this.pharmacyImage,
     this.pharmacyRequested,
     this.isActive,
+     this.isHomeDelivery,
     this.isPharmacyON,
     this.createdAt,
     this.selectedCategoryId,
@@ -52,6 +54,7 @@ class PharmacyModel {
     List<String>? selectedCategoryId,
     int? pharmacyRequested,
     bool? isActive,
+    bool? isHomeDelivery,
     bool? isPharmacyON,
     Timestamp? createdAt,
     List<String>? pharmacyKeywords,
@@ -67,11 +70,12 @@ class PharmacyModel {
       pharmacyAddress: pharmacyAddress ?? this.pharmacyAddress,
       pharmacyownerName: pharmacyownerName ?? this.pharmacyownerName,
       pharmacyDocumentLicense:
-          pharmacyDocumentLicense ?? this.pharmacyDocumentLicense,
+      pharmacyDocumentLicense ?? this.pharmacyDocumentLicense,
       pharmacyImage: pharmacyImage ?? this.pharmacyImage,
       selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
       pharmacyRequested: pharmacyRequested ?? this.pharmacyRequested,
-      isActive: isActive ?? this.isActive,
+      isHomeDelivery: isHomeDelivery ?? this.isHomeDelivery,
+       isActive: isActive ?? this.isActive,
       fcmToken: fcmToken ?? this.fcmToken,
       email: email ?? this.email,
       isPharmacyON: isPharmacyON ?? this.isPharmacyON,
@@ -94,6 +98,7 @@ class PharmacyModel {
       'selectedCategoryId': selectedCategoryId,
       'pharmacyRequested': pharmacyRequested,
       'isActive': isActive,
+       'isHomeDelivery': isHomeDelivery,
       'isPharmacyON': isPharmacyON,
       'createdAt': createdAt,
       'pharmacyKeywords': pharmacyKeywords,
@@ -103,6 +108,18 @@ class PharmacyModel {
     };
   }
 
+  Map<String, dynamic> toEditMap() {
+    return <String, dynamic>{
+      'pharmacyName': pharmacyName,
+      'pharmacyAddress': pharmacyAddress,
+      'pharmacyownerName': pharmacyownerName,
+      'pharmacyDocumentLicense': pharmacyDocumentLicense,
+      'pharmacyImage': pharmacyImage,
+       'email': email,
+       'pharmacyKeywords': pharmacyKeywords,
+    };
+  }
+  
   Map<String, dynamic> toProductMap() {
     return <String, dynamic>{
       'pharmacyName': pharmacyName,
@@ -111,6 +128,7 @@ class PharmacyModel {
       'phoneNo': phoneNo,
       'fcmToken': fcmToken,
       'email': email,
+      'pharmacyKeywords': pharmacyKeywords,
     };
   }
 
@@ -141,6 +159,7 @@ class PharmacyModel {
           ? map['pharmacyRequested'] as int
           : null,
       isActive: map['isActive'] != null ? map['isActive'] as bool : null,
+       isHomeDelivery: map['isHomeDelivery'] != null ? map['isHomeDelivery'] as bool : null,
       isPharmacyON:
           map['isPharmacyON'] != null ? map['isPharmacyON'] as bool : null,
       createdAt:
