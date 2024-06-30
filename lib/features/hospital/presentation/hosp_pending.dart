@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
@@ -52,9 +53,11 @@ class _PendingTabState extends State<HospPending> {
                 separatorBuilder: (context, index) => const Gap(12),
                 itemCount: ordersProvider.pendingList.length,
                 itemBuilder: (context, index) {
-                  return HospPendingCard(
-                    screenWidth: screenWidth,
-                    index: index,
+                  return FadeIn(
+                    child: HospPendingCard(
+                      screenWidth: screenWidth,
+                      index: index,
+                    ),
                   );
                 },
               ),

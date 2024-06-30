@@ -45,9 +45,8 @@ class ILabOrdersImpl implements ILabOrdersFacade {
 
 /* ---------------------------- PICK PRESCRIPTION --------------------------- */
   @override
-  FutureResult<File> pickPrescription() async {
-    return await _imageService.getGalleryImage(
-        imagesource: ImageSource.gallery);
+  FutureResult<File> pickPrescription({required ImageSource source}) async {
+    return await _imageService.getGalleryImage(imagesource: source);
   }
 
 /* ---------------------------- SAVE PRESCRIPTION --------------------------- */

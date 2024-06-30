@@ -10,6 +10,7 @@ import 'package:healthy_cart_user/core/custom/image_view/image_view.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
+import 'package:healthy_cart_user/core/custom/prescription_bottom_sheet/precription_bottomsheet.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
@@ -21,6 +22,7 @@ import 'package:healthy_cart_user/features/profile/application/provider/user_add
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -214,7 +216,36 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             ],
                                           ),
                                           onPressed: () {
-                                            labProvider.pickPrescription();
+                                            showModalBottomSheet(
+                                              showDragHandle: true,
+                                              elevation: 10,
+                                              backgroundColor: Colors.white,
+                                              context: context,
+                                              builder: (context) {
+                                                return ChoosePrescriptionBottomSheet(
+                                                  cameraButtonTap: () {
+                                                    labProvider
+                                                        .pickPrescription(
+                                                            source: ImageSource
+                                                                .camera)
+                                                        .whenComplete(() =>
+                                                            EasyNavigation.pop(
+                                                                context:
+                                                                    context));
+                                                  },
+                                                  galleryButtonTap: () {
+                                                    labProvider
+                                                        .pickPrescription(
+                                                            source: ImageSource
+                                                                .gallery)
+                                                        .whenComplete(() =>
+                                                            EasyNavigation.pop(
+                                                                context:
+                                                                    context));
+                                                  },
+                                                );
+                                              },
+                                            );
                                           },
                                         )
                                       : Column(

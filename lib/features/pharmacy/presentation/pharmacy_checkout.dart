@@ -1,10 +1,10 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
-import 'package:healthy_cart_user/core/custom/image_view/image_view.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/prescription_bottom_sheet/precription_bottomsheet.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -19,7 +19,6 @@ import 'package:healthy_cart_user/features/profile/application/provider/user_add
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class PharmacyCheckOutScreen extends StatefulWidget {
@@ -229,7 +228,8 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                                   )
                                 : Column(
                                     children: [
-                                      PrescriptionImageWidget(pharmacyProvider: pharmacyProvider),
+                                      PrescriptionImageWidget(
+                                          pharmacyProvider: pharmacyProvider),
                                     ],
                                   )
                           ],
@@ -265,7 +265,7 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                     context: context, text: 'Please wait...');
                 pharmacyProvider.saveImage().whenComplete(
                   () {
-                     pharmacyProvider.createProductOrderDetails(
+                    pharmacyProvider.createProductOrderDetails(
                         context: context);
                   },
                 );

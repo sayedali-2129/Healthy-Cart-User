@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
@@ -50,9 +51,11 @@ class _AcceptedTabState extends State<LabAccepted> {
                   separatorBuilder: (context, index) => const Gap(12),
                   itemCount: ordersProvider.approvedOrders.length,
                   itemBuilder: (context, index) {
-                    return AcceptCard(
-                      screenWidth: screenWidth,
-                      index: index,
+                    return FadeIn(
+                      child: AcceptCard(
+                        screenWidth: screenWidth,
+                        index: index,
+                      ),
                     );
                   }),
             )

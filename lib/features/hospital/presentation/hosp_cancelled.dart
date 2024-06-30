@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
@@ -58,9 +59,11 @@ class _CancelledTabState extends State<HospCancelled> {
                 separatorBuilder: (context, index) => const Gap(12),
                 itemCount: ordersProvider.cancelledHospBooking.length,
                 itemBuilder: (context, index) {
-                  return HospCancelledCard(
-                    screenWidth: screenWidth,
-                    index: index,
+                  return FadeIn(
+                    child: HospCancelledCard(
+                      screenWidth: screenWidth,
+                      index: index,
+                    ),
                   );
                 },
               ),

@@ -17,7 +17,6 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_p
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_details_screen.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
-import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -83,11 +82,12 @@ class _HomeMainState extends State<HomeMain> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: FadeInRight(child: AdSliderHome(screenWidth: screenwidth)),
+                    child: FadeInRight(
+                        child: AdSliderHome(screenWidth: screenwidth)),
                   ),
-                 
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -104,7 +104,6 @@ class _HomeMainState extends State<HomeMain> {
                       ],
                     ),
                   ),
-               
                   SizedBox(
                     height: 230,
                     child: ListView.separated(
@@ -126,11 +125,10 @@ class _HomeMainState extends State<HomeMain> {
                                   type: PageTransitionType.rightToLeft,
                                   duration: 250,
                                   page: HospitalDetails(
-                                    hospitalId: hospitalProvier
-                                        .hospitalList[index].id!,
+                                    hospitalId:
+                                        hospitalProvier.hospitalList[index].id!,
                                     categoryIdList: hospitalProvier
-                                        .hospitalList[index]
-                                        .selectedCategoryId,
+                                        .hospitalList[index].selectedCategoryId,
                                     hospitalIndex: index,
                                   ));
                         },
@@ -140,9 +138,9 @@ class _HomeMainState extends State<HomeMain> {
                       )),
                     ),
                   ),
-                 
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -159,7 +157,6 @@ class _HomeMainState extends State<HomeMain> {
                       ],
                     ),
                   ),
-                 
                   SizedBox(
                     height: 230,
                     child: ListView.separated(
@@ -177,9 +174,9 @@ class _HomeMainState extends State<HomeMain> {
                               ? CustomToast.errorToast(
                                   text: 'This Pharmacy is not available now!')
                               : pharmacyProvider.setPharmacyIdAndCategoryList(
-                                  selectedpharmacyId: pharmacyProvider
-                                          .pharmacyList[index].id ??
-                                      '',
+                                  selectedpharmacyId:
+                                      pharmacyProvider.pharmacyList[index].id ??
+                                          '',
                                   categoryIdList: pharmacyProvider
                                           .pharmacyList[index]
                                           .selectedCategoryId ??
@@ -197,9 +194,9 @@ class _HomeMainState extends State<HomeMain> {
                       )),
                     ),
                   ),
-
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -208,19 +205,19 @@ class _HomeMainState extends State<HomeMain> {
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
-                        
                         ViewAllButton(
                           onTap: () {
-                           widget.onNavigateToLaboratoryTab();
+                            widget.onNavigateToLaboratoryTab();
                           },
                         )
                       ],
                     ),
                   ),
-                
+
                   /* ---------------------------------- LABS ---------------------------------- */
                   ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: labProvider.labList.length > 5
