@@ -19,7 +19,7 @@ class PharmacyOrderModel {
   final num? deliveryCharge;
   final String? deliveryType;
   final num? totalAmount;
-    final num? totalDiscountAmount;
+  final num? totalDiscountAmount;
   final num? finalAmount;
   final String? rejectReason;
   final Timestamp? createdAt;
@@ -28,7 +28,9 @@ class PharmacyOrderModel {
   final Timestamp? completedAt;
   final String? prescription;
   final bool? isUserAccepted;
+  final bool? isRejectedByUser;
   final String? productBillPdf;
+  final String? paymentType;
   PharmacyOrderModel({
     this.id,
     this.pharmacyId,
@@ -52,7 +54,9 @@ class PharmacyOrderModel {
     this.completedAt,
     this.prescription,
     this.isUserAccepted,
+     this.isRejectedByUser,
     this.productBillPdf,
+    this.paymentType,
   });
 
   PharmacyOrderModel copyWith({
@@ -78,7 +82,9 @@ class PharmacyOrderModel {
     Timestamp? completedAt,
     String? prescription,
     bool? isUserAccepted,
+    bool? isRejectedByUser,
     String? productBillPdf,
+    String? paymentType,
   }) {
     return PharmacyOrderModel(
       id: id ?? this.id,
@@ -103,7 +109,9 @@ class PharmacyOrderModel {
       completedAt: completedAt ?? this.completedAt,
       prescription: prescription ?? this.prescription,
       isUserAccepted: isUserAccepted ?? this.isUserAccepted,
+         isRejectedByUser: isRejectedByUser ?? this.isRejectedByUser,
       productBillPdf: productBillPdf ?? this.productBillPdf,
+      paymentType: paymentType ?? this.paymentType,
     );
   }
 
@@ -131,10 +139,27 @@ class PharmacyOrderModel {
       'completedAt': completedAt,
       'prescription': prescription,
       'isUserAccepted': isUserAccepted,
+      'isRejectedByUser': isRejectedByUser,
       'productBillPdf': productBillPdf,
+      'paymentType': paymentType,
     };
   }
 
+  Map<String, dynamic> toEditMap() {
+    return <String, dynamic>{
+      'productDetails': productDetails?.map((e) => e.toMap()).toList(),
+      'orderStatus': orderStatus,
+      'paymentStatus': paymentStatus,
+      'deliveryCharge': deliveryCharge,
+      'totalAmount': totalAmount,
+      'totalDiscountAmount': totalDiscountAmount,
+      'finalAmount': finalAmount,
+      'rejectReason': rejectReason,
+      'acceptedAt': acceptedAt,
+      'rejectedAt': rejectedAt,
+      'isRejectedByUser': isRejectedByUser,
+    };
+  }
   factory PharmacyOrderModel.fromMap(Map<String, dynamic> map) {
     return PharmacyOrderModel(
       id: map['id'] != null ? map['id'] as String : null,
@@ -164,7 +189,8 @@ class PharmacyOrderModel {
           ? UserAddressModel.fromMap(map['addresss'] as Map<String, dynamic>)
           : null,
       pharmacyDetails: map['pharmacyDetails'] != null
-          ? PharmacyModel.fromMap(map['pharmacyDetails'] as Map<String, dynamic>)
+          ? PharmacyModel.fromMap(
+              map['pharmacyDetails'] as Map<String, dynamic>)
           : null,
       deliveryCharge:
           map['deliveryCharge'] != null ? map['deliveryCharge'] as num : null,
@@ -172,8 +198,9 @@ class PharmacyOrderModel {
           map['deliveryType'] != null ? map['deliveryType'] as String : null,
       totalAmount:
           map['totalAmount'] != null ? map['totalAmount'] as num : null,
-            totalDiscountAmount:
-          map['totalDiscountAmount'] != null ? map['totalDiscountAmount'] as num : null,    
+      totalDiscountAmount: map['totalDiscountAmount'] != null
+          ? map['totalDiscountAmount'] as num
+          : null,
       finalAmount:
           map['finalAmount'] != null ? map['finalAmount'] as num : null,
       rejectReason:
@@ -190,9 +217,14 @@ class PharmacyOrderModel {
           map['prescription'] != null ? map['prescription'] as String : null,
       isUserAccepted:
           map['isUserAccepted'] != null ? map['isUserAccepted'] as bool : null,
+      isRejectedByUser:
+          map['isRejectedByUser'] != null ? map['isRejectedByUser'] as bool : null,   
       productBillPdf: map['productBillPdf'] != null
           ? map['productBillPdf'] as String
           : null,
+      paymentType:
+          map['paymentType'] != null ? map['paymentType'] as String : null,
     );
   }
 }
+

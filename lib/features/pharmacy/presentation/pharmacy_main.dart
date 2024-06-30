@@ -7,6 +7,7 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicat
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
@@ -55,8 +56,8 @@ class _PharmacyMainState extends State<PharmacyMain> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<PharmacyProvider, AuthenticationProvider>(
-        builder: (context, pharmacyProvider, authProvider, _) {
+    return Consumer3<PharmacyProvider, AuthenticationProvider,PharmacyOrderProvider>(
+        builder: (context, pharmacyProvider, authProvider,orderProvider, _) {
       final screenwidth = MediaQuery.of(context).size.width;
       return Scaffold(
         body: PopScope(
@@ -134,23 +135,39 @@ class _PharmacyMainState extends State<PharmacyMain> {
         ),
         floatingActionButton: authProvider.userFetchlDataFetched == null
             ? null
-            : FloatingActionButton(
-                backgroundColor: BColors.darkblue,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
-                child: Image.asset(
-                  color: BColors.white,
-                  BIcon.calenderIcon,
-                  scale: 3.2,
-                ),
-                onPressed: () {
-                  EasyNavigation.push(
-                      context: context,
-                      page: const PharmacyOrdersTab(),
-                      type: PageTransitionType.bottomToTop,
-                      duration: 200);
-                },
-              ),
+            : Stack(
+              children: [
+                FloatingActionButton(
+                    backgroundColor: BColors.darkblue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    child: Image.asset(
+                      color: BColors.white,
+                      BIcon.calenderIcon,
+                      scale: 3.2,
+                    ),
+                    onPressed: () {
+                      EasyNavigation.push(
+                          context: context,
+                          page: const PharmacyOrdersTab(),
+                          type: PageTransitionType.bottomToTop,
+                          duration: 200);
+                    },
+                  ),
+                  if (orderProvider.approvedOrderList
+                      .any((element) => element.isUserAccepted == false))
+                    const Positioned(
+                      right: 2,
+                      top: 2,
+                      child: CircleAvatar(
+                        radius: 8,
+                        backgroundColor: Colors.yellow,
+                      ),
+                    )
+                  else
+                    const Gap(0),
+              ],
+            ),
       );
     });
   }

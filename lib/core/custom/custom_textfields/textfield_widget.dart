@@ -52,7 +52,7 @@ class TextfieldWidget extends StatelessWidget {
       children: [
         enableHeading == true
             ? Text(
-                fieldHeading!,
+                fieldHeading ?? '',
                 style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,

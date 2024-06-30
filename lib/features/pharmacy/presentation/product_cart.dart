@@ -12,6 +12,7 @@ import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_checko
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/product_cart_list_container.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/type_of_service_radio.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class ProductCartScreen extends StatefulWidget {
@@ -63,6 +64,34 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                   ),
                 ),
               ),
+              if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery ==
+                  false)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, top: 16, right: 16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.info_outline_rounded,
+                          color: BColors.offRed,
+                        ),
+                        const Gap(6),
+                        const Expanded(
+                          child: Text(
+                            "At this time, our pharmacy only offers order pickup and does not provide home delivery services.",
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: BColors.textLightBlack,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Montserrat'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               (pharmacyProvider.fetchLoading == true &&
                       pharmacyProvider.pharmacyCartProducts.isEmpty)
                   ? const SliverFillRemaining(
@@ -203,29 +232,45 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                           ),
                           ButtonWidget(
                             onPressed: () {
-                              pharmacyProvider.selectedRadio = null;
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return DeliveryTypeRadiopopup(
-                                    onConfirm: () {
-                                      if (pharmacyProvider.selectedRadio ==
-                                          null) {
-                                        CustomToast.errorToast(
-                                            text:
-                                                'Please select a delivery type.');
-                                        return;
-                                      }
-                                      EasyNavigation.pop(context: context);
+                              if (pharmacyProvider
+                                  .cartContainsOutOfStockProduct()) {
+                                CustomToast.errorToast(
+                                    text:
+                                        'Cart contains item out of stock, please remove the item.');
+                                return;
+                              }
+                              if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false) {
+                                pharmacyProvider.selectedRadio = 'Pharmacy';
+                                EasyNavigation.push(
+                                  type:  PageTransitionType.rightToLeft,
+                                  context: context,
+                                  page: const PharmacyCheckOutScreen(),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return DeliveryTypeRadiopopup(
+                                      onConfirm: () {
+                                        if (pharmacyProvider.selectedRadio ==
+                                            null) {
+                                          CustomToast.errorToast(
+                                              text:
+                                                  'Select a delivery type to check out.');
+                                          return;
+                                        }
+                                        EasyNavigation.pop(context: context);
 
-                                      EasyNavigation.push(
-                                        context: context,
-                                        page: const PharmacyCheckOutScreen(),
-                                      );
-                                    },
-                                  );
-                                },
-                              );
+                                        EasyNavigation.push(
+                                          type:  PageTransitionType.rightToLeft,
+                                          context: context,
+                                          page: const PharmacyCheckOutScreen(),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              }
                             },
                             buttonHeight: 48,
                             buttonWidth: 160,

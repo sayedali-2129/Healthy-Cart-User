@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
-import 'package:healthy_cart_user/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/prescription_bottom_sheet/precription_bottomsheet.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -271,8 +271,8 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                 );
               },
               titleText: 'Confirm Order',
-              subText:
-                  "Tap on 'YES' to check the prescription of the items in your cart by the pharmacy. Are you sure you want to proceed ?");
+              subText:  pharmacyProvider.pharmacyCartProducts
+                          .any((element) => element.requirePrescription == true) ?"Tap on 'YES' to check the prescription of  items in your cart by the pharmacy. Are you sure you want to proceed ?" : 'Are you sure you want to proceed, please tap YES confirm ?');
         },
         child: Container(
           height: 60,

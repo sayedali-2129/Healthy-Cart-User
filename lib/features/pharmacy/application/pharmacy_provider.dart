@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/core/services/send_fcm_message.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/i_pharmacy_facade.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
@@ -478,8 +479,9 @@ class PharmacyProvider extends ChangeNotifier {
 
   /* -------------------------------------------------------------------------- */
 /* -------------------------- ORDER CREATE SECTION -------------------------- */
-  Future<void> createProductOrderDetails(
-      {required BuildContext context}) async {
+  Future<void> createProductOrderDetails({
+    required BuildContext context,
+  }) async {
     cartProductsDetails();
     final result = await _iPharmacyFacade.createProductOrderDetails(
       pharmacyId: pharmacyId ?? '',
@@ -501,8 +503,14 @@ class PharmacyProvider extends ChangeNotifier {
             page: const OrderRequestSuccessScreen(
               title: 'Your order is in review, we will notify you soon.',
             ));
-        clearProductAndUserInCheckOutDetails();
+        sendFcmMessage(
+            token: selectedpharmacyData?.fcmToken ?? '',
+            body:
+                'New Order Received from ${userDetails?.userName ?? 'Customer'}. Please check the details and accept the order',
+            title: 'New Booking Received!!!');
+        log('Order Request Send Successfully');
         CustomToast.sucessToast(text: "The order is in review");
+        clearProductAndUserInCheckOutDetails();
       },
     );
   }
@@ -527,6 +535,15 @@ class PharmacyProvider extends ChangeNotifier {
     );
   }
 
+  bool cartContainsOutOfStockProduct() {
+    for (var element in pharmacyCartProducts) {
+      if (element.inStock == false) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void productDetails({
     required int quantity,
     required PharmacyProductAddModel productToCartDetails,
@@ -545,6 +562,7 @@ class PharmacyProvider extends ChangeNotifier {
   void clearProductAndUserInCheckOutDetails() {
     userAddress = null;
     userDetails = null;
+    selectedRadio = null;
     prescriptionImageUrl = null;
     prescriptionImageFile = null;
     productIdList.clear();

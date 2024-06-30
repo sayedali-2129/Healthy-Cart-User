@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:healthy_cart_user/core/custom/confirm_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -181,8 +181,33 @@ class ProductListWidget extends StatelessWidget {
                                         ),
                                       ]),
                                     ),
-                              const Gap(4),
-                              const Gap(12),
+                              
+                              if(productData.inStock == false)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 5,
+                                    backgroundColor: BColors.red,
+                                  ),
+                                 const  Gap(4),
+                                 const Text(
+                                                            'Out of stock',
+                                                            style:  TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: BColors.black),
+                                                            overflow: TextOverflow.ellipsis,
+                                                            maxLines: 2,
+                                                            textAlign: TextAlign.left,
+                                                      ),
+                                ],
+                                                            ),
+                              ),
+                              const Gap(16),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [

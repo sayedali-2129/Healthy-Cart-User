@@ -49,7 +49,6 @@ class _PostCardVerticalState extends State<PostCardVertical> {
               );
         },
         child: Container(
-          width: 180,
           padding: const EdgeInsets.only(top: 12, left: 6, right: 6, bottom: 8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,7 +73,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -116,27 +115,41 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                               ),
                             ])),
                         const Gap(8),
-                        RichText(
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            text: const TextSpan(children: [
-                              TextSpan(
-                                text: 'Category  :  ', // remeber to put space
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: BColors.textLightBlack),
-                              ),
-                              TextSpan(
-                                text: 'Energy',
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: BColors.black),
-                              ),
-                            ])),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text:  const TextSpan(children: [
+                                   TextSpan(
+                                    text: 'Category  :  ', // remeber to put space
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: BColors.textLightBlack),
+                                  ),
+                                  
+                                ])),
+                                Expanded(
+                                  child: RichText(
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  text:  TextSpan(children: [
+                                    
+                                    TextSpan(
+                                      text:  widget.productData.category ?? 'Unknown' ,
+                                      style: const TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: BColors.black),
+                                    ),
+                                  ])),
+                                ),
+                          ],
+                        ),
                         const Gap(8),
 
                         (widget.productData.productDiscountRate == null)
@@ -246,26 +259,57 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                   ),
                                 ],
                               ),
+                       
+
                       ],
                     ),
                   ),
                 ],
               ),
-              if (widget.productData.productDiscountRate != null)
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8, left: 12),
-                    child: PercentageShowContainerWidget(
-                      
-                      text: '${widget.productData.discountPercentage ?? 0}% off',
-                      textColor: BColors.textWhite,
-                      boxColor: BColors.offRed,
-                      width: 80,
-                      height: 32,
-                    ),
-                  ),
-                )
+              
+                
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                    if (widget.productData.productDiscountRate != null)
+                     Padding(
+                       padding: const EdgeInsets.only(bottom: 6, left: 12),
+                       child: PercentageShowContainerWidget(
+                         
+                         text: '${widget.productData.discountPercentage ?? 0}% off',
+                         textColor: BColors.textWhite,
+                         boxColor: BColors.offRed,
+                         width: 74,
+                         height: 32,
+                       ),
+                     ),
+                        if(widget.productData.inStock == false)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 6, right: 8, left: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  radius: 5,
+                                  backgroundColor: BColors.red,
+                                ),
+                               const  Gap(4),
+                               const Text(
+                            'Out of stock',
+                            style:  TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: BColors.black),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            textAlign: TextAlign.left,
+                                                    ),
+                              ],
+                            ),
+                          ), 
+                   ],
+                 )
             ],
           ),
         ),
