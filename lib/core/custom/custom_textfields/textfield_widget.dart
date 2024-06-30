@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 
@@ -23,6 +24,7 @@ class TextfieldWidget extends StatelessWidget {
     this.onTap,
     this.enableHeading = true,
     this.maxLendth,
+    this.inputFormatters,
   });
   final TextEditingController? controller;
   final bool? readOnly;
@@ -41,6 +43,7 @@ class TextfieldWidget extends StatelessWidget {
   final void Function()? onTap;
   final bool? enableHeading;
   final int? maxLendth;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +64,7 @@ class TextfieldWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: SizedBox(
             child: TextFormField(
+              inputFormatters: inputFormatters,
               onChanged: onChanged,
               maxLength: maxLendth,
               onTap: onTap,

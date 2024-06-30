@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/launch_dialer.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/payment_success_screen.dart';
@@ -25,166 +26,183 @@ class LabPaymentScreen extends StatelessWidget {
     return Consumer<LabOrdersProvider>(
       builder: (context, ordersProvider, _) {
         final orders = ordersProvider.approvedOrders[index];
-        return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded)),
-            backgroundColor: BColors.mainlightColor,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(8),
-                    bottomLeft: Radius.circular(8))),
-            title: const Text(
-              'Payment',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+        return PopScope(
+          onPopInvoked: (didPop) {
+            ordersProvider.paymentType = null;
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded)),
+              backgroundColor: BColors.mainlightColor,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(8),
+                      bottomLeft: Radius.circular(8))),
+              title: const Text(
+                'Payment',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              ),
+              centerTitle: false,
+              shadowColor: BColors.black.withOpacity(0.8),
+              elevation: 5,
             ),
-            centerTitle: false,
-            shadowColor: BColors.black.withOpacity(0.8),
-            elevation: 5,
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.location_on_outlined,
-                        size: 15,
-                      ),
-                      const Gap(5),
-                      Expanded(
-                        child: RichText(
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: '${orders.labDetails!.laboratoryName}- ',
-                                style: const TextStyle(
-                                  color: BColors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat',
-                                ),
-                              ),
-                              TextSpan(
-                                text: '${orders.labDetails!.address}',
-                                style: const TextStyle(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                          size: 15,
+                        ),
+                        const Gap(5),
+                        Expanded(
+                          child: RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${orders.labDetails!.laboratoryName}- ',
+                                  style: const TextStyle(
+                                    color: BColors.black,
+                                    fontWeight: FontWeight.w600,
                                     fontFamily: 'Montserrat',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: BColors.black),
-                              )
-                            ],
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '${orders.labDetails!.address}',
+                                  style: const TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: BColors.black),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const Gap(8),
-                  const Divider(),
-                  const Gap(8),
-                  ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) => const Gap(8),
-                      itemCount: orders.selectedTest!.length,
-                      itemBuilder: (context, testIndex) {
-                        return SelectedTestsCard(
-                          testIndex: testIndex,
-                          index: index,
-                          testName: orders.selectedTest![testIndex].testName,
-                          testPrice: orders.selectedTest![testIndex].testPrice
-                              .toString(),
-                          offerPrice: orders.selectedTest![testIndex].offerPrice
-                              .toString(),
-                          image:
-                              orders.selectedTest![testIndex].testImage ?? '',
-                        );
-                      }),
-                  const Gap(10),
-                  OrderSummaryCardPayment(
-                      isTimeSlotShow: orders.timeSlot == null ? false : true,
-                      timeSlot: orders.timeSlot ?? '',
-                      index: index,
-                      totalTestFee: orders.totalAmount!,
-                      doorStepCharge: orders.doorStepCharge!,
-                      totalAmount: orders.finalAmount!),
-                  const Gap(10),
-                  ButtonWidget(
-                      buttonHeight: 45,
-                      buttonWidth: double.infinity,
-                      buttonColor: const Color(0xff367CBD),
-                      buttonWidget: const Text(
-                        'Choose Payment Method',
-                        style: TextStyle(
-                            color: BColors.white, fontWeight: FontWeight.w600),
-                      ),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => PaymentTypeRadio(
-                                  onConfirm: () async {
-                                    log(ordersProvider.paymentType ?? 'null');
-                                    LoadingLottie.showLoading(
-                                        context: context, text: 'Loading...');
-                                    if (ordersProvider.paymentType ==
-                                        'Doorstep Payment') {
-                                      await ordersProvider.acceptOrder(
-                                          userName: ordersProvider
-                                              .approvedOrders[index]
-                                              .userDetails!
-                                              .userName!,
-                                          fcmtoken: ordersProvider
-                                              .approvedOrders[index]
-                                              .labDetails!
-                                              .fcmToken!,
-                                          orderId: orders.id!);
+                      ],
+                    ),
+                    const Gap(8),
+                    const Divider(),
+                    const Gap(8),
+                    ListView.separated(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) => const Gap(8),
+                        itemCount: orders.selectedTest!.length,
+                        itemBuilder: (context, testIndex) {
+                          return SelectedTestsCard(
+                            testIndex: testIndex,
+                            index: index,
+                            testName: orders.selectedTest![testIndex].testName,
+                            testPrice: orders.selectedTest![testIndex].testPrice
+                                .toString(),
+                            offerPrice: orders
+                                .selectedTest![testIndex].offerPrice
+                                .toString(),
+                            image:
+                                orders.selectedTest![testIndex].testImage ?? '',
+                          );
+                        }),
+                    const Gap(10),
+                    OrderSummaryCardPayment(
+                        isTimeSlotShow: orders.timeSlot == null ? false : true,
+                        timeSlot: orders.timeSlot ?? '',
+                        index: index,
+                        totalTestFee: orders.totalAmount!,
+                        doorStepCharge: orders.doorStepCharge!,
+                        totalAmount: orders.finalAmount!),
+                    const Gap(10),
+                    ButtonWidget(
+                        buttonHeight: 45,
+                        buttonWidth: double.infinity,
+                        buttonColor: const Color(0xff367CBD),
+                        buttonWidget: const Text(
+                          'Choose Payment Method',
+                          style: TextStyle(
+                              color: BColors.white,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => PaymentTypeRadio(
+                                    onConfirm: () async {
+                                      log(ordersProvider.paymentType ?? 'null');
+                                      if (ordersProvider.paymentType == null) {
+                                        CustomToast.infoToast(
+                                            text:
+                                                'Select preffered payment method');
+                                        return;
+                                      } else {
+                                        LoadingLottie.showLoading(
+                                            context: context,
+                                            text: 'Loading...');
+                                        if (ordersProvider.paymentType ==
+                                            'Doorstep Payment') {
+                                          await ordersProvider.acceptOrder(
+                                              userName: ordersProvider
+                                                  .approvedOrders[index]
+                                                  .userDetails!
+                                                  .userName!,
+                                              fcmtoken: ordersProvider
+                                                  .approvedOrders[index]
+                                                  .labDetails!
+                                                  .fcmToken!,
+                                              orderId: orders.id!);
 
-                                      await EasyNavigation.push(
-                                          context: context,
-                                          page: PaymentSuccessScreen(
-                                            index: index,
-                                          ),
-                                          type: PageTransitionType.rightToLeft,
-                                          duration: 200);
-                                      ordersProvider.paymentType == null;
+                                          await EasyNavigation.push(
+                                              context: context,
+                                              page: PaymentSuccessScreen(
+                                                index: index,
+                                              ),
+                                              type: PageTransitionType
+                                                  .rightToLeft,
+                                              duration: 200);
+                                          ordersProvider.paymentType == null;
+
+                                          Navigator.pop(context);
+                                        } else {}
+                                      }
 
                                       Navigator.pop(context);
-                                    } else {}
-
-                                    Navigator.pop(context);
-                                  },
-                                ));
-                      }),
-                  const Gap(20),
-                  ButtonWidget(
-                      onPressed: () async {
-                        await LaunchDialer.lauchDialer(
-                            phoneNumber: orders.labDetails!.phoneNo!);
-                      },
-                      buttonHeight: 42,
-                      buttonWidth: 140,
-                      buttonColor: BColors.mainlightColor,
-                      buttonWidget: const Row(
-                        children: [
-                          Icon(
-                            Icons.call,
-                            color: BColors.white,
-                            size: 18,
-                          ),
-                          Gap(10),
-                          Text(
-                            'Call Lab',
-                            style: TextStyle(
-                                color: BColors.white,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ))
-                ],
+                                    },
+                                  ));
+                        }),
+                    const Gap(20),
+                    ButtonWidget(
+                        onPressed: () async {
+                          await LaunchDialer.lauchDialer(
+                              phoneNumber: orders.labDetails!.phoneNo!);
+                        },
+                        buttonHeight: 42,
+                        buttonWidth: 140,
+                        buttonColor: BColors.mainlightColor,
+                        buttonWidget: const Row(
+                          children: [
+                            Icon(
+                              Icons.call,
+                              color: BColors.white,
+                              size: 18,
+                            ),
+                            Gap(10),
+                            Text(
+                              'Call Lab',
+                              style: TextStyle(
+                                  color: BColors.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
               ),
             ),
           ),

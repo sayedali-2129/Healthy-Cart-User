@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
@@ -7,14 +8,14 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/completed_card.dart';
 import 'package:provider/provider.dart';
 
-class CompletedTab extends StatefulWidget {
-  const CompletedTab({super.key});
+class LabCompleted extends StatefulWidget {
+  const LabCompleted({super.key});
 
   @override
-  State<CompletedTab> createState() => _CompletedTabState();
+  State<LabCompleted> createState() => _CompletedTabState();
 }
 
-class _CompletedTabState extends State<CompletedTab> {
+class _CompletedTabState extends State<LabCompleted> {
   final scrollController = ScrollController();
   @override
   void initState() {
@@ -57,9 +58,11 @@ class _CompletedTabState extends State<CompletedTab> {
                 separatorBuilder: (context, index) => const Gap(12),
                 itemCount: ordersProvider.completedOrders.length,
                 itemBuilder: (context, index) {
-                  return CompletedCard(
-                    screenWidth: screenWidth,
-                    index: index,
+                  return FadeIn(
+                    child: CompletedCard(
+                      screenWidth: screenWidth,
+                      index: index,
+                    ),
                   );
                 },
               ),

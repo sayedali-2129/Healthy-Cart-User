@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/custom_textfields/textfield_widget.dart';
@@ -79,10 +80,22 @@ class PatientDetailsScreen extends StatelessWidget {
                   ),
                   const Gap(16),
                   TextfieldWidget(
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp('[0-9]'))
+                    ],
                     enableHeading: true,
+                    maxLendth: 10,
                     fieldHeading: 'Phone Number*',
                     hintText: 'Enter Patient Phone Number',
-                    validator: BValidator.validate,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Enter Phone Number';
+                      } else if (value.length != 10) {
+                        return 'Enter valid phone number';
+                      } else {
+                        return null;
+                      }
+                    },
                     keyboardType: TextInputType.number,
                     controller: hospitalProvider.numberController,
                   ),

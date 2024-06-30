@@ -15,14 +15,16 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
 import '../../features/authentication/application/provider/authenication_provider.dart'
-    as _i39;
+    as _i43;
 import '../../features/authentication/domain/facade/i_auth_facade.dart' as _i27;
 import '../../features/authentication/infrastructure/i_auth_impl.dart' as _i28;
-import '../../features/home/application/provider/home_provider.dart' as _i38;
+import '../../features/home/application/provider/home_provider.dart' as _i42;
 import '../../features/home/domain/facade/i_home_facade.dart' as _i22;
 import '../../features/home/infrastructure/i_home_impl.dart' as _i23;
+import '../../features/hospital/application/provider/hosp_booking_provider.dart'
+    as _i40;
 import '../../features/hospital/application/provider/hospital_provider.dart'
-    as _i31;
+    as _i33;
 import '../../features/hospital/domain/facade/i_hospital_booking_facade.dart'
     as _i25;
 import '../../features/hospital/domain/facade/i_hospital_facade.dart' as _i20;
@@ -30,9 +32,9 @@ import '../../features/hospital/infrastructure/i_hospital_booking_impl.dart'
     as _i26;
 import '../../features/hospital/infrastructure/i_hospital_impl.dart' as _i21;
 import '../../features/laboratory/application/provider/lab_orders_provider.dart'
-    as _i29;
+    as _i31;
 import '../../features/laboratory/application/provider/lab_provider.dart'
-    as _i36;
+    as _i38;
 import '../../features/laboratory/domain/facade/i_lab_facade.dart' as _i16;
 import '../../features/laboratory/domain/facade/i_lab_orders_facade.dart'
     as _i18;
@@ -45,28 +47,33 @@ import '../../features/location_picker/location_picker/domain/i_location_facde.d
     as _i14;
 import '../../features/location_picker/location_picker/infrastructure/i_location_impl.dart'
     as _i15;
-import '../../features/pharmacy/application/pharmacy_order_provider.dart'
+import '../../features/notifications/application/provider/notification_provider.dart'
+    as _i39;
+import '../../features/notifications/domain/i_notification_facade.dart' as _i29;
+import '../../features/notifications/infrastructure/i_notification_impl.dart'
     as _i30;
-import '../../features/pharmacy/application/pharmacy_provider.dart' as _i37;
-import '../../features/pharmacy/domain/i_pharmacy_facade.dart' as _i34;
+import '../../features/pharmacy/application/pharmacy_order_provider.dart'
+    as _i32;
+import '../../features/pharmacy/application/pharmacy_provider.dart' as _i41;
+import '../../features/pharmacy/domain/i_pharmacy_facade.dart' as _i36;
 import '../../features/pharmacy/domain/i_pharmacy_order_facade.dart' as _i12;
-import '../../features/pharmacy/infrastructure/i_pharmacy_impl.dart' as _i35;
+import '../../features/pharmacy/infrastructure/i_pharmacy_impl.dart' as _i37;
 import '../../features/pharmacy/infrastructure/i_pharmacy_order_impl.dart'
     as _i13;
 import '../../features/profile/application/provider/user_address_provider.dart'
-    as _i40;
+    as _i44;
 import '../../features/profile/application/provider/user_profile_provider.dart'
-    as _i41;
+    as _i45;
 import '../../features/profile/domain/facade/i_user_profile_facade.dart'
-    as _i32;
-import '../../features/profile/infrastructure/i_user_profile_impl.dart' as _i33;
+    as _i34;
+import '../../features/profile/infrastructure/i_user_profile_impl.dart' as _i35;
 import '../services/image_picker.dart' as _i7;
 import '../services/location_service.dart' as _i8;
 import '../services/pdf_picker.dart' as _i9;
 import '../services/sound_services.dart' as _i11;
 import '../services/url_launcher.dart' as _i10;
 import 'firebase_injectable_module.dart' as _i3;
-import 'general_injectable_module.dart' as _i42;
+import 'general_injectable_module.dart' as _i46;
 
 // initializes the registration of main-scope dependencies inside of GetIt
 Future<_i1.GetIt> init(
@@ -123,39 +130,45 @@ Future<_i1.GetIt> init(
         gh<_i4.FirebaseAuth>(),
         gh<_i6.FirebaseFirestore>(),
       ));
-  gh.factory<_i29.LabOrdersProvider>(
-      () => _i29.LabOrdersProvider(gh<_i18.ILabOrdersFacade>()));
-  gh.factory<_i30.PharmacyOrderProvider>(
-      () => _i30.PharmacyOrderProvider(gh<_i12.IPharmacyOrderFacade>()));
-  gh.factory<_i31.HospitalProvider>(() => _i31.HospitalProvider(
+  gh.lazySingleton<_i29.INotificationFacade>(
+      () => _i30.INotificationImpl(gh<_i6.FirebaseFirestore>()));
+  gh.factory<_i31.LabOrdersProvider>(
+      () => _i31.LabOrdersProvider(gh<_i18.ILabOrdersFacade>()));
+  gh.factory<_i32.PharmacyOrderProvider>(
+      () => _i32.PharmacyOrderProvider(gh<_i12.IPharmacyOrderFacade>()));
+  gh.factory<_i33.HospitalProvider>(() => _i33.HospitalProvider(
         gh<_i20.IHospitalFacade>(),
         gh<_i25.IHospitalBookingFacade>(),
       ));
-  gh.lazySingleton<_i32.IUserProfileFacade>(() => _i33.IUserProfileImpl(
+  gh.lazySingleton<_i34.IUserProfileFacade>(() => _i35.IUserProfileImpl(
         gh<_i6.FirebaseFirestore>(),
         gh<_i7.ImageService>(),
       ));
-  gh.lazySingleton<_i34.IPharmacyFacade>(() => _i35.IPharmacyImpl(
+  gh.lazySingleton<_i36.IPharmacyFacade>(() => _i37.IPharmacyImpl(
         gh<_i6.FirebaseFirestore>(),
         gh<_i7.ImageService>(),
       ));
-  gh.factory<_i36.LabProvider>(() => _i36.LabProvider(
+  gh.factory<_i38.LabProvider>(() => _i38.LabProvider(
         gh<_i16.ILabFacade>(),
         gh<_i18.ILabOrdersFacade>(),
       ));
-  gh.factory<_i37.PharmacyProvider>(
-      () => _i37.PharmacyProvider(gh<_i34.IPharmacyFacade>()));
-  gh.factory<_i38.HomeProvider>(
-      () => _i38.HomeProvider(gh<_i22.IHomeFacade>()));
-  gh.factory<_i39.AuthenticationProvider>(
-      () => _i39.AuthenticationProvider(gh<_i27.IAuthFacade>()));
-  gh.factory<_i40.UserAddressProvider>(
-      () => _i40.UserAddressProvider(gh<_i32.IUserProfileFacade>()));
-  gh.factory<_i41.UserProfileProvider>(
-      () => _i41.UserProfileProvider(gh<_i32.IUserProfileFacade>()));
+  gh.factory<_i39.NotificationProvider>(
+      () => _i39.NotificationProvider(gh<_i29.INotificationFacade>()));
+  gh.factory<_i40.HospitalBookingProivder>(
+      () => _i40.HospitalBookingProivder(gh<_i25.IHospitalBookingFacade>()));
+  gh.factory<_i41.PharmacyProvider>(
+      () => _i41.PharmacyProvider(gh<_i36.IPharmacyFacade>()));
+  gh.factory<_i42.HomeProvider>(
+      () => _i42.HomeProvider(gh<_i22.IHomeFacade>()));
+  gh.factory<_i43.AuthenticationProvider>(
+      () => _i43.AuthenticationProvider(gh<_i27.IAuthFacade>()));
+  gh.factory<_i44.UserAddressProvider>(
+      () => _i44.UserAddressProvider(gh<_i34.IUserProfileFacade>()));
+  gh.factory<_i45.UserProfileProvider>(
+      () => _i45.UserProfileProvider(gh<_i34.IUserProfileFacade>()));
   return getIt;
 }
 
 class _$FirebaseInjecatbleModule extends _i3.FirebaseInjecatbleModule {}
 
-class _$GeneralInjecatbleModule extends _i42.GeneralInjecatbleModule {}
+class _$GeneralInjecatbleModule extends _i46.GeneralInjecatbleModule {}

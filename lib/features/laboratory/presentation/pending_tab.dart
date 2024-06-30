@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
@@ -7,14 +8,14 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/pending_card.dart';
 import 'package:provider/provider.dart';
 
-class PendingTab extends StatefulWidget {
-  const PendingTab({super.key});
+class LabPendingTab extends StatefulWidget {
+  const LabPendingTab({super.key});
 
   @override
-  State<PendingTab> createState() => _PendingTabState();
+  State<LabPendingTab> createState() => _PendingTabState();
 }
 
-class _PendingTabState extends State<PendingTab> {
+class _PendingTabState extends State<LabPendingTab> {
   @override
   void initState() {
     final authProvider = context.read<AuthenticationProvider>();
@@ -51,9 +52,11 @@ class _PendingTabState extends State<PendingTab> {
                 separatorBuilder: (context, index) => const Gap(12),
                 itemCount: ordersProvider.pendingOrders.length,
                 itemBuilder: (context, index) {
-                  return PendingCard(
-                    screenWidth: screenWidth,
-                    index: index,
+                  return FadeIn(
+                    child: PendingCard(
+                      screenWidth: screenWidth,
+                      index: index,
+                    ),
                   );
                 },
               ),

@@ -58,6 +58,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
           labProvider.cartItems.clear();
           labProvider.isBottomContainerPopUp = false;
           labProvider.isLabOnlySelected = true;
+          labProvider.selectedRadio = null;
         },
         child: Scaffold(
             appBar: AppBar(
@@ -90,8 +91,23 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child:
+                            child: Stack(
+                              children: [
                                 CustomCachedNetworkImage(image: labList.image!),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        BColors.black.withOpacity(0.5),
+                                        Colors.transparent
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.center,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
@@ -178,30 +194,34 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                               itemBuilder: (context, index) {
                                                 final testList =
                                                     labProvider.testList[index];
-                                                return TestListCard(
-                                                  isDoorstepAvailable: testList
-                                                      .isDoorstepAvailable,
-                                                  index: index,
-                                                  image: testList.testImage!,
-                                                  testName: testList.testName ??
-                                                      'No Name',
-                                                  testPrice:
-                                                      '${testList.testPrice ?? 000}',
-                                                  offerPrice:
-                                                      '${testList.offerPrice}',
-                                                  isSelected: labProvider
-                                                      .selectedTestIds
-                                                      .contains(testList.id),
-                                                  onAdd: () {
-                                                    labProvider.testAddButton(
-                                                        testList.id!, testList);
-                                                    labProvider
-                                                        .bottomPopUpContainer();
-                                                    if (labProvider
-                                                        .isBottomContainerPopUp) {
-                                                      bottomPopUp();
-                                                    }
-                                                  },
+                                                return FadeIn(
+                                                  child: TestListCard(
+                                                    isDoorstepAvailable: testList
+                                                        .isDoorstepAvailable,
+                                                    index: index,
+                                                    image: testList.testImage!,
+                                                    testName:
+                                                        testList.testName ??
+                                                            'No Name',
+                                                    testPrice:
+                                                        '${testList.testPrice ?? 000}',
+                                                    offerPrice:
+                                                        '${testList.offerPrice}',
+                                                    isSelected: labProvider
+                                                        .selectedTestIds
+                                                        .contains(testList.id),
+                                                    onAdd: () {
+                                                      labProvider.testAddButton(
+                                                          testList.id!,
+                                                          testList);
+                                                      labProvider
+                                                          .bottomPopUpContainer();
+                                                      if (labProvider
+                                                          .isBottomContainerPopUp) {
+                                                        bottomPopUp();
+                                                      }
+                                                    },
+                                                  ),
                                                 );
                                               },
                                             ),
@@ -226,38 +246,40 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                               itemBuilder: (context, index) {
                                                 final doorStepList = labProvider
                                                     .doorStepTestList[index];
-                                                return TestListCard(
-                                                  doorstepList: true,
-                                                  isDoorstepAvailable: true,
-                                                  index: index,
-                                                  image:
-                                                      doorStepList.testImage!,
-                                                  testName:
-                                                      doorStepList.testName ??
-                                                          'No Name',
-                                                  testPrice:
-                                                      '${doorStepList.testPrice ?? 000}',
-                                                  offerPrice:
-                                                      '${doorStepList.offerPrice}',
-                                                  isSelected: labProvider
-                                                      .selectedTestIds
-                                                      .contains(
-                                                          doorStepList.id),
-                                                  onAdd: () {
-                                                    labProvider.testAddButton(
-                                                        doorStepList.id!,
-                                                        doorStepList);
-                                                    if (labProvider
+                                                return FadeIn(
+                                                  child: TestListCard(
+                                                    doorstepList: true,
+                                                    isDoorstepAvailable: true,
+                                                    index: index,
+                                                    image:
+                                                        doorStepList.testImage!,
+                                                    testName:
+                                                        doorStepList.testName ??
+                                                            'No Name',
+                                                    testPrice:
+                                                        '${doorStepList.testPrice ?? 000}',
+                                                    offerPrice:
+                                                        '${doorStepList.offerPrice}',
+                                                    isSelected: labProvider
                                                         .selectedTestIds
-                                                        .isNotEmpty) {
-                                                      labProvider
-                                                          .bottomPopUpContainer();
+                                                        .contains(
+                                                            doorStepList.id),
+                                                    onAdd: () {
+                                                      labProvider.testAddButton(
+                                                          doorStepList.id!,
+                                                          doorStepList);
                                                       if (labProvider
-                                                          .isBottomContainerPopUp) {
-                                                        bottomPopUp();
+                                                          .selectedTestIds
+                                                          .isNotEmpty) {
+                                                        labProvider
+                                                            .bottomPopUpContainer();
+                                                        if (labProvider
+                                                            .isBottomContainerPopUp) {
+                                                          bottomPopUp();
+                                                        }
                                                       }
-                                                    }
-                                                  },
+                                                    },
+                                                  ),
                                                 );
                                               },
                                             ),
@@ -292,7 +314,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 .any((item) =>
                                     item.isDoorstepAvailable == false);
                             if (labProvider.selectedRadio == null) {
-                              CustomToast.errorToast(
+                              CustomToast.infoToast(
                                   text: 'Please select preferred test type');
                             } else if (labProvider.selectedRadio == 'Home' &&
                                 checkHomeAvailable) {

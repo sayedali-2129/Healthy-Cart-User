@@ -43,7 +43,7 @@ class HomeProvider with ChangeNotifier {
         currentTime.difference(currentBackPressTime!) >
             Duration(seconds: requiredSeconds)) {
       currentBackPressTime = currentTime;
-      CustomToast.errorToast(text: 'Press again to exit');
+      CustomToast.infoToast(text: 'Press again to exit');
       Future.delayed(
         Duration(seconds: requiredSeconds),
         () {

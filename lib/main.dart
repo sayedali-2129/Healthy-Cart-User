@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/di/injection.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/home/application/provider/home_provider.dart';
+import 'package:healthy_cart_user/features/hospital/application/provider/hosp_booking_provider.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // CustomToast(context: context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -50,7 +52,7 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<UserAddressProvider>(),
         ),
         ChangeNotifierProvider(
-          create: (context) => NotificationProvider(),
+          create: (context) => sl<NotificationProvider>(),
         ),
         ChangeNotifierProvider(
           create: (context) => sl<LabOrdersProvider>(),
@@ -64,8 +66,21 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => sl<HomeProvider>(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => sl<HospitalBookingProivder>(),
+        ),
       ],
       child: MaterialApp(
+        builder: (context, child) => Overlay(
+          initialEntries: [
+            if (child != null) ...[
+              OverlayEntry(
+                builder: (context) => child,
+              ),
+            ],
+          ],
+        ),
+        navigatorKey: navigatorKey,
         title: AppDetails.appName,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

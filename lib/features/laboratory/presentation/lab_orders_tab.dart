@@ -60,10 +60,10 @@ class LabOrdersTab extends StatelessWidget {
               ),
               const SliverFillRemaining(
                 child: TabBarView(children: [
-                  PendingTab(),
-                  AcceptedTab(),
-                  CompletedTab(),
-                  CancelledTab(),
+                  LabPendingTab(),
+                  LabAccepted(),
+                  LabCompleted(),
+                  LabCancelledTab(),
                 ]),
               )
             ]),

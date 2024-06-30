@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
@@ -227,7 +228,8 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                                   )
                                 : Column(
                                     children: [
-                                      PrescriptionImageWidget(pharmacyProvider: pharmacyProvider),
+                                      PrescriptionImageWidget(
+                                          pharmacyProvider: pharmacyProvider),
                                     ],
                                   )
                           ],
@@ -263,7 +265,7 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                     context: context, text: 'Please wait...');
                 pharmacyProvider.saveImage().whenComplete(
                   () {
-                     pharmacyProvider.createProductOrderDetails(
+                    pharmacyProvider.createProductOrderDetails(
                         context: context);
                   },
                 );

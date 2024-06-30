@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -149,11 +150,13 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
                               doctorIndex: doctorIndex,
                               hospitalAddress: hospitalProvider
                                   .hospitalList[widget.hospitalIndex].address!,
+                              doctorModel:
+                                  hospitalProvider.doctorsList[doctorIndex],
                             ),
                             type: PageTransitionType.rightToLeft,
                             duration: 250);
                       },
-                      child: DoctorCard(index: doctorIndex),
+                      child: FadeIn(child: DoctorCard(index: doctorIndex)),
                     ),
                   ),
                 ),

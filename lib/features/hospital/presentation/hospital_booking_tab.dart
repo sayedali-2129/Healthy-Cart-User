@@ -1,14 +1,14 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/order_accepted_pharmacy.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/order_cancelled_pharmacy.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/order_completed_pharmacy.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/order_pending_pharmacy.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hosp_accepted.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hosp_cancelled.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hosp_completed.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hosp_pending.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 
-class PharmacyOrdersTab extends StatelessWidget {
-  const PharmacyOrdersTab({super.key});
+class HospitalBookingTab extends StatelessWidget {
+  const HospitalBookingTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +19,10 @@ class PharmacyOrdersTab extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             slivers: [
               SliverCustomAppbar(
-                  title: 'Pharmacy Orders',
-                  onBackTap: () => Navigator.pop(context)),
+                  title: 'Bookings', onBackTap: () => Navigator.pop(context)),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.all(8.0),
                   child: ButtonsTabBar(
                       height: 42,
                       unselectedLabelStyle: const TextStyle(
@@ -38,7 +37,6 @@ class PharmacyOrdersTab extends StatelessWidget {
                       unselectedBackgroundColor: BColors.white,
                       unselectedBorderColor: BColors.darkblue,
                       borderWidth: 1,
-                      elevation: 3,
                       contentPadding: const EdgeInsets.all(8),
                       radius: 12,
                       duration: 50,
@@ -61,10 +59,10 @@ class PharmacyOrdersTab extends StatelessWidget {
               ),
               const SliverFillRemaining(
                 child: TabBarView(children: [
-                  PharmacyPendingTab(),
-                  PharmacyAcceptedTab(),
-                  PharmacyCompletedTab(),
-                  PharmacyCancelledTab(),
+                  HospPending(),
+                  HospAccepted(),
+                  HospCompleted(),
+                  HospCancelled()
                 ]),
               )
             ]),

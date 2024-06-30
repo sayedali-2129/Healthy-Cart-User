@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
@@ -7,14 +8,14 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/accept_card.dart';
 import 'package:provider/provider.dart';
 
-class AcceptedTab extends StatefulWidget {
-  const AcceptedTab({super.key});
+class LabAccepted extends StatefulWidget {
+  const LabAccepted({super.key});
 
   @override
-  State<AcceptedTab> createState() => _AcceptedTabState();
+  State<LabAccepted> createState() => _AcceptedTabState();
 }
 
-class _AcceptedTabState extends State<AcceptedTab> {
+class _AcceptedTabState extends State<LabAccepted> {
   @override
   void initState() {
     final authProvider = context.read<AuthenticationProvider>();
@@ -50,9 +51,11 @@ class _AcceptedTabState extends State<AcceptedTab> {
                   separatorBuilder: (context, index) => const Gap(12),
                   itemCount: ordersProvider.approvedOrders.length,
                   itemBuilder: (context, index) {
-                    return AcceptCard(
-                      screenWidth: screenWidth,
-                      index: index,
+                    return FadeIn(
+                      child: AcceptCard(
+                        screenWidth: screenWidth,
+                        index: index,
+                      ),
                     );
                   }),
             )

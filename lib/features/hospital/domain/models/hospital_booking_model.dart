@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
@@ -136,11 +133,6 @@ class HospitalBookingModel {
           : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory HospitalBookingModel.fromJson(String source) =>
-      HospitalBookingModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   HospitalBookingModel copyWith({
     String? id,

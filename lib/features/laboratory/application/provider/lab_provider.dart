@@ -14,6 +14,7 @@ import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_m
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_test_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -282,8 +283,8 @@ class LabProvider with ChangeNotifier {
   }
 
   /* ---------------------------- PICK PRESCRIPTION --------------------------- */
-  Future<void> pickPrescription() async {
-    final result = await iLabOrdersFacade.pickPrescription();
+  Future<void> pickPrescription({required ImageSource source}) async {
+    final result = await iLabOrdersFacade.pickPrescription(source: source);
     result.fold(
       (err) {
         log('error in pickPrescription() :: ${err.errMsg}');

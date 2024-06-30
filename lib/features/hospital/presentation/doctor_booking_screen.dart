@@ -131,7 +131,7 @@ class DoctorBookingScreen extends StatelessWidget {
             onTap: () {
               if (hospitalProvider.selectedSlot == null ||
                   hospitalProvider.seletedBookingDate == null) {
-                CustomToast.errorToast(text: 'Please select date and time');
+                CustomToast.infoToast(text: 'Please select date and time');
               } else {
                 log(hospitalProvider.selectedSlot!);
                 log(hospitalProvider.seletedBookingDate!);

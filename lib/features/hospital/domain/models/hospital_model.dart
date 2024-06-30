@@ -48,7 +48,7 @@ class HospitalModel {
       'keywords': keywords,
       'fcmToken': fcmToken,
       'phoneNo': phoneNo,
-      'placemark': placemark?.toJson(),
+      'placemark': placemark?.toMap(),
     };
   }
 

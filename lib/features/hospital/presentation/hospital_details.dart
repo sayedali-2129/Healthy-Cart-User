@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
+import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -71,7 +72,23 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: CustomCachedNetworkImage(image: hospital.image!),
+                        child: Stack(
+                          children: [
+                            CustomCachedNetworkImage(image: hospital.image!),
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    BColors.black.withOpacity(0.5),
+                                    Colors.transparent
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Padding(
@@ -132,7 +149,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600),
                                     ),
-                                    GestureDetector(
+                                    ViewAllButton(
                                       onTap: () {
                                         EasyNavigation.push(
                                             context: context,
@@ -145,16 +162,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                                   widget.hospitalIndex,
                                             ));
                                       },
-                                      child: const Text(
-                                        'View all',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            color: BColors.buttonLightBlue,
-                                            decoration:
-                                                TextDecoration.underline),
-                                      ),
-                                    ),
+                                    )
                                   ],
                                 )
                               : const Gap(0),
@@ -219,7 +227,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
                               ),
-                              GestureDetector(
+                              ViewAllButton(
                                 onTap: () {
                                   EasyNavigation.push(
                                       context: context,
@@ -231,15 +239,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                         hospitalId: widget.hospitalId,
                                       ));
                                 },
-                                child: const Text(
-                                  'View all',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: BColors.buttonLightBlue,
-                                      decoration: TextDecoration.underline),
-                                ),
-                              ),
+                              )
                             ],
                           ),
                           ListView.separated(
@@ -258,12 +258,17 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                       hospitalIndex: widget.hospitalIndex,
                                       doctorIndex: doctorIndex,
                                       hospitalAddress: hospital.address!,
+                                      doctorModel: hospitalProvider
+                                          .doctorsList[doctorIndex],
                                     ),
                                     type: PageTransitionType.rightToLeft,
                                     duration: 250);
                               },
-                              child: DoctorCard(
-                                index: doctorIndex,
+                              child: FadeInRight(
+                                duration: const Duration(milliseconds: 500),
+                                child: DoctorCard(
+                                  index: doctorIndex,
+                                ),
                               ),
                             ),
                           )
