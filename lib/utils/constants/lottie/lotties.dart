@@ -5,7 +5,7 @@ class BLottie {
       'assets/lottie/lottie-progress-indicator.json';
   static const String paymentFailed = 'assets/lottie/payment-failed.json';
   static const String bookingSuccess = 'assets/lottie/payment-successful.json';
-  static const String lottieLocation = 'assets/lottie/location.json';
+  static const String lottieLocation = 'assets/lottie/location_new_user.json';
   static const String paymentSuccess =
       'assets/lottie/payment-success-last.json';
   static const String successToastLottie = 'assets/lottie/check_lottie.json';
