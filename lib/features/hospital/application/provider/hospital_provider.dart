@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/send_fcm_message.dart';
 import 'package:healthy_cart_user/features/hospital/domain/facade/i_hospital_booking_facade.dart';
 import 'package:healthy_cart_user/features/hospital/domain/facade/i_hospital_facade.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
@@ -206,16 +207,17 @@ class HospitalProvider with ChangeNotifier {
 
   HospitalBookingModel? hospitalBookingModel;
   /* ------------------------- CREATE HOSPITAL BOOKING ------------------------ */
-  Future<void> addHospitalBooking(
-      {required String hospitalId,
-      required String userId,
-      required UserModel userModel,
-      required HospitalModel hospitalModel,
-      required int totalAmount,
-      required DoctorModel selectedDoctor
-      // required String fcmtoken,
-
-      }) async {
+  Future<void> addHospitalBooking({
+    required String hospitalId,
+    required String userId,
+    required UserModel userModel,
+    required HospitalModel hospitalModel,
+    required int totalAmount,
+    required DoctorModel selectedDoctor,
+    required String fcmtoken,
+    required String userName,
+    // required String fcmtoken,
+  }) async {
     hospitalBookingModel = HospitalBookingModel(
       hospitalId: hospitalId,
       bookedAt: Timestamp.now(),
@@ -243,11 +245,11 @@ class HospitalProvider with ChangeNotifier {
         log('error in addHospitalOrders() :: ${err.errMsg}');
       },
       (success) {
-        // sendFcmMessage(
-        //     token: fcmtoken,
-        //     body:
-        //         'New Booking Received from $userName. Please check the details and accept the order',
-        //     title: 'New Booking Received!!!');
+        sendFcmMessage(
+            token: fcmtoken,
+            body:
+                'New Booking Received from $userName. Please check the details and accept the order',
+            title: 'New Booking Received!!!');
         CustomToast.sucessToast(text: success);
         log('Order Request Send Successfully');
       },

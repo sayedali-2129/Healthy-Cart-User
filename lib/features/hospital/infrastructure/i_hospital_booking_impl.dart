@@ -133,4 +133,63 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
+
+  /* ---------------------------- UPDATE ORDER STATUS TO ON PROCESS -------------------------- */
+/* -------------------------------------------------------------------------- */
+  @override
+  FutureResult<String> acceptOrder(
+      {required String orderId, required String paymentMethod}) async {
+    try {
+      await _firestore
+          .collection(FirebaseCollections.hospitalBookingCollection)
+          .doc(orderId)
+          .update({'isUserAccepted': true, 'paymentMethod': paymentMethod});
+      return right('Booking Accepted Successfully');
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  /* -------------------------- GET COMPLETED ORDERS -------------------------- */
+  DocumentSnapshot<Map<String, dynamic>>? completedLastDoc;
+  bool completedNoMoreData = false;
+
+  @override
+  FutureResult<List<HospitalBookingModel>> getCompletedOrders(
+      {required String userId}) async {
+    if (completedNoMoreData) return right([]);
+
+    int limit = completedLastDoc == null ? 8 : 4;
+    try {
+      Query query = _firestore
+          .collection(FirebaseCollections.hospitalBookingCollection)
+          .where(Filter.and(Filter('userId', isEqualTo: userId),
+              Filter('orderStatus', isEqualTo: 2)))
+          .orderBy('completedAt', descending: true);
+      if (completedLastDoc != null) {
+        query = query.startAfterDocument(completedLastDoc!);
+      }
+      final snapshot = await query.limit(limit).get();
+      if (snapshot.docs.length < limit || snapshot.docs.isEmpty) {
+        completedNoMoreData = true;
+      } else {
+        completedLastDoc =
+            snapshot.docs.last as DocumentSnapshot<Map<String, dynamic>>;
+      }
+
+      return right(snapshot.docs
+          .map((e) =>
+              HospitalBookingModel.fromMap(e.data() as Map<String, dynamic>)
+                  .copyWith(id: e.id))
+          .toList());
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  void clearCompletedOrderData() {
+    completedNoMoreData = false;
+    completedLastDoc = null;
+  }
 }

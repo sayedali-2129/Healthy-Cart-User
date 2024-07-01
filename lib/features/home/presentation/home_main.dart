@@ -6,6 +6,8 @@ import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
 import 'package:healthy_cart_user/features/home/application/provider/home_provider.dart';
 import 'package:healthy_cart_user/features/home/presentation/widgets/ad_slider_home.dart';
 import 'package:healthy_cart_user/features/home/presentation/widgets/hospital_horizontal_card.dart';
@@ -58,10 +60,10 @@ class _HomeMainState extends State<HomeMain> {
   @override
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
-    return Consumer4<HomeProvider, HospitalProvider, LabProvider,
-            PharmacyProvider>(
+    return Consumer5<HomeProvider, HospitalProvider, LabProvider,
+            PharmacyProvider, AuthenticationProvider>(
         builder: (context, homeProvider, hospitalProvier, labProvider,
-            pharmacyProvider, _) {
+            pharmacyProvider, authProvider, _) {
       return Scaffold(
           body: CustomScrollView(
         slivers: [
@@ -116,21 +118,30 @@ class _HomeMainState extends State<HomeMain> {
                       itemBuilder: (context, index) => FadeInRight(
                           child: GestureDetector(
                         onTap: () {
-                          hospitalProvier.hospitalList[index].ishospitalON ==
-                                  false
-                              ? CustomToast.errorToast(
-                                  text: 'This Hospital is not available now!')
-                              : EasyNavigation.push(
-                                  context: context,
-                                  type: PageTransitionType.rightToLeft,
-                                  duration: 250,
-                                  page: HospitalDetails(
-                                    hospitalId:
-                                        hospitalProvier.hospitalList[index].id!,
-                                    categoryIdList: hospitalProvier
-                                        .hospitalList[index].selectedCategoryId,
-                                    hospitalIndex: index,
-                                  ));
+                          if (authProvider.auth.currentUser == null) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()));
+                            CustomToast.infoToast(text: 'Login First');
+                          } else {
+                            hospitalProvier.hospitalList[index].ishospitalON ==
+                                    false
+                                ? CustomToast.errorToast(
+                                    text: 'This Hospital is not available now!')
+                                : EasyNavigation.push(
+                                    context: context,
+                                    type: PageTransitionType.rightToLeft,
+                                    duration: 250,
+                                    page: HospitalDetails(
+                                      hospitalId: hospitalProvier
+                                          .hospitalList[index].id!,
+                                      categoryIdList: hospitalProvier
+                                          .hospitalList[index]
+                                          .selectedCategoryId,
+                                      hospitalIndex: index,
+                                    ));
+                          }
                         },
                         child: HospitalsHorizontalCard(
                           index: index,
@@ -169,24 +180,32 @@ class _HomeMainState extends State<HomeMain> {
                       itemBuilder: (context, index) => FadeInRight(
                           child: GestureDetector(
                         onTap: () {
-                          pharmacyProvider.pharmacyList[index].isPharmacyON ==
-                                  false
-                              ? CustomToast.errorToast(
-                                  text: 'This Pharmacy is not available now!')
-                              : pharmacyProvider.setPharmacyIdAndCategoryList(
-                                  selectedpharmacyId:
-                                      pharmacyProvider.pharmacyList[index].id ??
-                                          '',
-                                  categoryIdList: pharmacyProvider
-                                          .pharmacyList[index]
-                                          .selectedCategoryId ??
-                                      [],
-                                  pharmacy:
-                                      pharmacyProvider.pharmacyList[index]);
-                          EasyNavigation.push(
-                              type: PageTransitionType.rightToLeft,
-                              context: context,
-                              page: const PharmacyProductScreen());
+                          if (authProvider.auth.currentUser == null) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()));
+                            CustomToast.infoToast(text: 'Login First');
+                          } else {
+                            pharmacyProvider.pharmacyList[index].isPharmacyON ==
+                                    false
+                                ? CustomToast.errorToast(
+                                    text: 'This Pharmacy is not available now!')
+                                : pharmacyProvider.setPharmacyIdAndCategoryList(
+                                    selectedpharmacyId: pharmacyProvider
+                                            .pharmacyList[index].id ??
+                                        '',
+                                    categoryIdList: pharmacyProvider
+                                            .pharmacyList[index]
+                                            .selectedCategoryId ??
+                                        [],
+                                    pharmacy:
+                                        pharmacyProvider.pharmacyList[index]);
+                            EasyNavigation.push(
+                                type: PageTransitionType.rightToLeft,
+                                context: context,
+                                page: const PharmacyProductScreen());
+                          }
                         },
                         child: PharmacyHorizontalCard(
                           index: index,
@@ -228,14 +247,23 @@ class _HomeMainState extends State<HomeMain> {
                             child: LabListCardHome(
                               index: index,
                               onTap: () {
-                                EasyNavigation.push(
-                                    context: context,
-                                    type: PageTransitionType.rightToLeft,
-                                    duration: 250,
-                                    page: LabDetailsScreen(
-                                      labId: labProvider.labList[index].id!,
-                                      index: index,
-                                    ));
+                                if (authProvider.auth.currentUser == null) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginScreen()));
+                                  CustomToast.infoToast(text: 'Login First');
+                                } else {
+                                  EasyNavigation.push(
+                                      context: context,
+                                      type: PageTransitionType.rightToLeft,
+                                      duration: 250,
+                                      page: LabDetailsScreen(
+                                        labId: labProvider.labList[index].id!,
+                                        index: index,
+                                      ));
+                                }
                               },
                             ),
                           )),

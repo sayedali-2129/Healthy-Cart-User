@@ -132,6 +132,9 @@ class PatientDetailsScreen extends StatelessWidget {
                   LoadingLottie.showLoading(
                       context: context, text: 'Please wait...');
                   await hospitalProvider.addHospitalBooking(
+                      fcmtoken: hospitalProvider
+                          .hospitalList[hospitalIndex].fcmToken!,
+                      userName: authProvider.userFetchlDataFetched!.userName!,
                       hospitalId:
                           hospitalProvider.hospitalList[hospitalIndex].id!,
                       userId: authProvider.userFetchlDataFetched!.id!,

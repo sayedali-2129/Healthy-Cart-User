@@ -69,6 +69,13 @@ class HospPendingCard extends StatelessWidget {
                           style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 15),
                         ),
+                        Text(
+                          '(${orders.selectedDoctor!.doctorSpecialization!})',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                              color: BColors.grey),
+                        ),
                         const Gap(5),
                         RichText(
                           overflow: TextOverflow.ellipsis,
@@ -141,6 +148,23 @@ class HospPendingCard extends StatelessWidget {
                 ],
               ),
               const Gap(10),
+              Divider(),
+              Gap(4),
+              Column(
+                children: [
+                  const Text(
+                    'Selected Time Slot :',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  const Gap(5),
+                  Text(
+                    '${orders.selectedDate} : ${orders.selectedTimeSlot}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 15),
+                  )
+                ],
+              ),
+              Gap(8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -224,7 +248,11 @@ class HospPendingCard extends StatelessWidget {
                           LoadingLottie.showLoading(
                               context: context, text: 'Cancelling...');
                           await ordersProvider.cancelOrder(
-                              orderId: orders.id!, index: index);
+                              fromPending: true,
+                              fcmtoken: orders.hospitalDetails!.fcmToken!,
+                              userName: orders.userDetails!.userName,
+                              orderId: orders.id!,
+                              index: index);
                           // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         },

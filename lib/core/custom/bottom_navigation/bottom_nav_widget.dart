@@ -1,6 +1,6 @@
-import 'dart:developer';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
 import 'package:healthy_cart_user/features/home/application/provider/home_provider.dart';
 import 'package:healthy_cart_user/features/home/presentation/home_main.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_main.dart';
@@ -24,6 +24,8 @@ class _BottonNavTabState extends State<BottomNavigationWidget>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  final auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +47,14 @@ class _BottonNavTabState extends State<BottomNavigationWidget>
   void navigateToPharmacyTab() {
     setState(() {
       _tabController.index = 3;
+    });
+  }
+
+  Future<void> navigateToLoginScreen() async {
+    await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+    setState(() {
+      _tabController.index = 0; // Return to the profile tab
     });
   }
 
@@ -77,7 +87,9 @@ class _BottonNavTabState extends State<BottomNavigationWidget>
                   const HospitalMain(),
                   const LabMain(),
                   const PharmacyMain(),
-                  const ProfileMain(),
+                  auth.currentUser != null
+                      ? const ProfileMain()
+                      : const LoginScreen()
                 ]),
           ),
           bottomNavigationBar: PhysicalModel(
@@ -105,12 +117,14 @@ class _BottonNavTabState extends State<BottomNavigationWidget>
                     fontFamily: 'Montserrat'),
                 labelColor: BColors.mainlightColor,
                 unselectedLabelColor: BColors.black,
-                onTap: (index) {
-                  log("$index");
-                  setState(() {
-                    _tabController.index = index;
-                    log(_tabController.index.toString());
-                  });
+                onTap: (index) async {
+                  if (index == 4 && auth.currentUser == null) {
+                    await navigateToLoginScreen();
+                  } else {
+                    setState(() {
+                      _tabController.index = index;
+                    });
+                  }
                 },
                 tabs: [
                   Tab(

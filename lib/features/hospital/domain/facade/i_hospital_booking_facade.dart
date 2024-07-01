@@ -13,7 +13,12 @@ abstract class IHospitalBookingFacade {
       {required String userId});
   FutureResult<List<HospitalBookingModel>> getCancelledOrders(
       {required String userId});
+  FutureResult<List<HospitalBookingModel>> getCompletedOrders(
+      {required String userId});
   FutureResult<String> cancelOrder({required String orderId});
+  FutureResult<String> acceptOrder(
+      {required String orderId, required String paymentMethod});
+  void clearCompletedOrderData();
 
   void clearCancelledData();
 }

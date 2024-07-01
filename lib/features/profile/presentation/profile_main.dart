@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
@@ -6,6 +7,9 @@ import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_w
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hospital_booking_tab.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/lab_orders_tab.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
 import 'package:healthy_cart_user/features/profile/presentation/my_address_screen.dart';
 import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
 import 'package:healthy_cart_user/features/profile/presentation/widgets/profile_buttons.dart';
@@ -16,13 +20,27 @@ import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-class ProfileMain extends StatelessWidget {
+class ProfileMain extends StatefulWidget {
   const ProfileMain({super.key});
+
+  @override
+  State<ProfileMain> createState() => _ProfileMainState();
+}
+
+class _ProfileMainState extends State<ProfileMain> {
+  @override
+  void initState() {
+    final auth = FirebaseAuth.instance;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthenticationProvider>(
         builder: (context, authProvider, _) {
+      String? location =
+          '${authProvider.userFetchlDataFetched!.placemark?.localArea}, ${authProvider.userFetchlDataFetched!.placemark?.district}';
       return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
@@ -45,8 +63,7 @@ class ProfileMain extends StatelessWidget {
                 FadeInRight(
                   child: ProfileCard(
                     userName: authProvider.userFetchlDataFetched!.userName,
-                    userLocation:
-                        '${authProvider.userFetchlDataFetched!.placemark?.localArea}, ${authProvider.userFetchlDataFetched!.placemark?.district}',
+                    userLocation: location,
                     userImage: authProvider.userFetchlDataFetched!.image,
                   ),
                 ),
@@ -67,16 +84,37 @@ class ProfileMain extends StatelessWidget {
                         },
                       ),
                       ProfileButtons(
-                        buttonName: 'My Appointments',
-                        onPressed: () {},
+                        buttonName: 'Hospital Appointments',
+                        onPressed: () {
+                          EasyNavigation.push(
+                            context: context,
+                            page: const HospitalBookingTab(),
+                            type: PageTransitionType.rightToLeft,
+                            duration: 300,
+                          );
+                        },
                       ),
                       ProfileButtons(
-                        buttonName: 'My Orders',
-                        onPressed: () {},
+                        buttonName: 'Laboratory Appointments',
+                        onPressed: () {
+                          EasyNavigation.push(
+                            context: context,
+                            page: const LabOrdersTab(),
+                            type: PageTransitionType.rightToLeft,
+                            duration: 300,
+                          );
+                        },
                       ),
                       ProfileButtons(
-                        buttonName: 'My Cart',
-                        onPressed: () {},
+                        buttonName: 'Pharmacy Orders',
+                        onPressed: () {
+                          EasyNavigation.push(
+                            context: context,
+                            page: const PharmacyOrdersTab(),
+                            type: PageTransitionType.rightToLeft,
+                            duration: 300,
+                          );
+                        },
                       ),
                       ProfileButtons(
                         buttonName: 'My Address',
@@ -123,7 +161,8 @@ class ProfileMain extends StatelessWidget {
                                   context: context,
                                   confirmButtonTap: () async {
                                     LoadingLottie.showLoading(
-                                        context: context, text: 'Logging Out...');
+                                        context: context,
+                                        text: 'Logging Out...');
                                     await authProvider.userLogOut(
                                         context: context);
                                   },
