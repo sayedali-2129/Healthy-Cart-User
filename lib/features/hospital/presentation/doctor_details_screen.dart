@@ -38,6 +38,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
+        
         context.read<HospitalProvider>().getCategoryWiseDoctor(
             hospitalId: widget.doctorModel.hospitalId!,
             categoryId: widget.doctorModel.categoryId!);
@@ -136,7 +137,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
               else if (hospitalProvider.doctorsList.isEmpty)
                 const SliverFillRemaining(
                     child: Center(
-                  child: Text('No Related Doctors Found'),
+                  child: Text('No Related Doctors Found!'),
                 ))
               else
                 SliverPadding(
@@ -150,7 +151,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                       if (doctor.id == widget.doctorModel.id) {
                         return const SizedBox.shrink();
                       } else {
-                        return FadeIn(child: DoctorCard(index: index));
+                        return FadeIn(
+                            child: DoctorCard(index: index));
                       }
                     },
                   ),

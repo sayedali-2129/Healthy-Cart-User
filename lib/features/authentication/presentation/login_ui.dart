@@ -22,9 +22,9 @@ class LoginScreen extends StatelessWidget {
           leading: IconButton(
               onPressed: () {
                 EasyNavigation.pushAndRemoveUntil(
-                    context: context, page: BottomNavigationWidget());
+                    context: context, page: const BottomNavigationWidget());
               },
-              icon: Icon(Icons.arrow_back_ios_new_rounded)),
+              icon: const Icon( Icons.arrow_back_ios_new_rounded)),
           backgroundColor: BColors.white,
         ),
         body: GestureDetector(
@@ -76,8 +76,7 @@ class LoginScreen extends StatelessWidget {
                         buttonWidth: double.infinity,
                         buttonHeight: 48,
                         onPressed: () async {
-                          if (authenticationProvider.countryCode == null)
-                            return;
+                          if (authenticationProvider.countryCode == null)return;
                           if (authenticationProvider
                                   .phoneNumberController.text.isEmpty ||
                               authenticationProvider
@@ -107,17 +106,7 @@ class LoginScreen extends StatelessWidget {
                         buttonColor: BColors.buttonDarkColor,
                       ),
                       const Gap(24),
-                      // CustomButton(
-                      //   width: double.infinity,
-                      //   height: 48,
-                      //   onTap: () {},
-                      //   text: 'Skip login',
-                      //   buttonColor: BColors.buttonLightColor,
-                      //   style: Theme.of(context)
-                      //       .textTheme
-                      //       .labelLarge!
-                      //       .copyWith(fontSize: 18, color: BColors.white),
-                      // ),
+                     
                     ],
                   ),
                 )),

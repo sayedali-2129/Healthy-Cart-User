@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
@@ -17,6 +18,8 @@ import 'package:healthy_cart_user/features/hospital/application/provider/hospita
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_details.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_details_screen.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
 import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
@@ -60,6 +63,7 @@ class _HomeMainState extends State<HomeMain> {
 
   @override
   Widget build(BuildContext context) {
+        final locationProvider = context.read<LocationProvider>();
     final screenwidth = MediaQuery.of(context).size.width;
     return Consumer5<HomeProvider, HospitalProvider, LabProvider,
             PharmacyProvider, AuthenticationProvider>(
@@ -68,7 +72,26 @@ class _HomeMainState extends State<HomeMain> {
       return Scaffold(
           body: CustomScrollView(
         slivers: [
-          const MainHomeAppBar(searchHint: 'Search'),
+          MainHomeAppBar(
+            searchHint: 'Search',
+            locationText: "${locationProvider.localsavedplacemark?.localArea},${locationProvider.localsavedplacemark?.district},${locationProvider.localsavedplacemark?.state}",
+            locationTap: ()  {
+                  LoadingLottie.showLoading(
+                      context: context, text: 'Please wait...');
+                  locationProvider.getLocationPermisson().then(
+                    (value) {
+                      if (value == true) {
+                        EasyNavigation.pop(context: context);
+                        EasyNavigation.push(
+                            context: context,
+                            page: const UserLocationSearchWidget(
+                              isUserEditProfile: true,
+                            ));
+                      }
+                    },
+                  );
+                },
+          ),
           const SliverGap(10),
           if (homeProvider.isLoading == true &&
               hospitalProvier.hospitalFetchLoading == true &&
@@ -124,7 +147,7 @@ class _HomeMainState extends State<HomeMain> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const LoginScreen()));
-                            CustomToast.infoToast(text: 'Login First');
+                            CustomToast.infoToast(text: 'Login to continue !');
                           } else {
                             hospitalProvier.hospitalList[index].ishospitalON ==
                                     false
@@ -186,7 +209,7 @@ class _HomeMainState extends State<HomeMain> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const LoginScreen()));
-                            CustomToast.infoToast(text: 'Login First');
+                            CustomToast.infoToast(text: 'Login to continue !');
                           } else {
                             if (authProvider.userFetchlDataFetched!.userName ==
                                 null) {
@@ -263,7 +286,8 @@ class _HomeMainState extends State<HomeMain> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const LoginScreen()));
-                                  CustomToast.infoToast(text: 'Login First');
+                                  CustomToast.infoToast(
+                                      text: 'Login to continue !');
                                 } else {
                                   EasyNavigation.push(
                                       context: context,

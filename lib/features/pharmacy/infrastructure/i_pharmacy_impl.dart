@@ -30,7 +30,7 @@ class IPharmacyImpl implements IPharmacyFacade {
   @override
   FutureResult<String> saveImage({required File imageFile}) async {
     return await _imageService.saveImage(
-        imageFile: imageFile, folderName: 'doctor_image');
+        imageFile: imageFile, folderName: 'pharmacyUserSide_image');
   }
 
   DocumentSnapshot<Map<String, dynamic>>? lastPharmacyDoc;
@@ -49,7 +49,7 @@ class IPharmacyImpl implements IPharmacyFacade {
       if (noMorePharmacyData) return right([]);
       Query query = _firebaseFirestore
           .collection(FirebaseCollections.pharmacy)
-          .orderBy('createdAt', descending: true);
+          .orderBy('createdAt', descending: true).where('pharmacyRequested', isEqualTo: 2);
 
       if (searchText != null && searchText.isNotEmpty) {
         query = query.where('pharmacyKeywords',

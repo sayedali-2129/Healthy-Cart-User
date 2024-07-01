@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -14,6 +15,8 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_p
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_details_screen.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_orders_tab.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/lab_list_card.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 import 'package:page_transition/page_transition.dart';
@@ -51,6 +54,7 @@ class _LabMainState extends State<LabMain> {
 
   @override
   Widget build(BuildContext context) {
+     final locationProvider = context.read<LocationProvider>();
     return Consumer3<LabProvider, LabOrdersProvider, AuthenticationProvider>(
         builder: (context, labProvider, labOrders, authProvider, _) {
       final screenwidth = MediaQuery.of(context).size.width;
@@ -69,7 +73,23 @@ class _LabMainState extends State<LabMain> {
                     labProvider.searchLabs();
                   },
                 );
-              },
+              },  locationText: "${locationProvider.localsavedplacemark?.localArea},${locationProvider.localsavedplacemark?.district},${locationProvider.localsavedplacemark?.state}",
+               locationTap: () {
+                  LoadingLottie.showLoading(
+                      context: context, text: 'Please wait...');
+                  locationProvider.getLocationPermisson().then(
+                    (value) {
+                      if (value == true) {
+                        EasyNavigation.pop(context: context);
+                        EasyNavigation.push(
+                            context: context,
+                            page: const UserLocationSearchWidget(
+                              isUserEditProfile: true,
+                            ));
+                      }
+                    },
+                  );
+                },
             ),
             if (labProvider.labFetchLoading == true &&
                 labProvider.labList.isEmpty)
@@ -96,7 +116,7 @@ class _LabMainState extends State<LabMain> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const LoginScreen()));
-                          CustomToast.infoToast(text: 'Login First');
+                          CustomToast.infoToast(text: 'Login to continue !');
                         } else {
                           EasyNavigation.push(
                             context: context,

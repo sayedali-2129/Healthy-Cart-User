@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location.dart';
 import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,11 +22,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    final locationProvider = context.read<LocationProvider>();
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final auth = FirebaseAuth.instance;
     final notiProvider = context.read<NotificationProvider>();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await notiProvider.notificationPermission();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+       FirebaseMessaging.instance.subscribeToTopic('All');
+      notiProvider.notificationPermission();
       if (userId != null) {
         context
             .read<AuthenticationProvider>()
@@ -33,18 +37,29 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
-        if (mounted) {
-          if (auth.currentUser == null) {
-            context
-                .read<AuthenticationProvider>()
-                .navigationUserFuction(context: context);
-          } else {
-            EasyNavigation.pushAndRemoveUntil(
-              context: context,
-              type: PageTransitionType.bottomToTop,
-              page: BottomNavigationWidget(),
-            );
-          }
+        locationProvider.getLocationLocally();
+        if (auth.currentUser == null &&
+            locationProvider.locallysavedplacemark == null) {
+          EasyNavigation.pushAndRemoveUntil(
+            context: context,
+            page: const LocationPage(),
+          );
+        } else if (auth.currentUser == null) {
+          EasyNavigation.pushAndRemoveUntil(
+            context: context,
+            page: const BottomNavigationWidget(),
+          );
+        } else if (locationProvider.locallysavedplacemark == null &&
+            auth.currentUser != null) {
+          EasyNavigation.pushAndRemoveUntil(
+            context: context,
+            page: const LocationPage(),
+          );
+        } else {
+          EasyNavigation.pushAndRemoveUntil(
+            context: context,
+            page: const BottomNavigationWidget(),
+          );
         }
       },
     );

@@ -47,8 +47,8 @@ class LabListCardHome extends StatelessWidget {
                         children: [
                           Container(
                             clipBehavior: Clip.antiAlias,
-                            height: 52,
-                            width: 52,
+                            height: 80,
+                            width: 80,
                             decoration:
                                 const BoxDecoration(shape: BoxShape.circle),
                             child:
@@ -84,80 +84,80 @@ class LabListCardHome extends StatelessWidget {
                       ),
                       const Gap(5),
                       /* ----------------------------- AVAILABLE TESTS ---------------------------- */
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 10,
-                                    backgroundColor: BColors.mainlightColor,
-                                  ),
-                                  const Gap(5),
-                                  Expanded(
-                                    child: Text(
-                                      'Blood Test',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              BColors.black.withOpacity(0.6)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 10,
-                                    backgroundColor: BColors.mainlightColor,
-                                  ),
-                                  const Gap(5),
-                                  Expanded(
-                                    child: Text(
-                                      'Blood Test',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              BColors.black.withOpacity(0.6)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 10,
-                                    backgroundColor: BColors.mainlightColor,
-                                  ),
-                                  const Gap(5),
-                                  Expanded(
-                                    child: Text(
-                                      'Blood Test',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              BColors.black.withOpacity(0.6)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //     children: [
+                      //       Expanded(
+                      //         child: Row(
+                      //           children: [
+                      //             CircleAvatar(
+                      //               radius: 10,
+                      //               backgroundColor: BColors.mainlightColor,
+                      //             ),
+                      //             const Gap(5),
+                      //             Expanded(
+                      //               child: Text(
+                      //                 'Blood Test',
+                      //                 overflow: TextOverflow.ellipsis,
+                      //                 style: TextStyle(
+                      //                     fontSize: 12,
+                      //                     fontWeight: FontWeight.w500,
+                      //                     color:
+                      //                         BColors.black.withOpacity(0.6)),
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //       // Expanded(
+                      //       //   child: Row(
+                      //       //     children: [
+                      //       //       CircleAvatar(
+                      //       //         radius: 10,
+                      //       //         backgroundColor: BColors.mainlightColor,
+                      //       //       ),
+                      //       //       const Gap(5),
+                      //       //       Expanded(
+                      //       //         child: Text(
+                      //       //           'Blood Test',
+                      //       //           overflow: TextOverflow.ellipsis,
+                      //       //           style: TextStyle(
+                      //       //               fontSize: 12,
+                      //       //               fontWeight: FontWeight.w500,
+                      //       //               color:
+                      //       //                   BColors.black.withOpacity(0.6)),
+                      //       //         ),
+                      //       //       ),
+                      //       //     ],
+                      //       //   ),
+                      //       // ),
+                      //       // Expanded(
+                      //       //   child: Row(
+                      //       //     children: [
+                      //       //       CircleAvatar(
+                      //       //         radius: 10,
+                      //       //         backgroundColor: BColors.mainlightColor,
+                      //       //       ),
+                      //       //       const Gap(5),
+                      //       //       Expanded(
+                      //       //         child: Text(
+                      //       //           'Blood Test',
+                      //       //           overflow: TextOverflow.ellipsis,
+                      //       //           style: TextStyle(
+                      //       //               fontSize: 12,
+                      //       //               fontWeight: FontWeight.w500,
+                      //       //               color:
+                      //       //                   BColors.black.withOpacity(0.6)),
+                      //       //         ),
+                      //       //       ),
+                      //       //     ],
+                      //       //   ),
+                      //      // ),
+                      //     ],
+                      //   ),
+                      // ),
                       /* -------------------------------------------------------------------------- */
                     ],
                   ),

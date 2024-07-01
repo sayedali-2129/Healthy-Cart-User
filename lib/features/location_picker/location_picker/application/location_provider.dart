@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/i_location_facde.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
+import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -68,24 +70,20 @@ class LocationProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (sucess) async {
       log('$userId');
-      final result =
-          await iLocationFacade.updateUserLocation(selectedPlaceMark!, userId!);
+      final result = await iLocationFacade.updateUserLocation(
+          selectedPlaceMark!, userId ?? '');
       result.fold((failure) {
         Navigator.pop(context);
         CustomToast.errorToast(
             text: "Can't able to add location, please try again");
       }, (sucess) {
+        log(isUserEditProfile.toString());
         Navigator.pop(context);
         CustomToast.sucessToast(text: 'Location added sucessfully');
-        // (isUserEditProfile)
-        Navigator.pop(
-          context,
-        );
-        // : EasyNavigation.pushAndRemoveUntil(
-        //     context: context,
-        //     page: (labRequestedCount == 2)
-        //         ? const SplashScreen()
-        //         : const PendingPageScreen());
+        (isUserEditProfile)
+            ? EasyNavigation.pop(context: context)
+            : EasyNavigation.pushAndRemoveUntil(
+                context: context, page: const SplashScreen());
         notifyListeners();
       });
     });
@@ -100,6 +98,26 @@ class LocationProvider extends ChangeNotifier {
     selectedPlaceMark = null;
     searchResults.clear();
     searchController.clear();
+    notifyListeners();
+  }
+
+/* ------------------------- Locally saved location ------------------------- */
+  PlaceMark? locallysavedplacemark;
+  PlaceMark? localsavedplacemark;
+  Future<void> clearLocationLocally() async {
+    await iLocationFacade.clearLocation();
+  }
+
+  Future<PlaceMark?> getLocationLocally() async {
+    locallysavedplacemark = await iLocationFacade.getLocationLocally();
+    localsavedplacemark = locallysavedplacemark;
+    return locallysavedplacemark;
+    // log('$locallysavedplacemark');
+  }
+
+  Future<void> saveLocationLocally(PlaceMark placeMark) async {
+    iLocationFacade.saveLocationLocally(placeMark);
+    localsavedplacemark = placeMark;
     notifyListeners();
   }
 }

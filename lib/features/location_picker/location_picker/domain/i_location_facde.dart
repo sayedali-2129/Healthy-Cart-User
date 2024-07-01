@@ -13,4 +13,7 @@ abstract class ILocationFacade {
 
   Future<Either<MainFailure, Unit>> updateUserLocation(
       PlaceMark placeMark, String userId);
+  Future<void> saveLocationLocally(PlaceMark placeMark);
+  Future<PlaceMark?> getLocationLocally();
+  Future<void> clearLocation();
 }

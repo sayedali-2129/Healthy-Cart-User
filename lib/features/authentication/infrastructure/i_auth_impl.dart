@@ -95,7 +95,7 @@ class IAuthImpl implements IAuthFacade {
           .collection(FirebaseCollections.userCollection)
           .doc(uid)
           .set(UserModel()
-              .copyWith(phoneNo: phoneNo, fcmToken: fcmToken, id: uid)
+              .copyWith(phoneNo: phoneNo, fcmToken: fcmToken, id: uid, createdAt: Timestamp.now(),)
               .toMap());
     }
   }

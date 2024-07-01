@@ -3,6 +3,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/product_cart.dart';
@@ -101,6 +102,18 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                 ),
                 ),
           ),
+            if (pharmacyProvider.fetchLoading == true &&
+              pharmacyProvider.productAllList.isEmpty)
+            const SliverFillRemaining(
+              child: Center(
+                child: LoadingIndicater(),
+              ),
+            )
+       else if (pharmacyProvider.fetchLoading == false &&
+                  pharmacyProvider.productAllList.isEmpty)
+                const ErrorOrNoDataPage(
+                  text: 'No items added to this pharmacy!',
+                ),
           const RowProductCategoryWidget(),
           if (pharmacyProvider.bannerImageList.isNotEmpty)
             SliverToBoxAdapter(
@@ -131,15 +144,8 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                 ),
               ),
             ),
-          if (pharmacyProvider.fetchLoading == true &&
-              pharmacyProvider.productAllList.isEmpty)
-            const SliverFillRemaining(
-              child: Center(
-                child: LoadingIndicater(),
-              ),
-            )
-
-          else 
+        
+           
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverGrid.builder(

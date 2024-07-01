@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:geocoding/geocoding.dart';
@@ -15,7 +16,7 @@ class LocationService {
     LocationPermission permission;
     isServiceEnabled = await Geolocator.isLocationServiceEnabled();
     await Geolocator.requestPermission();
-   // Check if location services are enabled
+    // Check if location services are enabled
     isServiceEnabled = await Geolocator.isLocationServiceEnabled();
     await Geolocator.requestPermission();
 
@@ -41,7 +42,7 @@ class LocationService {
 
     // If permission is granted temporarily, handle fetching location accordingly
     if (permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always ) {
+        permission == LocationPermission.always) {
       await getCurrentLocationAddress();
     }
   }
@@ -61,7 +62,8 @@ class LocationService {
 
   Future<void> saveLocationLocally(PlaceMark placeMark) async {
     final prefs = await SharedPreferences.getInstance();
-    final placeMarkJson = jsonEncode(placeMark.toJson());
+    final placeMarkJson = placeMark.toJson();
+
     await prefs.setString(_locationKey, placeMarkJson);
   }
 
@@ -69,6 +71,7 @@ class LocationService {
     final prefs = await SharedPreferences.getInstance();
     final placeMarkJson = prefs.getString(_locationKey);
     if (placeMarkJson != null) {
+      log(placeMarkJson, name: "JSON");
       return PlaceMark.fromJson(placeMarkJson);
     }
     return null;

@@ -75,6 +75,7 @@ class AuthenticationProvider extends ChangeNotifier {
     //   );
     //   notifyListeners();
     // }  else {
+  
     EasyNavigation.pushAndRemoveUntil(
         type: PageTransitionType.bottomToTop,
         context: context,

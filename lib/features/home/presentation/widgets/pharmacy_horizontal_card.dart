@@ -74,28 +74,28 @@ class PharmacyHorizontalCard extends StatelessWidget {
                               fontWeight: FontWeight.w600),
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: BColors.buttonGreen),
-                        child: const Padding(
-                          padding: EdgeInsets.all(3),
-                          child: Row(
-                            children: [
-                              Text(
-                                '4.54',
-                                style: TextStyle(
-                                    fontSize: 10, fontWeight: FontWeight.w500),
-                              ),
-                              Icon(
-                                Icons.star,
-                                size: 12,
-                                color: BColors.black,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(5),
+                      //       color: BColors.buttonGreen),
+                      //   child: const Padding(
+                      //     padding: EdgeInsets.all(3),
+                      //     child: Row(
+                      //       children: [
+                      //         Text(
+                      //           '4.54',
+                      //           style: TextStyle(
+                      //               fontSize: 10, fontWeight: FontWeight.w500),
+                      //         ),
+                      //         Icon(
+                      //           Icons.star,
+                      //           size: 12,
+                      //           color: BColors.black,
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   const Gap(5),
