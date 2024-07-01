@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
-import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/otp_ui.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
@@ -21,7 +22,7 @@ class AuthenticationProvider extends ChangeNotifier {
   String? phoneNumber;
   String? userId;
   // int? isRequsetedPendingPage;
-
+  final auth = FirebaseAuth.instance;
   void setNumber() {
     phoneNumber = '$countryCode${phoneNumberController.text.trim()}';
     notifyListeners();
@@ -77,7 +78,7 @@ class AuthenticationProvider extends ChangeNotifier {
     EasyNavigation.pushAndRemoveUntil(
         type: PageTransitionType.bottomToTop,
         context: context,
-        page: const LoginScreen());
+        page: const BottomNavigationWidget());
     notifyListeners();
   }
 

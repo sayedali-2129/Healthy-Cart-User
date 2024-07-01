@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
+import 'package:healthy_cart_user/features/hospital/application/provider/hosp_booking_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,7 @@ class PaymentTypeRadio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LabOrdersProvider>(builder: (context, provider, _) {
+    return Consumer<HospitalBookingProivder>(builder: (context, provider, _) {
       return PopScope(
         // onPopInvoked: (didPop) {
         //   provider.selectedRadio = null;
@@ -34,7 +34,7 @@ class PaymentTypeRadio extends StatelessWidget {
               //   leading: Radio(
               //       activeColor: BColors.mainlightColor,
               //       value: 'Online',
-              //       groupValue: provider.paymentType,
+              //       groupValue: provider.hospitalpPaymentType,
               //       onChanged: (value) {
               //         provider.setPaymentType(value);
               //       }),
@@ -47,7 +47,7 @@ class PaymentTypeRadio extends StatelessWidget {
               //   leading: Radio(
               //     activeColor: BColors.mainlightColor,
               //     value: 'Doorstep Payment',
-              //     groupValue: provider.paymentType,
+              //     groupValue: provider.hospitalpPaymentType,
               //     onChanged: (value) {
               //       provider.setPaymentType(value);
               //     },
@@ -59,19 +59,19 @@ class PaymentTypeRadio extends StatelessWidget {
 
               RadioMenuButton(
                 value: 'Online',
-                groupValue: provider.paymentType,
+                groupValue: provider.hospitalpPaymentType,
                 onChanged: (value) {
                   provider.setPaymentType(value);
                 },
                 child: const Text('Online'),
               ),
               RadioMenuButton(
-                value: 'Doorstep Payment',
-                groupValue: provider.paymentType,
+                value: 'Cash in hand',
+                groupValue: provider.hospitalpPaymentType,
                 onChanged: (value) {
                   provider.setPaymentType(value);
                 },
-                child: const Text('Doorstep Payment'),
+                child: const Text('Cash in hand'),
               ),
               const Gap(10),
               ButtonWidget(

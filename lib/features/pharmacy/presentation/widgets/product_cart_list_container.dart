@@ -181,38 +181,40 @@ class ProductListWidget extends StatelessWidget {
                                         ),
                                       ]),
                                     ),
-                              
-                              if(productData.inStock == false)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 5,
-                                    backgroundColor: BColors.red,
+                              if (productData.inStock == false)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 5,
+                                        backgroundColor: BColors.red,
+                                      ),
+                                      const Gap(4),
+                                      const Text(
+                                        'Out of stock',
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: BColors.black),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ],
                                   ),
-                                 const  Gap(4),
-                                 const Text(
-                                                            'Out of stock',
-                                                            style:  TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: BColors.black),
-                                                            overflow: TextOverflow.ellipsis,
-                                                            maxLines: 2,
-                                                            textAlign: TextAlign.left,
-                                                      ),
-                                ],
-                                                            ),
-                              ),
+                                ),
                               const Gap(16),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   QuantityCountWidget(
                                     incrementTap: () {
+                                      LoadingLottie.showLoading(
+                                          context: context,
+                                          text: 'Please Wait...');
                                       pharmacyProvider.incrementInCart(
                                         index: index,
                                         productMRPRate:
@@ -223,14 +225,24 @@ class ProductListWidget extends StatelessWidget {
                                             ? productData.productMRPRate!
                                             : productData.productDiscountRate!,
                                       );
-                                      pharmacyProvider.addProductToUserCart(
+                                      pharmacyProvider
+                                          .addProductToUserCart(
                                         productId: productData.id ?? '',
                                         selectedQuantityCount: pharmacyProvider
                                             .productCartQuantityList[index],
-                                        cartQuantityIncrement: true,// this is to make the custom toast accordingly
+                                        cartQuantityIncrement:
+                                            true, // this is to make the custom toast accordingly
+                                      )
+                                          .whenComplete(
+                                        () {
+                                          EasyNavigation.pop(context: context);
+                                        },
                                       );
                                     },
                                     decrementTap: () {
+                                      LoadingLottie.showLoading(
+                                          context: context,
+                                          text: 'Please Wait...');
                                       pharmacyProvider.decrementInCart(
                                         index: index,
                                         productMRPRate:
@@ -241,11 +253,18 @@ class ProductListWidget extends StatelessWidget {
                                             ? productData.productMRPRate!
                                             : productData.productDiscountRate!,
                                       );
-                                      pharmacyProvider.addProductToUserCart(
+
+                                      pharmacyProvider
+                                          .addProductToUserCart(
                                         productId: productData.id ?? '',
                                         selectedQuantityCount: pharmacyProvider
                                             .productCartQuantityList[index],
                                         cartQuantityIncrement: false,
+                                      )
+                                          .whenComplete(
+                                        () {
+                                          EasyNavigation.pop(context: context);
+                                        },
                                       );
                                     },
                                     quantityValue: pharmacyProvider
@@ -285,7 +304,9 @@ class ProductListWidget extends StatelessWidget {
                                   context: context, text: 'Please wait...');
                               pharmacyProvider
                                   .removeProductFromUserCart(
-                                      productData: productData, index: index,)
+                                productData: productData,
+                                index: index,
+                              )
                                   .whenComplete(
                                 () {
                                   EasyNavigation.pop(context: context);

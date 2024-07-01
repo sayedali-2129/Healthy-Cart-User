@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +11,9 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/core/services/send_fcm_message.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/i_pharmacy_facade.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/product_quantity_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
@@ -314,7 +315,7 @@ class PharmacyProvider extends ChangeNotifier {
       required num productMRPRate,
       required num productDiscountRate}) {
     if (productCartQuantityList[index] <= 1) {
-      return CustomToast.sucessToast(
+      return CustomToast.infoToast(
           text:
               "If you want to remove the product please remove from the cart.");
     }

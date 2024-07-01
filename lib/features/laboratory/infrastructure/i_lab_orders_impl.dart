@@ -18,16 +18,16 @@ class ILabOrdersImpl implements ILabOrdersFacade {
   final FirebaseFirestore _firestore;
   final ImageService _imageService;
 
+  DocumentSnapshot<Map<String, dynamic>>? cancelledLastDoc;
+  bool cancelledNoMoreData = false;
+  DocumentSnapshot<Map<String, dynamic>>? completedLastDoc;
+  bool completedNoMoreData = false;
+
   StreamSubscription? labOrderSubscription;
 
   StreamController<Either<MainFailure, List<LabOrdersModel>>>
       labOrderController =
       StreamController<Either<MainFailure, List<LabOrdersModel>>>.broadcast();
-
-  DocumentSnapshot<Map<String, dynamic>>? cancelledLastDoc;
-  bool cancelledNoMoreData = false;
-  DocumentSnapshot<Map<String, dynamic>>? completedLastDoc;
-  bool completedNoMoreData = false;
 
 /* ---------------------------- CREATE LAB ORDER ---------------------------- */
   @override

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/widgets/phone_field.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -16,6 +18,15 @@ class LoginScreen extends StatelessWidget {
     return Consumer<AuthenticationProvider>(
         builder: (context, authenticationProvider, _) {
       return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                EasyNavigation.pushAndRemoveUntil(
+                    context: context, page: BottomNavigationWidget());
+              },
+              icon: Icon(Icons.arrow_back_ios_new_rounded)),
+          backgroundColor: BColors.white,
+        ),
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();

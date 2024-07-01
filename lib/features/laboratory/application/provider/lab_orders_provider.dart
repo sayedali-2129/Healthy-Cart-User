@@ -60,6 +60,7 @@ class LabOrdersProvider with ChangeNotifier {
 
   /* --------------------------- GET PENDING ORDERS --------------------------- */
   Future<void> getPendingOrders({required String userId}) async {
+    pendingOrders = [];
     isLoading = true;
     notifyListeners();
     final result = await iLabOrdersFacade.getPendingOrders(userId: userId);
@@ -96,7 +97,8 @@ class LabOrdersProvider with ChangeNotifier {
   /* ------------------------------ CANCEL ORDER ------------------------------ */
   Future<void> cancelOrder(
       {required String orderId,
-      required int index,
+      required bool fromPending,
+      int? index,
       required String fcmtoken,
       required userName}) async {
     final result = await iLabOrdersFacade.cancelOrder(orderId: orderId);
@@ -104,7 +106,9 @@ class LabOrdersProvider with ChangeNotifier {
       CustomToast.errorToast(text: 'Failed to cancel booking');
       log(err.errMsg);
     }, (success) {
-      pendingOrders.removeAt(index);
+      if (fromPending == true) {
+        pendingOrders.removeAt(index!);
+      }
       sendFcmMessage(
           token: fcmtoken,
           body: 'A Booking is cancelled by $userName, Booking ID : $orderId',

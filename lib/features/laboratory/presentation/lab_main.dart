@@ -91,12 +91,12 @@ class _LabMainState extends State<LabMain> {
                       screenwidth: screenwidth,
                       index: index,
                       onTap: () {
-                        if (authProvider.userFetchlDataFetched == null) {
+                        if (authProvider.auth.currentUser == null) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const LoginScreen()));
-                          CustomToast.errorToast(text: 'Login First');
+                          CustomToast.infoToast(text: 'Login First');
                         } else {
                           EasyNavigation.push(
                             context: context,
@@ -120,7 +120,7 @@ class _LabMainState extends State<LabMain> {
                     : const Gap(0)),
           ],
         ),
-        floatingActionButton: authProvider.userFetchlDataFetched == null
+        floatingActionButton: authProvider.auth.currentUser == null
             ? null
             : Stack(
                 children: [

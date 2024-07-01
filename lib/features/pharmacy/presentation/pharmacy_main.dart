@@ -5,8 +5,10 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
@@ -56,8 +58,9 @@ class _PharmacyMainState extends State<PharmacyMain> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<PharmacyProvider, AuthenticationProvider,PharmacyOrderProvider>(
-        builder: (context, pharmacyProvider, authProvider,orderProvider, _) {
+    return Consumer3<PharmacyProvider, AuthenticationProvider,
+            PharmacyOrderProvider>(
+        builder: (context, pharmacyProvider, authProvider, orderProvider, _) {
       final screenwidth = MediaQuery.of(context).size.width;
       return Scaffold(
         body: PopScope(
@@ -104,19 +107,29 @@ class _PharmacyMainState extends State<PharmacyMain> {
                           screenwidth: screenwidth,
                           pharmacy: pharmacyProvider.pharmacyList[index],
                           onTap: () {
-                            pharmacyProvider.setPharmacyIdAndCategoryList(
-                                selectedpharmacyId:
-                                    pharmacyProvider.pharmacyList[index].id ??
-                                        '',
-                                categoryIdList: pharmacyProvider
-                                        .pharmacyList[index]
-                                        .selectedCategoryId ??
-                                    [],
-                                pharmacy: pharmacyProvider.pharmacyList[index]);
-                            EasyNavigation.push(
-                                type: PageTransitionType.rightToLeft,
-                                context: context,
-                                page: const PharmacyProductScreen());
+                            if (authProvider.auth.currentUser == null) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LoginScreen()));
+                              CustomToast.infoToast(text: 'Login First');
+                            } else {
+                              pharmacyProvider.setPharmacyIdAndCategoryList(
+                                  selectedpharmacyId:
+                                      pharmacyProvider.pharmacyList[index].id ??
+                                          '',
+                                  categoryIdList: pharmacyProvider
+                                          .pharmacyList[index]
+                                          .selectedCategoryId ??
+                                      [],
+                                  pharmacy:
+                                      pharmacyProvider.pharmacyList[index]);
+                              EasyNavigation.push(
+                                  type: PageTransitionType.rightToLeft,
+                                  context: context,
+                                  page: const PharmacyProductScreen());
+                            }
                           },
                         ),
                       );
@@ -133,11 +146,11 @@ class _PharmacyMainState extends State<PharmacyMain> {
             ],
           ),
         ),
-        floatingActionButton: authProvider.userFetchlDataFetched == null
+        floatingActionButton: authProvider.auth.currentUser == null
             ? null
             : Stack(
-              children: [
-                FloatingActionButton(
+                children: [
+                  FloatingActionButton(
                     backgroundColor: BColors.darkblue,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
@@ -166,8 +179,8 @@ class _PharmacyMainState extends State<PharmacyMain> {
                     )
                   else
                     const Gap(0),
-              ],
-            ),
+                ],
+              ),
       );
     });
   }

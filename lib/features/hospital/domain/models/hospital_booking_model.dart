@@ -27,6 +27,8 @@ class HospitalBookingModel {
   String? rejectReason;
   bool? isUserAccepted;
   UserModel? userDetails;
+  String? newBookingDate;
+  String? newTimeSlot;
   HospitalBookingModel({
     this.id,
     this.hospitalId,
@@ -51,6 +53,8 @@ class HospitalBookingModel {
     this.rejectReason,
     this.isUserAccepted,
     this.userDetails,
+    this.newBookingDate,
+    this.newTimeSlot,
   });
 
   Map<String, dynamic> toMap() {
@@ -78,6 +82,8 @@ class HospitalBookingModel {
       'rejectReason': rejectReason,
       'isUserAccepted': isUserAccepted,
       'userDetails': userDetails!.toMap(),
+      'newTimeSlot': newTimeSlot,
+      'newBookingDate': newBookingDate,
     };
   }
 
@@ -131,6 +137,11 @@ class HospitalBookingModel {
       userDetails: map['userDetails'] != null
           ? UserModel.fromMap(map['userDetails'] as Map<String, dynamic>)
           : null,
+      newBookingDate: map['newBookingDate'] != null
+          ? map['newBookingDate'] as String
+          : null,
+      newTimeSlot:
+          map['newTimeSlot'] != null ? map['newTimeSlot'] as String : null,
     );
   }
 
@@ -158,6 +169,8 @@ class HospitalBookingModel {
     String? rejectReason,
     bool? isUserAccepted,
     UserModel? userDetails,
+    String? newBookingDate,
+    String? newTimeSlot,
   }) {
     return HospitalBookingModel(
       id: id ?? this.id,
@@ -183,6 +196,8 @@ class HospitalBookingModel {
       rejectReason: rejectReason ?? this.rejectReason,
       isUserAccepted: isUserAccepted ?? this.isUserAccepted,
       userDetails: userDetails ?? this.userDetails,
+      newTimeSlot: newTimeSlot ?? this.newTimeSlot,
+      newBookingDate: newBookingDate ?? this.newBookingDate,
     );
   }
 }

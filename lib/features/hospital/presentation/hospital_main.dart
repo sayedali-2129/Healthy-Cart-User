@@ -5,8 +5,11 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
+import 'package:healthy_cart_user/features/hospital/application/provider/hosp_booking_provider.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_booking_tab.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_details.dart';
@@ -43,8 +46,9 @@ class _HospitalMainState extends State<HospitalMain> {
   @override
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
-    return Consumer2<HospitalProvider, AuthenticationProvider>(
-        builder: (context, hospitalProvider, authProvider, _) {
+    return Consumer3<HospitalProvider, AuthenticationProvider,
+            HospitalBookingProivder>(
+        builder: (context, hospitalProvider, authProvider, bookingProvoder, _) {
       return Scaffold(
         body: CustomScrollView(
           controller: scrollController,
@@ -84,18 +88,27 @@ class _HospitalMainState extends State<HospitalMain> {
                       screenwidth: screenwidth,
                       index: index,
                       onTap: () {
-                        EasyNavigation.push(
-                            context: context,
-                            type: PageTransitionType.rightToLeft,
-                            duration: 250,
-                            page: HospitalDetails(
-                              hospitalId:
-                                  hospitalProvider.hospitalList[index].id!,
-                              categoryIdList: hospitalProvider
-                                      .hospitalList[index].selectedCategoryId ??
-                                  [],
-                              hospitalIndex: index,
-                            ));
+                        if (authProvider.auth.currentUser == null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()));
+                          CustomToast.infoToast(text: 'Login First');
+                        } else {
+                          EasyNavigation.push(
+                              context: context,
+                              type: PageTransitionType.rightToLeft,
+                              duration: 250,
+                              page: HospitalDetails(
+                                hospitalId:
+                                    hospitalProvider.hospitalList[index].id!,
+                                categoryIdList: hospitalProvider
+                                        .hospitalList[index]
+                                        .selectedCategoryId ??
+                                    [],
+                                hospitalIndex: index,
+                              ));
+                        }
                       },
                     ),
                   ),
@@ -108,7 +121,7 @@ class _HospitalMainState extends State<HospitalMain> {
                     : const Gap(0)),
           ],
         ),
-        floatingActionButton: authProvider.userFetchlDataFetched == null
+        floatingActionButton: authProvider.auth.currentUser == null
             ? null
             : Stack(
                 children: [
@@ -128,18 +141,18 @@ class _HospitalMainState extends State<HospitalMain> {
                             type: PageTransitionType.bottomToTop,
                             duration: 200);
                       }),
-                  // if (labOrders.approvedOrders
-                  //     .any((element) => element.isUserAccepted == false))
-                  const Positioned(
-                    right: 2,
-                    top: 2,
-                    child: CircleAvatar(
-                      radius: 8,
-                      backgroundColor: Colors.yellow,
-                    ),
-                  )
-                  // else
-                  //   const Gap(0),
+                  if (bookingProvoder.approvedBookings
+                      .any((element) => element.isUserAccepted == false))
+                    const Positioned(
+                      right: 2,
+                      top: 2,
+                      child: CircleAvatar(
+                        radius: 8,
+                        backgroundColor: Colors.yellow,
+                      ),
+                    )
+                  else
+                    const Gap(0),
                 ],
               ),
       );
