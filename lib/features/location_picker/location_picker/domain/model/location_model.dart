@@ -64,8 +64,7 @@ class PlaceMark  {
 
   String toJson() => json.encode(toMap());
 
-  factory PlaceMark.fromJson(String source) =>
-      PlaceMark.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory PlaceMark.fromJson(String source) => PlaceMark.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   List<Object?> get props => [localArea, district, country, pincode, geoPoint];

@@ -8,6 +8,7 @@ import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/custom_textfields/textfield_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/general/validator.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
@@ -149,14 +150,17 @@ class _ProfileSetupState extends State<ProfileSetup> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          context
-                              .read<LocationProvider>()
-                              .getLocationPermisson();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const UserLocationSearchWidget(isUserEditProfile: true,)));
+                          final locationProvider =
+                              context.read<LocationProvider>();
+                          locationProvider.getLocationPermisson().then((value) {
+                            if (value == true) {
+                              EasyNavigation.push(
+                                  context: context,
+                                  page: const UserLocationSearchWidget(
+                                    isUserEditProfile: true,
+                                  ));
+                            }
+                          });
                         },
                         child: Container(
                           color: Colors.white,

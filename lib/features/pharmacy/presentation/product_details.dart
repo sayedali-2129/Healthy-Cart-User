@@ -29,7 +29,7 @@ class ProductDetailsScreen extends StatelessWidget {
       (timeStamp) {
         final pharmacyProvider =
             Provider.of<PharmacyProvider>(context, listen: false);
-        pharmacyProvider.bottomsheetSwitch(false);
+       // pharmacyProvider.bottomsheetSwitch(false);
         if (pharmacyProvider.cartProductMap.containsKey((productData.id))) {
           pharmacyProvider.bottomsheetCart = true;
           pharmacyProvider.quantityCount =
@@ -533,8 +533,7 @@ class BottomSheetAddToCart extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8))),
-              child: (pharmacyProvider.bottomsheetCart &&
-                      pharmacyProvider.productCartIdList
+              child: (pharmacyProvider.productCartIdList
                           .contains(productData.id))
                   ? Padding(
                       padding: const EdgeInsets.only(
@@ -611,6 +610,7 @@ class BottomSheetAddToCart extends StatelessWidget {
                           ),
                           ButtonWidget(
                             onPressed: () {
+
                               LoadingLottie.showLoading(
                                 context: context,
                                 text: 'Adding to cart...',

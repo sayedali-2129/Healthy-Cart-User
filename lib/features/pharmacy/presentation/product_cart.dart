@@ -64,8 +64,7 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                   ),
                 ),
               ),
-              if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery ==
-                  false)
+              if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false)
                 SliverToBoxAdapter(
                   child: Padding(
                     padding:

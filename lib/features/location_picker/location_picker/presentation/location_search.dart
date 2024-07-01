@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/custom_textfields/search_field_button.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -84,13 +87,27 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
         SliverToBoxAdapter(
           child: InkWell(
             onTap: () async {
-              if (locationProvider.selectedPlaceMark == null) return;
-              LoadingLottie.showLoading(
-                  context: context, text: 'Getting Location...');
-              await locationProvider.setLocationByUser(
+              if (locationProvider.selectedPlaceMark == null) {
+                CustomToast.errorToast(
+                    text: "Couldn't able to get the location,please try again");
+                return;
+              }
+              if(locationProvider.userId != null){
+                 LoadingLottie.showLoading(
+                  context: context, text: 'Saving Location...');
+               await  locationProvider.saveLocationLocally(locationProvider.selectedPlaceMark!);
+                locationProvider.setLocationByUser(
+                // ignore: use_build_context_synchronously
                 context: context,
                 isUserEditProfile: widget.isUserEditProfile ?? false,
               );
+              }else{
+                await locationProvider.saveLocationLocally(locationProvider.selectedPlaceMark!);
+                EasyNavigation.pushAndRemoveUntil(
+                // ignore: use_build_context_synchronously
+                context: context, page: const SplashScreen());
+              }
+              
             },
             child: Padding(
               padding:
@@ -101,6 +118,7 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const Icon(
                           Icons.my_location_rounded,
@@ -119,17 +137,15 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                                     const SizedBox(),
                                     Expanded(
                                       child: Text(
-                                        overflow: TextOverflow.clip,
-                                        (locationProvider.selectedPlaceMark != null)
-                                            ? "${locationProvider.selectedPlaceMark?.localArea},${locationProvider.selectedPlaceMark?.district},${locationProvider.selectedPlaceMark?.state}"
-                                            : "Getting current location...",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(
+                                          overflow: TextOverflow.clip,
+                                          (locationProvider.selectedPlaceMark !=
+                                                  null)
+                                              ? "${locationProvider.selectedPlaceMark?.localArea},${locationProvider.selectedPlaceMark?.district},${locationProvider.selectedPlaceMark?.state}"
+                                              : "Getting current location...",
+                                          style: const TextStyle(
                                               color: BColors.darkblue,
-                                            ),
-                                      ),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600)),
                                     ),
                                   ],
                                 ),
@@ -137,8 +153,11 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                               Text(
                                 (locationProvider.searchLoading)
                                     ? "Getting location, please wait..."
-                                    : "Tap to save the location above.",
-                                style: Theme.of(context).textTheme.labelSmall,
+                                    : "Tap to continue with the location above.",
+                                style: const TextStyle(
+                                    color: BColors.darkblue,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),

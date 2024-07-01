@@ -38,7 +38,6 @@ class LocationProvider extends ChangeNotifier {
       //  CustomToast.errorToast(text: error.errMsg);
       searchLoading = false;
     }, (placeMark) {
-      saveLocationLocally(placeMark!);
       selectedPlaceMark = placeMark;
       searchLoading = false;
       notifyListeners();
@@ -71,20 +70,20 @@ class LocationProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (sucess) async {
       log('$userId');
-      final result =
-          await iLocationFacade.updateUserLocation(selectedPlaceMark!, userId!);
+      final result = await iLocationFacade.updateUserLocation(
+          selectedPlaceMark!, userId ?? '');
       result.fold((failure) {
         Navigator.pop(context);
         CustomToast.errorToast(
             text: "Can't able to add location, please try again");
       }, (sucess) {
+        log(isUserEditProfile.toString());
         Navigator.pop(context);
         CustomToast.sucessToast(text: 'Location added sucessfully');
-         (isUserEditProfile)?
-      EasyNavigation.pop(context: context)
-        : EasyNavigation.pushAndRemoveUntil(
-            context: context,
-            page: const SplashScreen());
+        (isUserEditProfile)
+            ? EasyNavigation.pop(context: context)
+            : EasyNavigation.pushAndRemoveUntil(
+                context: context, page: const SplashScreen());
         notifyListeners();
       });
     });
@@ -104,16 +103,21 @@ class LocationProvider extends ChangeNotifier {
 
 /* ------------------------- Locally saved location ------------------------- */
   PlaceMark? locallysavedplacemark;
-
+  PlaceMark? localsavedplacemark;
   Future<void> clearLocationLocally() async {
     await iLocationFacade.clearLocation();
   }
 
-  Future<void> getLocationLocally() async {
+  Future<PlaceMark?> getLocationLocally() async {
     locallysavedplacemark = await iLocationFacade.getLocationLocally();
+    localsavedplacemark = locallysavedplacemark;
+    return locallysavedplacemark;
+    // log('$locallysavedplacemark');
   }
 
   Future<void> saveLocationLocally(PlaceMark placeMark) async {
     iLocationFacade.saveLocationLocally(placeMark);
+    localsavedplacemark = placeMark;
+    notifyListeners();
   }
 }

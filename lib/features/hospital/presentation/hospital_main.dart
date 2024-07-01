@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -14,6 +15,8 @@ import 'package:healthy_cart_user/features/hospital/application/provider/hospita
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_booking_tab.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_details.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/hospital_main_card.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 import 'package:page_transition/page_transition.dart';
@@ -45,6 +48,7 @@ class _HospitalMainState extends State<HospitalMain> {
 
   @override
   Widget build(BuildContext context) {
+     final locationProvider = context.read<LocationProvider>();
     final screenwidth = MediaQuery.of(context).size.width;
     return Consumer3<HospitalProvider, AuthenticationProvider,
             HospitalBookingProivder>(
@@ -64,7 +68,24 @@ class _HospitalMainState extends State<HospitalMain> {
                     hospitalProvider.searchHospitals();
                   },
                 );
-              },
+              }, locationText: "${locationProvider.localsavedplacemark?.localArea},${locationProvider.localsavedplacemark?.district},${locationProvider.localsavedplacemark?.state}", locationTap: () { 
+                   
+                  LoadingLottie.showLoading(
+                      context: context, text: 'Please wait...');
+                  locationProvider.getLocationPermisson().then(
+                    (value) {
+                      if (value == true) {
+                        EasyNavigation.pop(context: context);
+                        EasyNavigation.push(
+                            context: context,
+                            page: const UserLocationSearchWidget(
+                              isUserEditProfile: true,
+                            ));
+                      }
+                    },
+                  );
+                
+               },
             ),
             if (hospitalProvider.hospitalFetchLoading == true &&
                 hospitalProvider.hospitalList.isEmpty)

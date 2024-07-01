@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
@@ -59,6 +62,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
 
   @override
   Widget build(BuildContext context) {
+    final locationProvider = context.read<LocationProvider>();
     return Consumer3<PharmacyProvider, AuthenticationProvider,
             PharmacyOrderProvider>(
         builder: (context, pharmacyProvider, authProvider, orderProvider, _) {
@@ -72,8 +76,26 @@ class _PharmacyMainState extends State<PharmacyMain> {
             controller: _scrollController,
             slivers: [
               HomeSliverAppbar(
+                locationText:
+                    "${locationProvider.localsavedplacemark?.localArea},${locationProvider.localsavedplacemark?.district},${locationProvider.localsavedplacemark?.state}",
                 searchHint: 'Search Pharmacy',
                 searchController: pharmacyProvider.searchController,
+                locationTap: () {
+                  LoadingLottie.showLoading(
+                      context: context, text: 'Please wait...');
+                  locationProvider.getLocationPermisson().then(
+                    (value) {
+                      if (value == true) {
+                        EasyNavigation.pop(context: context);
+                        EasyNavigation.push(
+                            context: context,
+                            page: const UserLocationSearchWidget(
+                              isUserEditProfile: true,
+                            ));
+                      }
+                    },
+                  );
+                },
                 onChanged: (searchText) {
                   EasyDebounce.debounce(
                     'pharmacysearch',
@@ -114,13 +136,15 @@ class _PharmacyMainState extends State<PharmacyMain> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           const LoginScreen()));
-                              CustomToast.infoToast(text: 'Login to continue !');
+                              CustomToast.infoToast(
+                                  text: 'Login to continue !');
                             } else {
                               if (authProvider
                                       .userFetchlDataFetched!.userName ==
                                   null) {
                                 EasyNavigation.push(
-                                    context: context, page: ProfileSetup());
+                                    context: context,
+                                    page: const ProfileSetup());
                               } else {
                                 pharmacyProvider.setPharmacyIdAndCategoryList(
                                     selectedpharmacyId: pharmacyProvider
