@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -31,18 +33,18 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
-        if (auth.currentUser == null) {
-          context
-              .read<AuthenticationProvider>()
-              .navigationUserFuction(context: context);
-        } else {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BottomNavigationWidget(),
-            ),
-            (route) => false,
-          );
+        if (mounted) {
+          if (auth.currentUser == null) {
+            context
+                .read<AuthenticationProvider>()
+                .navigationUserFuction(context: context);
+          } else {
+            EasyNavigation.pushAndRemoveUntil(
+              context: context,
+              type: PageTransitionType.bottomToTop,
+              page: BottomNavigationWidget(),
+            );
+          }
         }
       },
     );

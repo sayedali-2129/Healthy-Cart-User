@@ -14,6 +14,7 @@ import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provide
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmacy_list_card.dart';
+import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/icons/icons.dart';
 import 'package:page_transition/page_transition.dart';
@@ -115,20 +116,27 @@ class _PharmacyMainState extends State<PharmacyMain> {
                                           const LoginScreen()));
                               CustomToast.infoToast(text: 'Login First');
                             } else {
-                              pharmacyProvider.setPharmacyIdAndCategoryList(
-                                  selectedpharmacyId:
-                                      pharmacyProvider.pharmacyList[index].id ??
-                                          '',
-                                  categoryIdList: pharmacyProvider
-                                          .pharmacyList[index]
-                                          .selectedCategoryId ??
-                                      [],
-                                  pharmacy:
-                                      pharmacyProvider.pharmacyList[index]);
-                              EasyNavigation.push(
-                                  type: PageTransitionType.rightToLeft,
-                                  context: context,
-                                  page: const PharmacyProductScreen());
+                              if (authProvider
+                                      .userFetchlDataFetched!.userName ==
+                                  null) {
+                                EasyNavigation.push(
+                                    context: context, page: ProfileSetup());
+                              } else {
+                                pharmacyProvider.setPharmacyIdAndCategoryList(
+                                    selectedpharmacyId: pharmacyProvider
+                                            .pharmacyList[index].id ??
+                                        '',
+                                    categoryIdList: pharmacyProvider
+                                            .pharmacyList[index]
+                                            .selectedCategoryId ??
+                                        [],
+                                    pharmacy:
+                                        pharmacyProvider.pharmacyList[index]);
+                                EasyNavigation.push(
+                                    type: PageTransitionType.rightToLeft,
+                                    context: context,
+                                    page: const PharmacyProductScreen());
+                              }
                             }
                           },
                         ),

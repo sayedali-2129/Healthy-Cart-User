@@ -5,6 +5,7 @@ import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/features/home/domain/facade/i_home_facade.dart';
 import 'package:healthy_cart_user/features/home/domain/models/home_banner_model.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @injectable
 class HomeProvider with ChangeNotifier {
@@ -55,5 +56,16 @@ class HomeProvider with ChangeNotifier {
       canPopNow = true;
       notifyListeners();
     }
+  }
+
+  Future<bool> installedFirtTime() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    bool isFirstTime = preferences.getBool('firstTime') ?? true;
+
+    if (isFirstTime == true) {
+      await preferences.setBool('firstTime', false);
+    }
+    return isFirstTime;
   }
 }

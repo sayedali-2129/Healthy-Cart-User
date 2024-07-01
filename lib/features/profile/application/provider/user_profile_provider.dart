@@ -122,7 +122,7 @@ class UserProfileProvider with ChangeNotifier {
     nameController.text = editModel.userName ?? '';
     emailController.text = editModel.userEmail ?? '';
     ageController.text = editModel.userAge ?? '';
-    phoneNumberController.text = editModel.phoneNo!;
+    phoneNumberController.text = editModel.phoneNo ?? '';
     imageUrl = editModel.image;
     genderDropdownValue = editModel.gender;
     notifyListeners();

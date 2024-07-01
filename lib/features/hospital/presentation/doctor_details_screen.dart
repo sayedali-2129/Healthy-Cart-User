@@ -4,12 +4,15 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/doctor_booking_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/doctor_card.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/doctor_details_top_card.dart';
+import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +48,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
+    return Consumer2<HospitalProvider, AuthenticationProvider>(
+        builder: (context, hospitalProvider, authProvider, _) {
       // final doctors = hospitalProvider.doctorsList[widget.doctorIndex];
       return PopScope(
         onPopInvoked: (didPop) {
@@ -85,13 +89,23 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                             color: BColors.white, fontWeight: FontWeight.w600),
                       ),
                       onPressed: () {
-                        EasyNavigation.push(
-                            context: context,
-                            page: DoctorBookingScreen(
-                                hospitalIndex: widget.hospitalIndex,
-                                doctorIndex: widget.doctorIndex),
-                            type: PageTransitionType.rightToLeft,
-                            duration: 250);
+                        if (authProvider.userFetchlDataFetched!.userName ==
+                            null) {
+                          EasyNavigation.push(
+                              type: PageTransitionType.rightToLeft,
+                              duration: 250,
+                              context: context,
+                              page: ProfileSetup());
+                          CustomToast.infoToast(text: 'Fill user details');
+                        } else {
+                          EasyNavigation.push(
+                              context: context,
+                              page: DoctorBookingScreen(
+                                  hospitalIndex: widget.hospitalIndex,
+                                  doctorIndex: widget.doctorIndex),
+                              type: PageTransitionType.rightToLeft,
+                              duration: 250);
+                        }
                       },
                     ),
                   ),

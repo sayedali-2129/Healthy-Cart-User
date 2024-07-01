@@ -10,10 +10,14 @@ class ProfileCard extends StatelessWidget {
     this.userImage,
     this.userName,
     this.userLocation,
+    this.localArea,
+    this.district,
   });
   final String? userImage;
   final String? userName;
   final String? userLocation;
+  final String? localArea;
+  final String? district;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -43,7 +47,7 @@ class ProfileCard extends StatelessWidget {
                       color: BColors.black,
                       fontWeight: FontWeight.w700),
                 ),
-                userLocation == null
+                localArea == null && district == null
                     ? const Gap(0)
                     : Text(userLocation!,
                         style: const TextStyle(

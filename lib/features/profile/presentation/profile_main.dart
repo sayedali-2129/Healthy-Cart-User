@@ -39,8 +39,6 @@ class _ProfileMainState extends State<ProfileMain> {
   Widget build(BuildContext context) {
     return Consumer<AuthenticationProvider>(
         builder: (context, authProvider, _) {
-      String? location =
-          '${authProvider.userFetchlDataFetched!.placemark?.localArea}, ${authProvider.userFetchlDataFetched!.placemark?.district}';
       return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
@@ -62,8 +60,13 @@ class _ProfileMainState extends State<ProfileMain> {
               children: [
                 FadeInRight(
                   child: ProfileCard(
+                    district:
+                        authProvider.userFetchlDataFetched!.placemark?.district,
+                    localArea: authProvider
+                        .userFetchlDataFetched!.placemark?.localArea,
                     userName: authProvider.userFetchlDataFetched!.userName,
-                    userLocation: location,
+                    userLocation:
+                        '${authProvider.userFetchlDataFetched!.placemark?.localArea}, ${authProvider.userFetchlDataFetched!.placemark?.district}',
                     userImage: authProvider.userFetchlDataFetched!.image,
                   ),
                 ),

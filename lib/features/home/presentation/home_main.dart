@@ -19,6 +19,7 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_p
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_details_screen.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
+import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -187,24 +188,33 @@ class _HomeMainState extends State<HomeMain> {
                                     builder: (context) => const LoginScreen()));
                             CustomToast.infoToast(text: 'Login First');
                           } else {
-                            pharmacyProvider.pharmacyList[index].isPharmacyON ==
-                                    false
-                                ? CustomToast.errorToast(
-                                    text: 'This Pharmacy is not available now!')
-                                : pharmacyProvider.setPharmacyIdAndCategoryList(
-                                    selectedpharmacyId: pharmacyProvider
-                                            .pharmacyList[index].id ??
-                                        '',
-                                    categoryIdList: pharmacyProvider
-                                            .pharmacyList[index]
-                                            .selectedCategoryId ??
-                                        [],
-                                    pharmacy:
-                                        pharmacyProvider.pharmacyList[index]);
-                            EasyNavigation.push(
-                                type: PageTransitionType.rightToLeft,
-                                context: context,
-                                page: const PharmacyProductScreen());
+                            if (authProvider.userFetchlDataFetched!.userName ==
+                                null) {
+                              EasyNavigation.push(
+                                  context: context, page: ProfileSetup());
+                            } else {
+                              pharmacyProvider
+                                          .pharmacyList[index].isPharmacyON ==
+                                      false
+                                  ? CustomToast.errorToast(
+                                      text:
+                                          'This Pharmacy is not available now!')
+                                  : pharmacyProvider
+                                      .setPharmacyIdAndCategoryList(
+                                          selectedpharmacyId: pharmacyProvider
+                                                  .pharmacyList[index].id ??
+                                              '',
+                                          categoryIdList: pharmacyProvider
+                                                  .pharmacyList[index]
+                                                  .selectedCategoryId ??
+                                              [],
+                                          pharmacy: pharmacyProvider
+                                              .pharmacyList[index]);
+                              EasyNavigation.push(
+                                  type: PageTransitionType.rightToLeft,
+                                  context: context,
+                                  page: const PharmacyProductScreen());
+                            }
                           }
                         },
                         child: PharmacyHorizontalCard(

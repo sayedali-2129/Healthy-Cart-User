@@ -104,6 +104,7 @@ flutter:
   assets:
     - assets/icons/bottom_nav_icons/
     - assets/images/
+    - assets/dashboard-images/
     - assets/lottie/
     - assets/icons/
     - assets/audio/

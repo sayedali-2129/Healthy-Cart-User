@@ -12,6 +12,7 @@ import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_p
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_profile_provider.dart';
+import 'package:healthy_cart_user/features/splash_screen/dash_board_screen.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
 import 'package:healthy_cart_user/utils/app_details.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -71,22 +72,30 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        builder: (context, child) => Overlay(
-          initialEntries: [
-            if (child != null) ...[
-              OverlayEntry(
-                builder: (context) => child,
+          builder: (context, child) => Overlay(
+                initialEntries: [
+                  if (child != null) ...[
+                    OverlayEntry(
+                      builder: (context) => child,
+                    ),
+                  ],
+                ],
               ),
-            ],
-          ],
-        ),
-        navigatorKey: navigatorKey,
-        title: AppDetails.appName,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            scaffoldBackgroundColor: BColors.white, fontFamily: 'Montserrat'),
-        home: const SplashScreen(),
-      ),
+          navigatorKey: navigatorKey,
+          title: AppDetails.appName,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              scaffoldBackgroundColor: BColors.white, fontFamily: 'Montserrat'),
+          home: Consumer<HomeProvider>(
+              builder: (context, value, _) => FutureBuilder(
+                  future: value.installedFirtTime(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data == true) {
+                      return const DashboardScreen();
+                    } else {
+                      return const SplashScreen();
+                    }
+                  }))),
     );
   }
 }
