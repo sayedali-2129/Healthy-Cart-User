@@ -97,9 +97,9 @@ class PharmacyOrderProvider extends ChangeNotifier {
     }
   }
 
-  String? selectedPaymentRadio;
+   String? selectedPaymentRadio;
 
-  setSelectedRadio(String? value) {
+  void setSelectedRadio(String? value) {
     selectedPaymentRadio = value;
     notifyListeners();
   }
@@ -203,7 +203,8 @@ class PharmacyOrderProvider extends ChangeNotifier {
     final data = productData.copyWith(
       isUserAccepted: true,
       paymentType: selectedPaymentRadio,
-      paymentStatus: 1,
+      paymentStatus:(selectedPaymentRadio== 'COD')? 0: 1,
+      isPaymentRecieved: (selectedPaymentRadio== 'COD')? false : true,
     );
     final result = await _iPharmacyOrderFacade.updateOrderCompleteDetails(
       orderId: productData.id ?? '',
@@ -216,7 +217,6 @@ class PharmacyOrderProvider extends ChangeNotifier {
         notifyListeners();
       },
       (orderProduct) {
-        selectedPaymentRadio = null;
         EasyNavigation.pop(context: context);
         EasyNavigation.push(
             context: context,

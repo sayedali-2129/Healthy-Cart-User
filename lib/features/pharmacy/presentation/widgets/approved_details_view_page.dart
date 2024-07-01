@@ -12,7 +12,6 @@ import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_p
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/product_quantity_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/date_and_order_id.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmacy_detail_container.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/product_details_page_view.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
@@ -333,7 +332,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               RadioMenuButton(
-                                value: '',
+                                value: 'COD',
                                 groupValue: orderProvider.selectedPaymentRadio,
                                 onChanged: (value) {
                                   orderProvider.setSelectedRadio(value);

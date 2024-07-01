@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/custom_alertbox/textfield_alertbox.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
+import 'package:healthy_cart_user/core/custom/timeline_indicator/timeline_indicator.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
@@ -47,14 +48,24 @@ class PharmacyAcceptedCard extends StatelessWidget {
                     .dateFromTimeStamp(onProcessOrderData.acceptedAt!),
               ),
               const Gap(8),
-              if(onProcessOrderData.isUserAccepted == true)
+              if(onProcessOrderData.isUserAccepted == true && onProcessOrderData.isOrderPacked == false)
               Text(
                 'Your order is on processing...',
                 style: TextStyle(
                     color: BColors.mainlightColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 15),
-              ),
+              )
+              else if(onProcessOrderData.isOrderPacked == true)
+              Text(
+                'Getting ready for delivery...',
+                style: TextStyle(
+                    color: BColors.mainlightColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15),
+              )
+              else
+             const SizedBox(),
               const Gap(12),
               Container(
                 decoration: BoxDecoration(
@@ -111,6 +122,20 @@ class PharmacyAcceptedCard extends StatelessWidget {
                   ],
                 ),
               ),
+              const Gap(8),
+              if(onProcessOrderData.isUserAccepted ?? false)
+              SizedBox(
+                height: 48,
+                child: ListView(
+
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    TimeLineOrderStatus(isFirst: true, isLast: false, isPast: onProcessOrderData.isUserAccepted ?? false, icon: Icons.lock_clock, text: 'Processing', height: 32, widthOfLine: 120,),
+                    TimeLineOrderStatus(isFirst: false, isLast: false, isPast: onProcessOrderData.isOrderPacked ?? false, icon: Icons.card_giftcard, text: 'Packed',height: 32, widthOfLine: 120),
+                     TimeLineOrderStatus(isFirst: false, isLast: true, isPast: onProcessOrderData.isOrderDelivered ?? false, icon: Icons.local_shipping, text: 'Delivered',height: 32, widthOfLine: 120,)
+                  ],
+                ),
+              ),
               const Divider(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -127,23 +152,7 @@ class PharmacyAcceptedCard extends StatelessWidget {
                       fontWeightText1: FontWeight.w600,
                       text2Color: BColors.green,
                     ),
-                    const Gap(4),
-                    if (onProcessOrderData.deliveryType == 'Home')
-                      RowTextContainerWidget(
-                        text1: 'Delivery charge : ',
-                        text2: (onProcessOrderData.deliveryCharge == 0 ||
-                                onProcessOrderData.deliveryCharge == null)
-                            ? "Free Delivery"
-                            : '₹ ${onProcessOrderData.deliveryCharge}',
-                        text1Color: BColors.textLightBlack,
-                        fontSizeText1: 12,
-                        fontSizeText2: 12,
-                        fontWeightText1: FontWeight.w600,
-                        text2Color: (onProcessOrderData.deliveryCharge == 0 ||
-                                onProcessOrderData.deliveryCharge == null)
-                            ? BColors.green
-                            : BColors.textBlack,
-                      ),
+                  
                     const Gap(4),
                     RowTextContainerWidget(
                       text1: 'Total Items Rate :',
@@ -154,7 +163,7 @@ class PharmacyAcceptedCard extends StatelessWidget {
                       fontWeightText1: FontWeight.w600,
                       text2Color: BColors.textBlack,
                     ),
-                    const Gap(8),
+                    const Gap(4),
                     if (onProcessOrderData.totalDiscountAmount != null)
                       RowTextContainerWidget(
                         text1: 'Total Discount :',
@@ -169,7 +178,6 @@ class PharmacyAcceptedCard extends StatelessWidget {
                     const Gap(4),
                     if (onProcessOrderData.deliveryType == 'Home')
                       Column(children: [
-                        const Gap(8),
                         RowTextContainerWidget(
                           text1: 'Delivery Charge :',
                           text2: (onProcessOrderData.deliveryCharge == 0 ||
@@ -197,14 +205,15 @@ class PharmacyAcceptedCard extends StatelessWidget {
                       text2Color: BColors.green,
                     ),
                     const Gap(4),
-                    Align(
+                   const  Align(
                       alignment: Alignment.bottomRight,
                       child: Text(
                         'All charges included.',
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                            fontSize: 10,
-                            color: BColors.textLightBlack,
-                            fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                                fontSize: 10,
+                                color: BColors.textLightBlack,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Montserrat'),
                       ),
                     )
                   ],
@@ -220,15 +229,13 @@ class PharmacyAcceptedCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'Delivery Address : ',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                      color: BColors.textLightBlack,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12),
+                              style:  TextStyle(
+                                fontSize: 12,
+                                color: BColors.textLightBlack,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Montserrat'),
                             ),
                             const Gap(8),
                             Expanded(
@@ -241,15 +248,13 @@ class PharmacyAcceptedCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                           const  Text(
                               'Pick-Up Address : ',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .copyWith(
-                                      color: BColors.textLightBlack,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12),
+                              style:  TextStyle(
+                                fontSize: 12,
+                                color: BColors.textLightBlack,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Montserrat'),
                             ),
                             const Gap(8),
                             Expanded(
@@ -257,13 +262,11 @@ class PharmacyAcceptedCard extends StatelessWidget {
                                 '${onProcessOrderData.pharmacyDetails?.pharmacyName ?? 'Pharmacy'}-${onProcessOrderData.pharmacyDetails?.pharmacyAddress ?? 'Pharmacy'}',
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge!
-                                    .copyWith(
-                                        color: BColors.textBlack,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12),
+                                style: const TextStyle(
+                                fontSize: 12,
+                                color: BColors.textBlack,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Montserrat'),
                               ),
                             )
                           ],
@@ -323,13 +326,12 @@ class PharmacyAcceptedCard extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               side: const BorderSide(),
                               borderRadius: BorderRadius.circular(8))),
-                      child: Text('Cancel',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700)),
+                      child: const Text('Cancel',
+                          style: TextStyle(
+                                fontSize: 14,
+                                color: BColors.black,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Montserrat'),),
                     ),
                   ),
                   SizedBox(
@@ -348,13 +350,12 @@ class PharmacyAcceptedCard extends StatelessWidget {
                           surfaceTintColor: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8))),
-                      child: Text('Proceed',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700)),
+                      child: const Text('Proceed',
+                          style: TextStyle(
+                                fontSize: 14,
+                                color: BColors.white,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Montserrat'),),
                     ),
                   ),
                 ],
