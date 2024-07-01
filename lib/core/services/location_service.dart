@@ -15,18 +15,34 @@ class LocationService {
     LocationPermission permission;
     isServiceEnabled = await Geolocator.isLocationServiceEnabled();
     await Geolocator.requestPermission();
+   // Check if location services are enabled
+    isServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    await Geolocator.requestPermission();
 
     if (!isServiceEnabled) {
+      // Request to enable location services
       permission = await Geolocator.requestPermission();
     }
+    // Check the current permission status
     permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever ||
+        permission == LocationPermission.unableToDetermine) {
+      // Request permission
       permission = await Geolocator.requestPermission();
+
       if (permission != LocationPermission.always &&
           permission != LocationPermission.whileInUse) {
         // Handle permission denied scenario
         // return const MainFailure.locationError(errMsg: 'Denied location permission');
+        return;
       }
+    }
+
+    // If permission is granted temporarily, handle fetching location accordingly
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always ) {
+      await getCurrentLocationAddress();
     }
   }
 
