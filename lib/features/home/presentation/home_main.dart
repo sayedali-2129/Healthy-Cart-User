@@ -68,7 +68,7 @@ class _HomeMainState extends State<HomeMain> {
       return Scaffold(
           body: CustomScrollView(
         slivers: [
-          const HomeSliverAppbar(searchHint: 'Search'),
+          const MainHomeAppBar(searchHint: 'Search'),
           const SliverGap(10),
           if (homeProvider.isLoading == true &&
               hospitalProvier.hospitalFetchLoading == true &&
