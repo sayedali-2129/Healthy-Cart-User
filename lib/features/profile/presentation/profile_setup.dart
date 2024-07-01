@@ -34,7 +34,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
   void initState() {
     final provider = context.read<UserProfileProvider>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      provider.setEditData(widget.userModel!);
+      provider.setEditData(widget.userModel ?? UserModel());
     });
     super.initState();
   }
@@ -97,6 +97,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                   const Gap(16),
                   /* ---------------------------------- EMAIL --------------------------------- */
                   TextfieldWidget(
+                    keyboardType: TextInputType.emailAddress,
                     fieldHeading: 'Email*',
                     hintText: 'Please Enter Your Email',
                     controller: profileProvider.emailController,

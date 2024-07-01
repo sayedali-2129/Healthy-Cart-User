@@ -9,6 +9,7 @@ import 'package:healthy_cart_user/features/location_picker/location_picker/appli
 import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location.dart';
 import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {

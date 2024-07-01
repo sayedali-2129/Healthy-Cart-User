@@ -15,6 +15,7 @@ import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_sl
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_list_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_type_radio.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
+import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -306,40 +307,47 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                       //         ),
                       //       ));
                       // } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) => TestTypeRadiopopup(
-                          onConfirm: () {
-                            final checkHomeAvailable = labProvider.cartItems
-                                .any((item) =>
-                                    item.isDoorstepAvailable == false);
-                            if (labProvider.selectedRadio == null) {
-                              CustomToast.infoToast(
-                                  text: 'Please select preferred test type');
-                            } else if (labProvider.selectedRadio == 'Home' &&
-                                checkHomeAvailable) {
-                              CustomToast.errorToast(
-                                  text:
-                                      'One or more tests are not available for door step service');
-                            } else {
-                              Navigator.pop(context);
-                              EasyNavigation.push(
-                                type: PageTransitionType.rightToLeft,
-                                duration: 300,
-                                context: context,
-                                page: CheckoutScreen(
-                                  userId:
-                                      authProvider.userFetchlDataFetched!.id!,
-                                  index: widget.index,
-                                  userModel:
-                                      authProvider.userFetchlDataFetched!,
-                                ),
-                              );
-                              // labProvider.selectedRadio = null;
-                            }
-                          },
-                        ),
-                      );
+                      if (authProvider.userFetchlDataFetched!.userName ==
+                          null) {
+                        EasyNavigation.push(
+                            context: context, page: ProfileSetup());
+                        CustomToast.infoToast(text: 'Fill user details');
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => TestTypeRadiopopup(
+                            onConfirm: () {
+                              final checkHomeAvailable = labProvider.cartItems
+                                  .any((item) =>
+                                      item.isDoorstepAvailable == false);
+                              if (labProvider.selectedRadio == null) {
+                                CustomToast.infoToast(
+                                    text: 'Please select preferred test type');
+                              } else if (labProvider.selectedRadio == 'Home' &&
+                                  checkHomeAvailable) {
+                                CustomToast.errorToast(
+                                    text:
+                                        'One or more tests are not available for door step service');
+                              } else {
+                                Navigator.pop(context);
+                                EasyNavigation.push(
+                                  type: PageTransitionType.rightToLeft,
+                                  duration: 300,
+                                  context: context,
+                                  page: CheckoutScreen(
+                                    userId:
+                                        authProvider.userFetchlDataFetched!.id!,
+                                    index: widget.index,
+                                    userModel:
+                                        authProvider.userFetchlDataFetched!,
+                                  ),
+                                );
+                                // labProvider.selectedRadio = null;
+                              }
+                            },
+                          ),
+                        );
+                      }
                     },
                   )
                 : null),

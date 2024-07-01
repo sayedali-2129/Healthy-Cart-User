@@ -12,4 +12,14 @@ class BImage {
   static const String hospitalSample = 'assets/images/hospital-sample.png';
   static const String currentlyUnavailable =
       'assets/images/currently-unavailable.png';
+
+/* ---------------------------- DASHBOARD IMAGES ---------------------------- */
+  static const String transparentLogo = 'assets/dashboard-images/hc-png.png';
+  static const String getStarted =
+      'assets/dashboard-images/undraw_Mobile_app_re_catg.png';
+  static const String hcTextPng =
+      'assets/dashboard-images/healthycartbrandfirstlook 1.png';
+  static const String roundedLogo =
+      'assets/dashboard-images/healthy-cart-png.png';
+  static const String smallText = 'assets/dashboard-images/HEALTHY CART.png';
 }
