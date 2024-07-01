@@ -29,6 +29,9 @@ class PharmacyOrderModel {
   final String? prescription;
   final bool? isUserAccepted;
   final bool? isRejectedByUser;
+  final bool? isOrderPacked;
+  final bool? isOrderDelivered;
+  final bool? isPaymentRecieved;
   final String? productBillPdf;
   final String? paymentType;
   PharmacyOrderModel({
@@ -54,7 +57,10 @@ class PharmacyOrderModel {
     this.completedAt,
     this.prescription,
     this.isUserAccepted,
-     this.isRejectedByUser,
+    this.isRejectedByUser,
+    this.isOrderPacked,
+    this.isOrderDelivered,
+    this.isPaymentRecieved,
     this.productBillPdf,
     this.paymentType,
   });
@@ -83,6 +89,9 @@ class PharmacyOrderModel {
     String? prescription,
     bool? isUserAccepted,
     bool? isRejectedByUser,
+    bool? isOrderPacked,
+    bool? isOrderDelivered,
+    bool? isPaymentRecieved,
     String? productBillPdf,
     String? paymentType,
   }) {
@@ -109,7 +118,10 @@ class PharmacyOrderModel {
       completedAt: completedAt ?? this.completedAt,
       prescription: prescription ?? this.prescription,
       isUserAccepted: isUserAccepted ?? this.isUserAccepted,
-         isRejectedByUser: isRejectedByUser ?? this.isRejectedByUser,
+      isRejectedByUser: isRejectedByUser ?? this.isRejectedByUser,
+      isOrderPacked: isOrderPacked ?? this.isOrderPacked,
+      isOrderDelivered: isOrderDelivered ?? this.isOrderDelivered,
+      isPaymentRecieved: isPaymentRecieved ?? this.isPaymentRecieved,
       productBillPdf: productBillPdf ?? this.productBillPdf,
       paymentType: paymentType ?? this.paymentType,
     );
@@ -140,6 +152,9 @@ class PharmacyOrderModel {
       'prescription': prescription,
       'isUserAccepted': isUserAccepted,
       'isRejectedByUser': isRejectedByUser,
+      'isOrderPacked': isOrderPacked,
+      'isOrderDelivered': isOrderDelivered,
+      'isPaymentRecieved': isPaymentRecieved,
       'productBillPdf': productBillPdf,
       'paymentType': paymentType,
     };
@@ -158,8 +173,12 @@ class PharmacyOrderModel {
       'acceptedAt': acceptedAt,
       'rejectedAt': rejectedAt,
       'isRejectedByUser': isRejectedByUser,
+      'isOrderPacked': isOrderPacked,
+      'isOrderDelivered': isOrderDelivered,
+      'isPaymentRecieved': isPaymentRecieved,
     };
   }
+
   factory PharmacyOrderModel.fromMap(Map<String, dynamic> map) {
     return PharmacyOrderModel(
       id: map['id'] != null ? map['id'] as String : null,
@@ -217,8 +236,17 @@ class PharmacyOrderModel {
           map['prescription'] != null ? map['prescription'] as String : null,
       isUserAccepted:
           map['isUserAccepted'] != null ? map['isUserAccepted'] as bool : null,
-      isRejectedByUser:
-          map['isRejectedByUser'] != null ? map['isRejectedByUser'] as bool : null,   
+      isRejectedByUser: map['isRejectedByUser'] != null
+          ? map['isRejectedByUser'] as bool
+          : null,
+      isOrderPacked:
+          map['isOrderPacked'] != null ? map['isOrderPacked'] as bool : null,
+      isOrderDelivered: map['isOrderDelivered'] != null
+          ? map['isOrderDelivered'] as bool
+          : null,
+      isPaymentRecieved: map['isPaymentRecieved'] != null
+          ? map['isPaymentRecieved'] as bool
+          : null,
       productBillPdf: map['productBillPdf'] != null
           ? map['productBillPdf'] as String
           : null,
@@ -227,4 +255,3 @@ class PharmacyOrderModel {
     );
   }
 }
-

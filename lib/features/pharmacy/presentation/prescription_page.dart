@@ -25,6 +25,8 @@ class PrescriptionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pharmacyProvider = Provider.of<PharmacyProvider>(context);
+     final authProvider = Provider.of<AuthenticationProvider>(context);
+      final addressProvider = Provider.of<UserAddressProvider>(context);
     return Scaffold(
       body: Scaffold(
         body: CustomScrollView(
@@ -139,6 +141,9 @@ class PrescriptionScreen extends StatelessWidget {
                                 pharmacyProvider.selectedRadio = 'Pharmacy';
                                 LoadingLottie.showLoading(
                                     context: context, text: 'Please wait...');
+                        pharmacyProvider.setDeliveryAddressAndUserData(
+                    userData: authProvider.userFetchlDataFetched ?? UserModel(),
+                    address: addressProvider.selectedAddress);
                                 pharmacyProvider.saveImage().whenComplete(
                                   () {
                                     pharmacyProvider.createProductOrderDetails(
