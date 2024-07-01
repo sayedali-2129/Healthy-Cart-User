@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/i_location_facde.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
+import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -36,6 +38,7 @@ class LocationProvider extends ChangeNotifier {
       //  CustomToast.errorToast(text: error.errMsg);
       searchLoading = false;
     }, (placeMark) {
+      saveLocationLocally(placeMark!);
       selectedPlaceMark = placeMark;
       searchLoading = false;
       notifyListeners();
@@ -77,15 +80,11 @@ class LocationProvider extends ChangeNotifier {
       }, (sucess) {
         Navigator.pop(context);
         CustomToast.sucessToast(text: 'Location added sucessfully');
-        // (isUserEditProfile)
-        Navigator.pop(
-          context,
-        );
-        // : EasyNavigation.pushAndRemoveUntil(
-        //     context: context,
-        //     page: (labRequestedCount == 2)
-        //         ? const SplashScreen()
-        //         : const PendingPageScreen());
+         (isUserEditProfile)?
+      EasyNavigation.pop(context: context)
+        : EasyNavigation.pushAndRemoveUntil(
+            context: context,
+            page: const SplashScreen());
         notifyListeners();
       });
     });
@@ -101,5 +100,20 @@ class LocationProvider extends ChangeNotifier {
     searchResults.clear();
     searchController.clear();
     notifyListeners();
+  }
+
+/* ------------------------- Locally saved location ------------------------- */
+  PlaceMark? locallysavedplacemark;
+
+  Future<void> clearLocationLocally() async {
+    await iLocationFacade.clearLocation();
+  }
+
+  Future<void> getLocationLocally() async {
+    locallysavedplacemark = await iLocationFacade.getLocationLocally();
+  }
+
+  Future<void> saveLocationLocally(PlaceMark placeMark) async {
+    iLocationFacade.saveLocationLocally(placeMark);
   }
 }

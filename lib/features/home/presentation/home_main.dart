@@ -123,7 +123,7 @@ class _HomeMainState extends State<HomeMain> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const LoginScreen()));
-                            CustomToast.infoToast(text: 'Login First');
+                            CustomToast.infoToast(text: 'Login to continue !');
                           } else {
                             hospitalProvier.hospitalList[index].ishospitalON ==
                                     false
@@ -185,7 +185,7 @@ class _HomeMainState extends State<HomeMain> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const LoginScreen()));
-                            CustomToast.infoToast(text: 'Login First');
+                            CustomToast.infoToast(text: 'Login to continue !');
                           } else {
                             pharmacyProvider.pharmacyList[index].isPharmacyON ==
                                     false
@@ -253,7 +253,7 @@ class _HomeMainState extends State<HomeMain> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const LoginScreen()));
-                                  CustomToast.infoToast(text: 'Login First');
+                                  CustomToast.infoToast(text: 'Login to continue !');
                                 } else {
                                   EasyNavigation.push(
                                       context: context,

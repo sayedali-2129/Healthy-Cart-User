@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/lottie/lotties.dart';
 import 'package:lottie/lottie.dart';
@@ -24,10 +26,12 @@ class LocationPage extends StatelessWidget {
             children: [
               Lottie.asset(BLottie.lottieLocation, height: 232),
               const Gap(24),
-              Text('Tap below to select laboratory location.',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontSize: 14,
-                      )),
+             const Text('Tap below to select your current location.',
+                  style:  TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: BColors.textLightBlack,
+                                    fontFamily: 'Montserrat')),
               const Gap(40),
               (locationProvider.locationGetLoading)
                   ? const SizedBox(
@@ -46,15 +50,16 @@ class LocationPage extends StatelessWidget {
                       buttonWidth: double.infinity,
                       buttonHeight: 48,
                       onPressed: () {
-                        // locationProvider.getLocationPermisson().then((value) {
-                        //   if (value == true) {
-                        //     EasyNavigation.push(
-                        //         context: context,
-                        //         page: const UserLocationSearchWidget());
-                        //   }
-                        // });
+                        locationProvider.getLocationPermisson().then((value) {
+                          if (value == true) {
+                            
+                            EasyNavigation.push(
+                                context: context,
+                                page: const UserLocationSearchWidget());
+                          }
+                        });
                       },
-                      buttonWidget: const Text('Select Location',
+                      buttonWidget: const Text('Pick Location',
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                       buttonColor: BColors.buttonLightColor,

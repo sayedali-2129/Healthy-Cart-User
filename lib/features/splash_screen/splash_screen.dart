@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location.dart';
 import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
@@ -18,31 +21,50 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    final locationProvider = context.read<LocationProvider>();
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final auth = FirebaseAuth.instance;
     final notiProvider = context.read<NotificationProvider>();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await notiProvider.notificationPermission();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      notiProvider.notificationPermission();
+       locationProvider.getLocationLocally();
       if (userId != null) {
         context
             .read<AuthenticationProvider>()
             .userStreamFetchedData(userId: userId);
+             
       }
     });
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
+      
         if (auth.currentUser == null) {
+          if (locationProvider.locallysavedplacemark == null) {
+            EasyNavigation.pushAndRemoveUntil(
+              context: context,
+              page: const LocationPage(),
+            );
+          } else {
+            EasyNavigation.pushAndRemoveUntil(
+            context: context,
+            page: const BottomNavigationWidget(),
+          );
+          }
           context
               .read<AuthenticationProvider>()
               .navigationUserFuction(context: context);
         } else {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BottomNavigationWidget(),
-            ),
-            (route) => false,
+          if (locationProvider.locallysavedplacemark == null) {
+            EasyNavigation.pushAndRemoveUntil(
+              context: context,
+              page: const LocationPage(),
+            );
+          } else {
+            EasyNavigation.pushAndRemoveUntil(
+            context: context,
+            page: const BottomNavigationWidget(),
           );
+          }
         }
       },
     );

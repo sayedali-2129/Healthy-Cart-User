@@ -11,9 +11,9 @@ import 'package:provider/provider.dart';
 class UserLocationSearchWidget extends StatefulWidget {
   const UserLocationSearchWidget({
     super.key,
-    this.isHospitaEditProfile,
+    this.isUserEditProfile,
   });
-  final bool? isHospitaEditProfile;
+  final bool? isUserEditProfile;
 
   @override
   State<UserLocationSearchWidget> createState() =>
@@ -86,10 +86,10 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
             onTap: () async {
               if (locationProvider.selectedPlaceMark == null) return;
               LoadingLottie.showLoading(
-                  context: context, text: 'Getting Location..');
+                  context: context, text: 'Getting Location...');
               await locationProvider.setLocationByUser(
                 context: context,
-                isUserEditProfile: widget.isHospitaEditProfile ?? false,
+                isUserEditProfile: widget.isUserEditProfile ?? false,
               );
             },
             child: Padding(
@@ -120,8 +120,7 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                                     Expanded(
                                       child: Text(
                                         overflow: TextOverflow.clip,
-                                        (locationProvider.selectedPlaceMark !=
-                                                null)
+                                        (locationProvider.selectedPlaceMark != null)
                                             ? "${locationProvider.selectedPlaceMark?.localArea},${locationProvider.selectedPlaceMark?.district},${locationProvider.selectedPlaceMark?.state}"
                                             : "Getting current location...",
                                         style: Theme.of(context)

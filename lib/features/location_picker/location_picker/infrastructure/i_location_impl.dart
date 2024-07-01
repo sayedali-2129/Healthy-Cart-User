@@ -333,4 +333,21 @@ class ILocationImpl implements ILocationFacade {
       return left(MainFailure.locationError(errMsg: e.toString()));
     }
   }
+
+  /* ----------------------- LOCALLY SAVING THE ADDRESS ----------------------- */
+  @override
+  Future<void> clearLocation() async {
+    await _locationService.clearLocation();
+  }
+
+  @override
+  Future<PlaceMark?> getLocationLocally() async {
+    final result = await _locationService.getLocationLocally();
+    return result;
+  }
+
+  @override
+  Future<void> saveLocationLocally(PlaceMark placeMark) async{
+    await _locationService.saveLocationLocally(placeMark);
+  }
 }

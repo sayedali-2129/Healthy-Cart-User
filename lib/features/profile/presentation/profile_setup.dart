@@ -129,7 +129,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                       ),
                     ],
                   ),
-                  GenderDropDown(),
+                  const GenderDropDown(),
                   const Gap(16),
                   /* -------------------------------- LOCATION -------------------------------- */
                   Column(
@@ -155,7 +155,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const UserLocationSearchWidget()));
+                                      const UserLocationSearchWidget(isUserEditProfile: true,)));
                         },
                         child: Container(
                           color: Colors.white,
