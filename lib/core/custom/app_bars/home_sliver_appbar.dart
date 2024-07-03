@@ -11,13 +11,15 @@ class HomeSliverAppbar extends StatelessWidget {
     super.key,
     required this.searchHint,
     this.searchController,
-    this.onChanged, required this.locationText, required this.locationTap,
+    this.onChanged,
+    required this.locationText,
+    required this.locationTap,
   });
 
   final String searchHint;
   final TextEditingController? searchController;
   final void Function(String)? onChanged;
-    final String locationText;
+  final String locationText;
   final VoidCallback locationTap;
 
   @override
@@ -33,7 +35,7 @@ class HomeSliverAppbar extends StatelessWidget {
             const Gap(45),
             Image.asset(
               BImage.appBarImage,
-              scale: 2.8,
+              scale: 3,
             ),
           ],
         ),
@@ -55,21 +57,21 @@ class HomeSliverAppbar extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                 InkWell(
+                InkWell(
                   onTap: locationTap,
-                   child: Row(
+                  child: Row(
                     children: [
-                     const Icon(Icons.location_on_outlined),
+                      const Icon(Icons.location_on_outlined),
                       Text(
                         locationText,
-                        style:const TextStyle(
+                        style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: BColors.darkblue),
                       ),
                     ],
-                                   ),
-                 ),
+                  ),
+                ),
                 const Gap(8),
                 Row(
                   children: [
@@ -142,7 +144,8 @@ class MainHomeAppBar extends StatelessWidget {
     required this.searchHint,
     this.searchController,
     this.onChanged,
-    required this.locationText, required this.locationTap,
+    required this.locationText,
+    required this.locationTap,
   });
 
   final String searchHint;
@@ -163,7 +166,7 @@ class MainHomeAppBar extends StatelessWidget {
             const Gap(45),
             Image.asset(
               BImage.appBarImage,
-              scale: 2.8,
+              scale: 3,
             ),
           ],
         ),

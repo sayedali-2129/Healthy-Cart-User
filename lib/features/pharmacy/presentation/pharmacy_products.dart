@@ -38,7 +38,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
           ..getpharmacyCategory()
           ..getBanner()
           ..getPharmacyAllProductDetails()
-          ..createOrGetProductToUserCart();   
+          ..createOrGetProductToUserCart();
       },
     );
     _scrollController.addListener(
@@ -72,36 +72,36 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
               EasyNavigation.pop(context: context);
             },
             child: PreferredSize(
-                preferredSize: const Size.fromHeight(64),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    onTap: () {
-                      EasyNavigation.push(
-                          context: context,
-                          page: const ProductSearchListScreen());
-                    },
-                    readOnly: true,
-                    showCursor: false,
-                    cursorColor: BColors.black,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
-                      hintText: 'Search products',
-                      hintStyle: const TextStyle(fontSize: 14),
-                      suffixIcon: const Icon(
-                        Icons.search_outlined,
-                        color: BColors.darkblue,
-                      ),
-                      filled: true,
-                      fillColor: BColors.white,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(26),
-                      ),
+              preferredSize: const Size.fromHeight(64),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onTap: () {
+                    EasyNavigation.push(
+                        context: context,
+                        page: const ProductSearchListScreen());
+                  },
+                  readOnly: true,
+                  showCursor: false,
+                  cursorColor: BColors.black,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
+                    hintText: 'Search products',
+                    hintStyle: const TextStyle(fontSize: 14),
+                    suffixIcon: const Icon(
+                      Icons.search_outlined,
+                      color: BColors.darkblue,
+                    ),
+                    filled: true,
+                    fillColor: BColors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(26),
                     ),
                   ),
                 ),
-                ),
+              ),
+            ),
           ),
             if (pharmacyProvider.fetchLoading == true &&
                   pharmacyProvider.productAllList.isEmpty)

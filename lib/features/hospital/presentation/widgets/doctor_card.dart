@@ -40,37 +40,39 @@ class DoctorCard extends StatelessWidget {
                       image: doctor.doctorImage ?? ''),
                 ),
                 const Gap(16),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ///////////////DOCTOR NAME///////////////
-                    Text(
-                      '${doctor.doctorName} (${doctor.doctorQualification})',
-                      style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: BColors.black),
-                    ),
-                    const Gap(4),
-                    ///////////////CATEGORY//////////////////
-                    Text(
-                      doctor.doctorSpecialization ??
-                          "",
-                      style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: BColors.textLightBlack),
-                    ),
-                    const Gap(4),
-                    Text(
-                      'Time : ${doctor.doctorTotalTime ?? ""}',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: BColors.green),
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ///////////////DOCTOR NAME///////////////
+                      Text(
+                        '${doctor.doctorName} (${doctor.doctorQualification})',
+                        style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: BColors.black),
+                      ),
+                      const Gap(4),
+                      ///////////////CATEGORY//////////////////
+                      Text(
+                        doctor.doctorSpecialization ??
+                            "",
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: BColors.textLightBlack),
+                      ),
+                      const Gap(4),
+                      Text(
+                        'Time : ${doctor.doctorTotalTime ?? ""}',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: BColors.green),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

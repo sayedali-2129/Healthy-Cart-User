@@ -34,6 +34,7 @@ class NotificationFrame extends StatelessWidget {
     return Material(
       elevation: 3,
       borderRadius: BorderRadius.circular(16),
+      surfaceTintColor: BColors.white,
       child: Container(
         decoration: BoxDecoration(
             color: BColors.white, borderRadius: BorderRadius.circular(16)),

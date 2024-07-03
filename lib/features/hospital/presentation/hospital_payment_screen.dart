@@ -14,7 +14,7 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hosp_booking_provider.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/patient_details_card.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/payment_type_radio.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/widgets/payment_radio_hosp.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -158,7 +158,7 @@ class HospitalPaymentScreen extends StatelessWidget {
                         onPressed: () {
                           showDialog(
                               context: context,
-                              builder: (context) => PaymentTypeRadio(
+                              builder: (context) => PaymentTypeRadioHospital(
                                     onConfirm: () async {
                                       log(ordersProvider.hospitalpPaymentType ??
                                           'null');

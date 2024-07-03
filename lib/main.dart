@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:healthy_cart_user/core/di/injection.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/home/application/provider/home_provider.dart';
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<HospitalBookingProivder>(),
         ),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
           builder: (context, child) => Overlay(
                 initialEntries: [
                   if (child != null) ...[

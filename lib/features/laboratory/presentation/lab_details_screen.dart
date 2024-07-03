@@ -11,6 +11,7 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/checkout_screen.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/lab_prescription_page.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_list_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_type_radio.dart';
@@ -86,31 +87,38 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                       children: [
                         FadeInDown(
                           duration: const Duration(milliseconds: 500),
-                          child: Container(
-                            height: 234,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Stack(
-                              children: [
-                                CustomCachedNetworkImage(image: labList.image!),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        BColors.black.withOpacity(0.5),
-                                        Colors.transparent
-                                      ],
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            /* -------------------------------- LAB IMAGE ------------------------------- */
+                            child: Container(
+                              clipBehavior: Clip.antiAlias,
+                              height: 234,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Stack(
+                                children: [
+                                  CustomCachedNetworkImage(
+                                      image: labList.image!),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          BColors.black.withOpacity(0.5),
+                                          Colors.transparent
+                                        ],
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.center,
+                                      ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
+                        /* -------------------------- LAB NAME AND ADDRESS -------------------------- */
                         Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
@@ -119,16 +127,52 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  FadeInDown(
-                                    duration: const Duration(milliseconds: 500),
-                                    child: Text(
-                                      labList.laboratoryName ?? 'No Name',
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: BColors.black),
+                                  Expanded(
+                                    child: FadeInDown(
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      child: Text(
+                                        labList.laboratoryName ?? 'No Name',
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color: BColors.black),
+                                      ),
                                     ),
                                   ),
+                                  Gap(5),
+                                  ButtonWidget(
+                                    buttonHeight: 36,
+                                    buttonWidth: 160,
+                                    buttonColor: BColors.buttonGreen,
+                                    buttonWidget: const Row(
+                                      children: [
+                                        Icon(
+                                          Icons.maps_ugc_outlined,
+                                          color: BColors.black,
+                                          size: 19,
+                                        ),
+                                        Gap(5),
+                                        Text(
+                                          'Prescription',
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w700,
+                                              color: BColors.black),
+                                        )
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      labProvider.clearCurrentDetails();
+                                      addressProvider.selectedAddress = null;
+                                      EasyNavigation.push(
+                                        context: context,
+                                        page: const LabPrescriptionPage(),
+                                        duration: 250,
+                                        type: PageTransitionType.rightToLeft,
+                                      );
+                                    },
+                                  )
                                 ],
                               ),
                               const Gap(10),
