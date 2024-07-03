@@ -11,6 +11,7 @@ import 'package:healthy_cart_user/core/general/validator.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/patient_gender_dropdown.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
@@ -18,13 +19,11 @@ import 'package:provider/provider.dart';
 class PatientDetailsScreen extends StatelessWidget {
   const PatientDetailsScreen(
       {super.key,
-      required this.doctorIndex,
-      required this.selectedDoctor,
-      required this.hospitalIndex});
-  final int doctorIndex;
-  final DoctorModel selectedDoctor;
 
-  final int hospitalIndex;
+      required this.selectedDoctor, required this.hospital,});
+  final DoctorModel selectedDoctor;
+  final HospitalModel hospital;
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,22 +126,18 @@ class PatientDetailsScreen extends StatelessWidget {
                 context: context,
                 titleText: 'Confirm Booking',
                 subText:
-                    'This will send your booking to the hospital and check the availability of the slot. Are you sure you want to proceed?',
+                    "Tap 'Yes' to send this booking to the Hospital to check the availability of the slot. Are you sure you want to proceed?",
                 confirmButtonTap: () async {
                   LoadingLottie.showLoading(
                       context: context, text: 'Please wait...');
                   await hospitalProvider.addHospitalBooking(
-                      fcmtoken: hospitalProvider
-                          .hospitalList[hospitalIndex].fcmToken!,
+                      fcmtoken: hospital.fcmToken ?? '',
                       userName: authProvider.userFetchlDataFetched!.userName!,
-                      hospitalId:
-                          hospitalProvider.hospitalList[hospitalIndex].id!,
+                      hospitalId: hospital.id ?? '',
                       userId: authProvider.userFetchlDataFetched!.id!,
                       userModel: authProvider.userFetchlDataFetched!,
-                      hospitalModel:
-                          hospitalProvider.hospitalList[hospitalIndex],
-                      totalAmount:
-                          hospitalProvider.doctorsList[doctorIndex].doctorFee!,
+                      hospitalModel:hospital,
+                      totalAmount:  selectedDoctor.doctorFee!,
                       selectedDoctor: selectedDoctor);
                   Navigator.pushAndRemoveUntil(
                     context,

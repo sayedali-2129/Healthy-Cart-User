@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -19,11 +21,8 @@ import 'package:provider/provider.dart';
 
 class HospitalDetails extends StatefulWidget {
   const HospitalDetails(
-      {super.key,
-      required this.hospitalIndex,
-      required this.hospitalId,
-      required this.categoryIdList});
-  final int hospitalIndex;
+      {super.key, required this.hospitalId, required this.categoryIdList});
+
   final String hospitalId;
   final List<String>? categoryIdList;
 
@@ -49,7 +48,11 @@ class _HospitalDetailsState extends State<HospitalDetails> {
   @override
   Widget build(BuildContext context) {
     return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
-      final hospital = hospitalProvider.hospitalList[widget.hospitalIndex];
+      final hospital = hospitalProvider.hospitalList.firstWhere(
+        (element) {
+          return element.id == widget.hospitalId;
+        },
+      );
       return Scaffold(
           body: CustomScrollView(slivers: [
         SliverCustomAppbar(
@@ -91,17 +94,18 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Row(
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 16, left: 16, right: 16),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               FadeInDown(
                                 duration: const Duration(milliseconds: 500),
                                 child: Text(
-                                  hospital.hospitalName ?? 'No Name',
+                                  hospital.hospitalName ?? 'Unknown Name',
                                   style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -110,16 +114,19 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                               ),
                             ],
                           ),
-                          const Gap(10),
-                          FadeInDown(
-                            duration: const Duration(milliseconds: 500),
+                        ),
+                        const Gap(10),
+                        FadeInDown(
+                          duration: const Duration(milliseconds: 500),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Row(
                               children: [
                                 const Icon(Icons.location_on_outlined),
                                 const Gap(5),
                                 Expanded(
                                   child: Text(
-                                    hospital.address ?? 'No Address',
+                                    hospital.address ?? 'Unknown Address',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 3,
                                     style: const TextStyle(
@@ -129,17 +136,24 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                               ],
                             ),
                           ),
-                          const Divider(),
-                          FadeInRight(
-                            duration: const Duration(milliseconds: 500),
+                        ),
+                        const Divider(),
+                        FadeInRight(
+                          duration: const Duration(milliseconds: 500),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: AdSliderHospital(
                               screenWidth: double.infinity,
                               labId: widget.hospitalId,
                             ),
                           ),
-                          const Gap(8),
-                          hospitalProvider.hospitalCategoryList.isNotEmpty
-                              ? Row(
+                        ),
+                        const Gap(8),
+                        hospitalProvider.hospitalCategoryList.isNotEmpty
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -157,69 +171,65 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                                 PageTransitionType.rightToLeft,
                                             duration: 250,
                                             page: AllCategoriesScreen(
-                                              hospitalId: widget.hospitalId,
-                                              hospitalIndex:
-                                                  widget.hospitalIndex,
+                                              hospitalDetails: hospital,
                                             ));
                                       },
                                     )
                                   ],
-                                )
-                              : const Gap(0),
-                          const Gap(12),
-                          hospitalProvider.hospitalCategoryList.isNotEmpty
-                              ? SizedBox(
-                                  height: 120,
-                                  child: ListView.builder(
-                                    padding: const EdgeInsets.all(0),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: hospitalProvider
-                                                .hospitalCategoryList.length >
-                                            5
-                                        ? 5
-                                        : hospitalProvider
-                                            .hospitalCategoryList.length,
-                                    itemBuilder: (context, categoryIndex) {
-                                      return FadeInRight(
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        child: VerticalImageText(
-                                            rightPadding: 8,
-                                            leftPadding: 0,
-                                            onTap: () {
-                                              EasyNavigation.push(
-                                                  context: context,
-                                                  type: PageTransitionType
-                                                      .rightToLeft,
-                                                  duration: 250,
-                                                  page: AllDoctorsScreen(
-                                                    categoryId: hospitalProvider
-                                                        .hospitalCategoryList[
-                                                            categoryIndex]
-                                                        .id,
-                                                    isCategoryWise: true,
-                                                    categoryIndex:
-                                                        categoryIndex,
-                                                    hospitalIndex:
-                                                        widget.hospitalIndex,
-                                                    hospitalId:
-                                                        widget.hospitalId,
-                                                  ));
-                                            },
-                                            image: hospitalProvider
-                                                .hospitalCategoryList[
-                                                    categoryIndex]
-                                                .image!,
-                                            title: hospitalProvider
-                                                .hospitalCategoryList[
-                                                    categoryIndex]
-                                                .category!),
-                                      );
-                                    },
-                                  ),
-                                )
-                              : const Gap(0),
-                          Row(
+                                ),
+                              )
+                            : const Gap(0),
+                        const Gap(16),
+                        hospitalProvider.hospitalCategoryList.isNotEmpty
+                            ? SizedBox(
+                                height: 112,
+                                child: ListView.builder(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: hospitalProvider
+                                              .hospitalCategoryList.length >
+                                          5
+                                      ? 5
+                                      : hospitalProvider
+                                          .hospitalCategoryList.length,
+                                  itemBuilder: (context, categoryIndex) {
+                                    final selectedCategory = hospitalProvider
+                                        .hospitalCategoryList[categoryIndex];
+                                    return FadeInRight(
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      child: VerticalImageText(
+                                          rightPadding: 4,
+                                          leftPadding: 2,
+                                          onTap: () {
+                                            EasyNavigation.push(
+                                                context: context,
+                                                type: PageTransitionType
+                                                    .rightToLeft,
+                                                duration: 250,
+                                                page: AllDoctorsScreen(
+                                                  hospitalDetails: hospital,
+                                                  category: selectedCategory,
+                                                  isCategoryWise: true,
+                                                ));
+                                          },
+                                          image: hospitalProvider
+                                              .hospitalCategoryList[
+                                                  categoryIndex]
+                                              .image!,
+                                          title: hospitalProvider
+                                              .hospitalCategoryList[
+                                                  categoryIndex]
+                                              .category!),
+                                    );
+                                  },
+                                ),
+                              )
+                            : const Gap(0),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text(
@@ -235,45 +245,48 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                       duration: 250,
                                       page: AllDoctorsScreen(
                                         isCategoryWise: false,
-                                        hospitalIndex: widget.hospitalIndex,
-                                        hospitalId: widget.hospitalId,
+                                        hospitalDetails: hospital,
                                       ));
                                 },
                               )
                             ],
                           ),
-                          ListView.separated(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            separatorBuilder: (context, index) => const Gap(10),
-                            itemCount: hospitalProvider.doctorsList.length > 5
-                                ? 5
-                                : hospitalProvider.doctorsList.length,
-                            itemBuilder: (context, doctorIndex) =>
-                                GestureDetector(
-                              onTap: () {
-                                EasyNavigation.push(
-                                    context: context,
-                                    page: DoctorDetailsScreen(
-                                      hospitalIndex: widget.hospitalIndex,
-                                      doctorIndex: doctorIndex,
-                                      hospitalAddress: hospital.address!,
-                                      doctorModel: hospitalProvider
-                                          .doctorsList[doctorIndex],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: ListView.separated(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              separatorBuilder: (context, index) =>
+                                  const Gap(10),
+                              itemCount: hospitalProvider.doctorsList.length > 5
+                                  ? 5
+                                  : hospitalProvider.doctorsList.length,
+                              itemBuilder: (context, doctorIndex) {
+                                log(hospitalProvider
+                                        .doctorsList[doctorIndex].id ??
+                                    'NO IDDD');
+                                return GestureDetector(
+                                  onTap: () {
+                                    EasyNavigation.push(
+                                        context: context,
+                                        page: DoctorDetailsScreen(
+                                          doctorModel: hospitalProvider
+                                              .doctorsList[doctorIndex],
+                                          hospital: hospital,
+                                        ),
+                                        type: PageTransitionType.rightToLeft,
+                                        duration: 250);
+                                  },
+                                  child: FadeInRight(
+                                    duration: const Duration(milliseconds: 500),
+                                    child: DoctorCard( doctor:hospitalProvider.doctorsList[doctorIndex]
                                     ),
-                                    type: PageTransitionType.rightToLeft,
-                                    duration: 250);
-                              },
-                              child: FadeInRight(
-                                duration: const Duration(milliseconds: 500),
-                                child: DoctorCard(
-                                  index: doctorIndex,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                                  ),
+                                );
+                              }),
+                        )
+                      ],
                     ),
                   ],
                 ),

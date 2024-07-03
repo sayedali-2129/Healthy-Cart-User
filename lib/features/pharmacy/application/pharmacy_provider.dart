@@ -327,6 +327,7 @@ class PharmacyProvider extends ChangeNotifier {
 
 // creating a cart or getting the product cart id and quantity from user document
   Future<void> createOrGetProductToUserCart() async {
+    fetchLoading = true;
     final result = await _iPharmacyFacade.createOrGetProductToUserCart(
       pharmacyId: pharmacyId!,
       userId: userId!,
@@ -334,6 +335,8 @@ class PharmacyProvider extends ChangeNotifier {
     result.fold(
       (failure) {
         CustomToast.errorToast(text: "Something went wrong");
+        fetchLoading = false;
+        notifyListeners();
       },
       (cartProductsData) {
         if (cartProductsData.isNotEmpty) {
@@ -345,6 +348,8 @@ class PharmacyProvider extends ChangeNotifier {
           );
           cartProductMap.addAll(cartProductsData);
         }
+        fetchLoading = false;
+        notifyListeners();
       },
     );
   }
@@ -471,7 +476,7 @@ class PharmacyProvider extends ChangeNotifier {
 /* -------------------------------------------------------------------------- */
 
 /* ------------------------------ RADIO BUTTON ------------------------------ */
-  String? selectedRadio;
+String? selectedRadio;
 
   setSelectedRadio(String? value) {
     selectedRadio = value;
@@ -561,6 +566,7 @@ class PharmacyProvider extends ChangeNotifier {
   }
 
   void clearProductAndUserInCheckOutDetails() {
+    log('Calledd clear selectedRadoi');
     userAddress = null;
     userDetails = null;
     selectedRadio = null;

@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
@@ -103,18 +104,19 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                 ),
           ),
             if (pharmacyProvider.fetchLoading == true &&
-              pharmacyProvider.productAllList.isEmpty)
+                  pharmacyProvider.productAllList.isEmpty)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
               ),
             )
        else if (pharmacyProvider.fetchLoading == false &&
-                  pharmacyProvider.productAllList.isEmpty)
+                  pharmacyProvider.productAllList.isEmpty&& pharmacyProvider.cartProductMap.isEmpty)
                 const ErrorOrNoDataPage(
                   text: 'No items added to this pharmacy!',
                 ),
           const RowProductCategoryWidget(),
+
           if (pharmacyProvider.bannerImageList.isNotEmpty)
             SliverToBoxAdapter(
               child: FadeInLeft(
@@ -145,8 +147,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
               ),
             ),
         
-           
-            SliverPadding(
+            pharmacyProvider.productAllList.isNotEmpty? SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverGrid.builder(
                 itemCount: pharmacyProvider.productAllList.length,
@@ -165,7 +166,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                   );
                 },
               ),
-            ),
+            ):const SliverGap(0),
 
           SliverToBoxAdapter(
               child: (pharmacyProvider.fetchLoading == true &&
@@ -176,7 +177,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                   : null),
         ],
       ),
-      floatingActionButton: Padding(
+      floatingActionButton: (pharmacyProvider.productAllList.isNotEmpty)?Padding(
         padding: const EdgeInsets.only(bottom: 40, right: 8),
         child: SizedBox(
           height: 56,
@@ -200,7 +201,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
             ),
           ),
         ),
-      ),
+      ):const  SizedBox()
     );
   }
 }

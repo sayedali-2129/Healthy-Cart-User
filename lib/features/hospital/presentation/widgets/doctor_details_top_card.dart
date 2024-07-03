@@ -24,10 +24,10 @@ class DoctorDetailsTopCard extends StatelessWidget {
           children: [
             Container(
               clipBehavior: Clip.antiAlias,
-              width: 111,
-              height: 122,
+              width: 120,
+              height: 120,
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-              child: CustomCachedNetworkImage(image: doctors.doctorImage!),
+              child: CustomCachedNetworkImage(image: doctors.doctorImage?? ''),
             ),
             Expanded(
               child: Padding(
@@ -37,44 +37,56 @@ class DoctorDetailsTopCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Dr ${doctors.doctorName ?? 'Doctor'}',
+                      doctors.doctorName ?? 'Unknown Name',
                       style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
                           color: BColors.doctorTextGreen),
                     ),
                     const Gap(5),
                     Text(
                       doctors.doctorQualification?.toUpperCase() ??
-                          'Qualification',
+                          '',
                       style: const TextStyle(
                           fontSize: 13,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: BColors.doctorTextGreen),
                     ),
                     const Gap(5),
                     Text(
-                      doctors.doctorSpecialization ?? 'Specialization',
+                      doctors.doctorSpecialization ?? '',
                       style: const TextStyle(
                           fontSize: 13,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: BColors.doctorTextGreen),
                     ),
                     const Gap(5),
                     isBooking == true
-                        ? Text(
-                            'Consulting Fee: ₹${doctors.doctorFee}',
-                            style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: BColors.doctorTextGreen),
-                          )
+                        ? Row(
+                          children: [
+                           const Text(
+                                'Consulting Fee : ',
+                                style:  TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.textBlack),
+                              ),
+                                Text(
+                                '${doctors.doctorFee}',
+                                style:  TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.green),
+                              ),
+                          ],
+                        )
                         : Text(
-                            '${doctors.doctorExperience?.toString() ?? 'Experience'} Year Experience',
+                        (doctors.doctorExperience == 1)?
+                            '${doctors.doctorExperience?.toString() ?? ''} Year Experience': '${doctors.doctorExperience?.toString() ?? ''} Years Experience' ,
                             style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                color: BColors.textGrey),
+                                color: BColors.textLightBlack),
                           ),
                     // Gap(5),
                     // Row(
@@ -111,7 +123,7 @@ class DoctorDetailsTopCard extends StatelessWidget {
                     'About Doctor',
                     style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         color: BColors.darkblue),
                   ),
                   const Gap(8),
@@ -119,8 +131,8 @@ class DoctorDetailsTopCard extends StatelessWidget {
                     doctors.doctorAbout ?? 'About',
                     style: const TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: BColors.textGrey),
+                        fontWeight: FontWeight.w500,
+                        color: BColors.textLightBlack),
                   )
                 ],
               )

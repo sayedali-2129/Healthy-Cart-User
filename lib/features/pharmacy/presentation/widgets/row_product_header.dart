@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -40,7 +41,7 @@ class RowProductCategoryWidget extends StatelessWidget {
                         ButtonWidget(
                           buttonColor: BColors.buttonGreen,
                           onPressed: () {
-                            pharmacyProvider. clearProductAndUserInCheckOutDetails();
+                            pharmacyProvider.clearProductAndUserInCheckOutDetails();
                             EasyNavigation.push(
                               context: context,
                               page: const PrescriptionScreen(),
@@ -89,41 +90,39 @@ class RowProductCategoryWidget extends StatelessWidget {
                     ),
                   )
                 : const SizedBox(),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: SizedBox(
-                height: 120,
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(0),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: pharmacyProvider.pharmacyCategoryList.length,
-                  itemBuilder: (context, index) {
-                    return FadeInRight(
-                      duration: const Duration(milliseconds: 500),
-                      child: VerticalImageText(
-                          rightPadding: 8,
-                          leftPadding: 8,
-                          onTap: () {
-                            pharmacyProvider.setCategoryId(
-                                selectedCategoryId: pharmacyProvider
-                                        .pharmacyCategoryList[index].id ??
-                                    '',
-                                selectedCategoryName: pharmacyProvider
-                                    .pharmacyCategoryList[index].category);
-                            EasyNavigation.push(
-                                context: context,
-                                page:
-                                    const PharmacyCategoryWiseProductScreen());
-                          },
-                          image: pharmacyProvider
-                              .pharmacyCategoryList[index].image,
-                          title: pharmacyProvider
-                              .pharmacyCategoryList[index].category),
-                    );
-                  },
-                ),
+          (pharmacyProvider.pharmacyCategoryList.isNotEmpty)?      
+            SizedBox(
+              height: 112,
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                scrollDirection: Axis.horizontal,
+                itemCount: pharmacyProvider.pharmacyCategoryList.length,
+                itemBuilder: (context, index) {
+                  return FadeInRight(
+                    duration: const Duration(milliseconds: 500),
+                    child: VerticalImageText(
+                        rightPadding: 4,
+                        leftPadding: 2,
+                        onTap: () {
+                          pharmacyProvider.setCategoryId(
+                              selectedCategoryId: pharmacyProvider
+                                      .pharmacyCategoryList[index].id ??
+                                  '',
+                              selectedCategoryName: pharmacyProvider
+                                  .pharmacyCategoryList[index].category);
+                          EasyNavigation.push(
+                              context: context,
+                              page:
+                                  const PharmacyCategoryWiseProductScreen());
+                        },
+                        image: pharmacyProvider
+                            .pharmacyCategoryList[index].image,
+                        title: pharmacyProvider
+                            .pharmacyCategoryList[index].category),
+                  );
+                },
               ),
-            )
+            ): const Gap(0)
           ],
         ),
       );

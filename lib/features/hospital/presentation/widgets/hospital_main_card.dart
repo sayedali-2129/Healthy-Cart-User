@@ -142,18 +142,26 @@ class HospitalMainCard extends StatelessWidget {
               ),
             ),
             if (hospitals.ishospitalON == false)
-              Container(
-                  height: 200,
-                  width: screenwidth,
-                  decoration: BoxDecoration(
-                      color: BColors.white.withOpacity(0.6),
-                      borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(16),
-                          topLeft: Radius.circular(16))),
-                  child: Image.asset(
-                    BImage.currentlyUnavailable,
-                    scale: 3,
-                  )),
+                         Container(
+                height: 160,
+                width: screenwidth,
+                decoration: BoxDecoration(
+                    color: BColors.white.withOpacity(0.6),
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(16),
+                        topLeft: Radius.circular(16))),
+                    child:Center(
+                      child: Image.asset(BImage.healthyCartLogoWithOpacity, scale: 3,),
+                    ) ,    
+            ),
+             if (hospitals.ishospitalON == false)
+            Positioned(
+              bottom: 40,
+              right: 8,
+              child:  Image.asset(
+                  BImage.currentlyUnavailable,
+                  scale: 5,
+                )),
           ],
         ),
       );

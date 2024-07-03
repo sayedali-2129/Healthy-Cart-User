@@ -152,15 +152,20 @@ class _ProfileSetupState extends State<ProfileSetup> {
                         onTap: () {
                           final locationProvider =
                               context.read<LocationProvider>();
-                          locationProvider.getLocationPermisson().then((value) {
-                            if (value == true) {
-                              EasyNavigation.push(
-                                  context: context,
-                                  page: const UserLocationSearchWidget(
-                                    isUserEditProfile: true,
-                                  ));
-                            }
-                          });
+                          LoadingLottie.showLoading(
+                              context: context, text: 'Please wait...');
+                          locationProvider.getLocationPermisson().then(
+                            (value) {
+                              if (value == true) {
+                                EasyNavigation.pop(context: context);
+                                EasyNavigation.push(
+                                    context: context,
+                                    page: const UserLocationSearchWidget(
+                                      isUserEditProfile: true,
+                                    ));
+                              }
+                            },
+                          );
                         },
                         child: Container(
                           color: Colors.white,

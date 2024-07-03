@@ -18,7 +18,7 @@ class LoadingLottie {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Lottie.asset(BLottie.mainLoadingLottie,
-                      fit: BoxFit.fill, height: 100, width: 100),
+                      fit: BoxFit.fill, height: 120, width: 120),
                   Text(
                     text,
                     style:

@@ -69,13 +69,24 @@ class LabListCardHome extends StatelessWidget {
                                       color: BColors.black),
                                 ),
                                 const Gap(5),
-                                Text(
-                                  labList.address ?? 'No Adress',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                             const Icon(
+                            Icons.location_on,
+                            size: 15,
+                          ),
+                                    Expanded(
+                                      child: Text(
+                                        labList.address ?? 'No Adress',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
                                 )
                               ],
                             ),
@@ -172,11 +183,17 @@ class LabListCardHome extends StatelessWidget {
                     color: BColors.white.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(16)),
                 child: Center(
-                    child: Image.asset(
+                      child: Image.asset(BImage.healthyCartLogoWithOpacity, scale: 3.5,),
+                    )
+              ),
+           if (labProvider.labList[index].isLabotaroryOn == false)
+            Positioned(
+              bottom: 8,
+              right: 8,
+              child:  Image.asset(
                   BImage.currentlyUnavailable,
-                  scale: 4,
+                  scale: 5,
                 )),
-              )
           ],
         ),
       );

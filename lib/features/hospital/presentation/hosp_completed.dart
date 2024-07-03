@@ -38,7 +38,7 @@ class _CompletedTabState extends State<HospCompleted> {
   Widget build(BuildContext context) {
     return Consumer<HospitalBookingProivder>(
         builder: (context, ordersProvider, _) {
-      final screenWidth = MediaQuery.of(context).size.width;
+    
 
       return CustomScrollView(
         controller: scrollController,

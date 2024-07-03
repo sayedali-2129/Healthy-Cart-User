@@ -86,37 +86,47 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
         ),
         SliverToBoxAdapter(
           child: InkWell(
-            onTap: () async {
+            onTap: () {
               if (locationProvider.selectedPlaceMark == null) {
                 CustomToast.errorToast(
                     text: "Couldn't able to get the location,please try again");
                 return;
               }
-              if(locationProvider.userId != null){
-                 LoadingLottie.showLoading(
-                  context: context, text: 'Saving Location...');
-               await  locationProvider.saveLocationLocally(locationProvider.selectedPlaceMark!);
-                locationProvider.setLocationByUser(
-                // ignore: use_build_context_synchronously
-                context: context,
-                isUserEditProfile: widget.isUserEditProfile ?? false,
-              );
-              }else{
-                await locationProvider.saveLocationLocally(locationProvider.selectedPlaceMark!);
-                EasyNavigation.pushAndRemoveUntil(
-                // ignore: use_build_context_synchronously
-                context: context, page: const SplashScreen());
+              if (locationProvider.userId != null) {
+                LoadingLottie.showLoading(
+                    context: context, text: 'Saving Location...');
+                locationProvider
+                    .saveLocationLocally(locationProvider.selectedPlaceMark!)
+                    .whenComplete(
+                  () {
+                    locationProvider.setLocationByUser(
+                      context: context,
+                      isUserEditProfile: widget.isUserEditProfile ?? false,
+                    );
+                  },
+                );
+              } else {
+                locationProvider
+                    .saveLocationLocally(locationProvider.selectedPlaceMark!)
+                    .whenComplete(
+                      () {
+                            EasyNavigation.pushAndRemoveUntil(
+                    
+                    context: context,
+                    page: const SplashScreen());
+                      },
+                    );
+            
               }
-              
             },
             child: Padding(
               padding:
                   const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 4),
               child: SizedBox(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -154,8 +164,8 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                                 (locationProvider.searchLoading)
                                     ? "Getting location, please wait..."
                                     : "Tap to continue with the location above.",
-                                style: const TextStyle(
-                                    color: BColors.darkblue,
+                                style: TextStyle(
+                                    color: BColors.green,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500),
                               ),

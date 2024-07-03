@@ -64,7 +64,8 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                   ),
                 ),
               ),
-              if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false)
+              if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery ==
+                  false)
                 SliverToBoxAdapter(
                   child: Padding(
                     padding:
@@ -238,10 +239,12 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                                         'Cart contains item out of stock, please remove the item.');
                                 return;
                               }
-                              if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false) {
+                              if (pharmacyProvider
+                                      .selectedpharmacyData?.isHomeDelivery ==
+                                  false) {
                                 pharmacyProvider.selectedRadio = 'Pharmacy';
                                 EasyNavigation.push(
-                                  type:  PageTransitionType.rightToLeft,
+                                  type: PageTransitionType.rightToLeft,
                                   context: context,
                                   page: const PharmacyCheckOutScreen(),
                                 );
@@ -251,8 +254,7 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                                   builder: (context) {
                                     return DeliveryTypeRadiopopup(
                                       onConfirm: () {
-                                        if (pharmacyProvider.selectedRadio ==
-                                            null) {
+                                        if (pharmacyProvider.selectedRadio == null) {
                                           CustomToast.errorToast(
                                               text:
                                                   'Select a delivery type to check out.');
@@ -261,7 +263,7 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                                         EasyNavigation.pop(context: context);
 
                                         EasyNavigation.push(
-                                          type:  PageTransitionType.rightToLeft,
+                                          type: PageTransitionType.rightToLeft,
                                           context: context,
                                           page: const PharmacyCheckOutScreen(),
                                         );

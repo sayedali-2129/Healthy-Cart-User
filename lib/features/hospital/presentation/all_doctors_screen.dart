@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,8 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicat
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/hospital_category_model.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/doctor_details_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/doctor_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -18,16 +19,13 @@ import 'package:provider/provider.dart';
 class AllDoctorsScreen extends StatefulWidget {
   const AllDoctorsScreen(
       {super.key,
-      required this.hospitalIndex,
-      required this.hospitalId,
       required this.isCategoryWise,
-      this.categoryId,
-      this.categoryIndex});
-  final int hospitalIndex;
-  final String hospitalId;
+      required this.hospitalDetails,  this.category});
+
+  final HospitalModel hospitalDetails;
+  final HospitalCategoryModel? category;
   final bool isCategoryWise;
-  final String? categoryId;
-  final int? categoryIndex;
+
   @override
   State<AllDoctorsScreen> createState() => _AllDoctorsScreenState();
 }
@@ -40,19 +38,21 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         if (widget.isCategoryWise == true) {
-          log(widget.categoryId ?? 'null');
+          log(widget.category?.id ?? 'null');
           hospitalProvider.getCategoryWiseDoctor(
-              hospitalId: widget.hospitalId, categoryId: widget.categoryId!);
+              hospitalId: widget.hospitalDetails.id ?? '',
+              categoryId: widget.category?.id ?? '');
         } else {
           context.read<HospitalProvider>()
             ..clearDoctorData()
-            ..getDoctors(hospitalId: widget.hospitalId);
+            ..getDoctors(hospitalId: widget.hospitalDetails.id ?? '');
         }
       },
     );
 
     hospitalProvider.doctorinit(
-        scrollController: scrollController, hospitalId: widget.hospitalId);
+        scrollController: scrollController,
+        hospitalId: widget.hospitalDetails.id ?? '');
 
     super.initState();
   }
@@ -72,7 +72,8 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
             if (didPop) {
               hospitalProvider.doctorSearchController.clear();
               hospitalProvider.clearDoctorData();
-              hospitalProvider.getDoctors(hospitalId: widget.hospitalId);
+              hospitalProvider.getDoctors(
+                  hospitalId: widget.hospitalDetails.id ?? '');
             }
           },
           child: CustomScrollView(
@@ -80,8 +81,7 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
             slivers: [
               SliverCustomAppbar(
                 title: widget.isCategoryWise == true
-                    ? hospitalProvider
-                        .hospitalCategoryList[widget.categoryIndex!].category!
+                    ? widget.category?.category ??''
                     : 'All Doctors',
                 onBackTap: () {
                   Navigator.pop(context);
@@ -100,7 +100,8 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
                                 const Duration(microseconds: 500),
                                 () {
                                   hospitalProvider.searchDoctor(
-                                      hospitalId: widget.hospitalId);
+                                      hospitalId:
+                                          widget.hospitalDetails.id ?? '');
                                 },
                               );
                             },
@@ -128,35 +129,32 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
               ),
               if (hospitalProvider.isLoading == true &&
                   hospitalProvider.doctorsList.isEmpty)
-                SliverFillRemaining(
+                const SliverFillRemaining(
                   child: Center(
                     child: LoadingIndicater(),
                   ),
                 )
               else if (hospitalProvider.doctorsList.isEmpty)
-                ErrorOrNoDataPage(text: 'No Doctors Found!')
+                const ErrorOrNoDataPage(text: 'No Doctors Found!')
               else
                 SliverPadding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   sliver: SliverList.separated(
-                    separatorBuilder: (context, doctorIndex) => Gap(10),
+                    separatorBuilder: (context, doctorIndex) => const Gap(10),
                     itemCount: hospitalProvider.doctorsList.length,
                     itemBuilder: (context, doctorIndex) => GestureDetector(
                       onTap: () {
                         EasyNavigation.push(
                             context: context,
                             page: DoctorDetailsScreen(
-                              hospitalIndex: widget.hospitalIndex,
-                              doctorIndex: doctorIndex,
-                              hospitalAddress: hospitalProvider
-                                  .hospitalList[widget.hospitalIndex].address!,
+                              hospital:widget.hospitalDetails ,
                               doctorModel:
                                   hospitalProvider.doctorsList[doctorIndex],
                             ),
                             type: PageTransitionType.rightToLeft,
                             duration: 250);
                       },
-                      child: FadeIn(child: DoctorCard(index: doctorIndex)),
+                      child: FadeIn(child: DoctorCard(doctor: hospitalProvider.doctorsList[doctorIndex])),
                     ),
                   ),
                 ),
