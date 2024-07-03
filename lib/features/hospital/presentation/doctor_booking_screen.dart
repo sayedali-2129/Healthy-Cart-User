@@ -6,6 +6,8 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/patient_details_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/doctor_details_top_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -14,15 +16,17 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class DoctorBookingScreen extends StatelessWidget {
-  const DoctorBookingScreen(
-      {super.key, required this.doctorIndex, required this.hospitalIndex});
-  final int doctorIndex;
-  final int hospitalIndex;
+  const DoctorBookingScreen({
+    super.key, required this.hospital, required this.doctorModel,
+
+  });
+  final HospitalModel hospital;
+  final DoctorModel doctorModel;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
-      final doctors = hospitalProvider.doctorsList[doctorIndex];
+      final doctorDetail = doctorModel;
       return PopScope(
         onPopInvoked: (didPop) {
           hospitalProvider.selectedSlot = null;
@@ -51,7 +55,7 @@ class DoctorBookingScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DoctorDetailsTopCard(doctors: doctors, isBooking: true),
+                  DoctorDetailsTopCard(doctors: doctorDetail, isBooking: true),
                   const Gap(20),
                   const Text("Choose Date",
                       style: TextStyle(
@@ -89,9 +93,9 @@ class DoctorBookingScreen extends StatelessWidget {
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
                             mainAxisExtent: 50),
-                    itemCount: doctors.doctorTimeList!.length,
+                    itemCount: doctorDetail.doctorTimeList!.length,
                     itemBuilder: (context, timeIndex) {
-                      String timeSlot = doctors.doctorTimeList![timeIndex];
+                      String timeSlot = doctorDetail.doctorTimeList![timeIndex];
                       bool isSelected =
                           hospitalProvider.selectedSlot == timeSlot;
                       return GestureDetector(
@@ -108,7 +112,7 @@ class DoctorBookingScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(16),
                             child: Center(
                               child: Text(
-                                doctors.doctorTimeList![timeIndex],
+                                doctorDetail.doctorTimeList![timeIndex],
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: isSelected
@@ -138,9 +142,9 @@ class DoctorBookingScreen extends StatelessWidget {
                 EasyNavigation.push(
                     context: context,
                     page: PatientDetailsScreen(
-                      selectedDoctor: doctors,
-                      doctorIndex: doctorIndex,
-                      hospitalIndex: hospitalIndex,
+                      selectedDoctor: doctorDetail,
+                      hospital: hospital,
+                      
                     ),
                     type: PageTransitionType.rightToLeft,
                     duration: 250);

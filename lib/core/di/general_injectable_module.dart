@@ -14,8 +14,7 @@ abstract class GeneralInjecatbleModule {
   @lazySingleton
   LocationService get locationServices => LocationService();
   @lazySingleton
-  PdfPickerService get pdfPickerService =>
-      PdfPickerService(sl<FirebaseStorage>());
+  PdfPickerService get pdfPickerService => PdfPickerService(sl<FirebaseStorage>());
   @lazySingleton
   UrlService get urlService => UrlService();
   @lazySingleton

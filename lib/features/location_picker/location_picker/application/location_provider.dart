@@ -32,8 +32,10 @@ class LocationProvider extends ChangeNotifier {
 
   Future<void> getCurrentLocationAddress() async {
     searchLoading = true;
+    locationGetLoading = true;
     final result = await iLocationFacade.getCurrentLocationAddress();
     result.fold((error) {
+       locationGetLoading = false; // this is the loading in the on the initial page
       log("ERROR IN CURRENT LOCATION:$error");
       //  CustomToast.errorToast(text: error.errMsg);
       searchLoading = false;
@@ -84,6 +86,7 @@ class LocationProvider extends ChangeNotifier {
             ? EasyNavigation.pop(context: context)
             : EasyNavigation.pushAndRemoveUntil(
                 context: context, page: const SplashScreen());
+          locationGetLoading = false; /// here the get location on the initial location pick ends        
         notifyListeners();
       });
     });

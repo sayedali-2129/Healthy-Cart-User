@@ -148,8 +148,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                               } else {
                                 pharmacyProvider.setPharmacyIdAndCategoryList(
                                     selectedpharmacyId: pharmacyProvider
-                                            .pharmacyList[index].id ??
-                                        '',
+                                            .pharmacyList[index].id ??'',
                                     categoryIdList: pharmacyProvider
                                             .pharmacyList[index]
                                             .selectedCategoryId ??

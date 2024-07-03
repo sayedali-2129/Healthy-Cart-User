@@ -37,9 +37,9 @@ class _HospitalMainState extends State<HospitalMain> {
     final hospitalProvider = context.read<HospitalProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        hospitalProvider
-          ..clearHospitalData()
-          ..getAllHospitals();
+        hospitalProvider. clearHospitalData();
+        hospitalProvider.fetchInitData(
+            context: context, scrollController: scrollController);
       },
     );
     hospitalProvider.hospitalInit(scrollController);
@@ -48,7 +48,7 @@ class _HospitalMainState extends State<HospitalMain> {
 
   @override
   Widget build(BuildContext context) {
-     final locationProvider = context.read<LocationProvider>();
+    final locationProvider = context.read<LocationProvider>();
     final screenwidth = MediaQuery.of(context).size.width;
     return Consumer3<HospitalProvider, AuthenticationProvider,
             HospitalBookingProivder>(
@@ -66,26 +66,28 @@ class _HospitalMainState extends State<HospitalMain> {
                   const Duration(milliseconds: 500),
                   () {
                     hospitalProvider.searchHospitals();
+              
                   },
                 );
-              }, locationText: "${locationProvider.localsavedplacemark?.localArea},${locationProvider.localsavedplacemark?.district},${locationProvider.localsavedplacemark?.state}", locationTap: () { 
-                   
-                  LoadingLottie.showLoading(
-                      context: context, text: 'Please wait...');
-                  locationProvider.getLocationPermisson().then(
-                    (value) {
-                      if (value == true) {
-                        EasyNavigation.pop(context: context);
-                        EasyNavigation.push(
-                            context: context,
-                            page: const UserLocationSearchWidget(
-                              isUserEditProfile: true,
-                            ));
-                      }
-                    },
-                  );
-                
-               },
+              },
+              locationText:
+                  "${locationProvider.localsavedplacemark?.localArea},${locationProvider.localsavedplacemark?.district},${locationProvider.localsavedplacemark?.state}",
+              locationTap: () {
+                LoadingLottie.showLoading(
+                    context: context, text: 'Please wait...');
+                locationProvider.getLocationPermisson().then(
+                  (value) {
+                    if (value == true) {
+                      EasyNavigation.pop(context: context);
+                      EasyNavigation.push(
+                          context: context,
+                          page: const UserLocationSearchWidget(
+                            isUserEditProfile: true,
+                          ));
+                    }
+                  },
+                );
+              },
             ),
             if (hospitalProvider.hospitalFetchLoading == true &&
                 hospitalProvider.hospitalList.isEmpty)
@@ -127,7 +129,6 @@ class _HospitalMainState extends State<HospitalMain> {
                                         .hospitalList[index]
                                         .selectedCategoryId ??
                                     [],
-                                hospitalIndex: index,
                               ));
                         }
                       },

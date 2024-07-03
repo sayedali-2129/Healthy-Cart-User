@@ -7,12 +7,16 @@ class BImage {
   static const String appBarImage = 'assets/images/appbar logo.png';
   static const String labSample = 'assets/images/lab sample.jpeg';
   static const String userAvatar = 'assets/images/user avatar.png';
-  static const String noDataPng = 'assets/images/no data.png';
+  static const String noDataPng = 'assets/images/not found.png';
   static const String prescriptionImage = 'assets/images/medical-report.png';
   static const String hospitalSample = 'assets/images/hospital-sample.png';
   static const String currentlyUnavailable =
-      'assets/images/currently-unavailable.png';
-
+      'assets/images/currentlyUnavailable.png';
+  static const String notFound = 'assets/images/not found.png';
+  static const String stillWorking = 'assets/images/still working.png';
+  static const String noInternet = 'assets/images/no_internet.png';
+  static const String healthyCartLogoWithOpacity =
+      'assets/images/healthycart_with_opacity.png';
 /* ---------------------------- DASHBOARD IMAGES ---------------------------- */
   static const String transparentLogo = 'assets/dashboard-images/hc-png.png';
   static const String getStarted =

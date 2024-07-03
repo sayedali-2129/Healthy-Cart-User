@@ -10,7 +10,7 @@ class EasyNavigation {
     PageTransitionType type = PageTransitionType.fade,
   }) async {
     await Navigator.push(
-      context,
+     navigatorKey.currentState?.context?? context,
       PageTransition(
         child: page,
         type: type,
@@ -27,7 +27,7 @@ class EasyNavigation {
     int? duration,
   }) async {
     await Navigator.pushReplacement(
-      context,
+      navigatorKey.currentState?.context??context,
       PageTransition(
         child: page,
         type: type,
@@ -50,7 +50,7 @@ class EasyNavigation {
     PageTransitionType type = PageTransitionType.fade,
   }) async {
     await Navigator.pushAndRemoveUntil(
-      context,
+      navigatorKey.currentState?.context?? context,
       PageTransition(
         child: page,
         type: type,

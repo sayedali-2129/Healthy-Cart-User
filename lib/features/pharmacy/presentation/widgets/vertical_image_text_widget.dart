@@ -44,13 +44,14 @@ class VerticalImageText extends StatelessWidget {
             ),
             const Gap(8),
             SizedBox(
-              width: 88,
+              width: 96,
               child: Text(
-                title,
+               title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
+                  
                     fontFamily: 'Montserrat',
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: BColors.black),
                 maxLines: 2,

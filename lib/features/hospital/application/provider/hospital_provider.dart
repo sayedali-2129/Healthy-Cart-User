@@ -11,8 +11,11 @@ import 'package:healthy_cart_user/features/hospital/domain/models/hospital_banne
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_category_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:injectable/injectable.dart';
+import 'package:provider/provider.dart';
 
 @injectable
 class HospitalProvider with ChangeNotifier {
@@ -182,10 +185,10 @@ class HospitalProvider with ChangeNotifier {
     );
   }
 
-  void getCategoryWiseDoctor(
-      {required String hospitalId, required String categoryId}) {
+  Future<void> getCategoryWiseDoctor(
+      {required String hospitalId, required String categoryId}) async {
     clearDoctorData();
-    getDoctors(hospitalId: hospitalId, categoryId: categoryId);
+    await getDoctors(hospitalId: hospitalId, categoryId: categoryId);
     notifyListeners();
   }
   /* -------------------------------------------------------------------------- */
@@ -266,5 +269,125 @@ class HospitalProvider with ChangeNotifier {
     selectedSlot = null;
     seletedBookingDate = null;
     notifyListeners();
+  }
+
+  DoctorModel? relatedSelectedDoctor;
+
+  void setRelatedSelectedDoctor({required String selectedDoctorId}) {
+    final result = doctorsList.firstWhere(
+      (element) {
+        return selectedDoctorId == element.id;
+      },
+    );
+    relatedSelectedDoctor = result;
+    log(relatedSelectedDoctor.toString());
+    notifyListeners();
+  }
+
+  /* ------------------------- Location based fetching ------------------------ */
+
+  // Future<void> getAllHospitalsByLocation() async {
+  //   hospitalFetchLoading = true;
+  //   notifyListeners();
+
+  //   final result = await iHospitalFacade.fetchProduct(userHospitalLocation);
+  //   result.fold((err) {
+  //     log('ERROR :: ${err.errMsg}');
+  //     CustomToast.errorToast(text: "Couldn't able to show hospitals near you.");
+  //   }, (success) {
+  //     hospitalList.addAll(success);
+  //   });
+  //   hospitalFetchLoading = false;
+  //   notifyListeners();
+  // }
+
+  bool isFirebaseDataLoding = true;
+  bool circularProgressLOading = true;
+  bool isFunctionProcessing = false;
+  PlaceMark? _chackPlaceMark;
+
+  Future<void> _fetchData(BuildContext context) async {
+    isFunctionProcessing = true;
+    if (hospitalList.isEmpty) {
+      isFirebaseDataLoding = true;
+    }
+
+    notifyListeners();
+  
+    final placeMark = context.read<LocationProvider>().localsavedplacemark!;
+    _chackPlaceMark = placeMark;
+    final result = await iHospitalFacade.fetchProduct(placeMark);
+
+    result.fold((l) {
+      l.maybeMap(
+        orElse: () {},
+
+        firebaseException: (value) =>
+  CustomToast.errorToast(text: l.errMsg,),
+        generalException: (value) {
+          circularProgressLOading = false;
+          notifyListeners();
+        },
+      );
+    }, (r) {
+      if (r.length < 10) {
+        circularProgressLOading = false;
+      }
+      hospitalList.addAll(r);
+    });
+    isFirebaseDataLoding = false;
+    isFunctionProcessing = false;
+    notifyListeners();
+  }
+
+  void fetchInitData({
+    required BuildContext context,
+    required ScrollController scrollController,
+  }) {
+    final placeMark = context.read<LocationProvider>().localsavedplacemark!;
+    if (hospitalList.isEmpty ||
+        _chackPlaceMark?.localArea != placeMark.localArea) {
+      fecthUserLocaltion(
+        context: context,
+        success: () {
+          clearData();
+          _fetchData(context);
+        },
+      );
+    }
+
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge &&
+          scrollController.position.pixels != 0 &&
+          isFunctionProcessing == false &&
+          circularProgressLOading == true) {
+        _fetchData(context);
+      }
+    });
+  }
+
+  void clearData() {
+    hospitalList.clear();
+    iHospitalFacade.clearData();
+    isFirebaseDataLoding = true;
+    circularProgressLOading = true;
+    isFunctionProcessing = false;
+    notifyListeners();
+  }
+
+  Future<void> fecthUserLocaltion({
+    required BuildContext context,
+    required void Function() success,
+  }) async {
+    final placeMark = context.read<LocationProvider>().localsavedplacemark;
+    final result = await iHospitalFacade.fecthUserLocaltion(placeMark!);
+    result.fold(
+      (l) {
+        CustomToast.errorToast(text: l.errMsg,);
+      },
+      (r) {
+        success.call();
+      },
+    );
   }
 }

@@ -163,7 +163,6 @@ class _HomeMainState extends State<HomeMain> {
                                       categoryIdList: hospitalProvier
                                           .hospitalList[index]
                                           .selectedCategoryId,
-                                      hospitalIndex: index,
                                     ));
                           }
                         },
@@ -214,7 +213,7 @@ class _HomeMainState extends State<HomeMain> {
                             if (authProvider.userFetchlDataFetched!.userName ==
                                 null) {
                               EasyNavigation.push(
-                                  context: context, page: ProfileSetup());
+                                  context: context, page: const ProfileSetup());
                             } else {
                               pharmacyProvider
                                           .pharmacyList[index].isPharmacyON ==

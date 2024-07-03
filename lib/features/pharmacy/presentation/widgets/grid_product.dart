@@ -32,23 +32,36 @@ class _PostCardVerticalState extends State<PostCardVertical> {
   Widget build(BuildContext context) {
     final pharmacyProvider = Provider.of<PharmacyProvider>(context);
     return Material(
+      color: Colors.white,
       borderRadius: BorderRadius.circular(12),
-      color: BColors.white,
-      elevation: 10,
+      elevation: 3,
       child: InkWell(
         onTap: () {
-          pharmacyProvider.selectedIndex = 0;// to make the  the first index as 0 of image url list
-          pharmacyProvider.setProductImageList(widget.productData.productImage ?? []);
+          pharmacyProvider.selectedIndex =
+              0; // to make the  the first index as 0 of image url list
+          pharmacyProvider
+              .setProductImageList(widget.productData.productImage ?? []);
           EasyNavigation.push(
-              context: context,
-              type: PageTransitionType.bottomToTop,
-              page: ProductDetailsScreen(
-                productData: widget.productData,
-                fromCart: true,
-              ),
-              );
+            context: context,
+            type: PageTransitionType.bottomToTop,
+            page: ProductDetailsScreen(
+              productData: widget.productData,
+              fromCart: true,
+            ),
+          );
+         
         },
         child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: BColors.lightGrey,
+                blurRadius: 2.0,
+              ),
+            ],
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
           padding: const EdgeInsets.only(top: 12, left: 6, right: 6, bottom: 8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,14 +75,13 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                     padding: const EdgeInsets.all(12),
                     backgroundColor: BColors.lightGrey,
                     child: RoundedImage(
-                      backgroundColor: BColors.white,   
-                      applyBorderRadius: true,
-                       child: CustomCachedNetworkImage(
-            image: widget.productData.productImage?.first ??
-                          BImage.healthycartText,
-            fit: BoxFit.fitHeight,
-          )
-                    ),
+                        backgroundColor: BColors.white,
+                        applyBorderRadius: true,
+                        child: CustomCachedNetworkImage(
+                          image: widget.productData.productImage?.first ??
+                              BImage.healthycartText,
+                          fit: BoxFit.fitHeight,
+                        )),
                   ),
                   Padding(
                     padding:
@@ -121,25 +133,25 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                             RichText(
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                text:  const TextSpan(children: [
-                                   TextSpan(
-                                    text: 'Category  :  ', // remeber to put space
+                                text: const TextSpan(children: [
+                                  TextSpan(
+                                    text:
+                                        'Category  :  ', // remeber to put space
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                         color: BColors.textLightBlack),
                                   ),
-                                  
                                 ])),
-                                Expanded(
-                                  child: RichText(
+                            Expanded(
+                              child: RichText(
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  text:  TextSpan(children: [
-                                    
+                                  text: TextSpan(children: [
                                     TextSpan(
-                                      text:  widget.productData.category ?? 'Unknown' ,
+                                      text: widget.productData.category ??
+                                          'Unknown',
                                       style: const TextStyle(
                                           fontFamily: 'Montserrat',
                                           fontSize: 13,
@@ -147,7 +159,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                           color: BColors.black),
                                     ),
                                   ])),
-                                ),
+                            ),
                           ],
                         ),
                         const Gap(8),
@@ -158,8 +170,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   RichText(
-                                    text: TextSpan(
-                                      children: [
+                                    text: TextSpan(children: [
                                       const TextSpan(
                                         text: 'Our price  :  ',
                                         style: TextStyle(
@@ -168,18 +179,18 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                             fontWeight: FontWeight.w600,
                                             color: BColors.textLightBlack),
                                       ),
-                                       TextSpan(
+                                      TextSpan(
                                           text: "₹ ",
                                           style: TextStyle(
                                             fontFamily: 'Montserrat',
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
-                                           color: BColors.green,
+                                            color: BColors.green,
                                           )),
                                       TextSpan(
                                         text:
                                             '${widget.productData.productMRPRate ?? 0}',
-                                        style:  TextStyle(
+                                        style: TextStyle(
                                             fontFamily: 'Montserrat',
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
@@ -259,44 +270,41 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                   ),
                                 ],
                               ),
-                       
-
                       ],
                     ),
                   ),
                 ],
               ),
-              
-                
-                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-                    if (widget.productData.productDiscountRate != null)
-                     Padding(
-                       padding: const EdgeInsets.only(bottom: 6, left: 12),
-                       child: PercentageShowContainerWidget(
-                         
-                         text: '${widget.productData.discountPercentage ?? 0}% off',
-                         textColor: BColors.textWhite,
-                         boxColor: BColors.offRed,
-                         width: 74,
-                         height: 32,
-                       ),
-                     ),
-                        if(widget.productData.inStock == false)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 6, right: 8, left: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                  radius: 5,
-                                  backgroundColor: BColors.red,
-                                ),
-                               const  Gap(4),
-                               const Text(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (widget.productData.productDiscountRate != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 6, left: 12),
+                      child: PercentageShowContainerWidget(
+                        text:
+                            '${widget.productData.discountPercentage ?? 0}% off',
+                        textColor: BColors.textWhite,
+                        boxColor: BColors.offRed,
+                        width: 74,
+                        height: 32,
+                      ),
+                    ),
+                  if (widget.productData.inStock == false)
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 6, right: 8, left: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 5,
+                            backgroundColor: BColors.red,
+                          ),
+                          const Gap(4),
+                          const Text(
                             'Out of stock',
-                            style:  TextStyle(
+                            style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -304,12 +312,12 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                             textAlign: TextAlign.left,
-                                                    ),
-                              ],
-                            ),
-                          ), 
-                   ],
-                 )
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              )
             ],
           ),
         ),
