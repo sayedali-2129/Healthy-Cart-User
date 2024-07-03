@@ -37,7 +37,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
           ..getpharmacyCategory()
           ..getBanner()
           ..getPharmacyAllProductDetails()
-          ..createOrGetProductToUserCart();   
+          ..createOrGetProductToUserCart();
       },
     );
     _scrollController.addListener(
@@ -71,50 +71,52 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
               EasyNavigation.pop(context: context);
             },
             child: PreferredSize(
-                preferredSize: const Size.fromHeight(64),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    onTap: () {
-                      EasyNavigation.push(
-                          context: context,
-                          page: const ProductSearchListScreen());
-                    },
-                    readOnly: true,
-                    showCursor: false,
-                    cursorColor: BColors.black,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
-                      hintText: 'Search products',
-                      hintStyle: const TextStyle(fontSize: 14),
-                      suffixIcon: const Icon(
-                        Icons.search_outlined,
-                        color: BColors.darkblue,
-                      ),
-                      filled: true,
-                      fillColor: BColors.white,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(26),
-                      ),
+              preferredSize: const Size.fromHeight(64),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onTap: () {
+                    EasyNavigation.push(
+                        context: context,
+                        page: const ProductSearchListScreen());
+                  },
+                  readOnly: true,
+                  showCursor: false,
+                  cursorColor: BColors.black,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
+                    hintText: 'Search products',
+                    hintStyle: const TextStyle(fontSize: 14),
+                    suffixIcon: const Icon(
+                      Icons.search_outlined,
+                      color: BColors.darkblue,
+                    ),
+                    filled: true,
+                    fillColor: BColors.white,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(26),
                     ),
                   ),
                 ),
-                ),
+              ),
+            ),
           ),
-            if (pharmacyProvider.fetchLoading == true &&
+          if (pharmacyProvider.fetchLoading == true &&
               pharmacyProvider.productAllList.isEmpty)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
               ),
             )
-       else if (pharmacyProvider.fetchLoading == false &&
-                  pharmacyProvider.productAllList.isEmpty)
-                const ErrorOrNoDataPage(
-                  text: 'No items added to this pharmacy!',
-                ),
+          else if (pharmacyProvider.fetchLoading == false &&
+              pharmacyProvider.productAllList.isEmpty)
+            const ErrorOrNoDataPage(
+              text: 'No items added to this pharmacy!',
+            ),
+          /* -------------------------------- CATEGORY -------------------------------- */
           const RowProductCategoryWidget(),
+          /* -------------------------------- AD BANNER ------------------------------- */
           if (pharmacyProvider.bannerImageList.isNotEmpty)
             SliverToBoxAdapter(
               child: FadeInLeft(
@@ -144,29 +146,26 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                 ),
               ),
             ),
-        
-           
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: SliverGrid.builder(
-                itemCount: pharmacyProvider.productAllList.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 6,
-                  mainAxisSpacing: 6,
-                  mainAxisExtent: 368,
-                ),
-                itemBuilder: (context, index) {
-                  return FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    child: PostCardVertical(
-                      productData: pharmacyProvider.productAllList[index],
-                    ),
-                  );
-                },
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverGrid.builder(
+              itemCount: pharmacyProvider.productAllList.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 6,
+                mainAxisExtent: 368,
               ),
+              itemBuilder: (context, index) {
+                return FadeInUp(
+                  duration: const Duration(milliseconds: 500),
+                  child: PostCardVertical(
+                    productData: pharmacyProvider.productAllList[index],
+                  ),
+                );
+              },
             ),
-
+          ),
           SliverToBoxAdapter(
               child: (pharmacyProvider.fetchLoading == true &&
                       pharmacyProvider.productAllList.isNotEmpty)

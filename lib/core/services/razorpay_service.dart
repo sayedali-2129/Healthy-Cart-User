@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:get/get.dart';
 import 'package:healthy_cart_user/core/custom/payment_status_screen.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -22,6 +23,7 @@ class RazorpayService {
       'key': key,
       'amount': amount,
       'name': orgName,
+      'retry': {'enabled': true, 'max_count': 1},
       'prefill': {'contact': userPhoneNumber, 'email': userEmail},
       // 'external': {
       //   'wallets': ['paytm']
@@ -38,43 +40,28 @@ class RazorpayService {
     }
   }
 
-  //   Razorpay razorpay = Razorpay();
-  //   var options = {
-  //     'key': 'rzp_live_ILgsfZCZoFIKMb',
-  //     'amount': 100,
-  //     'name': 'Acme Corp.',
-  //     'description': 'Fine T-Shirt',
-  //     'retry': {'enabled': true, 'max_count': 1},
-  //     'send_sms_hash': true,
-  //     'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
-  //     'external': {
-  //       'wallets': ['paytm']
-  //     }
-  //   };
-  //   razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
-  //   razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
-  //   razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
-  //   razorpay.open(options);
-  // }
-
   void handlePaymentSuccess(PaymentSuccessResponse response) {
     CustomToast.sucessToast(
         text: 'Payment Successful ORDER ID: ${response.paymentId!}');
-    EasyNavigation.push(
-        context: navigatorKey.currentContext!,
-        page: PaymentStatusScreen(
-          bookingId: response.orderId!,
-          isErrorPage: false,
-        ));
+    Get.to(
+        PaymentStatusScreen(isErrorPage: false, bookingId: response.orderId!));
+    // EasyNavigation.push(
+    //     context: navigatorKey.currentContext!,
+    //     page: PaymentStatusScreen(
+    //       bookingId: response.orderId!,
+    //       isErrorPage: false,
+    //     ));
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
-    EasyNavigation.pushReplacement(
-        context: navigatorKey.currentContext!,
-        page: PaymentStatusScreen(
-          reason: response.message!,
-          isErrorPage: true,
-        ));
+    // EasyNavigation.pushReplacement(
+    //     context: navigatorKey.currentContext!,
+    //     page: PaymentStatusScreen(
+    //       reason: response.message!,
+    //       isErrorPage: true,
+    //     ));
+    Get.to(
+        PaymentStatusScreen(isErrorPage: true, bookingId: response.message!));
     CustomToast.errorToast(
         text: 'Payment Failed ORDER ID: ${response.message!}');
   }

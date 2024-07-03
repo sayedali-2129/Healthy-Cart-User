@@ -314,4 +314,14 @@ class LabProvider with ChangeNotifier {
     prescriptionFile = null;
     notifyListeners();
   }
+
+  void clearCurrentDetails() {
+    selectedRadio = null;
+    selectedTestIds = [];
+    selectedTestType = false;
+    prescriptionFile = null;
+    prescriptionUrl = null;
+    cartItems = [];
+    notifyListeners();
+  }
 }
