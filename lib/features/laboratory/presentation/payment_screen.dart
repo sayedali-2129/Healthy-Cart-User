@@ -7,25 +7,44 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/launch_dialer.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
+import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/core/services/razorpay_service.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/payment_success_screen.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/payment_type_radio.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/selected_tests_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-class LabPaymentScreen extends StatelessWidget {
+class LabPaymentScreen extends StatefulWidget {
   const LabPaymentScreen({super.key, required this.index});
   final int index;
+
+  @override
+  State<LabPaymentScreen> createState() => _LabPaymentScreenState();
+}
+
+class _LabPaymentScreenState extends State<LabPaymentScreen> {
+  RazorpayService razorpayService = RazorpayService();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    razorpayService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<LabOrdersProvider>(
       builder: (context, ordersProvider, _) {
-        final orders = ordersProvider.approvedOrders[index];
+        final orders = ordersProvider.approvedOrders[widget.index];
         return PopScope(
           onPopInvoked: (didPop) {
             ordersProvider.paymentType = null;
@@ -100,7 +119,7 @@ class LabPaymentScreen extends StatelessWidget {
                         itemBuilder: (context, testIndex) {
                           return SelectedTestsCard(
                             testIndex: testIndex,
-                            index: index,
+                            index: widget.index,
                             testName: orders.selectedTest![testIndex].testName,
                             testPrice: orders.selectedTest![testIndex].testPrice
                                 .toString(),
@@ -115,7 +134,7 @@ class LabPaymentScreen extends StatelessWidget {
                     OrderSummaryCardPayment(
                         isTimeSlotShow: orders.timeSlot == null ? false : true,
                         timeSlot: orders.timeSlot ?? '',
-                        index: index,
+                        index: widget.index,
                         totalTestFee: orders.totalAmount!,
                         doorStepCharge: orders.doorStepCharge!,
                         totalAmount: orders.finalAmount!),
@@ -133,7 +152,7 @@ class LabPaymentScreen extends StatelessWidget {
                         onPressed: () {
                           showDialog(
                               context: context,
-                              builder: (context) => PaymentTypeRadio(
+                              builder: (context) => PaymentTypeRadioLab(
                                     onConfirm: () async {
                                       log(ordersProvider.paymentType ?? 'null');
                                       if (ordersProvider.paymentType == null) {
@@ -149,19 +168,20 @@ class LabPaymentScreen extends StatelessWidget {
                                             'Doorstep Payment') {
                                           await ordersProvider.acceptOrder(
                                               userName: ordersProvider
-                                                  .approvedOrders[index]
+                                                  .approvedOrders[widget.index]
                                                   .userDetails!
                                                   .userName!,
                                               fcmtoken: ordersProvider
-                                                  .approvedOrders[index]
+                                                  .approvedOrders[widget.index]
                                                   .labDetails!
                                                   .fcmToken!,
                                               orderId: orders.id!);
 
                                           await EasyNavigation.push(
                                               context: context,
-                                              page: PaymentSuccessScreen(
-                                                index: index,
+                                              page: OrderRequestSuccessScreen(
+                                                title:
+                                                    'Your Booking is Successfull!!',
                                               ),
                                               type: PageTransitionType
                                                   .rightToLeft,
@@ -169,7 +189,16 @@ class LabPaymentScreen extends StatelessWidget {
                                           ordersProvider.paymentType == null;
 
                                           Navigator.pop(context);
-                                        } else {}
+                                        } else {
+                                          razorpayService.openRazorpay(
+                                              amount: orders.finalAmount!,
+                                              key: 'rzp_test_ky3Rg3L4nSwYE1',
+                                              orgName: 'Healthy Cart',
+                                              userPhoneNumber:
+                                                  orders.userDetails!.phoneNo!,
+                                              userEmail: orders
+                                                  .userDetails!.userEmail!);
+                                        }
                                       }
 
                                       Navigator.pop(context);
