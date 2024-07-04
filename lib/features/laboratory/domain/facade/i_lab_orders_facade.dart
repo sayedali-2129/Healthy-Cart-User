@@ -14,7 +14,8 @@ abstract class ILabOrdersFacade {
       {required String userId});
   FutureResult<String> acceptOrder(
       {required String orderId, required String paymentMethod});
-  FutureResult<String> cancelOrder({required String orderId});
+  FutureResult<String> cancelOrder(
+      {required String orderId, String? rejectReason});
   FutureResult<List<LabOrdersModel>> getPendingOrders({required String userId});
   FutureResult<List<LabOrdersModel>> getCancelledOrders(
       {required String userId});

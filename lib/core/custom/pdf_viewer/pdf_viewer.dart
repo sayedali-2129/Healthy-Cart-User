@@ -57,7 +57,7 @@ class ViewPdfScreen extends StatelessWidget {
                                 name: pdfName,
                                 onProgress: (fileName, progress) {
                                   if (progress == 0) {
-                                    CustomToast.sucessToast(
+                                    CustomToast.infoToast(
                                         text: "Downloading...");
                                   }
                                 },

@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
 class SelectedTestsCard extends StatelessWidget {
   const SelectedTestsCard({
     super.key,
-    required this.index,
     this.image,
     this.testName,
     this.testPrice,
     this.offerPrice,
     required this.testIndex,
+    required this.labOrdersModel,
   });
 
   final String? image;
   final String? testName;
   final String? testPrice;
   final String? offerPrice;
-  final int index;
+  final LabOrdersModel labOrdersModel;
   final int testIndex;
 
   @override
@@ -59,7 +60,7 @@ class SelectedTestsCard extends StatelessWidget {
                           ),
                           const Gap(8),
                           Expanded(
-                            child: odrersProvider.approvedOrders[index]
+                            child: labOrdersModel
                                         .selectedTest![testIndex].offerPrice ==
                                     null
                                 ? RichText(

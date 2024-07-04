@@ -238,18 +238,18 @@ class LabProvider with ChangeNotifier {
 
   LabOrdersModel? labOrderModel;
   /* ----------------------------- ADD LAB ORDERS ----------------------------- */
-  Future<void> addLabOrders({
-    required String labId,
-    required String userId,
-    required UserModel userModel,
-    required LabModel labModel,
-    required UserAddressModel selectedAddress,
-    required String fcmtoken,
-    required String userName,
-  }) async {
+  Future<void> addLabOrders(
+      {required String labId,
+      required String userId,
+      required UserModel userModel,
+      required LabModel labModel,
+      required UserAddressModel? selectedAddress,
+      required String fcmtoken,
+      required String userName,
+      required List<LabTestModel> selectedTests}) async {
     labOrderModel = LabOrdersModel(
       labId: labId,
-      selectedTest: cartItems,
+      selectedTest: selectedTests,
       userId: userId,
       userDetails: userModel,
       userAddress: selectedAddress,

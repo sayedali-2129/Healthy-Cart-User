@@ -43,8 +43,8 @@ class RazorpayService {
   void handlePaymentSuccess(PaymentSuccessResponse response) {
     CustomToast.sucessToast(
         text: 'Payment Successful ORDER ID: ${response.paymentId!}');
-    Get.to(
-        PaymentStatusScreen(isErrorPage: false, bookingId: response.orderId!));
+    Get.to(() =>
+        PaymentStatusScreen(isErrorPage: false, bookingId: response.orderId));
     // EasyNavigation.push(
     //     context: navigatorKey.currentContext!,
     //     page: PaymentStatusScreen(
@@ -60,8 +60,9 @@ class RazorpayService {
     //       reason: response.message!,
     //       isErrorPage: true,
     //     ));
-    Get.to(
-        PaymentStatusScreen(isErrorPage: true, bookingId: response.message!));
+    Get.to(() =>
+        PaymentStatusScreen(isErrorPage: true, bookingId: response.message));
+
     CustomToast.errorToast(
         text: 'Payment Failed ORDER ID: ${response.message!}');
   }
