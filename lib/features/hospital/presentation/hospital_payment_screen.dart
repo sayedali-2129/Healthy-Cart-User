@@ -11,6 +11,7 @@ import 'package:healthy_cart_user/core/custom/order_request/order_request_succes
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/core/services/razorpay_service.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hosp_booking_provider.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/patient_details_card.dart';
@@ -19,9 +20,22 @@ import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-class HospitalPaymentScreen extends StatelessWidget {
+class HospitalPaymentScreen extends StatefulWidget {
   const HospitalPaymentScreen({super.key, required this.bookingModel});
   final HospitalBookingModel bookingModel;
+
+  @override
+  State<HospitalPaymentScreen> createState() => _HospitalPaymentScreenState();
+}
+
+class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
+  RazorpayService razorpayService = RazorpayService();
+
+  @override
+  void dispose() {
+    razorpayService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +79,8 @@ class HospitalPaymentScreen extends StatelessWidget {
                             decoration:
                                 const BoxDecoration(shape: BoxShape.circle),
                             child: CustomCachedNetworkImage(
-                                image: bookingModel.hospitalDetails!.image!)),
+                                image: widget
+                                    .bookingModel.hospitalDetails!.image!)),
                         const Gap(20),
                         Expanded(
                           child: Column(
@@ -73,12 +88,12 @@ class HospitalPaymentScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Dr. ${bookingModel.selectedDoctor!.doctorName} (${bookingModel.selectedDoctor!.doctorQualification})',
+                                'Dr. ${widget.bookingModel.selectedDoctor!.doctorName} (${widget.bookingModel.selectedDoctor!.doctorQualification})',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 15),
                               ),
                               Text(
-                                '(${bookingModel.selectedDoctor!.doctorSpecialization!})',
+                                '(${widget.bookingModel.selectedDoctor!.doctorSpecialization!})',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12,
@@ -104,7 +119,7 @@ class HospitalPaymentScreen extends StatelessWidget {
                                         children: [
                                           TextSpan(
                                               text:
-                                                  '${bookingModel.hospitalDetails!.hospitalName} ',
+                                                  '${widget.bookingModel.hospitalDetails!.hospitalName} ',
                                               style: const TextStyle(
                                                 color: BColors.black,
                                                 fontWeight: FontWeight.w600,
@@ -112,7 +127,7 @@ class HospitalPaymentScreen extends StatelessWidget {
                                                 fontFamily: 'Montserrat',
                                               )),
                                           TextSpan(
-                                            text: bookingModel
+                                            text: widget.bookingModel
                                                 .hospitalDetails!.address,
                                             style: const TextStyle(
                                                 fontFamily: 'Montserrat',
@@ -134,16 +149,16 @@ class HospitalPaymentScreen extends StatelessWidget {
                     const Gap(8),
                     const Divider(),
                     PatientDetailsContainer(
-                        patientName: bookingModel.patientName ?? '',
-                        patientGender: bookingModel.patientGender ?? '',
-                        patientNumber: bookingModel.patientNumber ?? '',
-                        patientAge: bookingModel.patientAge ?? '',
-                        patientPlace: bookingModel.patientPlace ?? ''),
+                        patientName: widget.bookingModel.patientName ?? '',
+                        patientGender: widget.bookingModel.patientGender ?? '',
+                        patientNumber: widget.bookingModel.patientNumber ?? '',
+                        patientAge: widget.bookingModel.patientAge ?? '',
+                        patientPlace: widget.bookingModel.patientPlace ?? ''),
                     const Gap(8),
                     OrderSummaryCardPaymentHosp(
                         timeSlot:
-                            '${bookingModel.newBookingDate ?? bookingModel.selectedDate} : ${bookingModel.newTimeSlot ?? bookingModel.selectedTimeSlot}',
-                        totalAmount: bookingModel.totalAmount!),
+                            '${widget.bookingModel.newBookingDate ?? widget.bookingModel.selectedDate} : ${widget.bookingModel.newTimeSlot ?? widget.bookingModel.selectedTimeSlot}',
+                        totalAmount: widget.bookingModel.totalAmount!),
                     const Gap(10),
                     ButtonWidget(
                         buttonHeight: 45,
@@ -176,11 +191,11 @@ class HospitalPaymentScreen extends StatelessWidget {
                                                 .hospitalpPaymentType ==
                                             'Cash in hand') {
                                           await ordersProvider.acceptOrder(
-                                              userName: bookingModel
+                                              userName: widget.bookingModel
                                                   .userDetails!.userName!,
-                                              fcmtoken: bookingModel
+                                              fcmtoken: widget.bookingModel
                                                   .hospitalDetails!.fcmToken!,
-                                              orderId: bookingModel.id!);
+                                              orderId: widget.bookingModel.id!);
 
                                           await EasyNavigation.push(
                                               context: context,
@@ -195,9 +210,27 @@ class HospitalPaymentScreen extends StatelessWidget {
 
                                           Navigator.pop(context);
                                         } else {
-                                          log(ordersProvider
-                                                  .hospitalpPaymentType ??
-                                              'null');
+                                          razorpayService.openRazorpay(
+                                            amount: widget
+                                                .bookingModel.totalAmount!,
+                                            key: 'rzp_test_ky3Rg3L4nSwYE1',
+                                            orgName: 'Healthy Cart',
+                                            userPhoneNumber: widget.bookingModel
+                                                .userDetails!.phoneNo!,
+                                            userEmail: widget.bookingModel
+                                                .userDetails!.userEmail!,
+                                            onSuccess: (paymentId) async {
+                                              await ordersProvider.acceptOrder(
+                                                  userName: widget.bookingModel
+                                                      .userDetails!.userName!,
+                                                  fcmtoken: widget
+                                                      .bookingModel
+                                                      .hospitalDetails!
+                                                      .fcmToken!,
+                                                  orderId:
+                                                      widget.bookingModel.id!);
+                                            },
+                                          );
                                         }
                                       }
 
@@ -209,8 +242,8 @@ class HospitalPaymentScreen extends StatelessWidget {
                     ButtonWidget(
                         onPressed: () async {
                           await LaunchDialer.lauchDialer(
-                              phoneNumber:
-                                  bookingModel.hospitalDetails!.phoneNo!);
+                              phoneNumber: widget
+                                  .bookingModel.hospitalDetails!.phoneNo!);
                         },
                         buttonHeight: 42,
                         buttonWidth: 170,

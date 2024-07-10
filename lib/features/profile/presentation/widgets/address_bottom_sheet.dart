@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/custom_textfields/textfield_widget.dart';
@@ -110,6 +111,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet> {
                         const Gap(8),
                         TextfieldWidget(
                           enableHeading: true,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp('[0-9]'))
+                          ],
                           fieldHeading: 'Phone Number*',
                           hintText: 'Phone Number',
                           maxLendth: 10,
@@ -117,9 +121,9 @@ class _AddressBottomSheetState extends State<AddressBottomSheet> {
                           controller: addressProvider.phoneController,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter phone number';
-                            } else if (value.length < 10) {
-                              return 'Please enter valid phone number';
+                              return 'Enter Phone Number';
+                            } else if (value.length != 10) {
+                              return 'Enter valid phone number';
                             } else {
                               return null;
                             }
@@ -157,6 +161,10 @@ class _AddressBottomSheetState extends State<AddressBottomSheet> {
                                   width: 160,
                                   child: TextfieldWidget(
                                     maxLendth: 6,
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp('[0-9]'))
+                                    ],
                                     keyboardType: TextInputType.number,
                                     enableHeading: false,
                                     hintText: 'Enter pincode',

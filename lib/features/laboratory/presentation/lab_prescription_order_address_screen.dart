@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -37,6 +39,7 @@ class _LabPrescriptionOrderAddressScreenState
       if (labProvider.selectedRadio == 'Home') {
         addressProvider.getUserAddress(userId: widget.userId ?? '');
       }
+      log(addressProvider.selectedAddress.toString());
     });
     super.initState();
   }
@@ -101,51 +104,48 @@ class _LabPrescriptionOrderAddressScreenState
             CustomToast.errorToast(text: 'Please add a prescription.');
             return;
           }
+
           ConfirmAlertBoxWidget.showAlertConfirmBox(
               context: context,
-              confirmButtonTap: () {
-                ConfirmAlertBoxWidget.showAlertConfirmBox(
-                    context: context,
-                    titleText: 'Confirm Order',
-                    subText:
-                        'This will send your order to the laboratory and check the availability of the test. Are you sure you want to proceed?',
-                    confirmButtonTap: () async {
-                      LoadingLottie.showLoading(
-                          context: context, text: 'Please wait...');
-
-                      if (labProvider.prescriptionFile != null) {
-                        await labProvider.uploadPrescription();
-                      }
-                      await labProvider.addLabOrders(
-                          selectedTests: [],
-                          labModel: widget.labModel,
-                          labId: widget.labModel.id!,
-                          userId: authProvider.userFetchlDataFetched!.id!,
-                          userModel: authProvider.userFetchlDataFetched!,
-                          selectedAddress: addressProvider.selectedAddress,
-                          fcmtoken: widget.labModel.fcmToken!,
-                          userName:
-                              authProvider.userFetchlDataFetched!.userName!);
-
-                      labProvider.selectedRadio = null;
-                      addressProvider.selectedAddress = null;
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OrderRequestSuccessScreen(
-                            title:
-                                'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
-                          ),
-                        ),
-                        (route) => false,
-                      );
-                      labProvider.clearCurrentDetails();
-                      addressProvider.selectedAddress = null;
-                    });
-              },
               titleText: 'Confirm Order',
               subText:
-                  "Tap on 'YES' to check the prescription of  items in your cart by the pharmacy. Are you sure you want to proceed ?");
+                  'This will send your order to the laboratory and check the availability of the test. Are you sure you want to proceed?',
+              confirmButtonTap: () async {
+                LoadingLottie.showLoading(
+                    context: context, text: 'Please wait...');
+
+                if (labProvider.prescriptionFile != null) {
+                  await labProvider.uploadPrescription();
+                }
+                await labProvider
+                    .addLabOrders(
+                        prescriptionOnly: true,
+                        selectedTests: [],
+                        labModel: widget.labModel,
+                        labId: widget.labModel.id!,
+                        userId: authProvider.userFetchlDataFetched!.id!,
+                        userModel: authProvider.userFetchlDataFetched!,
+                        selectedAddress: addressProvider.selectedAddress,
+                        fcmtoken: widget.labModel.fcmToken!,
+                        userName: authProvider.userFetchlDataFetched!.userName!)
+                    .whenComplete(
+                  () {
+                    labProvider.clearCurrentDetails();
+                    addressProvider.selectedAddress == null;
+                  },
+                );
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const OrderRequestSuccessScreen(
+                      title:
+                          'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
+                    ),
+                  ),
+                  (route) => false,
+                );
+              });
         },
         child: Container(
           height: 60,

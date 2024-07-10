@@ -152,6 +152,7 @@ class LabPrescriptionPage extends StatelessWidget {
                                                         .uploadPrescription();
                                                   }
                                                   await labProvider.addLabOrders(
+                                                      prescriptionOnly: true,
                                                       selectedTests: [],
                                                       labModel: labModel,
                                                       labId: labModel.id!,

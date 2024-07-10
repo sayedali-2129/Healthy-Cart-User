@@ -206,16 +206,30 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                           Navigator.pop(context);
                                         } else {
                                           razorpayService.openRazorpay(
-                                              amount: widget
-                                                  .labOrdersModel.finalAmount!,
-                                              key: 'rzp_test_ky3Rg3L4nSwYE1',
-                                              orgName: 'Healthy Cart',
-                                              userPhoneNumber: widget
-                                                  .labOrdersModel
-                                                  .userDetails!
-                                                  .phoneNo!,
-                                              userEmail: widget.labOrdersModel
-                                                  .userDetails!.userEmail!);
+                                            amount: widget
+                                                .labOrdersModel.finalAmount!,
+                                            key: 'rzp_test_ky3Rg3L4nSwYE1',
+                                            orgName: 'Healthy Cart',
+                                            userPhoneNumber: widget
+                                                .labOrdersModel
+                                                .userDetails!
+                                                .phoneNo!,
+                                            userEmail: widget.labOrdersModel
+                                                .userDetails!.userEmail!,
+                                            onSuccess: (paymentId) async {
+                                              await ordersProvider.acceptOrder(
+                                                  userName: widget
+                                                      .labOrdersModel
+                                                      .userDetails!
+                                                      .userName!,
+                                                  fcmtoken: widget
+                                                      .labOrdersModel
+                                                      .labDetails!
+                                                      .fcmToken!,
+                                                  orderId: widget
+                                                      .labOrdersModel.id!);
+                                            },
+                                          );
                                         }
                                       }
 

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:healthy_cart_user/core/custom/payment_status_screen.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/general/typdef.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/main.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -10,13 +11,13 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 class RazorpayService {
   final _razorpay = Razorpay();
 
-  void openRazorpay({
-    required amount,
-    required key,
-    required orgName,
-    required userPhoneNumber,
-    required userEmail,
-  }) {
+  void openRazorpay(
+      {required amount,
+      required key,
+      required orgName,
+      required userPhoneNumber,
+      required userEmail,
+      required PaymentSuccessCallback onSuccess}) {
     amount = amount * 100;
 
     var options = {
@@ -30,7 +31,8 @@ class RazorpayService {
       // }
     };
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+        (response) => handlePaymentSuccess(response, onSuccess));
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
     try {
       log('$options');
@@ -40,26 +42,16 @@ class RazorpayService {
     }
   }
 
-  void handlePaymentSuccess(PaymentSuccessResponse response) {
+  void handlePaymentSuccess(
+      PaymentSuccessResponse response, PaymentSuccessCallback onSuccess) {
     CustomToast.sucessToast(
         text: 'Payment Successful ORDER ID: ${response.paymentId!}');
+    onSuccess(response.paymentId!);
     Get.to(() =>
-        PaymentStatusScreen(isErrorPage: false, bookingId: response.orderId));
-    // EasyNavigation.push(
-    //     context: navigatorKey.currentContext!,
-    //     page: PaymentStatusScreen(
-    //       bookingId: response.orderId!,
-    //       isErrorPage: false,
-    //     ));
+        PaymentStatusScreen(isErrorPage: false, bookingId: response.paymentId));
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
-    // EasyNavigation.pushReplacement(
-    //     context: navigatorKey.currentContext!,
-    //     page: PaymentStatusScreen(
-    //       reason: response.message!,
-    //       isErrorPage: true,
-    //     ));
     Get.to(() =>
         PaymentStatusScreen(isErrorPage: true, bookingId: response.message));
 
