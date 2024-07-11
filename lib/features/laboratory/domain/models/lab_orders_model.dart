@@ -29,33 +29,36 @@ class LabOrdersModel {
   String? prescription;
   bool? isUserAccepted;
   String? resultUrl;
+  bool? isRejectedByUser;
+  bool? prescriptionOnly;
 
-  LabOrdersModel({
-    this.id,
-    this.labId,
-    this.userId,
-    this.name,
-    this.testMode,
-    this.orderAt,
-    this.userAddress,
-    this.userDetails,
-    this.totalAmount,
-    this.orderStatus,
-    this.paymentStatus,
-    this.paymentMethod,
-    this.selectedTest,
-    this.doorStepCharge,
-    this.finalAmount,
-    this.rejectReason,
-    this.acceptedAt,
-    this.rejectedAt,
-    this.timeSlot,
-    this.completedAt,
-    this.labDetails,
-    this.prescription,
-    this.isUserAccepted,
-    this.resultUrl,
-  });
+  LabOrdersModel(
+      {this.id,
+      this.labId,
+      this.userId,
+      this.name,
+      this.testMode,
+      this.orderAt,
+      this.userAddress,
+      this.userDetails,
+      this.totalAmount,
+      this.orderStatus,
+      this.paymentStatus,
+      this.paymentMethod,
+      this.selectedTest,
+      this.doorStepCharge,
+      this.finalAmount,
+      this.rejectReason,
+      this.acceptedAt,
+      this.rejectedAt,
+      this.timeSlot,
+      this.completedAt,
+      this.labDetails,
+      this.prescription,
+      this.isUserAccepted,
+      this.resultUrl,
+      this.isRejectedByUser,
+      this.prescriptionOnly});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -83,6 +86,8 @@ class LabOrdersModel {
       'prescription': prescription,
       'isUserAccepted': isUserAccepted,
       'resultUrl': resultUrl,
+      'isRejectedByUser': isRejectedByUser,
+      'prescriptionOnly': prescriptionOnly,
     };
   }
 
@@ -136,6 +141,12 @@ class LabOrdersModel {
       resultUrl: map['resultUrl'] != null ? map['resultUrl'] as String : null,
       isUserAccepted:
           map['isUserAccepted'] != null ? map['isUserAccepted'] as bool : null,
+      isRejectedByUser: map['isRejectedByUser'] != null
+          ? map['isRejectedByUser'] as bool
+          : null,
+      prescriptionOnly: map['prescriptionOnly'] != null
+          ? map['prescriptionOnly'] as bool
+          : null,
     );
   }
 
@@ -163,6 +174,8 @@ class LabOrdersModel {
     LabModel? labDetails,
     String? prescription,
     bool? isUserAccepted,
+    bool? isRejectedByUser,
+    bool? prescriptionOnly,
     String? resultUrl,
   }) {
     return LabOrdersModel(
@@ -190,6 +203,8 @@ class LabOrdersModel {
       prescription: prescription ?? this.prescription,
       isUserAccepted: isUserAccepted ?? this.isUserAccepted,
       resultUrl: resultUrl ?? this.resultUrl,
+      isRejectedByUser: isRejectedByUser ?? this.isRejectedByUser,
+      prescriptionOnly: prescriptionOnly ?? this.prescriptionOnly,
     );
   }
 }

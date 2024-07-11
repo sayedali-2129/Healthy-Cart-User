@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -18,6 +19,8 @@ class LabOrdersProvider with ChangeNotifier {
   List<LabOrdersModel> pendingOrders = [];
   List<LabOrdersModel> cancelledOrders = [];
   List<LabOrdersModel> completedOrders = [];
+
+  TextEditingController rejectionReasonController = TextEditingController();
 
   String? paymentType;
 
@@ -100,7 +103,8 @@ class LabOrdersProvider with ChangeNotifier {
       int? index,
       required String fcmtoken,
       required userName}) async {
-    final result = await iLabOrdersFacade.cancelOrder(orderId: orderId);
+    final result = await iLabOrdersFacade.cancelOrder(
+        orderId: orderId, rejectReason: rejectionReasonController.text);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to cancel booking');
       log(err.errMsg);

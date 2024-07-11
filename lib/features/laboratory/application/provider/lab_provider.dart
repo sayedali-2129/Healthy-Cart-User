@@ -346,31 +346,32 @@ class LabProvider with ChangeNotifier {
 
   LabOrdersModel? labOrderModel;
   /* ----------------------------- ADD LAB ORDERS ----------------------------- */
-  Future<void> addLabOrders({
-    required String labId,
-    required String userId,
-    required UserModel userModel,
-    required LabModel labModel,
-    required UserAddressModel selectedAddress,
-    required String fcmtoken,
-    required String userName,
-  }) async {
+  Future<void> addLabOrders(
+      {required String labId,
+      required String userId,
+      required UserModel userModel,
+      required LabModel labModel,
+      required UserAddressModel? selectedAddress,
+      required String fcmtoken,
+      required String userName,
+      required bool prescriptionOnly,
+      required List<LabTestModel> selectedTests}) async {
     labOrderModel = LabOrdersModel(
-      labId: labId,
-      selectedTest: cartItems,
-      userId: userId,
-      userDetails: userModel,
-      userAddress: selectedAddress,
-      orderAt: Timestamp.now(),
-      totalAmount: claculateTotalAmount(),
-      orderStatus: 0,
-      paymentStatus: 0,
-      testMode: selectedRadio,
-      finalAmount: 0,
-      doorStepCharge: 0,
-      labDetails: labModel,
-      prescription: prescriptionUrl,
-    );
+        labId: labId,
+        selectedTest: selectedTests,
+        userId: userId,
+        userDetails: userModel,
+        userAddress: selectedAddress,
+        orderAt: Timestamp.now(),
+        totalAmount: claculateTotalAmount(),
+        orderStatus: 0,
+        paymentStatus: 0,
+        testMode: selectedRadio,
+        finalAmount: 0,
+        doorStepCharge: 0,
+        labDetails: labModel,
+        prescription: prescriptionUrl,
+        prescriptionOnly: prescriptionOnly);
 
     final result =
         await iLabOrdersFacade.createLabOrder(labOrdersModel: labOrderModel!);

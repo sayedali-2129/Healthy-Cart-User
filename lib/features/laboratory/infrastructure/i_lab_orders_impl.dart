@@ -197,12 +197,18 @@ class ILabOrdersImpl implements ILabOrdersFacade {
 
 /* -------------------------- CANCEL ORDER BY USER -------------------------- */
   @override
-  FutureResult<String> cancelOrder({required String orderId}) async {
+  FutureResult<String> cancelOrder(
+      {required String orderId, String? rejectReason}) async {
     try {
       await _firestore
           .collection(FirebaseCollections.labOrdersCollection)
           .doc(orderId)
-          .update({'orderStatus': 3, 'rejectedAt': Timestamp.now()});
+          .update({
+        'orderStatus': 3,
+        'rejectedAt': Timestamp.now(),
+        'isRejectedByUser': true,
+        'rejectReason': rejectReason
+      });
       return right('Booking Cancelled Successfully');
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));

@@ -346,6 +346,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         await labProvider.uploadPrescription();
                       }
                       await labProvider.addLabOrders(
+                          prescriptionOnly: false,
+                          selectedTests: labProvider.cartItems,
                           labModel: labProvider.labList[widget.index],
                           labId: labProvider.labList[widget.index].id!,
                           userId: widget.userId,

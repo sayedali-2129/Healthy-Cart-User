@@ -1,8 +1,8 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/core/services/send_fcm_message.dart';
@@ -101,7 +101,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
     }
   }
 
-   String? selectedPaymentRadio;
+  String? selectedPaymentRadio;
 
   void setSelectedRadio(String? value) {
     selectedPaymentRadio = value;
@@ -203,12 +203,12 @@ class PharmacyOrderProvider extends ChangeNotifier {
     required PharmacyOrderModel productData,
     required BuildContext context,
   }) async {
-     log('Data payment $selectedPaymentRadio');
+    log('Data payment $selectedPaymentRadio');
     final data = productData.copyWith(
       isUserAccepted: true,
       paymentType: selectedPaymentRadio,
-      paymentStatus:(selectedPaymentRadio== 'COD')? 0: 1,
-      isPaymentRecieved: (selectedPaymentRadio== 'COD')? false : true,
+      paymentStatus: (selectedPaymentRadio == 'COD') ? 0 : 1,
+      isPaymentRecieved: (selectedPaymentRadio == 'COD') ? false : true,
     );
     final result = await _iPharmacyOrderFacade.updateOrderCompleteDetails(
       orderId: productData.id ?? '',
@@ -217,23 +217,17 @@ class PharmacyOrderProvider extends ChangeNotifier {
     result.fold(
       (failure) {
         CustomToast.errorToast(text: failure.errMsg);
-         EasyNavigation.pop(context: context);
+        EasyNavigation.pop(context: context);
         notifyListeners();
       },
       (orderProduct) {
-        EasyNavigation.pop(context: context);
-        EasyNavigation.push(
-            context: context,
-            page: const OrderRequestSuccessScreen(
-              title: 'Your order has been sucessfully placed.',
-            ));
         log('FCM ::::: ${orderProduct.pharmacyDetails?.fcmToken}');
         sendFcmMessage(
             token: orderProduct.pharmacyDetails?.fcmToken ?? '',
             body:
                 '${orderProduct.userDetails?.userName ?? 'Customer'} has accepted and made payment of order with order ID - ${orderProduct.id}',
             title: 'New Order Placed!!!');
-        CustomToast.sucessToast(text: "Sucessfully placed.");
+
         notifyListeners();
       },
     );

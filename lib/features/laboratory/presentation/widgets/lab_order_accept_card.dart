@@ -184,7 +184,7 @@ class AcceptCard extends StatelessWidget {
                                     type: PageTransitionType.fade,
                                     duration: 200,
                                     page: LabPaymentScreen(
-                                      index: index,
+                                      labOrdersModel: orders,
                                     ));
                               },
                             ),

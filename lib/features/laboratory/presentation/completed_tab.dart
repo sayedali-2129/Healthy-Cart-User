@@ -5,7 +5,7 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicat
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/completed_card.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/widgets/lab_order_completed_card.dart';
 import 'package:provider/provider.dart';
 
 class LabCompleted extends StatefulWidget {
@@ -59,9 +59,8 @@ class _CompletedTabState extends State<LabCompleted> {
                 itemCount: ordersProvider.completedOrders.length,
                 itemBuilder: (context, index) {
                   return FadeIn(
-                    child: CompletedCard(
-                      screenWidth: screenWidth,
-                      index: index,
+                    child: LabOrderCompletedCard(
+                      completedOrderData: ordersProvider.completedOrders[index],
                     ),
                   );
                 },

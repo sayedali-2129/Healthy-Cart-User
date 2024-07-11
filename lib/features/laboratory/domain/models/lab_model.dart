@@ -40,7 +40,6 @@ class LabModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'placemark': placemark,
       'phoneNo': phoneNo,
       'laboratoryName': laboratoryName,
       'address': address,

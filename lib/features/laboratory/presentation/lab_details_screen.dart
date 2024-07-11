@@ -167,7 +167,9 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                       addressProvider.selectedAddress = null;
                                       EasyNavigation.push(
                                         context: context,
-                                        page: const LabPrescriptionPage(),
+                                        page: LabPrescriptionPage(
+                                          labModel: labList,
+                                        ),
                                         duration: 250,
                                         type: PageTransitionType.rightToLeft,
                                       );

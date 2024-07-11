@@ -5,7 +5,7 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicat
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/pending_card.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/widgets/lab_order_pending_card.dart';
 import 'package:provider/provider.dart';
 
 class LabPendingTab extends StatefulWidget {
@@ -54,7 +54,7 @@ class _PendingTabState extends State<LabPendingTab> {
                 itemBuilder: (context, index) {
                   return FadeIn(
                     child: PendingCard(
-                      screenWidth: screenWidth,
+                      pendingorderData: ordersProvider.pendingOrders[index],
                       index: index,
                     ),
                   );

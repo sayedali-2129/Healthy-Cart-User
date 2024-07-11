@@ -3,8 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/pending_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_pending_card.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +22,7 @@ class _PendingTabState extends State<PharmacyPendingTab> {
       (_) {
         final orderProvider = context.read<PharmacyOrderProvider>();
         orderProvider.setUserId(authProvider.userFetchlDataFetched?.id ?? '');
-       orderProvider.getPendingOrders( );
+        orderProvider.getPendingOrders();
       },
     );
     super.initState();
@@ -34,7 +32,6 @@ class _PendingTabState extends State<PharmacyPendingTab> {
   Widget build(BuildContext context) {
     return Consumer<PharmacyOrderProvider>(
         builder: (context, ordersProvider, _) {
-
       return CustomScrollView(
         slivers: [
           if (ordersProvider.fetchLoading == true &&

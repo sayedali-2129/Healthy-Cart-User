@@ -12,6 +12,7 @@ import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/core/services/razorpay_service.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/payment_type_radio.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/selected_tests_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -19,8 +20,11 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class LabPaymentScreen extends StatefulWidget {
-  const LabPaymentScreen({super.key, required this.index});
-  final int index;
+  const LabPaymentScreen({
+    super.key,
+    required this.labOrdersModel,
+  });
+  final LabOrdersModel labOrdersModel;
 
   @override
   State<LabPaymentScreen> createState() => _LabPaymentScreenState();
@@ -44,7 +48,6 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
   Widget build(BuildContext context) {
     return Consumer<LabOrdersProvider>(
       builder: (context, ordersProvider, _) {
-        final orders = ordersProvider.approvedOrders[widget.index];
         return PopScope(
           onPopInvoked: (didPop) {
             ordersProvider.paymentType = null;
@@ -87,7 +90,7 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                               children: [
                                 TextSpan(
                                   text:
-                                      '${orders.labDetails!.laboratoryName}- ',
+                                      '${widget.labOrdersModel.labDetails!.laboratoryName}- ',
                                   style: const TextStyle(
                                     color: BColors.black,
                                     fontWeight: FontWeight.w600,
@@ -95,7 +98,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: '${orders.labDetails!.address}',
+                                  text:
+                                      '${widget.labOrdersModel.labDetails!.address}',
                                   style: const TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontSize: 12,
@@ -111,34 +115,48 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                     const Gap(8),
                     const Divider(),
                     const Gap(8),
+                    /* -------------------------------- TEST LIST ------------------------------- */
                     ListView.separated(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         separatorBuilder: (context, index) => const Gap(8),
-                        itemCount: orders.selectedTest!.length,
+                        itemCount: widget.labOrdersModel.selectedTest!.length,
                         itemBuilder: (context, testIndex) {
                           return SelectedTestsCard(
                             testIndex: testIndex,
-                            index: widget.index,
-                            testName: orders.selectedTest![testIndex].testName,
-                            testPrice: orders.selectedTest![testIndex].testPrice
+                            labOrdersModel: widget.labOrdersModel,
+                            testName: widget.labOrdersModel
+                                .selectedTest![testIndex].testName,
+                            testPrice: widget.labOrdersModel
+                                .selectedTest![testIndex].testPrice
                                 .toString(),
-                            offerPrice: orders
+                            offerPrice: widget.labOrdersModel
                                 .selectedTest![testIndex].offerPrice
                                 .toString(),
-                            image:
-                                orders.selectedTest![testIndex].testImage ?? '',
+                            image: widget.labOrdersModel
+                                    .selectedTest![testIndex].testImage ??
+                                '',
                           );
                         }),
                     const Gap(10),
+                    /* --------------------------------- ADDRESS -------------------------------- */
+                    AddressCardPaymentScreen(
+                        labOrdersModel: widget.labOrdersModel),
+                    Gap(10),
+
+                    /* ------------------------------ ORDER SUMMARY ----------------------------- */
                     OrderSummaryCardPayment(
-                        isTimeSlotShow: orders.timeSlot == null ? false : true,
-                        timeSlot: orders.timeSlot ?? '',
-                        index: widget.index,
-                        totalTestFee: orders.totalAmount!,
-                        doorStepCharge: orders.doorStepCharge!,
-                        totalAmount: orders.finalAmount!),
+                        labOrdersModel: widget.labOrdersModel,
+                        isTimeSlotShow: widget.labOrdersModel.timeSlot == null
+                            ? false
+                            : true,
+                        timeSlot: widget.labOrdersModel.timeSlot ?? '',
+                        totalTestFee: widget.labOrdersModel.totalAmount!,
+                        doorStepCharge: widget.labOrdersModel.doorStepCharge!,
+                        totalAmount: widget.labOrdersModel.finalAmount!),
                     const Gap(10),
+
+                    /* ----------------------------- PAYMENT BUTTON ----------------------------- */
                     ButtonWidget(
                         buttonHeight: 45,
                         buttonWidth: double.infinity,
@@ -167,15 +185,12 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                         if (ordersProvider.paymentType ==
                                             'Doorstep Payment') {
                                           await ordersProvider.acceptOrder(
-                                              userName: ordersProvider
-                                                  .approvedOrders[widget.index]
-                                                  .userDetails!
-                                                  .userName!,
-                                              fcmtoken: ordersProvider
-                                                  .approvedOrders[widget.index]
-                                                  .labDetails!
-                                                  .fcmToken!,
-                                              orderId: orders.id!);
+                                              userName: widget.labOrdersModel
+                                                  .userDetails!.userName!,
+                                              fcmtoken: widget.labOrdersModel
+                                                  .labDetails!.fcmToken!,
+                                              orderId:
+                                                  widget.labOrdersModel.id!);
 
                                           await EasyNavigation.push(
                                               context: context,
@@ -191,13 +206,30 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                           Navigator.pop(context);
                                         } else {
                                           razorpayService.openRazorpay(
-                                              amount: orders.finalAmount!,
-                                              key: 'rzp_test_ky3Rg3L4nSwYE1',
-                                              orgName: 'Healthy Cart',
-                                              userPhoneNumber:
-                                                  orders.userDetails!.phoneNo!,
-                                              userEmail: orders
-                                                  .userDetails!.userEmail!);
+                                            amount: widget
+                                                .labOrdersModel.finalAmount!,
+                                            key: 'rzp_test_ky3Rg3L4nSwYE1',
+                                            orgName: 'Healthy Cart',
+                                            userPhoneNumber: widget
+                                                .labOrdersModel
+                                                .userDetails!
+                                                .phoneNo!,
+                                            userEmail: widget.labOrdersModel
+                                                .userDetails!.userEmail!,
+                                            onSuccess: (paymentId) async {
+                                              await ordersProvider.acceptOrder(
+                                                  userName: widget
+                                                      .labOrdersModel
+                                                      .userDetails!
+                                                      .userName!,
+                                                  fcmtoken: widget
+                                                      .labOrdersModel
+                                                      .labDetails!
+                                                      .fcmToken!,
+                                                  orderId: widget
+                                                      .labOrdersModel.id!);
+                                            },
+                                          );
                                         }
                                       }
 
@@ -209,7 +241,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                     ButtonWidget(
                         onPressed: () async {
                           await LaunchDialer.lauchDialer(
-                              phoneNumber: orders.labDetails!.phoneNo!);
+                              phoneNumber:
+                                  widget.labOrdersModel.labDetails!.phoneNo!);
                         },
                         buttonHeight: 42,
                         buttonWidth: 140,
@@ -249,14 +282,14 @@ class OrderSummaryCardPayment extends StatelessWidget {
     required this.totalTestFee,
     required this.doorStepCharge,
     required this.totalAmount,
-    required this.index,
     required this.isTimeSlotShow,
     required this.timeSlot,
+    required this.labOrdersModel,
   });
   final num totalTestFee;
   final num doorStepCharge;
   final num totalAmount;
-  final int index;
+  final LabOrdersModel labOrdersModel;
   final bool isTimeSlotShow;
   final String timeSlot;
 
@@ -296,20 +329,23 @@ class OrderSummaryCardPayment extends StatelessWidget {
             AmountRow(
               text: 'Total Test Fee',
               amountValue: '₹$totalTestFee',
+              fontSize: 14,
             ),
             const Gap(8),
             Consumer<LabOrdersProvider>(builder: (context, value, _) {
-              if (value.approvedOrders[index].testMode == 'Home') {
-                return (value.approvedOrders[index].doorStepCharge == 0 ||
-                        value.approvedOrders[index].doorStepCharge == null)
+              if (labOrdersModel.testMode == 'Home') {
+                return (labOrdersModel.doorStepCharge == 0 ||
+                        labOrdersModel.doorStepCharge == null)
                     ? AmountRow(
                         text: 'Door Step Charge',
                         amountValue: 'Free Service',
                         amountColor: BColors.green,
+                        fontSize: 14,
                       )
                     : AmountRow(
                         text: 'Door Step Charge',
                         amountValue: '₹$doorStepCharge',
+                        fontSize: 14,
                       );
               } else {
                 return const Gap(0);
@@ -323,7 +359,8 @@ class OrderSummaryCardPayment extends StatelessWidget {
               amountValue: '₹$totalAmount',
               amountColor: BColors.black.withOpacity(0.7),
               textColor: BColors.black.withOpacity(0.7),
-              fontSize: 18,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
             ),
           ],
         ),
@@ -339,12 +376,14 @@ class AmountRow extends StatelessWidget {
       required this.amountValue,
       this.textColor = BColors.black,
       this.amountColor = BColors.black,
-      this.fontSize = 15});
+      this.fontSize = 15,
+      this.fontWeight});
   final String text;
   final String amountValue;
   final Color? textColor;
   final Color? amountColor;
   final double? fontSize;
+  final FontWeight? fontWeight;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -353,16 +392,105 @@ class AmountRow extends StatelessWidget {
         Text(
           text,
           style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.w500,
-              color: textColor),
+            fontSize: fontSize,
+            color: textColor,
+            fontWeight: fontWeight ?? FontWeight.w500,
+          ),
         ),
         Text(
           amountValue,
           style: TextStyle(
               fontSize: fontSize,
-              fontWeight: FontWeight.w500,
+              fontWeight: fontWeight ?? FontWeight.w500,
               color: amountColor),
+        ),
+      ],
+    );
+  }
+}
+
+class AddressCardPaymentScreen extends StatelessWidget {
+  const AddressCardPaymentScreen({
+    super.key,
+    required this.labOrdersModel,
+  });
+  final LabOrdersModel labOrdersModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Selected Address :-',
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: BColors.black),
+            ),
+          ],
+        ),
+        Gap(5),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            labOrdersModel.userAddress!.name ?? 'User',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600),
+                          ),
+                          const Gap(8),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all()),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2),
+                              child: Center(
+                                child: Text(
+                                  labOrdersModel.userAddress!.addressType ??
+                                      'Home',
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Gap(5),
+                      Text(
+                        '${labOrdersModel.userAddress!.address ?? 'Address'} ${labOrdersModel.userAddress!.landmark ?? 'Address'} - ${labOrdersModel.userAddress!.pincode ?? 'Address'}',
+                        // overflow: TextOverflow.ellipsis,
+                        // maxLines: 3,
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w500),
+                      ),
+                      const Gap(5)
+                    ],
+                  ),
+                  Text(
+                    labOrdersModel.userAddress!.phoneNumber ?? '0000000000',
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );

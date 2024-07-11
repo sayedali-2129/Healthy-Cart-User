@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
+import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/core/services/razorpay_service.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
@@ -15,13 +17,27 @@ import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_tex
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
-class ApprovedOrderDetailsScreen extends StatelessWidget {
+class ApprovedOrderDetailsScreen extends StatefulWidget {
   const ApprovedOrderDetailsScreen({
     super.key,
     required this.orderData,
   });
 
   final PharmacyOrderModel orderData;
+
+  @override
+  State<ApprovedOrderDetailsScreen> createState() =>
+      _ApprovedOrderDetailsScreenState();
+}
+
+class _ApprovedOrderDetailsScreenState
+    extends State<ApprovedOrderDetailsScreen> {
+  RazorpayService razorpayService = RazorpayService();
+  @override
+  void dispose() {
+    razorpayService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +76,8 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                               const Gap(16),
                               GestureDetector(
                                 onTap: () async {
-                                  await Clipboard.setData(
-                                      ClipboardData(text: orderData.id ?? ''));
+                                  await Clipboard.setData(ClipboardData(
+                                      text: widget.orderData.id ?? ''));
                                   CustomToast.sucessToast(
                                       text: 'Order ID sucessfully copied.');
                                 },
@@ -73,7 +89,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                       color: BColors.darkblue),
                                   child: Center(
                                     child: Text(
-                                      '${orderData.id}',
+                                      '${widget.orderData.id}',
                                       style: const TextStyle(
                                           fontFamily: 'Montserrat',
                                           fontSize: 14,
@@ -93,22 +109,24 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return ProductDetailsWidget(
                                 index: index,
-                                productData: orderData.productDetails?[index] ??
-                                    ProductAndQuantityModel(),
+                                productData:
+                                    widget.orderData.productDetails?[index] ??
+                                        ProductAndQuantityModel(),
                               );
                             },
                             separatorBuilder: (context, index) {
                               return const Divider();
                             },
-                            itemCount: orderData.productDetails?.length ?? 0,
+                            itemCount:
+                                widget.orderData.productDetails?.length ?? 0,
                           ),
                           const Divider(),
                           const Gap(12),
                           Column(
                             children: [
                               const Divider(),
-                              (orderData.addresss != null &&
-                                      orderData.deliveryType == orderProvider.homeDelivery)
+                              (widget.orderData.addresss != null &&
+                                      widget.orderData.deliveryType == "Home")
                                   ? Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -147,7 +165,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                         const Gap(8),
                                         Expanded(
                                           child: Text(
-                                            '${orderData.pharmacyDetails?.pharmacyName ?? 'Pharmacy'}-${orderData.pharmacyDetails?.pharmacyAddress ?? 'Pharmacy'}',
+                                            '${widget.orderData.pharmacyDetails?.pharmacyName ?? 'Pharmacy'}-${widget.orderData.pharmacyDetails?.pharmacyAddress ?? 'Pharmacy'}',
                                             maxLines: 3,
                                             overflow: TextOverflow.ellipsis,
                                             style: Theme.of(context)
@@ -164,8 +182,8 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                               const Divider(),
                             ],
                           ),
-                          (orderData.rejectReason == null ||
-                                  orderData.rejectReason!.isEmpty)
+                          (widget.orderData.rejectReason == null ||
+                                  widget.orderData.rejectReason!.isEmpty)
                               ? const SizedBox()
                               : Container(
                                   width: double.infinity,
@@ -190,7 +208,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                       ),
                                       const Gap(6),
                                       Text(
-                                        orderData.rejectReason ??
+                                        widget.orderData.rejectReason ??
                                             'Unknown reason',
                                         style: Theme.of(context)
                                             .textTheme
@@ -216,7 +234,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                     RowTextContainerWidget(
                                       text1: 'Delivery :',
                                       text2: orderProvider.deliveryType(
-                                          orderData.deliveryType ?? ''),
+                                          widget.orderData.deliveryType ?? ''),
                                       text1Color: BColors.textLightBlack,
                                       fontSizeText1: 12,
                                       fontSizeText2: 12,
@@ -224,8 +242,9 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                       text2Color: BColors.black,
                                     ),
                                     const Gap(8),
-                                    (orderData.prescription != null &&
-                                            orderData.prescription!.isNotEmpty)
+                                    (widget.orderData.prescription != null &&
+                                            widget.orderData.prescription!
+                                                .isNotEmpty)
                                         ? const Column(
                                             children: [
                                               RowTextContainerWidget(
@@ -245,7 +264,8 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                         : const SizedBox(),
                                     RowTextContainerWidget(
                                       text1: 'Total Items Rate :',
-                                      text2: "₹ ${orderData.totalAmount}",
+                                      text2:
+                                          "₹ ${widget.orderData.totalAmount}",
                                       text1Color: BColors.textLightBlack,
                                       fontSizeText1: 12,
                                       fontSizeText2: 12,
@@ -256,33 +276,36 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                     RowTextContainerWidget(
                                       text1: 'Total Discount :',
                                       text2:
-                                          "- ₹ ${orderData.totalAmount ?? 0 - orderData.totalDiscountAmount!}",
+                                          "- ₹ ${widget.orderData.totalAmount ?? 0 - widget.orderData.totalDiscountAmount!}",
                                       text1Color: BColors.textLightBlack,
                                       fontSizeText1: 12,
                                       fontSizeText2: 12,
                                       fontWeightText1: FontWeight.w600,
                                       text2Color: BColors.green,
                                     ),
-                                    if (orderData.deliveryType == orderProvider.homeDelivery)
+                                    if (widget.orderData.deliveryType == 'Home')
                                       Column(
                                         children: [
                                           const Gap(8),
                                           RowTextContainerWidget(
                                             text1: 'Delivery Charge :',
-                                            text2: (orderData.deliveryCharge ==
+                                            text2: (widget.orderData
+                                                            .deliveryCharge ==
                                                         0 ||
-                                                    orderData.deliveryCharge ==
+                                                    widget.orderData
+                                                            .deliveryCharge ==
                                                         null)
                                                 ? "Free Delivery"
-                                                : '₹ ${orderData.deliveryCharge}',
+                                                : '₹ ${widget.orderData.deliveryCharge}',
                                             text1Color: BColors.textLightBlack,
                                             fontSizeText1: 12,
                                             fontSizeText2: 12,
                                             fontWeightText1: FontWeight.w600,
-                                            text2Color: (orderData
+                                            text2Color: (widget.orderData
                                                             .deliveryCharge ==
                                                         0 ||
-                                                    orderData.deliveryCharge ==
+                                                    widget.orderData
+                                                            .deliveryCharge ==
                                                         null)
                                                 ? BColors.green
                                                 : BColors.textBlack,
@@ -293,7 +316,8 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                     const Divider(),
                                     RowTextContainerWidget(
                                       text1: 'Amount To Be Paid : ',
-                                      text2: "₹ ${orderData.finalAmount}",
+                                      text2:
+                                          "₹ ${widget.orderData.finalAmount}",
                                       text1Color: BColors.textBlack,
                                       fontSizeText1: 13,
                                       fontSizeText2: 14,
@@ -307,12 +331,12 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                             ],
                           ),
                           const Divider(),
-                          if (orderData.prescription != null &&
-                              orderData.prescription!.isNotEmpty)
+                          if (widget.orderData.prescription != null &&
+                              widget.orderData.prescription!.isNotEmpty)
                             const Gap(12),
                           PharmacyDetailsContainer(
-                            pharmacyData:
-                                orderData.pharmacyDetails ?? PharmacyModel(),
+                            pharmacyData: widget.orderData.pharmacyDetails ??
+                                PharmacyModel(),
                           ),
                           const Gap(12),
                           const Divider(),
@@ -374,9 +398,35 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
               CustomToast.errorToast(text: 'Please select a payment method.');
               return;
             }
-            LoadingLottie.showLoading(context: context, text: 'Please wait...');
-            orderProvider.updateOrderCompleteDetails(
-                productData: orderData, context: context);
+            if (orderProvider.selectedPaymentRadio == 'Online') {
+              razorpayService.openRazorpay(
+                amount: widget.orderData.finalAmount!,
+                key: 'rzp_test_ky3Rg3L4nSwYE1',
+                orgName: 'Healthy Cart',
+                userPhoneNumber: widget.orderData.userDetails!.phoneNo!,
+                userEmail: widget.orderData.userDetails!.userEmail!,
+                onSuccess: (paymentId) async {
+                  await orderProvider.updateOrderCompleteDetails(
+                      productData: widget.orderData, context: context);
+                },
+              );
+            } else {
+              LoadingLottie.showLoading(
+                  context: context, text: 'Please wait...');
+              orderProvider
+                  .updateOrderCompleteDetails(
+                      productData: widget.orderData, context: context)
+                  .whenComplete(
+                () {
+                  EasyNavigation.pop(context: context);
+                  EasyNavigation.push(
+                      context: context,
+                      page: const OrderRequestSuccessScreen(
+                        title: 'Your order has been sucessfully placed.',
+                      ));
+                },
+              );
+            }
           },
           child: Container(
             height: 60,
