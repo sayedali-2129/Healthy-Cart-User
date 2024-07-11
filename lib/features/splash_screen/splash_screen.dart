@@ -1,12 +1,13 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
-import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
+import 'package:healthy_cart_user/core/custom/user_block_alert_dialogur.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location.dart';
 import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
@@ -35,12 +36,18 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
-        EasyNavigation.pushReplacement(
+        final authProvider = context.read<AuthenticationProvider>();
+        if (authProvider.userFetchlDataFetched?.isActive == false) {
+          UserBlockedAlertBox.userBlockedAlert();
+        } else {
+          log(authProvider.userFetchlDataFetched?.id ?? 'null');
+          EasyNavigation.pushReplacement(
             context: context,
             page: const LocationPage(
               locationSetter: 0,
             ),
-            );
+          );
+        }
       },
     );
 

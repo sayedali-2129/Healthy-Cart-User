@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
@@ -74,12 +73,13 @@ class _PharmacyMainState extends State<PharmacyMain> {
                       isUserEditProfile: false,
                       locationSetter: 3,
                       onSucess: () {
-                        pharmacyProvider.pharmacyFetchInitData( context: context);
+                        pharmacyProvider.pharmacyFetchInitData(
+                            context: context);
                       },
                     ));
               },
             ),
-                        SliverToBoxAdapter(
+            SliverToBoxAdapter(
                 child: (pharmacyProvider.pharmacyList.isNotEmpty &&
                         pharmacyProvider.checkNearestPharmacyLocation())
                     ? NoDataInSelectedLocation(
@@ -94,8 +94,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                 child: Center(child: LoadingIndicater()),
               )
             else if (pharmacyProvider.pharmacyList.isEmpty)
-              const ErrorOrNoDataPage(
-                text: 'No Pharmacies Found!',)
+              const ErrorOrNoDataPage(text: 'No Pharmacies Found!')
             else
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),

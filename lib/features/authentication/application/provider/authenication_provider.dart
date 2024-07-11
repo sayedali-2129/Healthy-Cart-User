@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/custom/user_block_alert_dialogur.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/otp_ui.dart';
@@ -28,17 +29,6 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void userStreamFetchData(
-      {required String userId, required BuildContext context}) {
-    iAuthFacade.userStreamFetchData(userId).listen((event) {
-      event.fold((failure) {}, (snapshot) {
-        userFetchlDataFetched = snapshot;
-        // isRequsetedPendingPage = snapshot.requested;
-        notifyListeners();
-      });
-    });
-  }
-
   bool userStreamFetchedData({required String userId}) {
     bool result = false;
     iAuthFacade.userStreamFetchData(userId).listen((event) {
@@ -48,6 +38,9 @@ class AuthenticationProvider extends ChangeNotifier {
         userFetchlDataFetched = snapshot;
         // isRequsetedPendingPage = snapshot.requested;
         result = true;
+        if (snapshot.isActive == false) {
+          UserBlockedAlertBox.userBlockedAlert();
+        }
         notifyListeners();
       });
     });
@@ -91,7 +84,7 @@ class AuthenticationProvider extends ChangeNotifier {
       }, (isVerified) {
         Navigator.pop(context);
         EasyNavigation.push(
-          type: PageTransitionType.rightToLeft,
+            type: PageTransitionType.rightToLeft,
             context: context,
             page: OTPScreen(
               verificationId: verificationId ?? 'No veriId',
@@ -122,6 +115,7 @@ class AuthenticationProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (sucess) {
       Navigator.pop(context);
+      userFetchlDataFetched = null;
       CustomToast.sucessToast(text: sucess);
       EasyNavigation.pushReplacement(
           context: context, page: const SplashScreen());
