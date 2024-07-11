@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
@@ -49,7 +48,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
   /* -------------------------------------------------------------------------- */
   /* ------------------------- APPROVED ORDER GET AND UPDATE ------------------------ */
   @override
-  Stream<Either<MainFailure, List<PharmacyOrderModel>>> pharmacyApprovedOrderData({
+  Stream<Either<MainFailure, List<PharmacyOrderModel>>> getPharmacyApprovedOrderData({
     required String userId,
   }) async* {
     final StreamController<Either<MainFailure, List<PharmacyOrderModel>>>
@@ -58,7 +57,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
     try {
       _streamSubscription = _firebaseFirestore
           .collection(FirebaseCollections.pharmacyOrder)
-          .orderBy('createdAt', descending: true)
+          .orderBy('acceptedAt', descending: true)
           .where(Filter.and(
             Filter('userId', isEqualTo: userId),
             Filter('orderStatus', isEqualTo: 1),
@@ -66,10 +65,8 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
           .snapshots()
           .listen(
         (docsList) {
-          final newOrderList = docsList.docs
-              .map((e) =>
-                  PharmacyOrderModel.fromMap(e.data()).copyWith(id: e.id))
-              .toList();
+          final newOrderList = docsList.docs.map((e) =>
+                  PharmacyOrderModel.fromMap(e.data()).copyWith(id: e.id)).toList();
           onProcessController.add(right(newOrderList));
         },
       );
@@ -118,7 +115,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
       if (noMoreData) return right([]);
       Query query = _firebaseFirestore
           .collection(FirebaseCollections.pharmacyOrder)
-          .orderBy('createdAt', descending: true)
+          .orderBy('completedAt', descending: true)
           .where(Filter.and(
             Filter('userId', isEqualTo: userId),
             Filter('orderStatus', isEqualTo: 2),
@@ -162,7 +159,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
       if (noMoreData) return right([]);
       Query query = _firebaseFirestore
           .collection(FirebaseCollections.pharmacyOrder)
-          .orderBy('createdAt', descending: true)
+          .orderBy('rejectedAt', descending: true)
           .where(Filter.and(
             Filter('userId', isEqualTo: userId),
             Filter('orderStatus', isEqualTo: 3),

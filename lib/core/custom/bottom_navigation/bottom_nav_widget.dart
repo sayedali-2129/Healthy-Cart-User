@@ -52,7 +52,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget>
 
   Future<void> navigateToLoginScreen() async {
     await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
     setState(() {
       _tabController.index = 0; // Return to the profile tab
     });
@@ -181,7 +181,7 @@ class _BottonNavTabState extends State<BottomNavigationWidget>
                       ),
                     ),
                     Tab(
-                      text: 'Medicine',
+                      text: 'Pharmacy',
                       icon: Padding(
                         padding: const EdgeInsets.only(top: 6),
                         child: _tabController.index == 3

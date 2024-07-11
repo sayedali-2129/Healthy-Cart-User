@@ -18,31 +18,33 @@ import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-class DoctorDetailsScreen extends StatefulWidget {
-  const DoctorDetailsScreen({
+class CategoryWiseDoctorDetailsScreen extends StatefulWidget {
+  const CategoryWiseDoctorDetailsScreen({
     super.key,
-    required this.hospital,
     required this.doctorModel,
   });
 
-  final HospitalModel hospital;
   final DoctorModel doctorModel;
 
   @override
-  State<DoctorDetailsScreen> createState() => _DoctorDetailsScreenState();
+  State<CategoryWiseDoctorDetailsScreen> createState() =>
+      _CategoryWiseDoctorDetailsScreenState();
 }
 
-class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
-          final scrollController = ScrollController();
+class _CategoryWiseDoctorDetailsScreenState
+    extends State<CategoryWiseDoctorDetailsScreen> {
+  final scrollController = ScrollController();
   @override
   void initState() {
     final hospitalProvider = context.read<HospitalProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        
+        hospitalProvider.getCategoryWiseHospital(
+            hospitalId: widget.doctorModel.hospitalId ?? '');
+
         hospitalProvider
             .getCategoryWiseDoctor(
-                hospitalId: widget.hospital.id ?? '',
+                hospitalId: widget.doctorModel.hospitalId ?? '',
                 categoryId: widget.doctorModel.categoryId ?? '')
             .whenComplete(
           () {
@@ -52,10 +54,10 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
         );
       },
     );
-        hospitalProvider.doctorinit(
+
+    hospitalProvider.doctorinit(
         scrollController: scrollController,
         hospitalId: widget.doctorModel.id ?? '');
- 
     super.initState();
   }
 
@@ -65,10 +67,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
         builder: (context, hospitalProvider, authProvider, _) {
       final doctor = hospitalProvider.relatedSelectedDoctor;
       return PopScope(
-        onPopInvoked: (didPop) {
-          hospitalProvider.clearDoctorData();
-          hospitalProvider.getDoctors(hospitalId: widget.hospital.id ?? '');
-        },
+        onPopInvoked: (didPop) {},
         child: Scaffold(
           body: CustomScrollView(
             controller: scrollController,
@@ -121,7 +120,9 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                           EasyNavigation.push(
                               context: context,
                               page: DoctorBookingScreen(
-                                hospital: widget.hospital,
+                                hospital: hospitalProvider
+                                        .selectedCategoryWiseHospital ??
+                                    HospitalModel(),
                                 doctorModel: doctor ?? DoctorModel(),
                               ),
                               type: PageTransitionType.rightToLeft,
@@ -153,7 +154,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
               (hospitalProvider.doctorsList.isEmpty)
                   ? const SliverFillRemaining(
                       child: Center(
-                      child: Text('No related doctors are currently available!'),
+                      child:
+                          Text('No related doctors are currently available!'),
                     ))
                   : SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -161,9 +163,10 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                         separatorBuilder: (context, index) => const Gap(5),
                         itemCount: hospitalProvider.doctorsList.length,
                         itemBuilder: (context, index) {
-                          final doctorRelated = hospitalProvider.doctorsList[index];
+                          final doctorRelated =
+                              hospitalProvider.doctorsList[index];
 
-                          if (doctor?.id == doctorRelated.id  ) {
+                          if (doctor?.id == doctorRelated.id) {
                             return const SizedBox.shrink();
                           } else {
                             return FadeIn(
@@ -171,26 +174,25 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                   onTap: () {
                                     EasyNavigation.pushReplacement(
                                       context: context,
-                                      page: DoctorDetailsScreen(
-                                          hospital: widget.hospital,
+                                      page: CategoryWiseDoctorDetailsScreen(
                                           doctorModel: hospitalProvider
                                               .doctorsList[index]),
                                     );
                                   },
                                   child: DoctorCard(
-                                    fromHomePage: false,
-                                    doctor: hospitalProvider.doctorsList[index]),
-                                  ),
+                                      fromHomePage: true,
+                                      doctor:
+                                          hospitalProvider.doctorsList[index])),
                             );
                           }
                         },
                       ),
                     ),
-                  SliverToBoxAdapter(
+              SliverToBoxAdapter(
                   child: (hospitalProvider.isLoading == true &&
                           hospitalProvider.doctorsList.isNotEmpty)
                       ? const Center(child: LoadingIndicater())
-                      :null),
+                      : null),
             ],
           ),
         ),

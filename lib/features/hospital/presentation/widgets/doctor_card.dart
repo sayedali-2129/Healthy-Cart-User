@@ -7,8 +7,9 @@ import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
 class DoctorCard extends StatelessWidget {
-  const DoctorCard({super.key, required this.doctor});
+  const DoctorCard({super.key, required this.doctor, required this.fromHomePage});
   final DoctorModel doctor;
+  final bool fromHomePage;
   @override
   Widget build(BuildContext context) {
     return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
@@ -36,8 +37,8 @@ class DoctorCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: CustomCachedNetworkImage(
-                      image: doctor.doctorImage ?? ''),
+                  child:
+                      CustomCachedNetworkImage(image: doctor.doctorImage ?? ''),
                 ),
                 const Gap(16),
                 Expanded(
@@ -56,8 +57,7 @@ class DoctorCard extends StatelessWidget {
                       const Gap(4),
                       ///////////////CATEGORY//////////////////
                       Text(
-                        doctor.doctorSpecialization ??
-                            "",
+                       (fromHomePage)? doctor.hospital ?? 'Unknown Hospital': doctor.doctorSpecialization ?? "",
                         style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,

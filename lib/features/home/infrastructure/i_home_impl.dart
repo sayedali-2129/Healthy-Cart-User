@@ -9,9 +9,9 @@ import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: IHomeFacade)
 class IHomeImpl implements IHomeFacade {
-  IHomeImpl(this._firestore);
+  IHomeImpl(this._firebaseFirestore);
 
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore _firebaseFirestore;
 
 /* ---------------------------- FETCH HOME BANNER --------------------------- */
   @override
@@ -19,7 +19,7 @@ class IHomeImpl implements IHomeFacade {
     List<HomeBannerModel> bannerList;
 
     try {
-      final result = await _firestore
+      final result = await _firebaseFirestore
           .collection(FirebaseCollections.homeBannerCollection)
           .orderBy('createdAt', descending: true)
           .get();
@@ -33,4 +33,5 @@ class IHomeImpl implements IHomeFacade {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
+  
 }

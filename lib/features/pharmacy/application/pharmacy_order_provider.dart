@@ -79,18 +79,22 @@ class PharmacyOrderProvider extends ChangeNotifier {
 
 /* -------------------------------------------------------------------------- */
 /* ------------------------------ DELIVERY  AND PAYMENT TYPE ----------------------------- */
+  final String homeDelivery = 'Home';
+  final String pharmacyPickup = 'Pharmacy'; // choose what kind delivery
   String deliveryType(String delivery) {
-    if (delivery == "Home") {
+    if (delivery == homeDelivery) {
       return 'Home Delivery';
     } else {
       return 'Pick-Up at pharmacy';
     }
   }
 
+  final String cashOnDelivery = "COD";
+  final String onlinePayment = 'Online';
   String paymentType(String paymentType) {
-    if (paymentType == "COD") {
+    if (paymentType == cashOnDelivery) {
       return 'Cash on delivery';
-    } else if (paymentType == "Online") {
+    } else if (paymentType == onlinePayment) {
       return 'Online';
     } else {
       return 'Pending';
@@ -128,7 +132,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
     fetchLoading = true;
     notifyListeners();
     _iPharmacyOrderFacade
-        .pharmacyApprovedOrderData(userId: userId ?? '')
+        .getPharmacyApprovedOrderData(userId: userId ?? '')
         .listen((event) {
       event.fold(
         (err) {

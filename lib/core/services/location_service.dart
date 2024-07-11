@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
@@ -11,19 +10,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocationService {
   static const String _locationKey = 'user-location';
 
-  Future<void> getPermission() async {
+  Future<bool> getLocationPermission() async {
     bool isServiceEnabled;
     LocationPermission permission;
-    isServiceEnabled = await Geolocator.isLocationServiceEnabled();
-    await Geolocator.requestPermission();
+
     // Check if location services are enabled
     isServiceEnabled = await Geolocator.isLocationServiceEnabled();
-    await Geolocator.requestPermission();
-
     if (!isServiceEnabled) {
+      log('called;;;');
       // Request to enable location services
       permission = await Geolocator.requestPermission();
     }
+
     // Check the current permission status
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied ||
@@ -35,16 +33,17 @@ class LocationService {
       if (permission != LocationPermission.always &&
           permission != LocationPermission.whileInUse) {
         // Handle permission denied scenario
-        // return const MainFailure.locationError(errMsg: 'Denied location permission');
-        return;
+        return false;
       }
     }
 
-    // If permission is granted temporarily, handle fetching location accordingly
+    // If permission is granted, handle fetching location accordingly
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
-      await getCurrentLocationAddress();
+      return true;
     }
+
+    return true;
   }
 
   Future<Either<MainFailure, Placemark>> getCurrentLocationAddress() async {

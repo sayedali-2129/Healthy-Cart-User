@@ -124,6 +124,7 @@ class LabPrescriptionPage extends StatelessWidget {
                                       .userFetchlDataFetched!.userName ==
                                   null) {
                                 EasyNavigation.push(
+                                   type: PageTransitionType.rightToLeft,
                                     context: context,
                                     page: const ProfileSetup());
                                 CustomToast.infoToast(
@@ -151,43 +152,48 @@ class LabPrescriptionPage extends StatelessWidget {
                                                     await labProvider
                                                         .uploadPrescription();
                                                   }
-                                                  await labProvider.addLabOrders(
-                                                      prescriptionOnly: true,
-                                                      selectedTests: [],
-                                                      labModel: labModel,
-                                                      labId: labModel.id!,
-                                                      userId: authProvider
-                                                          .userFetchlDataFetched!
-                                                          .id!,
-                                                      userModel: authProvider
-                                                          .userFetchlDataFetched!,
-                                                      selectedAddress:
-                                                          addressProvider
-                                                                  .selectedAddress ??
-                                                              UserAddressModel(),
-                                                      fcmtoken:
-                                                          labModel.fcmToken!,
-                                                      userName: authProvider
-                                                          .userFetchlDataFetched!
-                                                          .userName!);
-
-                                                  labProvider.selectedRadio =
+                                                  await labProvider
+                                                      .addLabOrders(
+                                                          prescriptionOnly:
+                                                              true,
+                                                          selectedTests: [],
+                                                          labModel: labModel,
+                                                          labId: labModel.id!,
+                                                          userId: authProvider
+                                                              .userFetchlDataFetched!
+                                                              .id!,
+                                                          userModel: authProvider
+                                                              .userFetchlDataFetched!,
+                                                          selectedAddress:
+                                                              addressProvider
+                                                                      .selectedAddress ??
+                                                                  UserAddressModel(),
+                                                          fcmtoken: labModel
+                                                              .fcmToken!,
+                                                          userName: authProvider
+                                                              .userFetchlDataFetched!
+                                                              .userName!)
+                                                      .whenComplete(
+                                                        () {
+                                                           labProvider.selectedRadio =
                                                       null;
                                                   addressProvider
                                                       .selectedAddress = null;
-                                                  Navigator.pushAndRemoveUntil(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const OrderRequestSuccessScreen(
+                                                  EasyNavigation.pushAndRemoveUntil(
+                                                    type: PageTransitionType.bottomToTop,
+                                                    context : context,
+                                                   
+                                                  page:  const OrderRequestSuccessScreen(
                                                         title:
                                                             'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
                                                       ),
-                                                    ),
-                                                    (route) => false,
                                                   );
                                                   labProvider
                                                       .clearCurrentDetails();
+                                                        },
+                                                      );
+
+                                               
                                                 });
                                       } else {
                                         EasyNavigation.push(
@@ -226,7 +232,7 @@ class LabPrescriptionPage extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Upload the prescription and it send for review.Our pharmacist will review it and add the items to your cart accordingly.',
+                        'Upload the prescription and it send for review.Our Lab will review it and select the test accordingly.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 12,

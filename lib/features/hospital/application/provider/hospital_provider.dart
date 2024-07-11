@@ -22,10 +22,8 @@ class HospitalProvider with ChangeNotifier {
   HospitalProvider(this.iHospitalFacade, this.iHospitalBookingFacade);
   final IHospitalFacade iHospitalFacade;
   final IHospitalBookingFacade iHospitalBookingFacade;
-
-  TextEditingController hospitalSearch = TextEditingController();
-
-  List<HospitalModel> hospitalList = [];
+  TextEditingController hospitalSearchController = TextEditingController();
+  List<HospitalModel> hospitalListSearch = [];
   List<HospitalBannerModel> hospitalBanner = [];
   List<HospitalCategoryModel> hospitalCategoryList = [];
   List<DoctorModel> doctorsList = [];
@@ -33,7 +31,6 @@ class HospitalProvider with ChangeNotifier {
 
   bool hospitalFetchLoading = false;
   bool isLoading = true;
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final doctorSearchController = TextEditingController();
 
@@ -57,40 +54,43 @@ class HospitalProvider with ChangeNotifier {
   }
 
 /* ------------------------ GET HOSPITALS AND SEARCH ------------------------ */
-
+  final ScrollController searchScrollController = ScrollController();
   Future<void> getAllHospitals() async {
     hospitalFetchLoading = true;
     notifyListeners();
 
     final result = await iHospitalFacade.getAllHospitals(
-        hospitalSearch: hospitalSearch.text);
+        hospitalSearch: hospitalSearchController.text);
     result.fold((err) {
-      log('ERROR :: ${err.errMsg}');
       CustomToast.errorToast(text: "Couldn't able to show hospitals near you.");
     }, (success) {
-      hospitalList.addAll(success);
+      hospitalListSearch.addAll(success);
     });
+
     hospitalFetchLoading = false;
     notifyListeners();
   }
 
   void searchHospitals() {
-    clearHospitalData();
+    hospitalListSearch.clear();
+    iHospitalFacade.clearHospitalData();
     getAllHospitals();
+    hospitalInit();
     notifyListeners();
   }
 
   void clearHospitalData() {
     iHospitalFacade.clearHospitalData();
-    hospitalList = [];
+    hospitalListSearch = [];
+    hospitalSearchController.clear();
     notifyListeners();
   }
 
-  void hospitalInit(ScrollController scrollController) {
-    scrollController.addListener(
+  void hospitalInit() {
+    searchScrollController.addListener(
       () {
-        if (scrollController.position.atEdge &&
-            scrollController.position.pixels != 0 &&
+        if (searchScrollController.position.atEdge &&
+            searchScrollController.position.pixels != 0 &&
             hospitalFetchLoading == false) {
           getAllHospitals();
         }
@@ -124,7 +124,8 @@ class HospitalProvider with ChangeNotifier {
     final result = await iHospitalFacade.getHospitalCategory(
         categoryIdList: categoryIdList);
     result.fold((err) {
-      CustomToast.errorToast(text: "Couldn't able to fetch category");
+      CustomToast.errorToast(
+          text: "Couldn't able to fetch hospital categories.");
       log('ERROR IN CATEGORY :: ${err.errMsg}');
     }, (success) {
       hospitalCategoryList = success;
@@ -133,19 +134,109 @@ class HospitalProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /* ------------------------------- GET DOCTORS ------------------------------ */
-  Future<void> getDoctors(
-      {required String hospitalId, String? categoryId}) async {
+/* -------------------------------------------------------------------------- */
+
+  /* -------------------------- GET  HOSPITAL ALL CATEGORY FOR HOME PAGE------------------------- */
+  List<HospitalCategoryModel> hospitalAllCategoryList = [];
+  Future<void> getHospitalAllCategory() async {
+    if (hospitalAllCategoryList.isNotEmpty) return;
     isLoading = true;
     notifyListeners();
 
+    final result = await iHospitalFacade.getHospitalAllCategory();
+    result.fold((err) {
+      CustomToast.errorToast(
+          text: "Couldn't able to fetch hospital categories.");
+      log('ERROR IN CATEGORY :: ${err.errMsg}');
+    }, (success) {
+      hospitalAllCategoryList = success;
+    });
+    isLoading = false;
+    notifyListeners();
+  }
+
+  /* ------------------------------- GET ALL CATEGORY WISE DOCTORS FOR HOME PAGE ------------------------------ */
+  List<DoctorModel> categoryWiseDoctorsList = [];
+  Set<String> categoryWiseDoctorIds = {};
+  Future<void> getAllDoctorsCategoryWise({required String categoryId}) async {
+    isLoading = true;
+    notifyListeners();
+    final result = await iHospitalFacade.getAllDoctorsCategoryWise(
+        doctorSearch: doctorSearchController.text, categoryId: categoryId);
+
+    result.fold((err) {
+      CustomToast.errorToast(text: 'Unable to fetch doctors.');
+      log('ERROR IN GET DOCTOR :: ${err.errMsg}');
+    }, (success) {
+      final uniqueDoctors = success
+          .where((doctor) => !categoryWiseDoctorIds.contains(doctor.id))
+          .toList();
+      categoryWiseDoctorIds.addAll(uniqueDoctors.map((doctor) => doctor.id!));
+      categoryWiseDoctorsList.addAll(uniqueDoctors);
+      notifyListeners();
+    });
+    isLoading = false;
+    notifyListeners();
+  }
+
+  void searchAllDoctorsCategoryWise({required String categoryId}) {
+        iHospitalFacade.clearAllDoctorsCategoryWiseData();
+      categoryWiseDoctorIds.clear();
+    categoryWiseDoctorsList = [];
+    getAllDoctorsCategoryWise(categoryId: categoryId);
+    notifyListeners();
+  }
+
+  void clearAllDoctorsCategoryWiseData() {
+    iHospitalFacade.clearAllDoctorsCategoryWiseData();
+    doctorSearchController.clear();
+    categoryWiseDoctorIds.clear();
+    categoryWiseDoctorsList = [];
+    notifyListeners();
+  }
+
+  void getAllDoctorsCategoryWiseinit(
+      {required ScrollController scrollController,
+      required String categoryId}) {
+    scrollController.addListener(
+      () {
+        if (scrollController.position.atEdge &&
+            scrollController.position.pixels != 0 &&
+            isLoading == false) {
+          getAllDoctorsCategoryWise(categoryId: categoryId);
+        }
+      },
+    );
+  }
+
+  /* -------------------------- FETCH SINGLE HOSPITAL for main page category wise ------------------------- */
+  HospitalModel? selectedCategoryWiseHospital;
+
+  Future<void> getCategoryWiseHospital({required String hospitalId}) async {
+    isLoading = true;
+    notifyListeners();
+    final result =
+        await iHospitalFacade.getCategoryWiseHospital(hospitalId: hospitalId);
+    result.fold((err) {
+      log('ERROR :: ${err.errMsg}');
+    }, (success) {
+      selectedCategoryWiseHospital = success;
+    });
+    isLoading = false;
+    notifyListeners();
+  }
+
+  /* ------------------------------- GET DOCTORS ------------------------------ */
+  Future<void> getDoctors({required String hospitalId, String? categoryId}) async {
+    isLoading = true;
+    notifyListeners();
     final result = await iHospitalFacade.getDoctors(
         hospitalId: hospitalId,
         doctorSearch: doctorSearchController.text,
         categoryId: categoryId);
 
     result.fold((err) {
-      CustomToast.errorToast(text: 'Unable to get doctors');
+      CustomToast.errorToast(text: 'Unable to fetch doctors.');
       log('ERROR IN GET DOCTOR :: ${err.errMsg}');
     }, (success) {
       final uniqueDoctors =
@@ -284,46 +375,35 @@ class HospitalProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /* ------------------------- Location based fetching ------------------------ */
+  /* ------------------------- Location based fetching Hospitals------------------------ */
 
-  // Future<void> getAllHospitalsByLocation() async {
-  //   hospitalFetchLoading = true;
-  //   notifyListeners();
-
-  //   final result = await iHospitalFacade.fetchProduct(userHospitalLocation);
-  //   result.fold((err) {
-  //     log('ERROR :: ${err.errMsg}');
-  //     CustomToast.errorToast(text: "Couldn't able to show hospitals near you.");
-  //   }, (success) {
-  //     hospitalList.addAll(success);
-  //   });
-  //   hospitalFetchLoading = false;
-  //   notifyListeners();
-  // }
-
+  final ScrollController mainScrollController = ScrollController();
   bool isFirebaseDataLoding = true;
   bool circularProgressLOading = true;
   bool isFunctionProcessing = false;
-  PlaceMark? _chackPlaceMark;
+  PlaceMark? _checkPlaceMark;
+  List<HospitalModel> hospitalList = [];
 
-  Future<void> _fetchData(BuildContext context) async {
+  Future<void> fetchHospitalLocationBasedData(BuildContext context) async {
     isFunctionProcessing = true;
     if (hospitalList.isEmpty) {
       isFirebaseDataLoding = true;
     }
 
     notifyListeners();
-  
-    final placeMark = context.read<LocationProvider>().localsavedplacemark!;
-    _chackPlaceMark = placeMark;
-    final result = await iHospitalFacade.fetchProduct(placeMark);
+
+    final placeMark =
+        context.read<LocationProvider>().locallySavedHospitalplacemark!;
+    _checkPlaceMark = placeMark;
+    final result =
+        await iHospitalFacade.fetchHospitalLocationBasedData(placeMark);
 
     result.fold((l) {
       l.maybeMap(
         orElse: () {},
-
-        firebaseException: (value) =>
-  CustomToast.errorToast(text: l.errMsg,),
+        firebaseException: (value) => CustomToast.errorToast(
+          text: l.errMsg,
+        ),
         generalException: (value) {
           circularProgressLOading = false;
           notifyListeners();
@@ -340,35 +420,41 @@ class HospitalProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void fetchInitData({
+  bool checkNearestHospitalLocation() {
+    return (hospitalList.first.placemark?.localArea !=
+        _checkPlaceMark?.localArea);
+  }
+
+  Future<void> hospitalFetchInitData({
     required BuildContext context,
-    required ScrollController scrollController,
-  }) {
-    final placeMark = context.read<LocationProvider>().localsavedplacemark!;
+  }) async {
+    notifyListeners();
+    final placeMark =
+        context.read<LocationProvider>().locallySavedHospitalplacemark!;
     if (hospitalList.isEmpty ||
-        _chackPlaceMark?.localArea != placeMark.localArea) {
+        _checkPlaceMark?.localArea != placeMark.localArea) {
       fecthUserLocaltion(
         context: context,
-        success: () {
-          clearData();
-          _fetchData(context);
+        success: () async {
+          clearHospitalLocationData();
+          await fetchHospitalLocationBasedData(context);
         },
       );
     }
 
-    scrollController.addListener(() {
-      if (scrollController.position.atEdge &&
-          scrollController.position.pixels != 0 &&
+    mainScrollController.addListener(() {
+      if (mainScrollController.position.atEdge &&
+          mainScrollController.position.pixels != 0 &&
           isFunctionProcessing == false &&
           circularProgressLOading == true) {
-        _fetchData(context);
+        fetchHospitalLocationBasedData(context);
       }
     });
   }
 
-  void clearData() {
+  void clearHospitalLocationData() {
     hospitalList.clear();
-    iHospitalFacade.clearData();
+    iHospitalFacade.clearHospitalLocationData();
     isFirebaseDataLoding = true;
     circularProgressLOading = true;
     isFunctionProcessing = false;
@@ -379,11 +465,14 @@ class HospitalProvider with ChangeNotifier {
     required BuildContext context,
     required void Function() success,
   }) async {
-    final placeMark = context.read<LocationProvider>().localsavedplacemark;
-    final result = await iHospitalFacade.fecthUserLocaltion(placeMark!);
+    final placeMark =
+        context.read<LocationProvider>().locallySavedHospitalplacemark;
+    final result = await iHospitalFacade.fecthHospitalLocation(placeMark!);
     result.fold(
       (l) {
-        CustomToast.errorToast(text: l.errMsg,);
+        CustomToast.errorToast(
+          text: l.errMsg,
+        );
       },
       (r) {
         success.call();

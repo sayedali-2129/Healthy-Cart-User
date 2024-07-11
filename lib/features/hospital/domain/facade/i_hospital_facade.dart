@@ -8,25 +8,29 @@ import 'package:healthy_cart_user/features/location_picker/location_picker/domai
 
 abstract class IHospitalFacade {
   FutureResult<List<HospitalModel>> getAllHospitals({String? hospitalSearch});
+    FutureResult<HospitalModel> getCategoryWiseHospital({required String hospitalId});
   FutureResult<List<HospitalBannerModel>> getHospitalBanner(
       {required String hospitalId});
   FutureResult<List<HospitalCategoryModel>> getHospitalCategory(
       {required List<String> categoryIdList});
+  FutureResult<List<HospitalCategoryModel>> getHospitalAllCategory();    
   FutureResult<List<DoctorModel>> getDoctors(
       {required String hospitalId, String? doctorSearch, String? categoryId});
+    FutureResult<List<DoctorModel>> getAllDoctorsCategoryWise(
+      {String? doctorSearch,required String categoryId});    
 
   void clearHospitalData();
   void clearDoctorData();
-
-  FutureResult<List<HospitalModel>> fetchProduct(PlaceMark placeMark) {
+  void clearAllDoctorsCategoryWiseData();
+  FutureResult<List<HospitalModel>> fetchHospitalLocationBasedData(PlaceMark placeMark) {
     throw UnimplementedError('fetchProduct is not implemented');
   }
 
-  FutureResult<Unit> fecthUserLocaltion(PlaceMark placeMark) {
+  FutureResult<Unit> fecthHospitalLocation(PlaceMark placeMark) {
     throw UnimplementedError('fecthUserLocaltion is not implemented');
   }
 
-  void clearData() {
+  void clearHospitalLocationData() {
     throw UnimplementedError('clearData is not implemented');
   }
 }

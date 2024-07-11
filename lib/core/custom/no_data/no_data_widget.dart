@@ -27,7 +27,7 @@ class NoDataImageWidget extends StatelessWidget {
           style: const TextStyle(
               fontSize: 14,
               color: BColors.textLightBlack,
-              fontWeight: FontWeight.w500),
+              fontWeight: FontWeight.w600),
         ),
       ],
     ));
@@ -58,13 +58,42 @@ class ErrorOrNoDataPage extends StatelessWidget {
             style: const TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 14,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
                 color: BColors.textLightBlack),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
+    );
+  }
+}
+
+class StillWorkingPage extends StatelessWidget {
+  const StillWorkingPage({
+    super.key,
+    required this.text,
+  });
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          BImage.stillWorking,
+          scale: 3.5,
+        ),
+        const Gap(16),
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+               color: BColors.textLightBlack)
+        ),
+      ],
     );
   }
 }

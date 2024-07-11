@@ -13,12 +13,14 @@ class HomeSliverAppbar extends StatelessWidget {
     this.searchController,
     this.onChanged,
     required this.locationText,
-    required this.locationTap,
+    required this.locationTap, this.onSubmitted, this.onSearchTap,
   });
 
   final String searchHint;
   final TextEditingController? searchController;
   final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
+   final VoidCallback? onSearchTap;
   final String locationText;
   final VoidCallback locationTap;
 
@@ -75,11 +77,14 @@ class HomeSliverAppbar extends StatelessWidget {
                 const Gap(8),
                 Row(
                   children: [
-                    Flexible(
+                    Expanded(
                       child: SizedBox(
                         height: 42,
                         child: TextField(
+                          onTap:onSearchTap ,
+                          readOnly: true,
                           onChanged: onChanged,
+                          onSubmitted: onSubmitted,
                           controller: searchController,
                           showCursor: false,
                           cursorColor: BColors.black,
@@ -102,7 +107,7 @@ class HomeSliverAppbar extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Gap(3),
+                    const Gap(4),
                     Stack(
                       children: [
                         GestureDetector(

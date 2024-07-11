@@ -108,17 +108,6 @@ class PharmacyModel {
     };
   }
 
-  Map<String, dynamic> toEditMap() {
-    return <String, dynamic>{
-      'pharmacyName': pharmacyName,
-      'pharmacyAddress': pharmacyAddress,
-      'pharmacyownerName': pharmacyownerName,
-      'pharmacyDocumentLicense': pharmacyDocumentLicense,
-      'pharmacyImage': pharmacyImage,
-       'email': email,
-       'pharmacyKeywords': pharmacyKeywords,
-    };
-  }
   
   Map<String, dynamic> toProductMap() {
     return <String, dynamic>{

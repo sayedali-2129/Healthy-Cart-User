@@ -53,12 +53,6 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
   }
 
   @override
-  void dispose() {
-    EasyDebounce.cancel('productsearch');
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final pharmacyProvider = Provider.of<PharmacyProvider>(context);
     return Scaffold(
@@ -79,14 +73,15 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                   onTap: () {
                     EasyNavigation.push(
                         context: context,
-                        page: const ProductSearchListScreen());
+                        page: const ProductSearchListScreen(),
+                        );
                   },
                   readOnly: true,
                   showCursor: false,
                   cursorColor: BColors.black,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
-                    hintText: 'Search products',
+                    hintText: 'Search Products',
                     hintStyle: const TextStyle(fontSize: 14),
                     suffixIcon: const Icon(
                       Icons.search_outlined,
@@ -104,17 +99,15 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
             ),
           ),
             if (pharmacyProvider.fetchLoading == true &&
-                  pharmacyProvider.productAllList.isEmpty)
+                  pharmacyProvider.productAllList.isEmpty&&pharmacyProvider.pharmacyCategoryList.isEmpty)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
               ),
             )
        else if (pharmacyProvider.fetchLoading == false &&
-                  pharmacyProvider.productAllList.isEmpty&& pharmacyProvider.cartProductMap.isEmpty)
-                const ErrorOrNoDataPage(
-                  text: 'No items added to this pharmacy!',
-                ),
+                  pharmacyProvider.productAllList.isEmpty&& pharmacyProvider.pharmacyCategoryList.isEmpty)
+                const SliverFillRemaining(child:  StillWorkingPage(text: "We are still working on our Pharmacy, will be soon available.", )), 
           const RowProductCategoryWidget(),
 
           if (pharmacyProvider.bannerImageList.isNotEmpty)
@@ -148,7 +141,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
             ),
         
             pharmacyProvider.productAllList.isNotEmpty? SliverPadding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
               sliver: SliverGrid.builder(
                 itemCount: pharmacyProvider.productAllList.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -166,7 +159,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                   );
                 },
               ),
-            ):const SliverGap(0),
+            ):const SliverToBoxAdapter(),
 
           SliverToBoxAdapter(
               child: (pharmacyProvider.fetchLoading == true &&
@@ -201,7 +194,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
             ),
           ),
         ),
-      ):const  SizedBox()
+      ):null
     );
   }
 }

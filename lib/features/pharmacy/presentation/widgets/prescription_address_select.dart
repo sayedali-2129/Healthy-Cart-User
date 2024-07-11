@@ -98,12 +98,7 @@ class _PrescriptionOrderAddressScreenState
             CustomToast.errorToast(text: 'Please select an address.');
             return;
           }
-          if (pharmacyProvider.prescriptionImageFile == null &&
-              pharmacyProvider.pharmacyCartProducts
-                  .any((element) => element.requirePrescription == true)) {
-            CustomToast.errorToast(text: 'Please add a prescription.');
-            return;
-          }
+
           ConfirmAlertBoxWidget.showAlertConfirmBox(
               context: context,
               confirmButtonTap: () {

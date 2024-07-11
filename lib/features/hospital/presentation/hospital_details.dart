@@ -1,19 +1,22 @@
 import 'dart:developer';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
+import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
-import 'package:healthy_cart_user/features/hospital/presentation/all_categories_screen.dart';
-import 'package:healthy_cart_user/features/hospital/presentation/all_doctors_screen.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hospital_categories_screen.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hospital_doctors_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/doctor_details_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/ad_slider_hospital.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/doctor_card.dart';
+import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/vertical_image_text_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
@@ -40,6 +43,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
           ..getHospitalCategory(categoryIdList: widget.categoryIdList ?? [])
           ..clearDoctorData()
           ..getDoctors(hospitalId: widget.hospitalId);
+          context.read<PharmacyProvider>().getSinglePharmacy(hospitalPharmacyId: widget.hospitalId);
       },
     );
     super.initState();
@@ -47,7 +51,8 @@ class _HospitalDetailsState extends State<HospitalDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
+    return Consumer2<HospitalProvider, PharmacyProvider>(
+        builder: (context, hospitalProvider, pharmacyProvider, _) {
       final hospital = hospitalProvider.hospitalList.firstWhere(
         (element) {
           return element.id == widget.hospitalId;
@@ -102,7 +107,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 16, left: 16, right: 16),
+                              top: 8, left: 16, right: 16, bottom: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -119,7 +124,6 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                             ],
                           ),
                         ),
-                        const Gap(10),
                         FadeInDown(
                           duration: const Duration(milliseconds: 500),
                           child: Padding(
@@ -127,7 +131,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                             child: Row(
                               children: [
                                 const Icon(Icons.location_on_outlined),
-                                const Gap(5),
+                                const Gap(4),
                                 Expanded(
                                   child: Text(
                                     hospital.address ?? 'Unknown Address',
@@ -142,17 +146,65 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                           ),
                         ),
                         const Divider(),
-                        FadeInRight(
-                          duration: const Duration(milliseconds: 500),
+                       
+                        
+                        Align(
+                          alignment: Alignment.centerRight,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: AdSliderHospital(
-                              screenWidth: double.infinity,
-                              labId: widget.hospitalId,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8
                             ),
+                            child:(pharmacyProvider.hospitalPharmacy != null)? ButtonWidget(
+                              buttonColor: BColors.buttonGreen,
+                              onPressed: () {
+                                pharmacyProvider.setPharmacyIdAndCategoryList(
+                                    selectedpharmacyId: pharmacyProvider.hospitalPharmacy?.id ??'',
+                                            
+                                    categoryIdList: pharmacyProvider.hospitalPharmacy?.selectedCategoryId ?? [],
+                                    pharmacy:pharmacyProvider.hospitalPharmacy ?? PharmacyModel());
+                                EasyNavigation.push(
+                                    type: PageTransitionType.rightToLeft,
+                                    context: context,
+                                    page: const PharmacyProductScreen());
+                              },
+                              buttonHeight: 32,
+                              buttonWidth: 200,
+                              buttonWidget: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Visit Our Pharmacy',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      color: BColors.textBlack,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    color: BColors.textBlack,
+                                    size: 20,
+                                  ),
+                                ],
+                              ),
+                            ): null
                           ),
                         ),
-                        const Gap(8),
+                        
+                        if (hospitalProvider.hospitalBanner.isNotEmpty)
+                          FadeInRight(
+                            duration: const Duration(milliseconds: 500),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              child: AdSliderHospital(
+                                screenWidth: double.infinity,
+                                labId: widget.hospitalId,
+                              ),
+                            ),
+                          ),
                         hospitalProvider.hospitalCategoryList.isNotEmpty
                             ? Padding(
                                 padding:
@@ -174,7 +226,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                             type:
                                                 PageTransitionType.rightToLeft,
                                             duration: 250,
-                                            page: AllCategoriesScreen(
+                                            page: HospitalCategoriesScreen(
                                               hospitalDetails: hospital,
                                             ));
                                       },
@@ -182,14 +234,14 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                   ],
                                 ),
                               )
-                            : const Gap(0),
+                            : const SizedBox(),
                         const Gap(16),
                         hospitalProvider.hospitalCategoryList.isNotEmpty
                             ? SizedBox(
                                 height: 112,
                                 child: ListView.builder(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
+                                      const EdgeInsets.symmetric(horizontal: 4),
                                   scrollDirection: Axis.horizontal,
                                   itemCount: hospitalProvider
                                               .hospitalCategoryList.length >
@@ -212,84 +264,89 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                                 type: PageTransitionType
                                                     .rightToLeft,
                                                 duration: 250,
-                                                page: AllDoctorsScreen(
+                                                page: HospitalDoctorsScreen(
                                                   hospitalDetails: hospital,
                                                   category: selectedCategory,
                                                   isCategoryWise: true,
                                                 ));
                                           },
                                           image: hospitalProvider
-                                              .hospitalCategoryList[
-                                                  categoryIndex]
-                                              .image!,
+                                                  .hospitalCategoryList[
+                                                      categoryIndex]
+                                                  .image ??
+                                              '',
                                           title: hospitalProvider
-                                              .hospitalCategoryList[
-                                                  categoryIndex]
-                                              .category!),
+                                                  .hospitalCategoryList[
+                                                      categoryIndex]
+                                                  .category ??
+                                              'Unknown Category'),
                                     );
                                   },
                                 ),
                               )
-                            : const Gap(0),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Our Doctors',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
-                              ),
-                              ViewAllButton(
-                                onTap: () {
-                                  EasyNavigation.push(
-                                      context: context,
-                                      type: PageTransitionType.rightToLeft,
-                                      duration: 250,
-                                      page: AllDoctorsScreen(
-                                        isCategoryWise: false,
-                                        hospitalDetails: hospital,
-                                      ));
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: ListView.separated(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              separatorBuilder: (context, index) =>
-                                  const Gap(10),
-                              itemCount: hospitalProvider.doctorsList.length > 5
-                                  ? 5
-                                  : hospitalProvider.doctorsList.length,
-                              itemBuilder: (context, doctorIndex) {
-                                log(hospitalProvider
-                                        .doctorsList[doctorIndex].id ??
-                                    'NO IDDD');
-                                return GestureDetector(
+                            : const SizedBox(),
+                        if (hospitalProvider.doctorsList.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Our Doctors',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                ViewAllButton(
                                   onTap: () {
                                     EasyNavigation.push(
                                         context: context,
-                                        page: DoctorDetailsScreen(
-                                          doctorModel: hospitalProvider
-                                              .doctorsList[doctorIndex],
-                                          hospital: hospital,
-                                        ),
                                         type: PageTransitionType.rightToLeft,
-                                        duration: 250);
+                                        duration: 250,
+                                        page: HospitalDoctorsScreen(
+                                          isCategoryWise: false,
+                                          hospitalDetails: hospital,
+                                        ));
                                   },
-                                  child: FadeInRight(
-                                    duration: const Duration(milliseconds: 500),
-                                    child: DoctorCard( doctor:hospitalProvider.doctorsList[doctorIndex]
-                                    ),
-                                  ),
-                                );
-                              }),
-                        )
+                                )
+                              ],
+                            ),
+                          ),
+                        const Gap(8),
+                        ListView.separated(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 16),
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            separatorBuilder: (context, index) => const Gap(12),
+                            itemCount: hospitalProvider.doctorsList.length > 5
+                                ? 5
+                                : hospitalProvider.doctorsList.length,
+                            itemBuilder: (context, doctorIndex) {
+                              log(hospitalProvider
+                                      .doctorsList[doctorIndex].id ??
+                                  'NO IDDD');
+                              return GestureDetector(
+                                onTap: () {
+                                  EasyNavigation.push(
+                                      context: context,
+                                      page: DoctorDetailsScreen(
+                                        doctorModel: hospitalProvider
+                                            .doctorsList[doctorIndex],
+                                        hospital: hospital,
+                                      ),
+                                      type: PageTransitionType.rightToLeft,
+                                      duration: 250);
+                                },
+                                child: FadeInRight(
+                                  duration: const Duration(milliseconds: 500),
+                                  child: DoctorCard(
+                                      fromHomePage: false,
+                                      doctor: hospitalProvider
+                                          .doctorsList[doctorIndex]),
+                                ),
+                              );
+                            })
                       ],
                     ),
                   ],

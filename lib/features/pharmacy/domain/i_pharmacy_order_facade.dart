@@ -9,7 +9,7 @@ abstract class IPharmacyOrderFacade {
   });
 
   FutureResult<Unit> cancelOrder( {required String orderId, required PharmacyOrderModel orderData });
-  Stream<Either<MainFailure, List<PharmacyOrderModel>>> pharmacyApprovedOrderData({
+  Stream<Either<MainFailure, List<PharmacyOrderModel>>> getPharmacyApprovedOrderData({
     required String userId,
   });
   Future<void> cancelStream();

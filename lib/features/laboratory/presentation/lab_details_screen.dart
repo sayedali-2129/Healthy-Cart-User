@@ -140,7 +140,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                       ),
                                     ),
                                   ),
-                                  Gap(5),
+                                  const Gap(6),
                                   ButtonWidget(
                                     buttonHeight: 36,
                                     buttonWidth: 160,
@@ -152,7 +152,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                           color: BColors.black,
                                           size: 19,
                                         ),
-                                        Gap(5),
+                                        Gap(6),
                                         Text(
                                           'Prescription',
                                           style: TextStyle(
@@ -183,7 +183,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 child: Row(
                                   children: [
                                     const Icon(Icons.location_on_outlined),
-                                    const Gap(5),
+                                    const Gap(6),
                                     Expanded(
                                       child: Text(
                                         labList.address ?? 'No Address',
@@ -284,7 +284,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                           : ListView.separated(
                                               separatorBuilder:
                                                   (context, index) =>
-                                                      const Gap(5),
+                                                      const Gap(6),
                                               physics:
                                                   const NeverScrollableScrollPhysics(),
                                               shrinkWrap: true,
@@ -356,7 +356,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                       if (authProvider.userFetchlDataFetched!.userName ==
                           null) {
                         EasyNavigation.push(
-                            context: context, page: ProfileSetup());
+                            context: context, page:const ProfileSetup());
                         CustomToast.infoToast(text: 'Fill user details');
                       } else {
                         showDialog(

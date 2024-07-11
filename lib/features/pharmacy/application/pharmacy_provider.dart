@@ -9,6 +9,8 @@ import 'package:healthy_cart_user/core/custom/order_request/order_request_succes
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/core/services/send_fcm_message.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/i_pharmacy_facade.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
@@ -20,12 +22,13 @@ import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 @injectable
 class PharmacyProvider extends ChangeNotifier {
   PharmacyProvider(this._iPharmacyFacade);
   final IPharmacyFacade _iPharmacyFacade;
-  List<PharmacyModel> pharmacyList = [];
+  List<PharmacyModel> pharmacySearchList = [];
   bool fetchLoading = false;
   List<PharmacyCategoryModel> pharmacyCategoryList = [];
   List<String> pharmacyCategoryIdList = [];
@@ -37,7 +40,7 @@ class PharmacyProvider extends ChangeNotifier {
   String? selectedCategory;
   String? pharmacyId;
   List<String> productImageUrlList = [];
-  bool bottomsheetCart = false;
+
   final TextEditingController searchController = TextEditingController();
   String? userId = FirebaseAuth.instance.currentUser?.uid;
 
@@ -78,7 +81,7 @@ class PharmacyProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-/* --------------------------------- common --------------------------------- */
+/* --------------------------------- COMMON --------------------------------- */
   void setPharmacyIdAndCategoryList(
       {required String selectedpharmacyId,
       required List<String> categoryIdList,
@@ -100,20 +103,16 @@ class PharmacyProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void bottomsheetSwitch(bool value) {
-    bottomsheetCart = value;
-    notifyListeners();
-  }
-
   String expiryDateSetterFetched(Timestamp expiryDate) {
     final DateTime date =
         DateTime.fromMillisecondsSinceEpoch(expiryDate.millisecondsSinceEpoch);
     final String result = DateFormat('yyyy-MM').format(date);
     return result;
   }
+
   /* -------------------------------------------------------------------------- */
 /* ---------------------------- Get All Pharmacy ---------------------------- */
-
+  final ScrollController searchScrollController = ScrollController();
   Future<void> getAllPharmacy({String? searchText}) async {
     fetchLoading = true;
     notifyListeners();
@@ -123,7 +122,8 @@ class PharmacyProvider extends ChangeNotifier {
       CustomToast.errorToast(
           text: "Couldn't able to show pharmacies near you.");
     }, (pharmacies) {
-      pharmacyList.addAll(pharmacies); //// here we are assigning pharmecies
+      pharmacySearchList
+          .addAll(pharmacies); //// here we are assigning pharmecies
     });
     fetchLoading = false;
     notifyListeners();
@@ -131,18 +131,163 @@ class PharmacyProvider extends ChangeNotifier {
 
   void clearPharmacyFetchData() {
     searchController.clear();
-    pharmacyList.clear();
+    pharmacySearchList.clear();
     _iPharmacyFacade.clearPharmacyFetchData();
+    notifyListeners();
   }
 
   void searchPharmacy({
     required String searchText,
   }) {
     _iPharmacyFacade.clearPharmacyFetchData();
-    pharmacyList.clear();
+    pharmacySearchList.clear();
     getAllPharmacy(searchText: searchText);
+    pharmacyInit();
     notifyListeners();
   }
+
+  void pharmacyInit() {
+    searchScrollController.addListener(
+      () {
+        if (searchScrollController.position.atEdge &&
+            searchScrollController.position.pixels != 0 &&
+            fetchLoading == false) {
+          getAllPharmacy();
+        }
+      },
+    );
+  }
+
+  /* ------------------------- Location based fetching Pharmacy------------------------ */
+
+  final ScrollController mainScrollController = ScrollController();
+  bool isFirebaseDataLoding = true;
+  bool circularProgressLOading = true;
+  bool isFunctionProcessing = false;
+  PlaceMark? _checkPlaceMark;
+  List<PharmacyModel> pharmacyList = [];
+
+  Future<void> fetchPharmacyLocationBasedData(BuildContext context) async {
+    isFunctionProcessing = true;
+    if (pharmacyList.isEmpty) {
+      isFirebaseDataLoding = true;
+    }
+
+    notifyListeners();
+
+    final placeMark =
+        context.read<LocationProvider>().locallySavedPharmacyplacemark!;
+    _checkPlaceMark = placeMark;
+    final result =
+        await _iPharmacyFacade.fetchPharmacyLocationBasedData(placeMark);
+
+    result.fold((l) {
+      l.maybeMap(
+        orElse: () {},
+        firebaseException: (value) => CustomToast.errorToast(
+          text: l.errMsg,
+        ),
+        generalException: (value) {
+          circularProgressLOading = false;
+          notifyListeners();
+        },
+      );
+    }, (r) {
+      if (r.length < 10) {
+        circularProgressLOading = false;
+      }
+      pharmacyList.addAll(r);
+    });
+    isFirebaseDataLoding = false;
+    isFunctionProcessing = false;
+    notifyListeners();
+  }
+
+  bool checkNearestPharmacyLocation() {
+    return (pharmacyList.first.placemark?.localArea !=
+        _checkPlaceMark?.localArea);
+  }
+
+  void pharmacyFetchInitData({
+    required BuildContext context,
+  }) {
+    notifyListeners();
+    final placeMark =
+        context.read<LocationProvider>().locallySavedPharmacyplacemark!;
+    if (pharmacyList.isEmpty ||
+        _checkPlaceMark?.localArea != placeMark.localArea) {
+      fecthPharmacyLocation(
+        context: context,
+        success: () {
+          clearHospitalLocationData();
+          fetchPharmacyLocationBasedData(context);
+        },
+      );
+    }
+
+    mainScrollController.addListener(() {
+      if (mainScrollController.position.atEdge &&
+          mainScrollController.position.pixels != 0 &&
+          isFunctionProcessing == false &&
+          circularProgressLOading == true) {
+        fetchPharmacyLocationBasedData(context);
+      }
+    });
+  }
+
+  void clearHospitalLocationData() {
+    pharmacyList.clear();
+    _iPharmacyFacade.clearPharmacyLocationData();
+    isFirebaseDataLoding = true;
+    circularProgressLOading = true;
+    isFunctionProcessing = false;
+    notifyListeners();
+  }
+
+  Future<void> fecthPharmacyLocation({
+    required BuildContext context,
+    required void Function() success,
+  }) async {
+    final placeMark =
+        context.read<LocationProvider>().locallySavedPharmacyplacemark;
+    final result = await _iPharmacyFacade.fecthPharmacyLocation(placeMark!);
+    result.fold(
+      (l) {
+        CustomToast.errorToast(
+          text: l.errMsg,
+        );
+      },
+      (r) {
+        success.call();
+      },
+    );
+  }
+
+/* -------------------------------------------------------------------------- */
+/* --------------------------- Get Single Pharmacy for fetch in hospital side -------------------------- */
+
+  PharmacyModel? hospitalPharmacy;
+  Future<void> getSinglePharmacy({required String hospitalPharmacyId}) async {
+    hospitalPharmacy = null;
+    fetchLoading = true;
+    notifyListeners();
+    final result = await _iPharmacyFacade.getSinglePharmacy(
+        pharmacyId: hospitalPharmacyId);
+    result.fold((failure) {
+      fetchLoading = false;
+      notifyListeners();
+    }, (pharmacy) {
+      if (pharmacy.isActive == true && pharmacy.pharmacyRequested == 2) {
+        hospitalPharmacy = pharmacy;
+      } else {
+        hospitalPharmacy = null;
+      }
+
+      fetchLoading = false;
+      notifyListeners();
+    });
+  }
+
 /* -------------------------------------------------------------------------- */
 
 /* --------------------------- Get Pharmacy Banner -------------------------- */
@@ -275,8 +420,8 @@ class PharmacyProvider extends ChangeNotifier {
   int quantityCount = 1;
   Map<String, dynamic> cartProductMap = {};
   Map<String, int> productCartDataAdded = {};
-  List<int> productCartQuantityList = [];
-  List<String> productCartIdList = [];
+  // List<int> productCartQuantityList = [];
+  // List<String> productCartIdList = [];
   List<PharmacyProductAddModel> pharmacyCartProducts = [];
   List<ProductAndQuantityModel> productAndQuantityDetails = [];
   PharmacyOrderModel? orderProducts;
@@ -300,10 +445,11 @@ class PharmacyProvider extends ChangeNotifier {
 
   // increment of the quantity from product cart page
   void incrementInCart(
-      {required int index,
+      {required String productId,
       required num productMRPRate,
       required num productDiscountRate}) {
-    productCartQuantityList[index]++;
+    cartProductMap[productId]++;
+    //productCartQuantityList[index]++;
     totalFinalAmount += productDiscountRate;
     totalAmount += productMRPRate;
     notifyListeners();
@@ -311,15 +457,15 @@ class PharmacyProvider extends ChangeNotifier {
 
   // decrement of the quantity from product cart page
   void decrementInCart(
-      {required int index,
+      {required String productId,
       required num productMRPRate,
       required num productDiscountRate}) {
-    if (productCartQuantityList[index] <= 1) {
+    if (cartProductMap[productId] <= 1) {
       return CustomToast.infoToast(
           text:
               "If you want to remove the product please remove from the cart.");
     }
-    productCartQuantityList[index]--;
+    cartProductMap[productId]--;
     totalFinalAmount -= productDiscountRate;
     totalAmount -= productMRPRate;
     notifyListeners();
@@ -327,6 +473,7 @@ class PharmacyProvider extends ChangeNotifier {
 
 // creating a cart or getting the product cart id and quantity from user document
   Future<void> createOrGetProductToUserCart() async {
+    if (productAllList.isEmpty) return; // if no product present no need to get
     fetchLoading = true;
     final result = await _iPharmacyFacade.createOrGetProductToUserCart(
       pharmacyId: pharmacyId!,
@@ -340,12 +487,12 @@ class PharmacyProvider extends ChangeNotifier {
       },
       (cartProductsData) {
         if (cartProductsData.isNotEmpty) {
-          cartProductsData.forEach(
-            (key, value) {
-              productCartQuantityList.add(value);
-              productCartIdList.add(key);
-            },
-          );
+          // cartProductsData.forEach(
+          //   (key, value) {
+          //     productCartQuantityList.add(value);
+          //     productCartIdList.add(key);
+          //   },
+          // );
           cartProductMap.addAll(cartProductsData);
         }
         fetchLoading = false;
@@ -359,6 +506,12 @@ class PharmacyProvider extends ChangeNotifier {
     pharmacyCartProducts.clear();
     fetchLoading = true;
     notifyListeners();
+    List<String> productCartIdList = [];
+    cartProductMap.forEach(
+      (key, value) {
+        return productCartIdList.add(key);
+      },
+    );
     final result = await _iPharmacyFacade.getpharmcyCartProduct(
         productCartIdList: productCartIdList);
     result.fold((failure) {
@@ -374,8 +527,8 @@ class PharmacyProvider extends ChangeNotifier {
 
   void clearCartData() {
     pharmacyCartProducts.clear();
-    productCartIdList.clear();
-    productCartQuantityList.clear();
+    // productCartIdList.clear();
+    // productCartQuantityList.clear();
     cartProductMap.clear();
     notifyListeners();
   }
@@ -398,21 +551,23 @@ class PharmacyProvider extends ChangeNotifier {
       (productData) {
         productCartDataAdded = productData;
         if (productCartDataAdded.isNotEmpty) {
+          cartProductMap.addAll(productCartDataAdded);
           productCartDataAdded.forEach(
             (key, value) {
-              productCartQuantityList.add(value);
-              productCartIdList.add(key);
+              // productCartQuantityList.add(value);
+              // productCartIdList.add(key);
             },
           );
         } // here when the prodct is incremented from the cart it will show the toast accordingly
         if (cartQuantityIncrement == true) {
           CustomToast.sucessToast(text: "One quantity added.");
-        } else if (cartQuantityIncrement == false) {
+        } else if (cartQuantityIncrement == false &&
+            selectedQuantityCount > 1) {
           CustomToast.sucessToast(text: "One quantity removed.");
-        } else {
+        } else if (cartQuantityIncrement == null) {
           CustomToast.sucessToast(text: "Product added to cart.");
         }
-        bottomsheetSwitch(true);
+
         notifyListeners();
       },
     );
@@ -439,8 +594,8 @@ class PharmacyProvider extends ChangeNotifier {
           totalFinalAmount -= productData.productMRPRate!;
         }
         cartProductMap.remove(productData.id);
-        productCartQuantityList.removeAt(index);
-        productCartIdList.removeAt(index);
+        // productCartQuantityList.removeAt(index);
+        // productCartIdList.removeAt(index);
         notifyListeners();
         CustomToast.sucessToast(text: 'Removed sucessfully');
       },
@@ -456,14 +611,14 @@ class PharmacyProvider extends ChangeNotifier {
 
     for (int i = 0; i < pharmacyCartProducts.length; i++) {
       if (pharmacyCartProducts[i].productDiscountRate == null) {
-        totalDiscountAmount = productCartQuantityList[i] *
+        totalDiscountAmount = cartProductMap[pharmacyCartProducts[i].id] *
             pharmacyCartProducts[i].productMRPRate!;
       } else {
-        totalDiscountAmount = productCartQuantityList[i] *
+        totalDiscountAmount = cartProductMap[pharmacyCartProducts[i].id] *
             pharmacyCartProducts[i].productDiscountRate!;
       }
-      totalMRPAmount =
-          productCartQuantityList[i] * pharmacyCartProducts[i].productMRPRate!;
+      totalMRPAmount = cartProductMap[pharmacyCartProducts[i].id] *
+          pharmacyCartProducts[i].productMRPRate!;
 
       totalAmount += totalMRPAmount;
       totalFinalAmount += totalDiscountAmount;
@@ -476,7 +631,7 @@ class PharmacyProvider extends ChangeNotifier {
 /* -------------------------------------------------------------------------- */
 
 /* ------------------------------ RADIO BUTTON ------------------------------ */
-String? selectedRadio;
+  String? selectedRadio;
 
   setSelectedRadio(String? value) {
     selectedRadio = value;
@@ -485,6 +640,9 @@ String? selectedRadio;
 
   /* -------------------------------------------------------------------------- */
 /* -------------------------- ORDER CREATE SECTION -------------------------- */
+  final String homeDelivery = 'Home';
+  final String pharmacyPickup = 'Pharmacy'; // choose what kind delivery
+
   Future<void> createProductOrderDetails({
     required BuildContext context,
   }) async {
@@ -585,4 +743,21 @@ String? selectedRadio;
   }
 
   /* -------------------------------------------------------------------------- */
+  // List<String> productSearchTypeList = [
+  //   'Medicine',
+  //   'Equipments',
+  //   'Other items'
+  // ];
+
+  // String productSearchStringTitle() {
+  //   String? value;
+  //   int? index;
+  //   Future.delayed(
+  //     Duration(milliseconds: 500),
+  //     () {
+  //       index = 0;
+  //       value = productSearchTypeList[index!];
+  //     },
+  //   );
+  // }
 }

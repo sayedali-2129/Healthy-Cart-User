@@ -29,11 +29,8 @@ class ProductDetailsScreen extends StatelessWidget {
       (timeStamp) {
         final pharmacyProvider =
             Provider.of<PharmacyProvider>(context, listen: false);
-       // pharmacyProvider.bottomsheetSwitch(false);
-        if (pharmacyProvider.cartProductMap.containsKey((productData.id))) {
-          pharmacyProvider.bottomsheetCart = true;
-          pharmacyProvider.quantityCount =
-              pharmacyProvider.cartProductMap[productData.id];
+        if (pharmacyProvider.cartProductMap.containsKey((productData.id))) 
+        { pharmacyProvider.quantityCount = pharmacyProvider.cartProductMap[productData.id];
         } else {
           pharmacyProvider.quantityCount = 1;
         }
@@ -227,8 +224,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                     child: PercentageShowContainerWidget(
                                         width: 80,
                                         height: 32,
-                                        text:
-                                            '${productData.discountPercentage}% off',
+                                        text:'${productData.discountPercentage}% off',
                                         textColor: BColors.white,
                                         boxColor: BColors.offRed)),
                               ],
@@ -331,8 +327,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            if (productData.requirePrescription == null ||
-                productData.requirePrescription == false)
+            if (productData.requirePrescription == true)
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8),
@@ -533,8 +528,7 @@ class BottomSheetAddToCart extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8))),
-              child: (pharmacyProvider.productCartIdList
-                          .contains(productData.id))
+              child: (pharmacyProvider.cartProductMap.containsKey(productData.id))
                   ? Padding(
                       padding: const EdgeInsets.only(
                           bottom: 16, top: 8, right: 24, left: 16),
@@ -552,7 +546,7 @@ class BottomSheetAddToCart extends StatelessWidget {
                                   : '${pharmacyProvider.quantityCount} items already in your cart',
                             ),
                           ),
-                          fromCart // check wheather get to this page from cart or not
+                          (!fromCart) // check wheather get to this page from cart or not
                               ? ButtonWidget(
                                   onPressed: () {
                                     EasyNavigation.push(

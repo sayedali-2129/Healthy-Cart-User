@@ -353,7 +353,7 @@ class _ApprovedOrderDetailsScreenState
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               RadioMenuButton(
-                                value: 'COD',
+                                value: orderProvider.cashOnDelivery,
                                 groupValue: orderProvider.selectedPaymentRadio,
                                 onChanged: (value) {
                                   orderProvider.setSelectedRadio(value);
@@ -367,7 +367,7 @@ class _ApprovedOrderDetailsScreenState
                                 ),
                               ),
                               RadioMenuButton(
-                                value: 'Online',
+                                value: orderProvider.onlinePayment,
                                 groupValue: orderProvider.selectedPaymentRadio,
                                 onChanged: (value) {
                                   orderProvider.setSelectedRadio(value);

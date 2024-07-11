@@ -19,6 +19,17 @@ class LoginScreen extends StatelessWidget {
     return Consumer<AuthenticationProvider>(
         builder: (context, authenticationProvider, _) {
       return Scaffold(
+        appBar: AppBar(
+          surfaceTintColor: BColors.white,
+          backgroundColor: BColors.white,
+          leading:   GestureDetector(
+                                onTap: () {
+                                  EasyNavigation.pushReplacement(
+                                      context: context,
+                                      page: const BottomNavigationWidget());
+                                },
+                                child: const Icon(Icons.arrow_back_ios_new_rounded)),
+        ),
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -26,26 +37,11 @@ class LoginScreen extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
               child: SingleChildScrollView(
-                child: Container(
+                child: SizedBox(
                   height: screenheight,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  EasyNavigation.pushAndRemoveUntil(
-                                      context: context,
-                                      page: const BottomNavigationWidget());
-                                },
-                                child: Icon(Icons.arrow_back_ios_new_rounded)),
-                          ],
-                        ),
-                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,

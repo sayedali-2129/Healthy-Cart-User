@@ -1,10 +1,9 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
-import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
+import 'package:healthy_cart_user/core/custom/no_data/location_no_data_widget.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -14,6 +13,7 @@ import 'package:healthy_cart_user/features/hospital/application/provider/hosp_bo
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_booking_tab.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_details.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/hospital_search_main.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/hospital_main_card.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
@@ -30,66 +30,65 @@ class HospitalMain extends StatefulWidget {
 }
 
 class _HospitalMainState extends State<HospitalMain> {
-  final scrollController = ScrollController();
-
   @override
   void initState() {
     final hospitalProvider = context.read<HospitalProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        hospitalProvider. clearHospitalData();
-        hospitalProvider.fetchInitData(
-            context: context, scrollController: scrollController);
+        hospitalProvider.clearHospitalData();
+        hospitalProvider.hospitalFetchInitData(context: context);
       },
     );
-    hospitalProvider.hospitalInit(scrollController);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final locationProvider = context.read<LocationProvider>();
     final screenwidth = MediaQuery.of(context).size.width;
-    return Consumer3<HospitalProvider, AuthenticationProvider,
-            HospitalBookingProivder>(
-        builder: (context, hospitalProvider, authProvider, bookingProvoder, _) {
+    return Consumer4<HospitalProvider, AuthenticationProvider,
+            HospitalBookingProivder, LocationProvider>(
+        builder: (context, hospitalProvider, authProvider, bookingProvider,
+            locationProvider, _) {
       return Scaffold(
         body: CustomScrollView(
-          controller: scrollController,
+          controller: hospitalProvider.mainScrollController,
           slivers: [
             HomeSliverAppbar(
-              searchHint: 'Search Hospitals',
-              searchController: hospitalProvider.hospitalSearch,
-              onChanged: (_) {
-                EasyDebounce.debounce(
-                  'hospitalsearch',
-                  const Duration(milliseconds: 500),
-                  () {
-                    hospitalProvider.searchHospitals();
-              
-                  },
-                );
+              onSearchTap: () {
+                EasyNavigation.push(
+                    type: PageTransitionType.topToBottom,
+                    context: context,
+                    page: const HospitalsMainSearch());
               },
+              searchHint: 'Search Hospitals',
               locationText:
-                  "${locationProvider.localsavedplacemark?.localArea},${locationProvider.localsavedplacemark?.district},${locationProvider.localsavedplacemark?.state}",
-              locationTap: () {
-                LoadingLottie.showLoading(
-                    context: context, text: 'Please wait...');
-                locationProvider.getLocationPermisson().then(
-                  (value) {
-                    if (value == true) {
-                      EasyNavigation.pop(context: context);
-                      EasyNavigation.push(
-                          context: context,
-                          page: const UserLocationSearchWidget(
-                            isUserEditProfile: true,
-                          ));
-                    }
-                  },
+                  "${locationProvider.locallySavedHospitalplacemark?.localArea},${locationProvider.locallySavedHospitalplacemark?.district},${locationProvider.locallySavedHospitalplacemark?.state}",
+              locationTap: () async {
+                await EasyNavigation.push(
+                  type: PageTransitionType.topToBottom,
+                  context: context,
+                  page: UserLocationSearchWidget(
+                    isUserEditProfile: false,
+                    locationSetter: 1,
+                    onSucess: () {
+                      hospitalProvider.hospitalFetchInitData(
+                        context: context,
+                      );
+                    },
+                  ),
                 );
               },
             ),
-            if (hospitalProvider.hospitalFetchLoading == true &&
+            SliverToBoxAdapter(
+                child: (hospitalProvider.hospitalList.isNotEmpty &&
+                        hospitalProvider.checkNearestHospitalLocation())
+                    ? NoDataInSelectedLocation(
+                        locationTitle:
+                            '${locationProvider.locallySavedHospitalplacemark?.localArea}',
+                        typeOfService: 'Hospitals',
+                      )
+                    : null),
+            if (hospitalProvider.isFirebaseDataLoding == true &&
                 hospitalProvider.hospitalList.isEmpty)
               const SliverFillRemaining(
                 child: Center(
@@ -102,45 +101,47 @@ class _HospitalMainState extends State<HospitalMain> {
               )
             else
               SliverPadding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                 sliver: SliverList.separated(
-                  separatorBuilder: (context, index) => const Gap(8),
-                  itemCount: hospitalProvider.hospitalList.length,
-                  itemBuilder: (context, index) => FadeInUp(
-                    child: HospitalMainCard(
-                      screenwidth: screenwidth,
-                      index: index,
-                      onTap: () {
-                        if (authProvider.auth.currentUser == null) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginScreen()));
-                          CustomToast.infoToast(text: 'Login to continue !');
-                        } else {
-                          EasyNavigation.push(
-                              context: context,
-                              type: PageTransitionType.rightToLeft,
-                              duration: 250,
-                              page: HospitalDetails(
-                                hospitalId:
-                                    hospitalProvider.hospitalList[index].id!,
-                                categoryIdList: hospitalProvider
-                                        .hospitalList[index]
-                                        .selectedCategoryId ??
-                                    [],
-                              ));
-                        }
-                      },
-                    ),
-                  ),
-                ),
+                    separatorBuilder: (context, index) => const Gap(12),
+                    itemCount: hospitalProvider.hospitalList.length,
+                    itemBuilder: (context, index) {
+                      return FadeInUp(
+                        child: HospitalMainCard(
+                          screenwidth: screenwidth,
+                          hospital: hospitalProvider.hospitalList[index],
+                          onTap: () {
+                            if (authProvider.auth.currentUser == null) {
+                              EasyNavigation.push(
+                                  type: PageTransitionType.rightToLeft,
+                                  context: context,
+                                  page: const LoginScreen());
+                              CustomToast.infoToast(
+                                  text: 'Login to continue !');
+                            } else {
+                              EasyNavigation.push(
+                                  context: context,
+                                  type: PageTransitionType.rightToLeft,
+                                  duration: 250,
+                                  page: HospitalDetails(
+                                    hospitalId: hospitalProvider
+                                        .hospitalList[index].id!,
+                                    categoryIdList: hospitalProvider
+                                            .hospitalList[index]
+                                            .selectedCategoryId ??
+                                        [],
+                                  ));
+                            }
+                          },
+                        ),
+                      );
+                    }),
               ),
             SliverToBoxAdapter(
-                child: (hospitalProvider.hospitalFetchLoading == true &&
+                child: (hospitalProvider.circularProgressLOading == true &&
                         hospitalProvider.hospitalList.isNotEmpty)
                     ? const Center(child: LoadingIndicater())
-                    : const Gap(0)),
+                    : null),
           ],
         ),
         floatingActionButton: authProvider.auth.currentUser == null
@@ -163,7 +164,7 @@ class _HospitalMainState extends State<HospitalMain> {
                             type: PageTransitionType.bottomToTop,
                             duration: 200);
                       }),
-                  if (bookingProvoder.approvedBookings
+                  if (bookingProvider.approvedBookings
                       .any((element) => element.isUserAccepted == false))
                     const Positioned(
                       right: 2,
@@ -173,8 +174,6 @@ class _HospitalMainState extends State<HospitalMain> {
                         backgroundColor: Colors.yellow,
                       ),
                     )
-                  else
-                    const Gap(0),
                 ],
               ),
       );

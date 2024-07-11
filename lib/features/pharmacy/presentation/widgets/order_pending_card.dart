@@ -157,7 +157,7 @@ class PharmacyPendingCard extends StatelessWidget {
                         context: context,
                         controller: orderProvider.rejectionReasonController,
                         maxlines: 3,
-                        hintText: 'Let us know more about cancellation.',
+                        hintText: 'Let us know more about cancellation.(Optional)',
                         titleText: 'Confrim to cancel !',
                         subText:
                             'Are you sure you want to confirm the cancellation of this order?',

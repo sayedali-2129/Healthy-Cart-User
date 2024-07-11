@@ -37,18 +37,15 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
         final addressProvider = context.read<UserAddressProvider>();
         final pharmacyProvider = context.read<PharmacyProvider>();
         if (pharmacyProvider.selectedRadio == 'Home') {
-          addressProvider
-              .getUserAddress(userId: pharmacyProvider.userId ?? '')
+          addressProvider.getUserAddress(userId: pharmacyProvider.userId ?? '')
               .whenComplete(
             () {
-              for (int i = 0;
-                  i < pharmacyProvider.pharmacyCartProducts.length;
+              for (int i = 0; i < pharmacyProvider.pharmacyCartProducts.length;
                   i++) {
                 pharmacyProvider.productDetails(
-                  quantity: pharmacyProvider.productCartQuantityList[i],
-                  productToCartDetails:
-                      pharmacyProvider.pharmacyCartProducts[i],
-                  id: pharmacyProvider.productCartIdList[i],
+                  quantity: pharmacyProvider.cartProductMap[ pharmacyProvider.pharmacyCartProducts[i].id],
+                  productToCartDetails: pharmacyProvider.pharmacyCartProducts[i],
+                  id: pharmacyProvider.pharmacyCartProducts[i].id ?? '',
                 );
               }
             },
@@ -56,9 +53,9 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
         }else{
         for (int i = 0; i < pharmacyProvider.pharmacyCartProducts.length; i++) {
           pharmacyProvider.productDetails(
-            quantity: pharmacyProvider.productCartQuantityList[i],
+            quantity: pharmacyProvider.cartProductMap[ pharmacyProvider.pharmacyCartProducts[i].id],
             productToCartDetails: pharmacyProvider.pharmacyCartProducts[i],
-            id: pharmacyProvider.productCartIdList[i],
+            id: pharmacyProvider.pharmacyCartProducts[i].id ?? '',
           );
         }
         }
@@ -161,7 +158,7 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                             productName:
                                 '${pharmacyProvider.pharmacyCartProducts[index].productName}',
                             productQuantity:
-                                '${pharmacyProvider.productCartQuantityList[index]}',
+                                '${pharmacyProvider.cartProductMap[ pharmacyProvider.pharmacyCartProducts[index].id]}',
                             prescription: pharmacyProvider
                                 .pharmacyCartProducts[index]
                                 .requirePrescription,
