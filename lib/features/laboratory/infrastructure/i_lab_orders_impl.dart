@@ -188,7 +188,11 @@ class ILabOrdersImpl implements ILabOrdersFacade {
       await _firestore
           .collection(FirebaseCollections.labOrdersCollection)
           .doc(orderId)
-          .update({'isUserAccepted': true, 'paymentMethod': paymentMethod});
+          .update({
+        'isUserAccepted': true,
+        'paymentMethod': paymentMethod,
+        'paymentStatus': 1
+      });
       return right('Booking Accepted Successfully');
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
