@@ -12,10 +12,13 @@ import 'package:healthy_cart_user/features/laboratory/domain/models/lab_banner_m
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_test_model.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
+import 'package:provider/provider.dart';
 
 @injectable
 class LabProvider with ChangeNotifier {
@@ -26,7 +29,7 @@ class LabProvider with ChangeNotifier {
   bool isLabOnlySelected = true;
   TextEditingController labSearchController = TextEditingController();
 
-  List<LabModel> labList = [];
+  List<LabModel> labSearchList = [];
   List<LabBannerModel> labBannerList = [];
   List<LabTestModel> testList = [];
   List<LabTestModel> doorStepTestList = [];
@@ -69,7 +72,108 @@ class LabProvider with ChangeNotifier {
   }
   /* -------------------------------------------------------------------------- */
 
+  /* ------------------------- Location based fetching Hospitals------------------------ */
+  final ScrollController mainScrollController = ScrollController();
+  bool isFirebaseDataLoding = true;
+  bool circularProgressLOading = true;
+  bool isFunctionProcessing = false;
+  PlaceMark? _checkPlaceMark;
+  List<LabModel> labList = [];
+
+  Future<void> fetchLabortaryLocationBasedData(BuildContext context) async {
+    isFunctionProcessing = true;
+    if (labList.isEmpty) {
+      isFirebaseDataLoding = true;
+    }
+
+    notifyListeners();
+
+    final placeMark =
+        context.read<LocationProvider>().locallySavedLabortaryplacemark!;
+    _checkPlaceMark = placeMark;
+    final result = await iLabFacade.fetchLabortaryLocationBasedData(placeMark);
+
+    result.fold((l) {
+      l.maybeMap(
+        orElse: () {},
+        firebaseException: (value) => CustomToast.errorToast(
+          text: l.errMsg,
+        ),
+        generalException: (value) {
+          circularProgressLOading = false;
+          notifyListeners();
+        },
+      );
+    }, (r) {
+      if (r.length < 10) {
+        circularProgressLOading = false;
+      }
+      labList.addAll(r);
+    });
+    isFirebaseDataLoding = false;
+    isFunctionProcessing = false;
+    notifyListeners();
+  }
+  bool checkNearestLabortaryLocation() {
+    return (labList.first.placemark?.localArea !=
+        _checkPlaceMark?.localArea);
+  }
+  void labortaryFetchInitData({
+    required BuildContext context,
+  }) {
+    notifyListeners();
+    final placeMark =
+        context.read<LocationProvider>().locallySavedLabortaryplacemark!;
+    if (labList.isEmpty || _checkPlaceMark?.localArea != placeMark.localArea) {
+      fecthLabortaryLocation(
+        context: context,
+        success: () {
+          clearLabortaryLocationData();
+          fetchLabortaryLocationBasedData(context);
+        },
+      );
+    }
+
+    mainScrollController.addListener(() {
+      if (mainScrollController.position.atEdge &&
+          mainScrollController.position.pixels != 0 &&
+          isFunctionProcessing == false &&
+          circularProgressLOading == true) {
+        fetchLabortaryLocationBasedData(context);
+      }
+    });
+  }
+
+  void clearLabortaryLocationData() {
+    labList.clear();
+    iLabFacade.clearLabortaryLocationData();
+    isFirebaseDataLoding = true;
+    circularProgressLOading = true;
+    isFunctionProcessing = false;
+    notifyListeners();
+  }
+
+  Future<void> fecthLabortaryLocation({
+    required BuildContext context,
+    required void Function() success,
+  }) async {
+    final placeMark =
+        context.read<LocationProvider>().locallySavedLabortaryplacemark;
+    final result = await iLabFacade.fecthLabortaryLocation(placeMark!);
+    result.fold(
+      (l) {
+        CustomToast.errorToast(
+          text: l.errMsg,
+        );
+      },
+      (r) {
+        success.call();
+      },
+    );
+  }
+
 /* --------------------------- GET AND SEARCH LABS -------------------------- */
+  final ScrollController searchScrollController = ScrollController();
   Future<void> getLabs() async {
     labFetchLoading = true;
     notifyListeners();
@@ -86,7 +190,7 @@ class LabProvider with ChangeNotifier {
         notifyListeners();
       },
       (success) {
-        labList.addAll(success);
+        labSearchList.addAll(success);
         notifyListeners();
         log('labs fetched successfully');
       },
@@ -96,23 +200,27 @@ class LabProvider with ChangeNotifier {
   }
 
   void searchLabs() {
-    clearLabData();
+    iLabFacade.clearData();
+    labIds.clear();
+    labSearchList = [];
     getLabs();
+    labortaryInit();
     notifyListeners();
   }
 
   void clearLabData() {
+    labSearchController.clear();
     iLabFacade.clearData();
     labIds.clear();
-    labList = [];
+    labSearchList = [];
     notifyListeners();
   }
 
-  void init(ScrollController scrollController) {
-    scrollController.addListener(
+  void labortaryInit() {
+    searchScrollController.addListener(
       () {
-        if (scrollController.position.atEdge &&
-            scrollController.position.pixels != 0 &&
+        if (searchScrollController.position.atEdge &&
+            searchScrollController.position.pixels != 0 &&
             labFetchLoading == false) {
           getLabs();
         }

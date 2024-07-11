@@ -73,7 +73,7 @@ class PharmacyCancelledCard extends StatelessWidget {
                     if (cancelledOrderData.productDetails!.isNotEmpty)
                       RowTextContainerWidget(
                         text1: 'Total Amount : ',
-                        text2: '₹ ${cancelledOrderData.finalAmount}',
+                        text2: '₹ ${cancelledOrderData.finalAmount ?? cancelledOrderData.totalAmount}',
                         text1Color: BColors.textLightBlack,
                         fontSizeText1: 13,
                         fontSizeText2: 13,

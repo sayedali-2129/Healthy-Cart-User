@@ -1,12 +1,9 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
-import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/i_location_facde.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
-import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -24,10 +21,16 @@ class LocationProvider extends ChangeNotifier {
   Future<bool> getLocationPermisson() async {
     locationGetLoading = true;
     notifyListeners();
-    await iLocationFacade.getLocationPermisson();
-    locationGetLoading = false;
-    notifyListeners();
-    return true;
+    bool? isPermissionEnabled;
+    await iLocationFacade.getLocationPermisson().then(
+      (value) {
+        log(value.toString());
+        isPermissionEnabled = value;
+        locationGetLoading = false;
+        notifyListeners();
+      },
+    );
+    return isPermissionEnabled!;
   }
 
   Future<void> getCurrentLocationAddress() async {
@@ -35,9 +38,9 @@ class LocationProvider extends ChangeNotifier {
     locationGetLoading = true;
     final result = await iLocationFacade.getCurrentLocationAddress();
     result.fold((error) {
-       locationGetLoading = false; // this is the loading in the on the initial page
+      locationGetLoading =
+          false; // this is the loading in the on the initial page
       log("ERROR IN CURRENT LOCATION:$error");
-      //  CustomToast.errorToast(text: error.errMsg);
       searchLoading = false;
     }, (placeMark) {
       selectedPlaceMark = placeMark;
@@ -62,33 +65,42 @@ class LocationProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> setLocationByUser({
+  Future<void> setLocationOfUser({
     required BuildContext context,
     required bool isUserEditProfile,
+    required int locationSetter,
+    required VoidCallback onSucess,
   }) async {
+    if (selectedPlaceMark == null) {
+      locationGetLoading = false;
+      notifyListeners();
+      CustomToast.errorToast(
+          text: "Couldn't able to get the location,please try again");
+      return;
+    }
+    locationGetLoading = true;
+    notifyListeners();
     log('Location selected::::$selectedPlaceMark');
-    final result = await iLocationFacade.setLocationByUser(selectedPlaceMark!);
+    final result = await iLocationFacade.updateUserLocation(
+        selectedPlaceMark!, userId ?? '');
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
-    }, (sucess) async {
-      log('$userId');
-      final result = await iLocationFacade.updateUserLocation(
-          selectedPlaceMark!, userId ?? '');
-      result.fold((failure) {
-        Navigator.pop(context);
-        CustomToast.errorToast(
-            text: "Can't able to add location, please try again");
-      }, (sucess) {
-        log(isUserEditProfile.toString());
-        Navigator.pop(context);
-        CustomToast.sucessToast(text: 'Location added sucessfully');
-        (isUserEditProfile)
-            ? EasyNavigation.pop(context: context)
-            : EasyNavigation.pushAndRemoveUntil(
-                context: context, page: const SplashScreen());
-          locationGetLoading = false; /// here the get location on the initial location pick ends        
-        notifyListeners();
-      });
+      locationGetLoading = false;
+      notifyListeners();
+    }, (sucess) {
+      saveLocationLocally(
+              isUserEditProfile: isUserEditProfile,
+              context: context,
+              locationSetter: locationSetter,
+              onSucess: onSucess)
+          .whenComplete(
+        () {
+          locationGetLoading = false;
+          notifyListeners();
+        },
+      );
+
+      /// here the get location on the initial location pick ends
     });
   }
 
@@ -106,21 +118,64 @@ class LocationProvider extends ChangeNotifier {
 
 /* ------------------------- Locally saved location ------------------------- */
   PlaceMark? locallysavedplacemark;
-  PlaceMark? localsavedplacemark;
+  PlaceMark? localsavedHomeplacemark;
+  PlaceMark? locallySavedHospitalplacemark;
+  PlaceMark? locallySavedPharmacyplacemark;
+  PlaceMark? locallySavedLabortaryplacemark;
   Future<void> clearLocationLocally() async {
     await iLocationFacade.clearLocation();
   }
 
   Future<PlaceMark?> getLocationLocally() async {
     locallysavedplacemark = await iLocationFacade.getLocationLocally();
-    localsavedplacemark = locallysavedplacemark;
     return locallysavedplacemark;
-    // log('$locallysavedplacemark');
   }
 
-  Future<void> saveLocationLocally(PlaceMark placeMark) async {
-    iLocationFacade.saveLocationLocally(placeMark);
-    localsavedplacemark = placeMark;
+  Future<void> saveLocationLocally({
+    required bool isUserEditProfile,
+    required BuildContext context,
+    required int locationSetter,
+    required VoidCallback onSucess,
+  }) async {
+    if (selectedPlaceMark == null) {
+      locationGetLoading = false;
+      notifyListeners();
+      CustomToast.errorToast(
+          text: "Couldn't able to get the location,please try again");
+      return;
+    }
+    locationGetLoading = true;
     notifyListeners();
+    await iLocationFacade.saveLocationLocally(selectedPlaceMark!).whenComplete(
+      () {
+        if (locationSetter == 1) {
+          locallySavedHospitalplacemark = selectedPlaceMark;
+          log(selectedPlaceMark!.toMap().toString());
+          log('Called::: Hospital Place Mark');
+          notifyListeners();
+        } else if (locationSetter == 2) {
+          locallySavedLabortaryplacemark = selectedPlaceMark;
+          log('Called::: Labortary Place Mark');
+          notifyListeners();
+        } else if (locationSetter == 3) {
+          locallySavedPharmacyplacemark = selectedPlaceMark;
+          notifyListeners();
+        } else if (locationSetter == 4) {
+          localsavedHomeplacemark = selectedPlaceMark;
+          notifyListeners();
+        } else {
+          log('Called:::');
+          locallySavedHospitalplacemark = selectedPlaceMark;
+          locallySavedLabortaryplacemark = selectedPlaceMark;
+          locallySavedPharmacyplacemark = selectedPlaceMark;
+          localsavedHomeplacemark = selectedPlaceMark;
+        }
+        log(isUserEditProfile.toString());
+        onSucess.call();
+        locationGetLoading = false;
+        CustomToast.sucessToast(text: 'Location added sucessfully');
+        notifyListeners();
+      },
+    );
   }
 }

@@ -46,7 +46,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
             type: PageTransitionType.bottomToTop,
             page: ProductDetailsScreen(
               productData: widget.productData,
-              fromCart: true,
+              fromCart: false,
             ),
           );
          

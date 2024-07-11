@@ -116,7 +116,7 @@ class LabPrescriptionPage extends StatelessWidget {
                                       .userFetchlDataFetched!.userName ==
                                   null) {
                                 EasyNavigation.push(
-                                    context: context, page: ProfileSetup());
+                                    context: context, page: const ProfileSetup());
                                 CustomToast.infoToast(
                                     text: 'Fill user details');
                               } else {
@@ -148,7 +148,7 @@ class LabPrescriptionPage extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        'Upload the prescription and it send for review.Our pharmacist will review it and add the items to your cart accordingly.',
+                        'Upload the prescription and it send for review.Our Lab will review it and select the test accordingly.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 12,

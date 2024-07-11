@@ -1,12 +1,12 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
-import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/lottie/lotties.dart';
 import 'package:lottie/lottie.dart';
@@ -15,8 +15,10 @@ import 'package:provider/provider.dart';
 class LocationPage extends StatelessWidget {
   const LocationPage({
     super.key,
+    required this.locationSetter,
+  
   });
-
+  final int locationSetter;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,9 +33,9 @@ class LocationPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Lottie.asset(BLottie.lottieLocation, height: 232),
-                    const Gap(62),
+                    const Gap(80),
                     const Text(
-                      'Tap below to select your current location.',
+                      'Tap to continue with your current location.',
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -58,28 +60,31 @@ class LocationPage extends StatelessWidget {
                                         .getCurrentLocationAddress()
                                         .whenComplete(
                                       () {
-                                        if (locationProvider
-                                                .selectedPlaceMark ==
-                                            null) {
-                                          CustomToast.errorToast(
-                                              text:
-                                                  "Couldn't able to get the location,please try again");
-                                          return;
+                                        if (locationProvider.userId != null) {
+                                          locationProvider.setLocationOfUser(
+                                            context: context,
+                                            isUserEditProfile: false,
+                                            locationSetter: locationSetter,
+                                            onSucess: () {
+                                             EasyNavigation.pushReplacement(context: context, page: const BottomNavigationWidget());
+                                            },
+                                          );
+                                        } else {
+                                          locationProvider.saveLocationLocally(
+                                            isUserEditProfile: false,
+                                            context: context,
+                                            locationSetter: locationSetter,
+                                            onSucess: () {
+                                                EasyNavigation.pushReplacement(context: context, page: const BottomNavigationWidget());
+                                            },
+                                          );
                                         }
-                                        locationProvider
-                                            .saveLocationLocally(
-                                                locationProvider
-                                                    .selectedPlaceMark!)
-                                            .whenComplete(
-                                          () {
-                                            locationProvider.setLocationByUser(
-                                              context: context,
-                                              isUserEditProfile: false,
-                                            );
-                                          },
-                                        );
                                       },
                                     );
+                                  }else{
+                                    CustomToast.errorToast(
+                                              text:
+                                                  "Please enable location to continue.");
                                   }
                                 },
                               );
@@ -87,11 +92,10 @@ class LocationPage extends StatelessWidget {
                             buttonWidget: const Text('Pick Your Location',
                                 style: TextStyle(
                                     color: BColors.white,
-                                    fontSize: 15,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w600)),
                             buttonColor: BColors.darkblue,
                           ),
-                    const Gap(16),
                   ],
                 ),
               ),

@@ -94,7 +94,7 @@ class RowProductCategoryWidget extends StatelessWidget {
             SizedBox(
               height: 112,
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
                 scrollDirection: Axis.horizontal,
                 itemCount: pharmacyProvider.pharmacyCategoryList.length,
                 itemBuilder: (context, index) {

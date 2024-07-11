@@ -27,7 +27,7 @@ class DeliveryTypeRadiopopup extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             RadioMenuButton(
-              value: 'Home',
+              value: provider.homeDelivery,
               groupValue: provider.selectedRadio,
               onChanged: (value) {
                 provider.setSelectedRadio(value);
@@ -35,7 +35,7 @@ class DeliveryTypeRadiopopup extends StatelessWidget {
               child: const Text('Home Delivery'),
             ),
             RadioMenuButton(
-              value: 'Pharmacy',
+              value: provider.pharmacyPickup,
               groupValue: provider.selectedRadio,
               onChanged: (value) {
                 provider.setSelectedRadio(value);

@@ -7,7 +7,6 @@ import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
-import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -15,9 +14,12 @@ class UserLocationSearchWidget extends StatefulWidget {
   const UserLocationSearchWidget({
     super.key,
     this.isUserEditProfile,
+    required this.locationSetter,
+    required this.onSucess,
   });
   final bool? isUserEditProfile;
-
+  final int locationSetter;
+  final VoidCallback onSucess;
   @override
   State<UserLocationSearchWidget> createState() =>
       _UserLocationSearchWidgetState();
@@ -28,9 +30,24 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final locationProvider = context.read<LocationProvider>();
-      locationProvider
-        ..clearLocationData()
-        ..getCurrentLocationAddress();
+      LoadingLottie.showLoading(context: context, text: 'Loading...');
+      locationProvider.getLocationPermisson().then(
+        (value) {
+          if (value == true) {
+            locationProvider
+              ..clearLocationData()
+              ..getCurrentLocationAddress().whenComplete(
+                () {
+                  EasyNavigation.pop(context: context);
+                },
+              );
+          } else {
+            EasyNavigation.pop(context: context);
+            CustomToast.errorToast(
+                text: "Please turn on location to continue.");
+          }
+        },
+      );
     });
     super.initState();
   }
@@ -68,9 +85,11 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
               const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 16),
           sliver: SliverToBoxAdapter(
             child: SearchTextFieldButton(
-              text: 'Search city, area or place',
+              text: 'Search city, area or place...',
               onSubmit: (val) {
-                if (val.isEmpty) return;
+                if (val.isEmpty) {
+                  locationProvider.searchResults = [];
+                }
                 locationProvider.searchPlaces();
               },
               controller: locationProvider.searchController,
@@ -87,36 +106,29 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
         SliverToBoxAdapter(
           child: InkWell(
             onTap: () {
-              if (locationProvider.selectedPlaceMark == null) {
-                CustomToast.errorToast(
-                    text: "Couldn't able to get the location,please try again");
-                return;
-              }
-              if (locationProvider.userId != null) {
-                LoadingLottie.showLoading(
-                    context: context, text: 'Saving Location...');
-                locationProvider
-                    .saveLocationLocally(locationProvider.selectedPlaceMark!)
-                    .whenComplete(
-                  () {
-                    locationProvider.setLocationByUser(
-                      context: context,
-                      isUserEditProfile: widget.isUserEditProfile ?? false,
-                    );
-                  },
-                );
-              } else {
-                locationProvider
-                    .saveLocationLocally(locationProvider.selectedPlaceMark!)
-                    .whenComplete(
-                      () {
-                            EasyNavigation.pushAndRemoveUntil(
-                    
+              LoadingLottie.showLoading(
+                  context: context, text: 'Setting location...');
+              if (locationProvider.userId != null &&
+                  widget.isUserEditProfile == true) {
+                locationProvider.setLocationOfUser(
                     context: context,
-                    page: const SplashScreen());
-                      },
-                    );
-            
+                    isUserEditProfile: widget.isUserEditProfile ?? false,
+                    locationSetter: widget.locationSetter,
+                    onSucess: () {
+                      EasyNavigation.pop(context: context);
+                       EasyNavigation.pop(context: context);
+                      widget.onSucess();
+                    });
+              } else {
+                locationProvider.saveLocationLocally(
+                    isUserEditProfile: widget.isUserEditProfile ?? false,
+                    context: context,
+                    locationSetter: widget.locationSetter,
+                    onSucess: () {
+                      EasyNavigation.pop(context: context);
+                       EasyNavigation.pop(context: context);
+                      widget.onSucess();
+                    });
               }
             },
             child: Padding(
@@ -147,27 +159,30 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                                     const SizedBox(),
                                     Expanded(
                                       child: Text(
-                                          overflow: TextOverflow.clip,
-                                          (locationProvider.selectedPlaceMark !=
-                                                  null)
-                                              ? "${locationProvider.selectedPlaceMark?.localArea},${locationProvider.selectedPlaceMark?.district},${locationProvider.selectedPlaceMark?.state}"
-                                              : "Getting current location...",
-                                          style: const TextStyle(
-                                              color: BColors.darkblue,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600)),
+                                        overflow: TextOverflow.clip,
+                                        (locationProvider.selectedPlaceMark !=
+                                                null)
+                                            ? "${locationProvider.selectedPlaceMark?.localArea},${locationProvider.selectedPlaceMark?.district},${locationProvider.selectedPlaceMark?.state}"
+                                            : "Getting current location...",
+                                        style: const TextStyle(
+                                          color: BColors.darkblue,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                               Text(
                                 (locationProvider.searchLoading)
-                                    ? "Getting location, please wait..."
-                                    : "Tap to continue with the location above.",
+                                    ? "Getting current location, please wait..."
+                                    : "Tap to continue with current location.",
                                 style: TextStyle(
-                                    color: BColors.green,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
+                                  color: BColors.green,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
@@ -183,13 +198,15 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
         ),
         if (locationProvider.searchLoading)
           const SliverToBoxAdapter(
-              child: Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 4),
-            child: LinearProgressIndicator(
-              color: BColors.darkblue,
-            ),
-          )),
-        if (locationProvider.searchResults.isEmpty)
+            child: SizedBox(
+                child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: LinearProgressIndicator(
+                color: BColors.darkblue,
+              ),
+            )),
+          )
+        else if (locationProvider.searchResults.isEmpty)
           SliverFillRemaining(
             child: Center(
                 child: Row(
@@ -206,8 +223,8 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                 )
               ],
             )),
-          ),
-        if (locationProvider.searchResults.isNotEmpty)
+          )
+        else
           SliverList.builder(
             itemCount: locationProvider.searchResults.length,
             itemBuilder: (context, index) {
@@ -232,6 +249,33 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
                     onTap: () {
                       locationProvider.setSelectedPlaceMark(
                           locationProvider.searchResults[index]);
+            
+                      LoadingLottie.showLoading(
+                          context: context, text: 'Setting location...');
+                      if (locationProvider.userId != null &&
+                          widget.isUserEditProfile == true) {
+                        locationProvider.setLocationOfUser(
+                          context: context,
+                          isUserEditProfile: widget.isUserEditProfile ?? false,
+                          locationSetter: widget.locationSetter,
+                          onSucess: () {
+                             EasyNavigation.pop(context: context);
+                            EasyNavigation.pop(context: context);
+                            widget.onSucess();
+                          },
+                        );
+                      } else {
+                        locationProvider.saveLocationLocally(
+                            isUserEditProfile:
+                                widget.isUserEditProfile ?? false,
+                            context: context,
+                            locationSetter: widget.locationSetter,
+                            onSucess: () {
+                               EasyNavigation.pop(context: context);
+                              EasyNavigation.pop(context: context);
+                              widget.onSucess();
+                            });
+                      }
                     },
                   ),
                 ),

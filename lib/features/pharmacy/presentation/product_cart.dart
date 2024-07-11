@@ -30,7 +30,6 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
       (timeStamp) {
         final pharmacyProvider =
             Provider.of<PharmacyProvider>(context, listen: false);
-
         pharmacyProvider.getpharmcyCartProduct().whenComplete(
           () {
             pharmacyProvider.totalAmountCalclator();
@@ -242,7 +241,7 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                               if (pharmacyProvider
                                       .selectedpharmacyData?.isHomeDelivery ==
                                   false) {
-                                pharmacyProvider.selectedRadio = 'Pharmacy';
+                                pharmacyProvider.selectedRadio = pharmacyProvider.pharmacyPickup;
                                 EasyNavigation.push(
                                   type: PageTransitionType.rightToLeft,
                                   context: context,

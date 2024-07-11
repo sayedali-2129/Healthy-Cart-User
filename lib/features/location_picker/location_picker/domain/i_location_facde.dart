@@ -9,7 +9,7 @@ abstract class ILocationFacade {
 
   FutureResult<List<PlaceMark>?> getSearchPlaces(String query);
 
-  Future<Either<MainFailure, Unit>> setLocationByUser(PlaceMark placeMark);
+  // Future<Either<MainFailure, Unit>> setLocationByUser(PlaceMark placeMark);
 
   Future<Either<MainFailure, Unit>> updateUserLocation(
       PlaceMark placeMark, String userId);

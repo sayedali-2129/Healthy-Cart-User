@@ -150,22 +150,15 @@ class _ProfileSetupState extends State<ProfileSetup> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          final locationProvider =
-                              context.read<LocationProvider>();
-                          LoadingLottie.showLoading(
-                              context: context, text: 'Please wait...');
-                          locationProvider.getLocationPermisson().then(
-                            (value) {
-                              if (value == true) {
-                                EasyNavigation.pop(context: context);
-                                EasyNavigation.push(
-                                    context: context,
-                                    page: const UserLocationSearchWidget(
-                                      isUserEditProfile: true,
-                                    ));
-                              }
-                            },
-                          );
+                          EasyNavigation.push(
+                              context: context,
+                              page:  UserLocationSearchWidget(
+                                isUserEditProfile: true,
+                                locationSetter: 0,
+                                 onSucess: () {
+                        EasyNavigation.pop(context: context);
+                      },
+                              ));
                         },
                         child: Container(
                           color: Colors.white,

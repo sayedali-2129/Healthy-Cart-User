@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
@@ -11,10 +12,10 @@ class LabListCard extends StatelessWidget {
   const LabListCard({
     super.key,
     required this.screenwidth,
-    required this.index,
+    required this.labortaryData,
     this.onTap,
   });
-  final int index;
+  final LabModel labortaryData;
   final void Function()? onTap;
 
   final double screenwidth;
@@ -22,7 +23,7 @@ class LabListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {
-      final labs = labProvider.labList[index];
+      final labs = labortaryData;
       return GestureDetector(
         onTap: labs.isLabotaroryOn == false
             ? () {
@@ -148,7 +149,7 @@ class LabListCard extends StatelessWidget {
               ),
             ),
             if (labs.isLabotaroryOn == false)
-                          Container(
+              Container(
                 height: 160,
                 width: screenwidth,
                 decoration: BoxDecoration(
@@ -156,18 +157,21 @@ class LabListCard extends StatelessWidget {
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(16),
                         topLeft: Radius.circular(16))),
-                    child:Center(
-                      child: Image.asset(BImage.healthyCartLogoWithOpacity, scale: 3,),
-                    ) ,    
-            ),
-             if (labs.isLabotaroryOn == false)
-            Positioned(
-              bottom: 40,
-              right: 8,
-              child:  Image.asset(
-                  BImage.currentlyUnavailable,
-                  scale: 5,
-                )),
+                child: Center(
+                  child: Image.asset(
+                    BImage.healthyCartLogoWithOpacity,
+                    scale: 3,
+                  ),
+                ),
+              ),
+            if (labs.isLabotaroryOn == false)
+              Positioned(
+                  bottom: 40,
+                  right: 8,
+                  child: Image.asset(
+                    BImage.currentlyUnavailable,
+                    scale: 5,
+                  )),
           ],
         ),
       );

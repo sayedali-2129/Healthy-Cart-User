@@ -108,7 +108,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                             children: [
                               const Divider(),
                               (orderData.addresss != null &&
-                                      orderData.deliveryType == "Home")
+                                      orderData.deliveryType == orderProvider.homeDelivery)
                                   ? Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -263,7 +263,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                       fontWeightText1: FontWeight.w600,
                                       text2Color: BColors.green,
                                     ),
-                                    if (orderData.deliveryType == 'Home')
+                                    if (orderData.deliveryType == orderProvider.homeDelivery)
                                       Column(
                                         children: [
                                           const Gap(8),
@@ -329,7 +329,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               RadioMenuButton(
-                                value: 'COD',
+                                value: orderProvider.cashOnDelivery,
                                 groupValue: orderProvider.selectedPaymentRadio,
                                 onChanged: (value) {
                                   orderProvider.setSelectedRadio(value);
@@ -343,7 +343,7 @@ class ApprovedOrderDetailsScreen extends StatelessWidget {
                                 ),
                               ),
                               RadioMenuButton(
-                                value: 'Online',
+                                value: orderProvider.onlinePayment,
                                 groupValue: orderProvider.selectedPaymentRadio,
                                 onChanged: (value) {
                                   orderProvider.setSelectedRadio(value);

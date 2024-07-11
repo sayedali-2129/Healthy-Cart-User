@@ -56,7 +56,7 @@ class PharmacyListCard extends StatelessWidget {
                       children: [
                         Positioned.fill(
                             child: CustomCachedNetworkImage(
-                                image: pharmacy.pharmacyImage!)),
+                                image: pharmacy.pharmacyImage ?? '')),
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(

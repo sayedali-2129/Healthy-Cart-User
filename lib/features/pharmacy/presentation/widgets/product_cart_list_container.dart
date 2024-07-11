@@ -42,7 +42,7 @@ class ProductListWidget extends StatelessWidget {
                       type: PageTransitionType.bottomToTop,
                       page: ProductDetailsScreen(
                         productData: productData,
-                        fromCart: false,
+                        fromCart: true,
                       ),
                     );
                   },
@@ -216,9 +216,8 @@ class ProductListWidget extends StatelessWidget {
                                           context: context,
                                           text: 'Please Wait...');
                                       pharmacyProvider.incrementInCart(
-                                        index: index,
-                                        productMRPRate:
-                                            productData.productMRPRate!,
+                                        productId: productData.id ?? '',
+                                        productMRPRate:productData.productMRPRate!,
                                         productDiscountRate: productData
                                                     .productDiscountRate ==
                                                 null
@@ -228,8 +227,7 @@ class ProductListWidget extends StatelessWidget {
                                       pharmacyProvider
                                           .addProductToUserCart(
                                         productId: productData.id ?? '',
-                                        selectedQuantityCount: pharmacyProvider
-                                            .productCartQuantityList[index],
+                                        selectedQuantityCount: pharmacyProvider.cartProductMap[productData.id],
                                         cartQuantityIncrement:
                                             true, // this is to make the custom toast accordingly
                                       )
@@ -244,7 +242,7 @@ class ProductListWidget extends StatelessWidget {
                                           context: context,
                                           text: 'Please Wait...');
                                       pharmacyProvider.decrementInCart(
-                                        index: index,
+                                        productId: productData.id ?? '',
                                         productMRPRate:
                                             productData.productMRPRate!,
                                         productDiscountRate: productData
@@ -257,8 +255,7 @@ class ProductListWidget extends StatelessWidget {
                                       pharmacyProvider
                                           .addProductToUserCart(
                                         productId: productData.id ?? '',
-                                        selectedQuantityCount: pharmacyProvider
-                                            .productCartQuantityList[index],
+                                        selectedQuantityCount: pharmacyProvider.cartProductMap[productData.id],
                                         cartQuantityIncrement: false,
                                       )
                                           .whenComplete(
@@ -268,7 +265,7 @@ class ProductListWidget extends StatelessWidget {
                                       );
                                     },
                                     quantityValue: pharmacyProvider
-                                        .productCartQuantityList[index],
+                                        .cartProductMap[productData.id],
                                   ),
                                   if (productData.productDiscountRate != null)
                                     Padding(
@@ -317,7 +314,7 @@ class ProductListWidget extends StatelessWidget {
                             subText: 'Are you sure you want to proceed ?');
                       },
                       icon: Icon(
-                        Icons.remove_circle_outline,
+                        Icons.cancel_rounded,
                         color: BColors.red,
                         size: 28,
                       )))

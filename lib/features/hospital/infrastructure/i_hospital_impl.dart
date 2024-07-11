@@ -19,6 +19,7 @@ import 'package:injectable/injectable.dart';
 class IHospitalImpl implements IHospitalFacade {
   IHospitalImpl(this.firebaseFirestore);
   final FirebaseFirestore firebaseFirestore;
+  /* --------------------- Getting Hospital Location Based -------------------- */
   LocationSortEnum locationSortEnum = LocationSortEnum.localArea;
   QueryDocumentSnapshot<Map<String, dynamic>>? lastdoc;
   int limit = 10;
@@ -30,14 +31,14 @@ class IHospitalImpl implements IHospitalFacade {
   int currentDistrictIndex = 0;
   int currentStateIndex = 0;
 
-  //
   final collection = FirebaseCollections.hospitalCollection;
   final baseDir = 'placemark.';
   final timestamp = 'createdAt';
   final locationCollection = 'hospitalLocations';
 
   @override
-  FutureResult<List<HospitalModel>> fetchProduct(PlaceMark placeMark) async {
+  FutureResult<List<HospitalModel>> fetchHospitalLocationBasedData(
+      PlaceMark placeMark) async {
     if (locationSortEnum == LocationSortEnum.noDataFound) {
       return left(
         const MainFailure.generalException(errMsg: 'No data found!'),
@@ -55,6 +56,8 @@ class IHospitalImpl implements IHospitalFacade {
                   .collection(collection)
                   .where('${baseDir}district', isEqualTo: placeMark.district)
                   .where('${baseDir}localArea', isEqualTo: placeMark.localArea)
+                  .where('requested', isEqualTo: 2)
+                  .where('isActive', isEqualTo: true)
                   .orderBy(timestamp)
                   .limit(limit)
                   .get()
@@ -62,6 +65,8 @@ class IHospitalImpl implements IHospitalFacade {
                   .collection(collection)
                   .where('${baseDir}district', isEqualTo: placeMark.district)
                   .where('${baseDir}localArea', isEqualTo: placeMark.localArea)
+                  .where('requested', isEqualTo: 2)
+                  .where('isActive', isEqualTo: true)
                   .orderBy(timestamp)
                   .startAfterDocument(lastdoc!)
                   .limit(limit)
@@ -101,6 +106,8 @@ class IHospitalImpl implements IHospitalFacade {
                       '${baseDir}localArea',
                       whereIn: localAreaList[currentIndex],
                     )
+                    .where('requested', isEqualTo: 2)
+                    .where('isActive', isEqualTo: true)
                     .orderBy(timestamp)
                     .limit(limit)
                     .get()
@@ -111,6 +118,8 @@ class IHospitalImpl implements IHospitalFacade {
                       '${baseDir}localArea',
                       whereIn: localAreaList[currentIndex],
                     )
+                    .where('requested', isEqualTo: 2)
+                    .where('isActive', isEqualTo: true)
                     .orderBy(timestamp)
                     .startAfterDocument(lastdoc!)
                     .limit(limit)
@@ -158,6 +167,8 @@ class IHospitalImpl implements IHospitalFacade {
                       '${baseDir}district',
                       whereIn: districtList[currentDistrictIndex],
                     )
+                    .where('requested', isEqualTo: 2)
+                    .where('isActive', isEqualTo: true)
                     .orderBy(timestamp)
                     .limit(limit)
                     .get()
@@ -168,6 +179,8 @@ class IHospitalImpl implements IHospitalFacade {
                       '${baseDir}district',
                       whereIn: districtList[currentDistrictIndex],
                     )
+                    .where('requested', isEqualTo: 2)
+                    .where('isActive', isEqualTo: true)
                     .orderBy(timestamp)
                     .startAfterDocument(lastdoc!)
                     .limit(limit)
@@ -217,6 +230,8 @@ class IHospitalImpl implements IHospitalFacade {
                       '${baseDir}state',
                       whereIn: stateList[currentStateIndex],
                     )
+                    .where('requested', isEqualTo: 2)
+                    .where('isActive', isEqualTo: true)
                     .orderBy(timestamp)
                     .limit(limit)
                     .get()
@@ -227,6 +242,8 @@ class IHospitalImpl implements IHospitalFacade {
                       '${baseDir}state',
                       whereIn: stateList[currentStateIndex],
                     )
+                    .where('requested', isEqualTo: 2)
+                    .where('isActive', isEqualTo: true)
                     .orderBy(timestamp)
                     .startAfterDocument(lastdoc!)
                     .limit(limit)
@@ -271,7 +288,7 @@ class IHospitalImpl implements IHospitalFacade {
   }
 
   @override
-  void clearData() {
+  void clearHospitalLocationData() {
     locationSortEnum = LocationSortEnum.localArea;
     lastdoc = null;
     currentIndex = 0;
@@ -280,7 +297,7 @@ class IHospitalImpl implements IHospitalFacade {
   }
 
   @override
-  FutureResult<Unit> fecthUserLocaltion(PlaceMark placeMark) async {
+  FutureResult<Unit> fecthHospitalLocation(PlaceMark placeMark) async {
     try {
       final futureList = <Future<DocumentSnapshot<Map<String, dynamic>>>>[
         // get district doc
@@ -365,6 +382,7 @@ class IHospitalImpl implements IHospitalFacade {
     for (var i = 0; i < location.length; i += chunkSize) {
       final end =
           (i + chunkSize < location.length) ? i + chunkSize : location.length;
+
       result.add(location.sublist(i, end));
     }
     return result;
@@ -441,6 +459,7 @@ class IHospitalImpl implements IHospitalFacade {
       Query query = firebaseFirestore
           .collection(FirebaseCollections.hospitalCollection)
           .where('requested', isEqualTo: 2)
+          .where('isActive', isEqualTo: true)
           .orderBy('createdAt', descending: true);
 
       if (hospitalSearch != null && hospitalSearch.isNotEmpty) {
@@ -451,8 +470,8 @@ class IHospitalImpl implements IHospitalFacade {
       if (hospitalLastDoc != null) {
         query = query.startAfterDocument(hospitalLastDoc!);
       }
-      final snapshot = await query.limit(5).get();
-      if (snapshot.docs.length < 5 || snapshot.docs.isEmpty) {
+      final snapshot = await query.limit(4).get();
+      if (snapshot.docs.length < 4 || snapshot.docs.isEmpty) {
         hospitalNoMoreData = true;
       } else {
         hospitalLastDoc =
@@ -522,15 +541,34 @@ class IHospitalImpl implements IHospitalFacade {
     }
   }
 
+/* -------------------------- GET HOSPITAL ALL CATRGORY For home screen ------------------------- */
+  @override
+  FutureResult<List<HospitalCategoryModel>> getHospitalAllCategory() async {
+    try {
+      final result = await firebaseFirestore
+          .collection(FirebaseCollections.doctorCategory)
+          .get();
+
+      final categoryList = result.docs
+          .map<HospitalCategoryModel>(
+              (e) => HospitalCategoryModel.fromMap(e.data()).copyWith(id: e.id))
+          .toList();
+
+      return right(categoryList);
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
 /* ------------------------------- GET DOCTRS ------------------------------- */
 
   DocumentSnapshot<Map<String, dynamic>>? lastDoc;
   bool noMoreData = false;
   @override
-  FutureResult<List<DoctorModel>> getDoctors(
-      {required String hospitalId,
-      String? doctorSearch,
-      String? categoryId}) async {
+  FutureResult<List<DoctorModel>> getDoctors({
+    required String hospitalId,
+    String? doctorSearch,
+    String? categoryId,
+  }) async {
     if (noMoreData) return right([]);
     try {
       Query query = firebaseFirestore
@@ -567,5 +605,63 @@ class IHospitalImpl implements IHospitalFacade {
   void clearDoctorData() {
     lastDoc = null;
     noMoreData = false;
+  }
+  /* ---------------------- GET ALL DOCTORS CATEGORY WISE --------------------- */
+
+  DocumentSnapshot<Map<String, dynamic>>? lastCategoryDoctorDoc;
+  bool noCategoryDoctorMoreData = false;
+  @override
+  FutureResult<List<DoctorModel>> getAllDoctorsCategoryWise(
+      {String? doctorSearch, required String categoryId}) async {
+    if (noCategoryDoctorMoreData) return right([]);
+    try {
+      Query query = firebaseFirestore
+          .collection(FirebaseCollections.doctorCollection)
+          .where('categoryId', isEqualTo: categoryId)
+          .orderBy('createdAt', descending: true);
+
+      if (doctorSearch != null && doctorSearch.isNotEmpty) {
+        query =
+            query.where('keywords', arrayContains: doctorSearch.toLowerCase());
+      }
+      if (lastCategoryDoctorDoc != null) {
+        query = query.startAfterDocument(lastCategoryDoctorDoc!);
+      }
+      final snapshot = await query.limit(12).get();
+      if (snapshot.docs.length < 12 || snapshot.docs.isEmpty) {
+        noCategoryDoctorMoreData = true;
+      } else {
+        lastCategoryDoctorDoc =
+            snapshot.docs.last as DocumentSnapshot<Map<String, dynamic>>;
+      }
+      return right(snapshot.docs
+          .map((e) => DoctorModel.fromMap(e.data() as Map<String, dynamic>)
+              .copyWith(id: e.id))
+          .toList());
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  void clearAllDoctorsCategoryWiseData() {
+    lastCategoryDoctorDoc = null;
+    noCategoryDoctorMoreData = false;
+  }
+
+  @override
+  FutureResult<HospitalModel> getCategoryWiseHospital(
+      {required String hospitalId}) async {
+    try {
+      final result = await firebaseFirestore
+          .collection(FirebaseCollections.hospitalCollection)
+          .doc(hospitalId)
+          .get();
+
+      return right(
+          HospitalModel.fromMap(result.data()!).copyWith(id: result.id));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
   }
 }

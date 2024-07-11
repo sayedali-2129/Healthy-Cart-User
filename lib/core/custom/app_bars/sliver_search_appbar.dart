@@ -6,10 +6,13 @@ class CustomSliverSearchAppBar extends StatelessWidget {
     super.key,
     required this.onTapBackButton,
     required this.searchOnChanged,
-    this.controller,
+    required this.searchHint,
+    this.controller, this.onSubmitted,
   });
+  final String searchHint;
   final VoidCallback onTapBackButton;
   final void Function(String) searchOnChanged;
+   final void Function(String)? onSubmitted;
   final TextEditingController? controller;
   @override
   Widget build(BuildContext context) {
@@ -37,6 +40,7 @@ class CustomSliverSearchAppBar extends StatelessWidget {
       title: Padding(
         padding: const EdgeInsets.only(right: 8, bottom: 8, top: 8),
         child: TextField(
+          onSubmitted: onSubmitted,
           onChanged: searchOnChanged,
           controller: controller,
           showCursor: false,
@@ -44,7 +48,7 @@ class CustomSliverSearchAppBar extends StatelessWidget {
           cursorColor: BColors.black,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
-            hintText: 'Search products',
+            hintText: searchHint,
             hintStyle: const TextStyle(fontSize: 14),
             suffixIcon: const Icon(
               Icons.search_outlined,

@@ -182,10 +182,13 @@ class LabListCardHome extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: BColors.white.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(16)),
-                child: Center(
-                      child: Image.asset(BImage.healthyCartLogoWithOpacity, scale: 3.5,),
-                    )
               ),
+              if (labProvider.labList[index].isLabotaroryOn == false)
+                          Positioned(
+                  top:8,
+                  right:12,
+                  child: Image.asset(BImage.healthyCartLogoWithOpacity, scale: 4,),
+                ),   
            if (labProvider.labList[index].isLabotaroryOn == false)
             Positioned(
               bottom: 8,

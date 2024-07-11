@@ -102,7 +102,7 @@ class CancelledCard extends StatelessWidget {
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 15))
                             : Text(
-                                '${orders.selectedTest!.first.testName!} & ${orders.selectedTest!.length - 1} More',
+                                '${orders.selectedTest?.first.testName??'Unknown test'} & ${orders.selectedTest!.length - 1} More',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 15),
                               ),

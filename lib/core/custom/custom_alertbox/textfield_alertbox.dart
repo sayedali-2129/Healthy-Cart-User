@@ -14,7 +14,8 @@ class TextFieldAlertBoxWidget {
       required String subText,
       required TextEditingController controller,
       int? maxlines,
-      TextInputType? keyboardType}) async {
+      TextInputType? keyboardType,
+      }) async {
     await showDialog(
       context: context,
       builder: (context) {

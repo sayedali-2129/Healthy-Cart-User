@@ -1,8 +1,7 @@
-
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/general/typdef.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_banner_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
@@ -31,8 +30,23 @@ abstract class IPharmacyFacade {
   void clearPharmacyAllProductFetchData();
   void clearPharmacyCategoryProductFetchData();
 
+
+  FutureResult<List<PharmacyModel>> fetchPharmacyLocationBasedData(PlaceMark placeMark) {
+    throw UnimplementedError('fetchProduct is not implemented');
+  }
+
+  FutureResult<Unit> fecthPharmacyLocation(PlaceMark placeMark) {
+    throw UnimplementedError('fecthUserLocaltion is not implemented');
+  }
+
+  void clearPharmacyLocationData() {
+    throw UnimplementedError('clearData is not implemented');
+  }
   FutureResult<List<PharmacyModel>> getAllPharmacy({
     required String? searchText,
+  });
+    FutureResult<PharmacyModel>getSinglePharmacy({
+    required String pharmacyId,
   });
   FutureResult<List<PharmacyCategoryModel>> getpharmacyCategory({
     required List<String> categoryIdList,

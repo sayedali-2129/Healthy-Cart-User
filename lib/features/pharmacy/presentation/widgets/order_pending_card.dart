@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
-import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/custom_alertbox/textfield_alertbox.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
@@ -160,7 +159,7 @@ class PharmacyPendingCard extends StatelessWidget {
                         context: context,
                         controller: orderProvider.rejectionReasonController,
                         maxlines: 3,
-                        hintText: 'Let us know more about cancellation.',
+                        hintText: 'Let us know more about cancellation.(Optional)',
                         titleText: 'Confrim to cancel !',
                         subText: 'Are you sure you want to confirm the cancellation of this order?',
                         confirmButtonTap: () {

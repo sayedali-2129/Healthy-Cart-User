@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
-import 'package:provider/provider.dart';
 
 class OrderSummaryPharmacyCard extends StatelessWidget {
   const OrderSummaryPharmacyCard({

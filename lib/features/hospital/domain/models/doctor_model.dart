@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 
 class DoctorModel {
   String? id;
   final String? hospitalId;
   final String? categoryId;
+  final String? hospital;
   final int? doctorFee;
   final int? doctorExperience;
   final String? doctorImage;
@@ -15,10 +17,12 @@ class DoctorModel {
   final String? doctorAbout;
   final Timestamp? createdAt;
   final List<String>? keywords;
+  final  PlaceMark? placemark;
 
   DoctorModel({
     this.id,
     this.hospitalId,
+    this.hospital,
     this.categoryId,
     this.doctorFee,
     this.doctorExperience,
@@ -31,11 +35,13 @@ class DoctorModel {
     this.doctorAbout,
     this.createdAt,
     this.keywords,
+    this.placemark,
   });
 
   DoctorModel copyWith({
     String? id,
     String? hospitalId,
+    String? hospital,
     String? categoryId,
     int? doctorFee,
     int? doctorExperience,
@@ -48,10 +54,12 @@ class DoctorModel {
     String? doctorAbout,
     Timestamp? createdAt,
     List<String>? keywords,
+    PlaceMark? placemark,
   }) {
     return DoctorModel(
       id: id ?? this.id,
       hospitalId: hospitalId ?? this.hospitalId,
+      hospital: hospital ?? this.hospital,
       categoryId: categoryId ?? this.categoryId,
       doctorFee: doctorFee ?? this.doctorFee,
       doctorExperience: doctorExperience ?? this.doctorExperience,
@@ -64,6 +72,7 @@ class DoctorModel {
       doctorAbout: doctorAbout ?? this.doctorAbout,
       createdAt: createdAt ?? this.createdAt,
       keywords: keywords ?? this.keywords,
+      placemark: placemark ?? this.placemark 
     );
   }
 
@@ -71,6 +80,7 @@ class DoctorModel {
     return <String, dynamic>{
       'id': id,
       'hospitalId': hospitalId,
+      'hospital': hospital,
       'categoryId': categoryId,
       'doctorFee': doctorFee,
       'doctorExperience': doctorExperience,
@@ -83,6 +93,7 @@ class DoctorModel {
       'doctorAbout': doctorAbout,
       'createdAt': createdAt,
       'keywords': keywords,
+       'placemark': placemark?.toMap(),
     };
   }
 
@@ -91,6 +102,8 @@ class DoctorModel {
       id: map['id'] != null ? map['id'] as String : null,
       hospitalId:
           map['hospitalId'] != null ? map['hospitalId'] as String : null,
+      hospital:
+          map['hospital'] != null ? map['hospital'] as String : null,
       categoryId:
           map['categoryId'] != null ? map['categoryId'] as String : null,
       doctorFee: map['doctorFee'] != null ? map['doctorFee'] as int : null,
@@ -120,6 +133,9 @@ class DoctorModel {
       keywords: map['keywords'] != null
           ? List<String>.from((map['keywords'] as List<dynamic>))
           : null,
+      placemark: map['placemark'] != null
+          ? PlaceMark.fromMap(map['placemark'] as Map<String, dynamic>)
+          : null,    
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
+import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
@@ -11,20 +12,17 @@ class HospitalMainCard extends StatelessWidget {
   const HospitalMainCard({
     super.key,
     required this.screenwidth,
-    required this.index,
-    this.onTap,
+    this.onTap, required this.hospital,
   });
-  final int index;
+  final HospitalModel hospital;
   final void Function()? onTap;
-
   final double screenwidth;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
-      final hospitals = hospitalProvider.hospitalList[index];
       return GestureDetector(
-        onTap: hospitals.ishospitalON == false
+        onTap: hospital.ishospitalON == false
             ? () {
                 CustomToast.errorToast(
                     text: 'This Hospital is not available now!');
@@ -58,7 +56,7 @@ class HospitalMainCard extends StatelessWidget {
                         children: [
                           Positioned.fill(
                               child: CustomCachedNetworkImage(
-                                  image: hospitals.image!)),
+                                  image: hospital.image!)),
                           Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -84,7 +82,7 @@ class HospitalMainCard extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  hospitals.hospitalName!.toUpperCase(),
+                                  hospital.hospitalName!.toUpperCase(),
                                   style: const TextStyle(
                                       color: BColors.black,
                                       fontSize: 16,
@@ -126,7 +124,7 @@ class HospitalMainCard extends StatelessWidget {
                               const Gap(3),
                               Expanded(
                                 child: Text(
-                                  '${hospitals.address}',
+                                  '${hospital.address}',
                                   style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w500),
@@ -141,8 +139,8 @@ class HospitalMainCard extends StatelessWidget {
                 ),
               ),
             ),
-            if (hospitals.ishospitalON == false)
-                         Container(
+            if (hospital.ishospitalON == false)
+              Container(
                 height: 160,
                 width: screenwidth,
                 decoration: BoxDecoration(
@@ -150,18 +148,21 @@ class HospitalMainCard extends StatelessWidget {
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(16),
                         topLeft: Radius.circular(16))),
-                    child:Center(
-                      child: Image.asset(BImage.healthyCartLogoWithOpacity, scale: 3,),
-                    ) ,    
-            ),
-             if (hospitals.ishospitalON == false)
-            Positioned(
-              bottom: 40,
-              right: 8,
-              child:  Image.asset(
-                  BImage.currentlyUnavailable,
-                  scale: 5,
-                )),
+                child: Center(
+                  child: Image.asset(
+                    BImage.healthyCartLogoWithOpacity,
+                    scale: 3,
+                  ),
+                ),
+              ),
+            if (hospital.ishospitalON == false)
+              Positioned(
+                  bottom: 40,
+                  right: 8,
+                  child: Image.asset(
+                    BImage.currentlyUnavailable,
+                    scale: 5,
+                  )),
           ],
         ),
       );

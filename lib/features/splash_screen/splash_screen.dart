@@ -22,12 +22,10 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    final locationProvider = context.read<LocationProvider>();
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    final auth = FirebaseAuth.instance;
     final notiProvider = context.read<NotificationProvider>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-       FirebaseMessaging.instance.subscribeToTopic('All');
+      FirebaseMessaging.instance.subscribeToTopic('All');
       notiProvider.notificationPermission();
       if (userId != null) {
         context
@@ -37,51 +35,20 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
-        locationProvider.getLocationLocally();
-        if (auth.currentUser == null &&
-            locationProvider.locallysavedplacemark == null) {
-          EasyNavigation.pushAndRemoveUntil(
+        EasyNavigation.pushReplacement(
             context: context,
-            page: const LocationPage(),
-          );
-        } else if (auth.currentUser == null) {
-          EasyNavigation.pushAndRemoveUntil(
-            context: context,
-            page: const BottomNavigationWidget(),
-          );
-        } else if (locationProvider.locallysavedplacemark == null &&
-            auth.currentUser != null) {
-          EasyNavigation.pushAndRemoveUntil(
-            context: context,
-            page: const LocationPage(),
-          );
-        } else {
-          EasyNavigation.pushAndRemoveUntil(
-            context: context,
-            page: const BottomNavigationWidget(),
-          );
-        }
+            page: LocationPage(
+              locationSetter: 0,
+            ),
+            );
       },
     );
 
-    /* ------------------------------ OLD FUNCTION ------------------------------ */
-    // Future.delayed(const Duration(seconds: 4)).then((value) {
-    //   if (userId == null) {
-    //     EasyNavigation.pushReplacement(
-    //         context: context, page: const LoginScreen());
-    //   } else {
-    //     context
-    //         .read<AuthenticationProvider>()
-    //         .navigationUserFuction(context: context);
-    //   }
-    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final screenwidth = MediaQuery.of(context).size.width;
-    // final screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Animate(
         child: Center(
