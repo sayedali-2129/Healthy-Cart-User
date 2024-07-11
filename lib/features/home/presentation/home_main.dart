@@ -27,7 +27,6 @@ import 'package:healthy_cart_user/features/location_picker/location_picker/appli
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
 import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
-import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
@@ -60,9 +59,11 @@ class _HomeMainState extends State<HomeMain> {
         hospitalProvider
             .hospitalFetchInitData(
           context: context,
-      ) .whenComplete(
+        )
+            .whenComplete(
           () {
             hospitalProvider.getHospitalAllCategory();
+            homeProvider.getBanner();
           },
         );
 
@@ -70,8 +71,6 @@ class _HomeMainState extends State<HomeMain> {
           context: context,
         );
         pharmacyProvider.pharmacyFetchInitData(context: context);
-
-        homeProvider.getBanner();
       },
     );
     super.initState();
@@ -126,7 +125,8 @@ class _HomeMainState extends State<HomeMain> {
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: FadeInRight(
-                          child: AdSliderHome(screenWidth: screenwidth)),
+                        child: AdSliderHome(screenWidth: screenwidth),
+                      ),
                     ),
                   if (hospitalProvier.hospitalList.isNotEmpty)
                     Padding(
@@ -195,7 +195,8 @@ class _HomeMainState extends State<HomeMain> {
                         )),
                       ),
                     ),
-                  if (hospitalProvier.hospitalAllCategoryList.isNotEmpty)
+                  if (hospitalProvier.hospitalAllCategoryList.isNotEmpty &&
+                      hospitalProvier.hospitalList.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
@@ -210,15 +211,17 @@ class _HomeMainState extends State<HomeMain> {
                           ViewAllButton(
                             onTap: () {
                               EasyNavigation.push(
-                                  type: PageTransitionType.rightToLeft,
-                                  context: context,
-                                  page: const AllCategoriesScreen());
+                                type: PageTransitionType.rightToLeft,
+                                context: context,
+                                page: const AllCategoriesScreen(),
+                              );
                             },
                           )
                         ],
                       ),
                     ),
-                  if (hospitalProvier.hospitalAllCategoryList.isNotEmpty)
+                  if (hospitalProvier.hospitalAllCategoryList.isNotEmpty &&
+                      hospitalProvier.hospitalList.isNotEmpty)
                     GridView.builder(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),

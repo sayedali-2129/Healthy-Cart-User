@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/features/home/domain/facade/i_home_facade.dart';
 import 'package:healthy_cart_user/features/home/domain/models/home_banner_model.dart';
-import 'package:healthy_cart_user/features/hospital/domain/models/hospital_category_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

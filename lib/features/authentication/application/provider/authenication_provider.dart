@@ -1,12 +1,15 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
+import 'package:healthy_cart_user/core/custom/no_data/no_internet.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/otp_ui.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
+import 'package:healthy_cart_user/main.dart';
 import 'package:injectable/injectable.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -91,7 +94,7 @@ class AuthenticationProvider extends ChangeNotifier {
       }, (isVerified) {
         Navigator.pop(context);
         EasyNavigation.push(
-          type: PageTransitionType.rightToLeft,
+            type: PageTransitionType.rightToLeft,
             context: context,
             page: OTPScreen(
               verificationId: verificationId ?? 'No veriId',
@@ -127,4 +130,7 @@ class AuthenticationProvider extends ChangeNotifier {
           context: context, page: const SplashScreen());
     });
   }
+  /* -------------------------- INTERNET CONNECTIVITY ------------------------- */
+
+
 }

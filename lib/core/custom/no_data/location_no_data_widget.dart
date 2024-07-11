@@ -31,8 +31,6 @@ class NoDataInSelectedLocation extends StatelessWidget {
             const Gap(8),
             Expanded(
               child: RichText(
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
                 text: TextSpan(
                   children: [
                     const TextSpan(
@@ -42,7 +40,7 @@ class NoDataInSelectedLocation extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                           fontSize: 12,
                           fontFamily: 'Montserrat',
-                        )),
+                        ),),
                     TextSpan(
                       text: locationTitle,
                       style: const TextStyle(

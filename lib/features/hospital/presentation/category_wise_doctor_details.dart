@@ -66,135 +66,189 @@ class _CategoryWiseDoctorDetailsScreenState
     return Consumer2<HospitalProvider, AuthenticationProvider>(
         builder: (context, hospitalProvider, authProvider, _) {
       final doctor = hospitalProvider.relatedSelectedDoctor;
-      return PopScope(
-        onPopInvoked: (didPop) {},
-        child: Scaffold(
-          body: CustomScrollView(
-            controller: scrollController,
-            slivers: [
-              SliverCustomAppbar(
-                onBackTap: () {
-                  EasyNavigation.pop(context: context);
-                },
-                title: doctor?.doctorName ?? 'Doctor',
-              ),
-              if (hospitalProvider.isLoading == true &&
-                  hospitalProvider.doctorsList.isEmpty)
-                const SliverFillRemaining(
-                  child: Center(
-                    child: LoadingIndicater(),
-                  ),
+      return Scaffold(
+        body: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            SliverCustomAppbar(
+              onBackTap: () {
+                EasyNavigation.pop(context: context);
+              },
+              title: doctor?.doctorName ?? 'Doctor',
+            ),
+            if (hospitalProvider.isLoading == true &&
+                hospitalProvider.doctorsList.isEmpty)
+              const SliverFillRemaining(
+                child: Center(
+                  child: LoadingIndicater(),
                 ),
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverToBoxAdapter(
-                    child: DoctorDetailsTopCard(
-                        doctors: doctor ?? DoctorModel(), isBooking: false)),
               ),
-              const SliverGap(10),
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverToBoxAdapter(
+                child: DoctorDetailsTopCard(
+                    doctors: doctor ?? DoctorModel(), isBooking: false),
+              ),
+            ),
+            const SliverGap(8),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: ButtonWidget(
+                  buttonHeight: 48,
+                  buttonWidth: double.infinity,
+                  buttonColor: (hospitalProvider
+                                  .selectedCategoryWiseHospital?.isActive ==
+                              true &&
+                          hospitalProvider
+                                  .selectedCategoryWiseHospital?.ishospitalON ==
+                              true)
+                      ? BColors.mainlightColor
+                      : BColors.grey,
+                  buttonWidget: const Text(
+                    'Make An Appoinment',
+                    style: TextStyle(
+                        color: BColors.white, fontWeight: FontWeight.w600),
+                  ),
+                  onPressed: (hospitalProvider
+                                  .selectedCategoryWiseHospital?.isActive ==
+                              true &&
+                          hospitalProvider
+                                  .selectedCategoryWiseHospital?.ishospitalON ==
+                              true)
+                      ? () {
+                          if (authProvider.userFetchlDataFetched!.userName ==
+                              null) {
+                            EasyNavigation.push(
+                                type: PageTransitionType.rightToLeft,
+                                duration: 250,
+                                context: context,
+                                page: const ProfileSetup());
+                            CustomToast.infoToast(text: 'Fill user details');
+                          } else {
+                            EasyNavigation.push(
+                                context: context,
+                                page: DoctorBookingScreen(
+                                  hospital: hospitalProvider
+                                          .selectedCategoryWiseHospital ??
+                                      HospitalModel(),
+                                  doctorModel: doctor ?? DoctorModel(),
+                                ),
+                                type: PageTransitionType.rightToLeft,
+                                duration: 250);
+                          }
+                        }
+                      : () {
+                          CustomToast.infoToast(
+                              text:
+                                  "This hospital is not currently accepting bookings.");
+                        },
+                ),
+              ),
+            ),
+            (hospitalProvider.selectedCategoryWiseHospital?.isActive !=
+                    true &&
+                hospitalProvider.selectedCategoryWiseHospital?.ishospitalON !=
+                    true)?
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Material(
-                    elevation: 4,
-                    borderRadius: BorderRadius.circular(12),
-                    child: ButtonWidget(
-                      buttonHeight: 48,
-                      buttonWidth: double.infinity,
-                      buttonColor: BColors.mainlightColor,
-                      buttonWidget: const Text(
-                        'Make An Appoinment',
-                        style: TextStyle(
-                            color: BColors.white, fontWeight: FontWeight.w600),
-                      ),
-                      onPressed: () {
-                        if (authProvider.userFetchlDataFetched!.userName ==
-                            null) {
-                          EasyNavigation.push(
-                              type: PageTransitionType.rightToLeft,
-                              duration: 250,
-                              context: context,
-                              page: const ProfileSetup());
-                          CustomToast.infoToast(text: 'Fill user details');
+                  padding:
+                      const EdgeInsets.all(16),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                         TextSpan(
+                            text: "Unfortunately, ",
+                            style: TextStyle(
+                              color: BColors.red,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              fontFamily: 'Montserrat',
+                            )),
+                        TextSpan(
+                          text:
+                              '${hospitalProvider.selectedCategoryWiseHospital?.hospitalName}',
+                          style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: BColors.black),
+                        ),
+                        TextSpan(
+                          text:
+                              " is not accepting any booking, please try again after some time.",
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: BColors.red),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ):
+            const SliverGap(24),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(),
+                    Gap(12),
+                    Text(
+                      'Related Doctors',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            (hospitalProvider.doctorsList.isEmpty)
+                ? const SliverFillRemaining(
+                    child: Center(
+                    child: Text('No related doctors are currently available!'),
+                  ))
+                : SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    sliver: SliverList.separated(
+                      separatorBuilder: (context, index) => const Gap(5),
+                      itemCount: hospitalProvider.doctorsList.length,
+                      itemBuilder: (context, index) {
+                        final doctorRelated =
+                            hospitalProvider.doctorsList[index];
+
+                        if (doctor?.id == doctorRelated.id) {
+                          return const SizedBox.shrink();
                         } else {
-                          EasyNavigation.push(
-                              context: context,
-                              page: DoctorBookingScreen(
-                                hospital: hospitalProvider
-                                        .selectedCategoryWiseHospital ??
-                                    HospitalModel(),
-                                doctorModel: doctor ?? DoctorModel(),
-                              ),
-                              type: PageTransitionType.rightToLeft,
-                              duration: 250);
+                          return FadeIn(
+                            child: GestureDetector(
+                                onTap: () {
+                                  EasyNavigation.pushReplacement(
+                                    context: context,
+                                    page: CategoryWiseDoctorDetailsScreen(
+                                        doctorModel: hospitalProvider
+                                            .doctorsList[index]),
+                                  );
+                                },
+                                child: DoctorCard(
+                                    fromHomePage: true,
+                                    doctor:
+                                        hospitalProvider.doctorsList[index])),
+                          );
                         }
                       },
                     ),
                   ),
-                ),
-              ),
-              const SliverGap(30),
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Divider(),
-                      Gap(12),
-                      Text(
-                        'Related Doctors',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              (hospitalProvider.doctorsList.isEmpty)
-                  ? const SliverFillRemaining(
-                      child: Center(
-                      child:
-                          Text('No related doctors are currently available!'),
-                    ))
-                  : SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      sliver: SliverList.separated(
-                        separatorBuilder: (context, index) => const Gap(5),
-                        itemCount: hospitalProvider.doctorsList.length,
-                        itemBuilder: (context, index) {
-                          final doctorRelated =
-                              hospitalProvider.doctorsList[index];
-
-                          if (doctor?.id == doctorRelated.id) {
-                            return const SizedBox.shrink();
-                          } else {
-                            return FadeIn(
-                              child: GestureDetector(
-                                  onTap: () {
-                                    EasyNavigation.pushReplacement(
-                                      context: context,
-                                      page: CategoryWiseDoctorDetailsScreen(
-                                          doctorModel: hospitalProvider
-                                              .doctorsList[index]),
-                                    );
-                                  },
-                                  child: DoctorCard(
-                                      fromHomePage: true,
-                                      doctor:
-                                          hospitalProvider.doctorsList[index])),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-              SliverToBoxAdapter(
-                  child: (hospitalProvider.isLoading == true &&
-                          hospitalProvider.doctorsList.isNotEmpty)
-                      ? const Center(child: LoadingIndicater())
-                      : null),
-            ],
-          ),
+            SliverToBoxAdapter(
+                child: (hospitalProvider.isLoading == true &&
+                        hospitalProvider.doctorsList.isNotEmpty)
+                    ? const Center(child: LoadingIndicater())
+                    : null),
+          ],
         ),
       );
     });
