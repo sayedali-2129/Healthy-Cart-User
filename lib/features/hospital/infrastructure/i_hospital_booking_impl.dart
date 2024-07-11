@@ -143,7 +143,11 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
       await _firestore
           .collection(FirebaseCollections.hospitalBookingCollection)
           .doc(orderId)
-          .update({'isUserAccepted': true, 'paymentMethod': paymentMethod});
+          .update({
+        'isUserAccepted': true,
+        'paymentMethod': paymentMethod,
+        'paymentStatus': 1
+      });
       return right('Booking Accepted Successfully');
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
