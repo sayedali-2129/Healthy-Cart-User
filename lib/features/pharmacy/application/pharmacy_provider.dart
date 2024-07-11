@@ -219,7 +219,7 @@ class PharmacyProvider extends ChangeNotifier {
       fecthPharmacyLocation(
         context: context,
         success: () {
-          clearHospitalLocationData();
+          clearPharmacyLocationData();
           fetchPharmacyLocationBasedData(context);
         },
       );
@@ -235,7 +235,7 @@ class PharmacyProvider extends ChangeNotifier {
     });
   }
 
-  void clearHospitalLocationData() {
+  void clearPharmacyLocationData() {
     pharmacyList.clear();
     _iPharmacyFacade.clearPharmacyLocationData();
     isFirebaseDataLoding = true;

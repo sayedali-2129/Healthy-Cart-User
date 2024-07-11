@@ -50,99 +50,109 @@ class _HospitalMainState extends State<HospitalMain> {
         builder: (context, hospitalProvider, authProvider, bookingProvider,
             locationProvider, _) {
       return Scaffold(
-        body: CustomScrollView(
-          controller: hospitalProvider.mainScrollController,
-          slivers: [
-            HomeSliverAppbar(
-              onSearchTap: () {
-                EasyNavigation.push(
+        body: RefreshIndicator(
+          color: BColors.darkblue,
+          backgroundColor: BColors.white,
+          onRefresh: () async {
+            hospitalProvider
+              ..clearHospitalLocationData()
+              ..hospitalFetchInitData(context: context);
+          },
+          child: CustomScrollView(
+            controller: hospitalProvider.mainScrollController,
+            slivers: [
+              HomeSliverAppbar(
+                onSearchTap: () {
+                  EasyNavigation.push(
+                      type: PageTransitionType.topToBottom,
+                      context: context,
+                      page: const HospitalsMainSearch());
+                },
+                searchHint: 'Search Hospitals',
+                locationText:
+                    "${locationProvider.locallySavedHospitalplacemark?.localArea},${locationProvider.locallySavedHospitalplacemark?.district},${locationProvider.locallySavedHospitalplacemark?.state}",
+                locationTap: () async {
+                  await EasyNavigation.push(
                     type: PageTransitionType.topToBottom,
                     context: context,
-                    page: const HospitalsMainSearch());
-              },
-              searchHint: 'Search Hospitals',
-              locationText:
-                  "${locationProvider.locallySavedHospitalplacemark?.localArea},${locationProvider.locallySavedHospitalplacemark?.district},${locationProvider.locallySavedHospitalplacemark?.state}",
-              locationTap: () async {
-                await EasyNavigation.push(
-                  type: PageTransitionType.topToBottom,
-                  context: context,
-                  page: UserLocationSearchWidget(
-                    isUserEditProfile: false,
-                    locationSetter: 1,
-                    onSucess: () {
-                      hospitalProvider.hospitalFetchInitData(
-                        context: context,
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-            SliverToBoxAdapter(
-                child: (hospitalProvider.hospitalList.isNotEmpty &&
-                        hospitalProvider.checkNearestHospitalLocation())
-                    ? NoDataInSelectedLocation(
-                        locationTitle:
-                            '${locationProvider.locallySavedHospitalplacemark?.localArea}',
-                        typeOfService: 'Hospitals',
-                      )
-                    : null),
-            if (hospitalProvider.isFirebaseDataLoding == true &&
-                hospitalProvider.hospitalList.isEmpty)
-              const SliverFillRemaining(
-                child: Center(
-                  child: LoadingIndicater(),
-                ),
-              )
-            else if (hospitalProvider.hospitalList.isEmpty)
-              const SliverFillRemaining(
-                child: NoDataImageWidget(text: 'No Hospitals Found'),
-              )
-            else
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                sliver: SliverList.separated(
-                    separatorBuilder: (context, index) => const Gap(12),
-                    itemCount: hospitalProvider.hospitalList.length,
-                    itemBuilder: (context, index) {
-                      return FadeInUp(
-                        child: HospitalMainCard(
-                          screenwidth: screenwidth,
-                          hospital: hospitalProvider.hospitalList[index],
-                          onTap: () {
-                            if (authProvider.auth.currentUser == null) {
-                              EasyNavigation.push(
-                                  type: PageTransitionType.rightToLeft,
-                                  context: context,
-                                  page: const LoginScreen());
-                              CustomToast.infoToast(
-                                  text: 'Login to continue !');
-                            } else {
-                              EasyNavigation.push(
-                                  context: context,
-                                  type: PageTransitionType.rightToLeft,
-                                  duration: 250,
-                                  page: HospitalDetails(
-                                    hospitalId: hospitalProvider
-                                        .hospitalList[index].id!,
-                                    categoryIdList: hospitalProvider
-                                            .hospitalList[index]
-                                            .selectedCategoryId ??
-                                        [],
-                                  ));
-                            }
-                          },
-                        ),
-                      );
-                    }),
+                    page: UserLocationSearchWidget(
+                      isUserEditProfile: false,
+                      locationSetter: 1,
+                      onSucess: () {
+                        hospitalProvider.hospitalFetchInitData(
+                          context: context,
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
-            SliverToBoxAdapter(
-                child: (hospitalProvider.circularProgressLOading == true &&
-                        hospitalProvider.hospitalList.isNotEmpty)
-                    ? const Center(child: LoadingIndicater())
-                    : null),
-          ],
+              SliverToBoxAdapter(
+                  child: (hospitalProvider.hospitalList.isNotEmpty &&
+                          hospitalProvider.checkNearestHospitalLocation())
+                      ? NoDataInSelectedLocation(
+                          locationTitle:
+                              '${locationProvider.locallySavedHospitalplacemark?.localArea}',
+                          typeOfService: 'Hospitals',
+                        )
+                      : null),
+              if (hospitalProvider.isFirebaseDataLoding == true &&
+                  hospitalProvider.hospitalList.isEmpty)
+                const SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: LoadingIndicater(),
+                  ),
+                )
+              else if (hospitalProvider.hospitalList.isEmpty)
+                const SliverFillRemaining(
+                  child: NoDataImageWidget(text: 'No Hospitals Found'),
+                )
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                  sliver: SliverList.separated(
+                      separatorBuilder: (context, index) => const Gap(12),
+                      itemCount: hospitalProvider.hospitalList.length,
+                      itemBuilder: (context, index) {
+                        return FadeInUp(
+                          child: HospitalMainCard(
+                            screenwidth: screenwidth,
+                            hospital: hospitalProvider.hospitalList[index],
+                            onTap: () {
+                              if (authProvider.auth.currentUser == null) {
+                                EasyNavigation.push(
+                                    type: PageTransitionType.rightToLeft,
+                                    context: context,
+                                    page: const LoginScreen());
+                                CustomToast.infoToast(
+                                    text: 'Login to continue !');
+                              } else {
+                                EasyNavigation.push(
+                                    context: context,
+                                    type: PageTransitionType.rightToLeft,
+                                    duration: 250,
+                                    page: HospitalDetails(
+                                      hospitalId: hospitalProvider
+                                          .hospitalList[index].id!,
+                                      categoryIdList: hospitalProvider
+                                              .hospitalList[index]
+                                              .selectedCategoryId ??
+                                          [],
+                                    ));
+                              }
+                            },
+                          ),
+                        );
+                      }),
+                ),
+              SliverToBoxAdapter(
+                  child: (hospitalProvider.circularProgressLOading == true &&
+                          hospitalProvider.hospitalList.isNotEmpty)
+                      ? const Center(child: LoadingIndicater())
+                      : null),
+            ],
+          ),
         ),
         floatingActionButton: authProvider.auth.currentUser == null
             ? null

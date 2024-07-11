@@ -12,6 +12,7 @@ import 'package:healthy_cart_user/features/laboratory/presentation/lab_orders_ta
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
 import 'package:healthy_cart_user/features/profile/presentation/my_address_screen.dart';
 import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/contact_us_sheet.dart';
 import 'package:healthy_cart_user/features/profile/presentation/widgets/profile_buttons.dart';
 import 'package:healthy_cart_user/features/profile/presentation/widgets/profile_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -140,7 +141,12 @@ class _ProfileMainState extends State<ProfileMain> {
                             buttonWidth: 160,
                             buttonColor: Colors.transparent,
                             borderColor: BColors.black,
-                            onPressed: () {},
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => ContactUsBottomSheet(),
+                              );
+                            },
                             buttonWidget: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
