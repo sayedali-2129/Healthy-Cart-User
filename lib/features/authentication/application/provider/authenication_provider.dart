@@ -75,7 +75,7 @@ class AuthenticationProvider extends ChangeNotifier {
     //   );
     //   notifyListeners();
     // }  else {
-  
+
     EasyNavigation.pushAndRemoveUntil(
         type: PageTransitionType.bottomToTop,
         context: context,
@@ -90,13 +90,13 @@ class AuthenticationProvider extends ChangeNotifier {
         CustomToast.errorToast(text: failure.errMsg);
       }, (isVerified) {
         Navigator.pop(context);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: ((context) => OTPScreen(
-                      verificationId: verificationId ?? 'No veriId',
-                      phoneNumber: phoneNumber ?? 'No Number',
-                    ))));
+        EasyNavigation.push(
+          type: PageTransitionType.rightToLeft,
+            context: context,
+            page: OTPScreen(
+              verificationId: verificationId ?? 'No veriId',
+              phoneNumber: phoneNumber ?? 'No Number',
+            ));
       });
     });
   }
@@ -110,7 +110,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }, (userId) {
       userId = userId;
       Navigator.pop(context);
-      EasyNavigation.pushReplacement(
+      EasyNavigation.pushAndRemoveUntil(
           context: context, page: const SplashScreen());
     });
   }

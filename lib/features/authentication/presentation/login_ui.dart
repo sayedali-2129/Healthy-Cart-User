@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
           backgroundColor: BColors.white,
           leading:   GestureDetector(
                                 onTap: () {
-                                  EasyNavigation.pushAndRemoveUntil(
+                                  EasyNavigation.pushReplacement(
                                       context: context,
                                       page: const BottomNavigationWidget());
                                 },

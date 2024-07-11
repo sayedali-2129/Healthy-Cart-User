@@ -1,6 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
-
 import 'package:healthy_cart_user/features/pharmacy/domain/model/product_quantity_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
@@ -34,6 +36,7 @@ class PharmacyOrderModel {
   final bool? isPaymentRecieved;
   final String? productBillPdf;
   final String? paymentType;
+    final String? description;
   PharmacyOrderModel({
     this.id,
     this.pharmacyId,
@@ -63,6 +66,7 @@ class PharmacyOrderModel {
     this.isPaymentRecieved,
     this.productBillPdf,
     this.paymentType,
+    this.description,
   });
 
   PharmacyOrderModel copyWith({
@@ -94,6 +98,7 @@ class PharmacyOrderModel {
     bool? isPaymentRecieved,
     String? productBillPdf,
     String? paymentType,
+    String? description,
   }) {
     return PharmacyOrderModel(
       id: id ?? this.id,
@@ -124,6 +129,7 @@ class PharmacyOrderModel {
       isPaymentRecieved: isPaymentRecieved ?? this.isPaymentRecieved,
       productBillPdf: productBillPdf ?? this.productBillPdf,
       paymentType: paymentType ?? this.paymentType,
+       description: description ?? this.description
     );
   }
 
@@ -157,6 +163,7 @@ class PharmacyOrderModel {
       'isPaymentRecieved': isPaymentRecieved,
       'productBillPdf': productBillPdf,
       'paymentType': paymentType,
+       'description': description,
     };
   }
 
@@ -176,6 +183,7 @@ class PharmacyOrderModel {
       'isOrderPacked': isOrderPacked,
       'isOrderDelivered': isOrderDelivered,
       'isPaymentRecieved': isPaymentRecieved,
+
     };
   }
 
@@ -252,6 +260,7 @@ class PharmacyOrderModel {
           : null,
       paymentType:
           map['paymentType'] != null ? map['paymentType'] as String : null,
+           description: map['description'] != null ? map['description'] as String : null,     
     );
   }
 }

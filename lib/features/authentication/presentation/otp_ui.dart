@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/widgets/pinput.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -56,6 +57,15 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          surfaceTintColor: BColors.white,
+          backgroundColor: BColors.white,
+          leading: GestureDetector(
+              onTap: () {
+                EasyNavigation.pop(context: context);
+              },
+              child: const Icon(Icons.arrow_back_ios_new_rounded)),
+        ),
         body: Consumer<AuthenticationProvider>(
             builder: (context, authenticationProvider, _) {
           return GestureDetector(
@@ -68,17 +78,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Gap(32),
-                    GestureDetector(
-                      // back to previous page
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Icon(Icons.arrow_back_ios)),
-                    ),
-                    const Gap(56),
+                    const Gap(88),
                     SizedBox(
                       child: Center(
                         child: Image.asset(

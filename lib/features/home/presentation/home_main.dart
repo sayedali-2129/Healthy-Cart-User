@@ -384,7 +384,7 @@ class _HomeMainState extends State<HomeMain> {
                             ? 5
                             : labProvider.labList.length,
                         separatorBuilder: (context, index) => const Gap(10),
-                        itemBuilder: (context, index) => FadeInRight(
+                        itemBuilder: (context, index) => FadeInUp(
                               child: LabListCardHome(
                                 index: index,
                                 onTap: () {

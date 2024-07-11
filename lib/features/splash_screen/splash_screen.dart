@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
       (value) {
         EasyNavigation.pushReplacement(
             context: context,
-            page: LocationPage(
+            page: const LocationPage(
               locationSetter: 0,
             ),
             );
