@@ -94,9 +94,16 @@ class IAuthImpl implements IAuthFacade {
       await _firestore
           .collection(FirebaseCollections.userCollection)
           .doc(uid)
-          .set(UserModel()
-              .copyWith(phoneNo: phoneNo, fcmToken: fcmToken, id: uid, createdAt: Timestamp.now(),)
-              .toMap());
+          .set(
+            UserModel()
+                .copyWith(
+                  phoneNo: phoneNo,
+                  fcmToken: fcmToken,
+                  id: uid,
+                  isActive: true,
+                )
+                .toMap(),
+          );
     }
   }
 

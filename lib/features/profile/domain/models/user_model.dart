@@ -38,7 +38,7 @@ class UserModel {
       'userName': userName,
       'image': image,
       'isActive': isActive,
-      'createdAt': createdAt,
+      'createdAt': createdAt??FieldValue.serverTimestamp(),
       'keywords': keywords,
       'userAge': userAge,
       'gender': gender,
