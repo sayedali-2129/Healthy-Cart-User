@@ -1,7 +1,9 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
+import 'package:healthy_cart_user/core/custom/custom_textfields/textfield_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/prescription_bottom_sheet/precription_bottomsheet.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -25,68 +27,69 @@ class PrescriptionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pharmacyProvider = Provider.of<PharmacyProvider>(context);
-     final authProvider = Provider.of<AuthenticationProvider>(context);
-      final addressProvider = Provider.of<UserAddressProvider>(context);
+    final authProvider = Provider.of<AuthenticationProvider>(context);
+    final addressProvider = Provider.of<UserAddressProvider>(context);
     return PopScope(
       onPopInvoked: (didPop) {
-        
+        pharmacyProvider.clearImageFileAndPrescriptionDetails();
       },
       child: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              SliverCustomAppbar(
-                title: 'Prescription',
-                onBackTap: () {
-                  EasyNavigation.pop(context: context);
-                },
-              ),
-               if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 16, top: 16, right: 16),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.info_outline_rounded,
-                            color: BColors.offRed,
-                          ),
-                          const Gap(6),
-                          const Expanded(
-                            child: Text(
-                              "At this time, our pharmacy only offers order pickup and does not provide home delivery services.",
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: BColors.textLightBlack,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        body: CustomScrollView(
+          slivers: [
+            SliverCustomAppbar(
+              title: 'Prescription',
+              onBackTap: () {
+                EasyNavigation.pop(context: context);
+              },
+            ),
+            if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      pharmacyProvider.prescriptionImageFile == null
-                          ? Image.asset(BImage.prescriptionImage)
-                          : Column(
-                              children: [
-                                PrescriptionImageWidget(
-                                  pharmacyProvider: pharmacyProvider,
-                                  height: 320,
-                                  width: 320,
-                                ),
-                                const Gap(24)
-                              ],
-                            ),
-                      pharmacyProvider.prescriptionImageFile == null
-                          ? ButtonWidget(
+                      Icon(
+                        Icons.warning_amber_outlined,
+                        color: BColors.offRed,
+                        size: 32,
+                      ),
+                      const Gap(8),
+                      const Expanded(
+                        child: Text(
+                          "At this time, our pharmacy only offers order Pick-Up and does not provide Home Delivery services.",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: BColors.textLightBlack,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Montserrat'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    pharmacyProvider.prescriptionImageFile == null
+                        ? Image.asset(BImage.prescriptionImage)
+                        : Column(
+                            children: [
+                              PrescriptionImageWidget(
+                                pharmacyProvider: pharmacyProvider,
+                                height: 320,
+                                width: 320,
+                              ),
+                              const Gap(24)
+                            ],
+                          ),
+                    pharmacyProvider.prescriptionImageFile == null
+                        ? FadeInDown(
+                            child: ButtonWidget(
                               onPressed: () {
                                 showModalBottomSheet(
                                   showDragHandle: true,
@@ -96,20 +99,15 @@ class PrescriptionScreen extends StatelessWidget {
                                   builder: (context) {
                                     return ChoosePrescriptionBottomSheet(
                                       cameraButtonTap: () {
-                                        pharmacyProvider
-                                            .getImage(
-                                                imagesource: ImageSource.camera)
-                                            .whenComplete(() =>
-                                                EasyNavigation.pop(
-                                                    context: context));
+                                        pharmacyProvider.getImage(
+                                            imagesource: ImageSource.camera);
+                                        EasyNavigation.pop(context: context);
                                       },
                                       galleryButtonTap: () {
-                                        pharmacyProvider
-                                            .getImage(
-                                                imagesource: ImageSource.gallery)
-                                            .whenComplete(() =>
-                                                EasyNavigation.pop(
-                                                    context: context));
+                                        pharmacyProvider.getImage(
+                                            imagesource: ImageSource.gallery);
+
+                                        EasyNavigation.pop(context: context);
                                       },
                                     );
                                   },
@@ -137,78 +135,110 @@ class PrescriptionScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            )
-                          : ButtonWidget(
-                              onPressed: () {
-                                if (pharmacyProvider.selectedpharmacyData?.isHomeDelivery == false) {
-                                  pharmacyProvider.selectedRadio = 'Pharmacy';
-                                  LoadingLottie.showLoading(
-                                      context: context, text: 'Please wait...');
-                          pharmacyProvider.setDeliveryAddressAndUserData(
-                      userData: authProvider.userFetchlDataFetched ?? UserModel(),
-                      address: addressProvider.selectedAddress);
-                                  pharmacyProvider.saveImage().whenComplete(
-                                    () {
-                                      pharmacyProvider.createProductOrderDetails(
-                                          context: context);
-                                    },
-                                  );
-                                } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return DeliveryTypeRadiopopup(
-                                        onConfirm: () {
-                                          if (pharmacyProvider.selectedRadio ==null) {
-                                            CustomToast.errorToast(
-                                                text:
-                                                    'Select a delivery type to send for review.');
-                                            return;
-                                          }
-                                          EasyNavigation.pop(context: context);
-                                          
-                                          EasyNavigation.push(
-                                            type:  PageTransitionType.rightToLeft,
-                                            context: context,
-                                            page: const PrescriptionOrderAddressScreen(),
+                            ),
+                          )
+                        : FadeInUp(
+                            child: Column(
+                              children: [
+                                TextfieldWidget(
+                                  controller:
+                                      pharmacyProvider.prescriptionDescription,
+                                  enableHeading: true,
+                                  fieldHeading: 'Add Note',
+                                  hintText:
+                                      'Leave a note if have any suggestions.',
+                                  maxlines: 4,
+                                ),
+                                const Gap(16),
+                                ButtonWidget(
+                                  onPressed: () {
+                                    if (pharmacyProvider.selectedpharmacyData
+                                            ?.isHomeDelivery ==
+                                        false) {
+                                      pharmacyProvider.selectedRadio =
+                                          'Pharmacy';
+                                      LoadingLottie.showLoading(
+                                          context: context,
+                                          text: 'Please wait...');
+                                      pharmacyProvider
+                                          .setDeliveryAddressAndUserData(
+                                              userData: authProvider
+                                                      .userFetchlDataFetched ??
+                                                  UserModel(),
+                                              address: addressProvider
+                                                  .selectedAddress);
+                                      pharmacyProvider.saveImage().whenComplete(
+                                        () {
+                                          pharmacyProvider
+                                              .createProductOrderDetails(
+                                                  context: context);
+                                        },
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return DeliveryTypeRadiopopup(
+                                            onConfirm: () {
+                                              if (pharmacyProvider
+                                                      .selectedRadio ==
+                                                  null) {
+                                                CustomToast.errorToast(
+                                                    text:
+                                                        'Select a delivery type to send for review.');
+                                                return;
+                                              }
+                                              EasyNavigation.pop(
+                                                  context: context);
+
+                                              EasyNavigation.push(
+                                                type: PageTransitionType
+                                                    .rightToLeft,
+                                                context: context,
+                                                page:
+                                                    const PrescriptionOrderAddressScreen(),
+                                              );
+                                            },
                                           );
                                         },
                                       );
-                                    },
-                                  );
-                                }
-                              },
-                              buttonHeight: 40,
-                              buttonWidth: double.infinity,
-                              buttonColor: BColors.lightgreen,
-                              buttonWidget: const Text(
-                                'Send for review',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Montserrat',
-                                    color: BColors.black,),
-                              ),
+                                    }
+                                  },
+                                  buttonHeight: 40,
+                                  buttonWidth: double.infinity,
+                                  buttonColor: BColors.lightgreen,
+                                  buttonWidget: const Text(
+                                    'Send for review',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      color: BColors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                      const Gap(24),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          'Upload the prescription and it send for review.Our pharmacist will review it and add the items to your cart accordingly.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Montserrat',
-                              color: BColors.black),
-                        ),
+                          ),
+                    const Gap(24),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Upload the prescription and it send for review. Our pharmacist will review it and add the items to your cart accordingly.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Montserrat',
+                            color: BColors.black),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
     );
   }

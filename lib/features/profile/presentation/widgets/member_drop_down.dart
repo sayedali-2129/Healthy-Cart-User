@@ -1,19 +1,21 @@
+
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/general/validator.dart';
-import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
+import 'package:healthy_cart_user/features/profile/application/provider/user_family_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
-class PatientGenderDropdown extends StatelessWidget {
-  const PatientGenderDropdown({
+
+class FamilyMembersGenderDropdown extends StatelessWidget {
+  const FamilyMembersGenderDropdown({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    List<String> genderList = ['Male', 'Female', 'Other'];
+    List<String> genderList = ['Male', 'Female', 'Other','unspecified'];
 
-    return Consumer<HospitalProvider>(builder: (context, value, _) {
+    return Consumer<UserFamilyMembersProvider>(builder: (context, value, _) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -22,7 +24,7 @@ class PatientGenderDropdown extends StatelessWidget {
             SizedBox(
               width: 180,
               child: DropdownButtonFormField<String>(
-                value: value.genderDropdownValue,
+                value: value.selectedGenderDrop,
                 validator: BValidator.validate,
                 hint: const Text('Select Gender'),
                 dropdownColor: BColors.white,
@@ -40,7 +42,7 @@ class PatientGenderDropdown extends StatelessWidget {
                         ))
                     .toList(),
                 onChanged: (dropDownValue) {
-                  value.genderDropdownValue = dropDownValue;
+                  value.selectedGenderDrop = dropDownValue;
                 },
               ),
             ),

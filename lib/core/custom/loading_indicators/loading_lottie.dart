@@ -22,7 +22,7 @@ class LoadingLottie {
                   Text(
                     text,
                     style:
-                        TextStyle(color: BColors.backgroundRoundContainerColor),
+                        TextStyle(color: BColors.backgroundRoundContainerColor,fontWeight: FontWeight.w600,),
                   )
                 ],
               ),

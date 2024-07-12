@@ -54,7 +54,7 @@ class UserAddressProvider with ChangeNotifier {
         log('Error: ${err.errMsg}');
       },
       (success) {
-        CustomToast.sucessToast(text: 'User added successfully');
+        CustomToast.sucessToast(text: 'User address added successfully');
         userAddressList.insert(0, success);
         selectedAddress = success;
         clearFields();
@@ -82,7 +82,6 @@ class UserAddressProvider with ChangeNotifier {
         log('userAddressList: ${userAddressList.length}');
         if (userAddressList.isNotEmpty) {
           selectedAddress = userAddressList.first;
-          // log(selectedAddress!.toMap().toString());
         }
         isLoading = false;
         notifyListeners();

@@ -25,6 +25,7 @@ class ButtonWidget extends StatelessWidget {
       child: ElevatedButton(
           onPressed: onPressed,
           style: ButtonStyle(
+            elevation: const WidgetStatePropertyAll(2),
             backgroundColor: WidgetStatePropertyAll(buttonColor),
             shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
@@ -65,6 +66,7 @@ class OutlineButtonWidget extends StatelessWidget {
       child: OutlinedButton(
           onPressed: onPressed,
           style: ButtonStyle(
+            elevation: const WidgetStatePropertyAll(2),
             backgroundColor: WidgetStatePropertyAll(
               buttonColor,
             ),

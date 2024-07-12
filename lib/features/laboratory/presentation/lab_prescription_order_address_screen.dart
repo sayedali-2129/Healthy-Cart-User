@@ -13,7 +13,7 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/address_card.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/address_card.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
@@ -132,18 +132,13 @@ class _LabPrescriptionOrderAddressScreenState
                   () {
                     labProvider.clearCurrentDetails();
                     addressProvider.selectedAddress == null;
+                    EasyNavigation.pushAndRemoveUntil(
+                        context: context,
+                        page: const OrderRequestSuccessScreen(
+                          title:
+                              'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
+                        ));
                   },
-                );
-
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const OrderRequestSuccessScreen(
-                      title:
-                          'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
-                    ),
-                  ),
-                  (route) => false,
                 );
               });
         },

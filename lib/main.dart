@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:healthy_cart_user/core/controller/no_internet_controller.dart';
 import 'package:healthy_cart_user/core/di/injection.dart';
 import 'package:healthy_cart_user/core/services/foreground_notification.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
@@ -15,6 +16,7 @@ import 'package:healthy_cart_user/features/notifications/application/provider/no
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
+import 'package:healthy_cart_user/features/profile/application/provider/user_family_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_profile_provider.dart';
 import 'package:healthy_cart_user/features/splash_screen/dash_board_screen.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
@@ -40,6 +42,7 @@ Future<void> main() async {
       channel: channel,
       flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
   runApp(const MyApp());
+   DependencyInjection.init();
 }
 
 class MyApp extends StatefulWidget {
@@ -98,6 +101,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(
           create: (context) => sl<HospitalBookingProivder>(),
+        ),
+       ChangeNotifierProvider(
+          create: (context) => sl<UserFamilyMembersProvider>(),
         ),
       ],
       child: GetMaterialApp(

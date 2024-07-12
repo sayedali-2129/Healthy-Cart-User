@@ -1,7 +1,5 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
@@ -37,8 +35,11 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
           ..clearCartData()
           ..getpharmacyCategory()
           ..getBanner()
-          ..getPharmacyAllProductDetails()
-          ..createOrGetProductToUserCart();
+          ..getPharmacyAllProductDetails().whenComplete(
+            () {
+              pharmacyProvider.createOrGetProductToUserCart();
+            },
+          );
       },
     );
     _scrollController.addListener(
@@ -56,145 +57,152 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
   Widget build(BuildContext context) {
     final pharmacyProvider = Provider.of<PharmacyProvider>(context);
     return Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverCustomAppbar(
-            title: pharmacyProvider.selectedpharmacyData?.pharmacyName ??
-                'Pharmacy',
-            onBackTap: () {
-              EasyNavigation.pop(context: context);
-            },
-            child: PreferredSize(
-              preferredSize: const Size.fromHeight(64),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onTap: () {
-                    EasyNavigation.push(
+        body: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverCustomAppbar(
+              title: pharmacyProvider.selectedpharmacyData?.pharmacyName ??
+                  'Pharmacy',
+              onBackTap: () {
+                EasyNavigation.pop(context: context);
+              },
+              child: PreferredSize(
+                preferredSize: const Size.fromHeight(64),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onTap: () {
+                      EasyNavigation.push(
                         context: context,
                         page: const ProductSearchListScreen(),
-                        );
-                  },
-                  readOnly: true,
-                  showCursor: false,
-                  cursorColor: BColors.black,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
-                    hintText: 'Search Products',
-                    hintStyle: const TextStyle(fontSize: 14),
-                    suffixIcon: const Icon(
-                      Icons.search_outlined,
-                      color: BColors.darkblue,
-                    ),
-                    filled: true,
-                    fillColor: BColors.white,
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.circular(26),
+                      );
+                    },
+                    readOnly: true,
+                    showCursor: false,
+                    cursorColor: BColors.black,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
+                      hintText: 'Search Products',
+                      hintStyle: const TextStyle(fontSize: 14),
+                      suffixIcon: const Icon(
+                        Icons.search_outlined,
+                        color: BColors.darkblue,
+                      ),
+                      filled: true,
+                      fillColor: BColors.white,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(26),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
             if (pharmacyProvider.fetchLoading == true &&
-                  pharmacyProvider.productAllList.isEmpty&&pharmacyProvider.pharmacyCategoryList.isEmpty)
-            const SliverFillRemaining(
-              child: Center(
-                child: LoadingIndicater(),
-              ),
-            )
-       else if (pharmacyProvider.fetchLoading == false &&
-                  pharmacyProvider.productAllList.isEmpty&& pharmacyProvider.pharmacyCategoryList.isEmpty)
-                const SliverFillRemaining(child:  StillWorkingPage(text: "We are still working on our Pharmacy, will be soon available.", )), 
-          const RowProductCategoryWidget(),
-
-          if (pharmacyProvider.bannerImageList.isNotEmpty)
-            SliverToBoxAdapter(
-              child: FadeInLeft(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: AdPharmacySlider(
-                    imageUrlList: pharmacyProvider.bannerImageList,
-                    autoPlay: (pharmacyProvider.bannerImageList.length <= 1)
-                        ? false
-                        : true,
-                    productImage: false,
-                    fit: BoxFit.contain,
+                pharmacyProvider.productAllList.isEmpty &&
+                pharmacyProvider.pharmacyCategoryList.isEmpty)
+              const SliverFillRemaining(
+                child: Center(
+                  child: LoadingIndicater(),
+                ),
+              )
+            else if (pharmacyProvider.fetchLoading == false &&
+                pharmacyProvider.productAllList.isEmpty &&
+                pharmacyProvider.pharmacyCategoryList.isEmpty)
+              const SliverFillRemaining(
+                  child: StillWorkingPage(
+                text:
+                    "We are still working on our Pharmacy, will be soon available.",
+              )),
+            const RowProductCategoryWidget(),
+            if (pharmacyProvider.bannerImageList.isNotEmpty)
+              SliverToBoxAdapter(
+                child: FadeInLeft(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: AdPharmacySlider(
+                      imageUrlList: pharmacyProvider.bannerImageList,
+                      autoPlay: (pharmacyProvider.bannerImageList.length <= 1)
+                          ? false
+                          : true,
+                      productImage: false,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
-            ),
-          if (pharmacyProvider.productAllList.isNotEmpty)
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(left: 16, top: 8),
-                child: Text(
-                  "All Products",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Montserrat'),
+            if (pharmacyProvider.productAllList.isNotEmpty)
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 16, top: 8),
+                  child: Text(
+                    "All Products",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Montserrat'),
+                  ),
                 ),
               ),
-            ),
-        
-            pharmacyProvider.productAllList.isNotEmpty? SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-              sliver: SliverGrid.builder(
-                itemCount: pharmacyProvider.productAllList.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 6,
-                  mainAxisSpacing: 6,
-                  mainAxisExtent: 368,
-                ),
-                itemBuilder: (context, index) {
-                  return FadeInUp(
-                    duration: const Duration(milliseconds: 500),
-                    child: PostCardVertical(
-                      productData: pharmacyProvider.productAllList[index],
+            pharmacyProvider.productAllList.isNotEmpty
+                ? SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                    sliver: SliverGrid.builder(
+                      itemCount: pharmacyProvider.productAllList.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 6,
+                        mainAxisSpacing: 6,
+                        mainAxisExtent: 368,
+                      ),
+                      itemBuilder: (context, index) {
+                        return FadeInUp(
+                          duration: const Duration(milliseconds: 500),
+                          child: PostCardVertical(
+                            productData: pharmacyProvider.productAllList[index],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ):const SliverToBoxAdapter(),
-
-          SliverToBoxAdapter(
-              child: (pharmacyProvider.fetchLoading == true &&
-                      pharmacyProvider.productAllList.isNotEmpty)
-                  ? const Center(
-                      child: LoadingIndicater(),
-                    )
-                  : null),
-        ],
-      ),
-      floatingActionButton: (pharmacyProvider.productAllList.isNotEmpty)?Padding(
-        padding: const EdgeInsets.only(bottom: 40, right: 8),
-        child: SizedBox(
-          height: 56,
-          width: 56,
-          child: FloatingActionButton(
-            elevation: 12,
-            tooltip: 'Add to cart',
-            clipBehavior: Clip.antiAlias,
-            isExtended: true,
-            backgroundColor: BColors.darkblue,
-            onPressed: () {
-              EasyNavigation.push(
-                  context: context,
-                  type: PageTransitionType.bottomToTop,
-                  page: const ProductCartScreen());
-            },
-            child: const Icon(
-              Icons.shopping_cart_outlined,
-              color: BColors.white,
-              size: 32,
-            ),
-          ),
+                  )
+                : const SliverToBoxAdapter(),
+            SliverToBoxAdapter(
+                child: (pharmacyProvider.fetchLoading == true &&
+                        pharmacyProvider.productAllList.isNotEmpty)
+                    ? const Center(
+                        child: LoadingIndicater(),
+                      )
+                    : null),
+          ],
         ),
-      ):null
-    );
+        floatingActionButton: (pharmacyProvider.productAllList.isNotEmpty)
+            ? Padding(
+                padding: const EdgeInsets.only(bottom: 40, right: 8),
+                child: SizedBox(
+                  height: 56,
+                  width: 56,
+                  child: FloatingActionButton(
+                    elevation: 12,
+                    tooltip: 'Add to cart',
+                    clipBehavior: Clip.antiAlias,
+                    isExtended: true,
+                    backgroundColor: BColors.darkblue,
+                    onPressed: () {
+                      EasyNavigation.push(
+                          context: context,
+                          type: PageTransitionType.bottomToTop,
+                          page: const ProductCartScreen());
+                    },
+                    child: const Icon(
+                      Icons.shopping_cart_outlined,
+                      color: BColors.white,
+                      size: 32,
+                    ),
+                  ),
+                ),
+              )
+            : null);
   }
 }

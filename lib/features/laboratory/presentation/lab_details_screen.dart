@@ -2,9 +2,11 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/custom_tab_bar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -63,280 +65,277 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
           labProvider.selectedRadio = null;
         },
         child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded)),
-              backgroundColor: BColors.mainlightColor,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(8),
-                      bottomLeft: Radius.circular(8))),
-              title: Text(
-                labList.laboratoryName ?? 'No Name',
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-              ),
-              shadowColor: BColors.black.withOpacity(0.8),
-              elevation: 5,
-            ),
-            body: labProvider.detailsScreenLoading == true
-                ? const Center(child: LoadingIndicater())
-                : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        FadeInDown(
-                          duration: const Duration(milliseconds: 500),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            /* -------------------------------- LAB IMAGE ------------------------------- */
-                            child: Container(
-                              clipBehavior: Clip.antiAlias,
-                              height: 234,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Stack(
-                                children: [
-                                  CustomCachedNetworkImage(
-                                      image: labList.image!),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          BColors.black.withOpacity(0.5),
-                                          Colors.transparent
-                                        ],
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.center,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+            body: CustomScrollView(
+              slivers: [
+                SliverCustomAppbar(
+                  title: labList.laboratoryName ?? 'Labortary',
+                  onBackTap: () {
+                    EasyNavigation.pop(context: context);
+                  },
+                ),
+                if (labProvider.detailsScreenLoading == true &&
+                    labProvider.testList.isEmpty &&
+                    labProvider.doorStepTestList.isEmpty &&
+                    labProvider.labBannerList.isEmpty)
+                  const SliverFillRemaining(
+                      child: Center(child: LoadingIndicater()))
+                else if (labProvider.detailsScreenLoading == false &&
+                    labProvider.testList.isEmpty &&
+                    labProvider.doorStepTestList.isEmpty &&
+                    labProvider.labBannerList.isEmpty)
+                  const SliverFillRemaining(
+                      child: StillWorkingPage(
+                    text:
+                        "We are still working on our Laboratory, will be soon available.",
+                  )),
+                if (labProvider.labBannerList.isNotEmpty &&
+                    labProvider.testList.isNotEmpty &&
+                    labProvider.doorStepTestList.isNotEmpty)
+                  SliverToBoxAdapter(
+                    child: FadeInDown(
+                      duration: const Duration(milliseconds: 500),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        /* -------------------------------- LAB IMAGE ------------------------------- */
+                        child: Container(
+                          clipBehavior: Clip.antiAlias,
+                          height: 234,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Stack(
+                            children: [
+                              CustomCachedNetworkImage(image: labList.image!),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      BColors.black.withOpacity(0.5),
+                                      Colors.transparent
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.center,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                        /* -------------------------- LAB NAME AND ADDRESS -------------------------- */
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
+                      ),
+                    ),
+                  ),
+                /* -------------------------- LAB NAME AND ADDRESS -------------------------- */
+                if (labProvider.labBannerList.isNotEmpty &&
+                    labProvider.testList.isNotEmpty &&
+                    labProvider.doorStepTestList.isNotEmpty)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: FadeInDown(
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      child: Text(
-                                        labList.laboratoryName ?? 'No Name',
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: BColors.black),
-                                      ),
-                                    ),
+                              Expanded(
+                                child: FadeInDown(
+                                  duration: const Duration(milliseconds: 500),
+                                  child: Text(
+                                    labList.laboratoryName ?? 'No Name',
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        color: BColors.black),
                                   ),
-                                  const Gap(6),
-                                  ButtonWidget(
-                                    buttonHeight: 36,
-                                    buttonWidth: 160,
-                                    buttonColor: BColors.buttonGreen,
-                                    buttonWidget: const Row(
-                                      children: [
-                                        Icon(
-                                          Icons.maps_ugc_outlined,
-                                          color: BColors.black,
-                                          size: 19,
-                                        ),
-                                        Gap(6),
-                                        Text(
-                                          'Prescription',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                              color: BColors.black),
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      labProvider.clearCurrentDetails();
-                                      addressProvider.selectedAddress = null;
-                                      EasyNavigation.push(
-                                        context: context,
-                                        page: LabPrescriptionPage(
-                                          labModel: labList,
-                                        ),
-                                        duration: 250,
-                                        type: PageTransitionType.rightToLeft,
-                                      );
-                                    },
-                                  )
-                                ],
+                                ),
                               ),
-                              const Gap(10),
-                              FadeInDown(
-                                duration: const Duration(milliseconds: 500),
-                                child: Row(
+                              const Gap(6),
+                              ButtonWidget(
+                                buttonHeight: 36,
+                                buttonWidth: 160,
+                                buttonColor: BColors.buttonGreen,
+                                buttonWidget: const Row(
                                   children: [
-                                    const Icon(Icons.location_on_outlined),
-                                    const Gap(6),
-                                    Expanded(
-                                      child: Text(
-                                        labList.address ?? 'No Address',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 3,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                      ),
+                                    Icon(
+                                      Icons.maps_ugc_outlined,
+                                      color: BColors.black,
+                                      size: 19,
+                                    ),
+                                    Gap(6),
+                                    Text(
+                                      'Prescription',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                          color: BColors.black),
                                     )
                                   ],
                                 ),
-                              ),
-                              const Divider(),
-                              FadeInRight(
-                                duration: const Duration(milliseconds: 500),
-                                child: AdSlider(
-                                  screenWidth: double.infinity,
-                                  labId: widget.labId,
-                                ),
-                              ),
-                              const Gap(8),
-                              CustomTabBar(
-                                screenWidth: screenWidth,
-                                text1: 'All Tests',
-                                text2: 'Door Step Tests',
-                                tab1Color: labProvider.isLabOnlySelected
-                                    ? BColors.mainlightColor
-                                    : BColors.white,
-                                tab2Color: labProvider.isLabOnlySelected
-                                    ? BColors.white
-                                    : BColors.mainlightColor,
-                                onTapTab1: () =>
-                                    labProvider.labTabSelection(true),
-                                onTapTab2: () =>
-                                    labProvider.labTabSelection(false),
-                              ),
-                              const Gap(8),
-                              /* -------------------------------- ALL TESTS ------------------------------- */
-                              labProvider.isLabOnlySelected
-                                  ? SizedBox(
-                                      width: double.infinity,
-                                      child: labProvider.testList.isEmpty
-                                          ? const Center(
-                                              child:
-                                                  Text('No Tests Available!'))
-                                          : ListView.separated(
-                                              separatorBuilder:
-                                                  (context, index) =>
-                                                      const Gap(5),
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemCount:
-                                                  labProvider.testList.length,
-                                              itemBuilder: (context, index) {
-                                                final testList =
-                                                    labProvider.testList[index];
-                                                return FadeIn(
-                                                  child: TestListCard(
-                                                    isDoorstepAvailable: testList
-                                                        .isDoorstepAvailable,
-                                                    index: index,
-                                                    image: testList.testImage!,
-                                                    testName:
-                                                        testList.testName ??
-                                                            'No Name',
-                                                    testPrice:
-                                                        '${testList.testPrice ?? 000}',
-                                                    offerPrice:
-                                                        '${testList.offerPrice}',
-                                                    isSelected: labProvider
-                                                        .selectedTestIds
-                                                        .contains(testList.id),
-                                                    onAdd: () {
-                                                      labProvider.testAddButton(
-                                                          testList.id!,
-                                                          testList);
-                                                      labProvider
-                                                          .bottomPopUpContainer();
-                                                      if (labProvider
-                                                          .isBottomContainerPopUp) {
-                                                        bottomPopUp();
-                                                      }
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                    )
-                                  /* ----------------------------- DOOR STEP TESTS ---------------------------- */
-                                  : SizedBox(
-                                      width: double.infinity,
-                                      child: labProvider
-                                              .doorStepTestList.isEmpty
-                                          ? const Center(
-                                              child:
-                                                  Text('No Tests Available!'))
-                                          : ListView.separated(
-                                              separatorBuilder:
-                                                  (context, index) =>
-                                                      const Gap(6),
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemCount: labProvider
-                                                  .doorStepTestList.length,
-                                              itemBuilder: (context, index) {
-                                                final doorStepList = labProvider
-                                                    .doorStepTestList[index];
-                                                return FadeIn(
-                                                  child: TestListCard(
-                                                    doorstepList: true,
-                                                    isDoorstepAvailable: true,
-                                                    index: index,
-                                                    image:
-                                                        doorStepList.testImage!,
-                                                    testName:
-                                                        doorStepList.testName ??
-                                                            'No Name',
-                                                    testPrice:
-                                                        '${doorStepList.testPrice ?? 000}',
-                                                    offerPrice:
-                                                        '${doorStepList.offerPrice}',
-                                                    isSelected: labProvider
-                                                        .selectedTestIds
-                                                        .contains(
-                                                            doorStepList.id),
-                                                    onAdd: () {
-                                                      labProvider.testAddButton(
-                                                          doorStepList.id!,
-                                                          doorStepList);
-                                                      if (labProvider
-                                                          .selectedTestIds
-                                                          .isNotEmpty) {
-                                                        labProvider
-                                                            .bottomPopUpContainer();
-                                                        if (labProvider
-                                                            .isBottomContainerPopUp) {
-                                                          bottomPopUp();
-                                                        }
-                                                      }
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                onPressed: () {
+                                  labProvider.clearCurrentDetails();
+                                  addressProvider.selectedAddress = null;
+                                  EasyNavigation.push(
+                                    context: context,
+                                    page: LabPrescriptionPage(
+                                      labModel: labList,
                                     ),
+                                    duration: 250,
+                                    type: PageTransitionType.rightToLeft,
+                                  );
+                                },
+                              )
                             ],
                           ),
-                        )
-                      ],
+                          const Gap(10),
+                          FadeInDown(
+                            duration: const Duration(milliseconds: 500),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.location_on_outlined),
+                                const Gap(6),
+                                Expanded(
+                                  child: Text(
+                                    labList.address ?? 'No Address',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          const Divider(),
+                          if (labProvider.labBannerList.isNotEmpty)
+                            FadeInRight(
+                              duration: const Duration(milliseconds: 500),
+                              child: AdSlider(
+                                screenWidth: double.infinity,
+                                labId: widget.labId,
+                              ),
+                            ),
+                          const Gap(8),
+                          CustomTabBar(
+                            screenWidth: screenWidth,
+                            text1: 'All Tests',
+                            text2: 'Door Step Tests',
+                            tab1Color: labProvider.isLabOnlySelected
+                                ? BColors.mainlightColor
+                                : BColors.white,
+                            tab2Color: labProvider.isLabOnlySelected
+                                ? BColors.white
+                                : BColors.mainlightColor,
+                            onTapTab1: () => labProvider.labTabSelection(true),
+                            onTapTab2: () => labProvider.labTabSelection(false),
+                          ),
+                          const Gap(8),
+                          /* -------------------------------- ALL TESTS ------------------------------- */
+                          labProvider.isLabOnlySelected
+                              ? SizedBox(
+                                  width: double.infinity,
+                                  child: labProvider.testList.isEmpty
+                                      ? const Center(
+                                          child: Text('No Tests Available!'))
+                                      : ListView.separated(
+                                          separatorBuilder: (context, index) =>
+                                              const Gap(5),
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              labProvider.testList.length,
+                                          itemBuilder: (context, index) {
+                                            final testList =
+                                                labProvider.testList[index];
+                                            return FadeIn(
+                                              child: TestListCard(
+                                                isDoorstepAvailable: testList
+                                                    .isDoorstepAvailable,
+                                                index: index,
+                                                image: testList.testImage!,
+                                                testName: testList.testName ??
+                                                    'No Name',
+                                                testPrice:
+                                                    '${testList.testPrice ?? 000}',
+                                                offerPrice:
+                                                    '${testList.offerPrice}',
+                                                isSelected: labProvider
+                                                    .selectedTestIds
+                                                    .contains(testList.id),
+                                                onAdd: () {
+                                                  labProvider.testAddButton(
+                                                      testList.id!, testList);
+                                                  labProvider
+                                                      .bottomPopUpContainer();
+                                                  if (labProvider
+                                                      .isBottomContainerPopUp) {
+                                                    bottomPopUp();
+                                                  }
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                )
+                              /* ----------------------------- DOOR STEP TESTS ---------------------------- */
+                              : SizedBox(
+                                  width: double.infinity,
+                                  child: labProvider.doorStepTestList.isEmpty
+                                      ? const Center(
+                                          child: Text('No Tests Available!'))
+                                      : ListView.separated(
+                                          separatorBuilder: (context, index) =>
+                                              const Gap(6),
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: labProvider
+                                              .doorStepTestList.length,
+                                          itemBuilder: (context, index) {
+                                            final doorStepList = labProvider
+                                                .doorStepTestList[index];
+                                            return FadeIn(
+                                              child: TestListCard(
+                                                doorstepList: true,
+                                                isDoorstepAvailable: true,
+                                                index: index,
+                                                image: doorStepList.testImage!,
+                                                testName:
+                                                    doorStepList.testName ??
+                                                        'No Name',
+                                                testPrice:
+                                                    '${doorStepList.testPrice ?? 000}',
+                                                offerPrice:
+                                                    '${doorStepList.offerPrice}',
+                                                isSelected: labProvider
+                                                    .selectedTestIds
+                                                    .contains(doorStepList.id),
+                                                onAdd: () {
+                                                  labProvider.testAddButton(
+                                                      doorStepList.id!,
+                                                      doorStepList);
+                                                  if (labProvider
+                                                      .selectedTestIds
+                                                      .isNotEmpty) {
+                                                    labProvider
+                                                        .bottomPopUpContainer();
+                                                    if (labProvider
+                                                        .isBottomContainerPopUp) {
+                                                      bottomPopUp();
+                                                    }
+                                                  }
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                ),
+                        ],
+                      ),
                     ),
-                  ),
+                  )
+              ],
+            ),
             bottomNavigationBar: labProvider.isBottomContainerPopUp
                 ? bottomPopUp(
                     itemCount: labProvider.selectedTestIds.length,
@@ -356,7 +355,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                       if (authProvider.userFetchlDataFetched!.userName ==
                           null) {
                         EasyNavigation.push(
-                            context: context, page:const ProfileSetup());
+                            context: context, page: const ProfileSetup());
                         CustomToast.infoToast(text: 'Fill user details');
                       } else {
                         showDialog(

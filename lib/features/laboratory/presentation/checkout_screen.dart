@@ -15,7 +15,7 @@ import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/address_card.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/address_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/cart_items_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/order_summary_card.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
@@ -359,15 +359,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       labProvider.clearCart();
                       labProvider.selectedRadio = null;
                       addressProvider.selectedAddress = null;
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const OrderRequestSuccessScreen(
+                      EasyNavigation.pushAndRemoveUntil(
+                        context: context,
+                         type: PageTransitionType.bottomToTop,
+                        page: const  OrderRequestSuccessScreen(
                             title:
                                 'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
                           ),
-                        ),
-                        (route) => false,
+                    
                       );
                       labProvider.prescriptionFile = null;
                       labProvider.prescriptionUrl = null;

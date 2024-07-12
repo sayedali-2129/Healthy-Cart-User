@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -10,10 +9,10 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/address_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/address_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +32,8 @@ class _PrescriptionOrderAddressScreenState
       final addressProvider = context.read<UserAddressProvider>();
       final pharmacyProvider = context.read<PharmacyProvider>();
       if (pharmacyProvider.selectedRadio == 'Home') {
-        addressProvider.getUserAddress(userId: pharmacyProvider.userId ?? '');
+        addressProvider.getUserAddress(
+            userId: pharmacyProvider.userId ?? '');
       }
     });
     super.initState();
@@ -58,35 +58,34 @@ class _PrescriptionOrderAddressScreenState
               },
             ),
             if (addressProvider.isLoading)
-                  
-           const  SliverFillRemaining(
-              child: Center(
-                child: LoadingIndicater(),
-              ),
-            )
+              const SliverFillRemaining(
+                child: Center(
+                  child: LoadingIndicater(),
+                ),
+              )
             else
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Select Delivery Address",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Montserrat'),
-                    ),
-                    const Gap(16),
-                    if (pharmacyProvider.selectedRadio == 'Home')
-                      const Divider(),  
-                    FadeInRight(child: const AddressCard()),
-                    const Divider(),
-                  ],
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, top: 16, right: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Select Delivery Address",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Montserrat'),
+                      ),
+                      const Gap(16),
+                      if (pharmacyProvider.selectedRadio == 'Home')
+                        const Divider(),
+                      FadeInRight(child: const AddressCard()),
+                      const Divider(),
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

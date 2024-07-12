@@ -6,6 +6,7 @@ import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
+import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
@@ -59,17 +60,25 @@ class _HospitalDetailsState extends State<HospitalDetails> {
         },
       );
       return Scaffold(
-          body: CustomScrollView(slivers: [
+          body: CustomScrollView(
+            slivers: [
         SliverCustomAppbar(
           title: hospital.hospitalName ?? 'Hospital',
           onBackTap: () {
             Navigator.pop(context);
           },
         ),
-        hospitalProvider.isLoading == true
-            ? const SliverFillRemaining(
-                child: Center(child: LoadingIndicater()))
-            : SliverToBoxAdapter(
+      if  (hospitalProvider.isLoading == true)
+            const SliverFillRemaining(
+                child: Center(child: LoadingIndicater(),),)
+         else if(hospitalProvider.isLoading == false && hospitalProvider.hospitalBanner.isEmpty && hospitalProvider.hospitalCategoryList.isEmpty && hospitalProvider.doctorsList.isEmpty)
+           const SliverFillRemaining(
+                      child: StillWorkingPage(
+                    text:
+                        "We are still working on our Hospital, will be soon available.",
+                  ))
+             else            
+            SliverToBoxAdapter(
                 child: Column(
                   children: [
                     FadeInDown(

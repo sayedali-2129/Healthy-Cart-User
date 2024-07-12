@@ -22,100 +22,104 @@ class LoginScreen extends StatelessWidget {
         appBar: AppBar(
           surfaceTintColor: BColors.white,
           backgroundColor: BColors.white,
-          leading:   GestureDetector(
-                                onTap: () {
-                                  EasyNavigation.pushReplacement(
-                                      context: context,
-                                      page: const BottomNavigationWidget());
-                                },
-                                child: const Icon(Icons.arrow_back_ios_new_rounded)),
+          leading: GestureDetector(
+              onTap: () {
+                EasyNavigation.pushReplacement(
+                    context: context, page: const BottomNavigationWidget());
+              },
+              child: const Icon(Icons.arrow_back_ios_new_rounded)),
         ),
-        body: GestureDetector(
+        body: InkWell(
           onTap: () {
             FocusScope.of(context).unfocus();
           },
           child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+              padding: const EdgeInsets.all(16),
               child: SingleChildScrollView(
                 child: SizedBox(
                   height: screenheight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Gap(88),
-                          SizedBox(
-                            child: Center(
-                              child: Image.asset(
-                                  height: 260, width: 218, BImage.loginImage),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Gap(88),
+                            SizedBox(
+                              child: Center(
+                                child: Image.asset(
+                                    height: 260, width: 218, BImage.loginImage),
+                              ),
                             ),
-                          ),
-                          const Gap(48),
-                          const Text(
-                            'Login',
-                            style: TextStyle(
-                                fontSize: 28, fontWeight: FontWeight.w700),
-                          ),
-                          const Gap(16),
-                          const SizedBox(
-                            width: 300,
-                            child: Text(
-                              'Please select your Country code & enter the Phone number. ',
+                            const Gap(48),
+                            const Text(
+                              'Login',
                               style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500),
-                              textAlign: TextAlign.center,
+                                  fontSize: 28, fontWeight: FontWeight.w700),
                             ),
-                          ),
-                          const Gap(20),
-                          PhoneField(
-                            phoneNumberController:
-                                authenticationProvider.phoneNumberController,
-                            countryCode: (value) {
-                              authenticationProvider.countryCode = value;
-                            },
-                          ),
-                          const Gap(40),
-                          ButtonWidget(
-                            buttonWidth: double.infinity,
-                            buttonHeight: 48,
-                            onPressed: () async {
-                              if (authenticationProvider.countryCode == null)
+                            const Gap(16),
+                            const SizedBox(
+                              width: 300,
+                              child: Text(
+                                'Please select your Country code & enter the Phone number. ',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            const Gap(40),
+                            PhoneField(
+                              phoneNumberController:
+                                  authenticationProvider.phoneNumberController,
+                              countryCode: (value) {
+                                authenticationProvider.countryCode = value;
+                              },
+                            ),
+                            const Gap(40),
+                            ButtonWidget(
+                              buttonWidth: double.infinity,
+                              buttonHeight: 48,
+                              onPressed: () async {
+                                if (authenticationProvider.countryCode == null){
+                                  CustomToast.errorToast(
+                                      text: 'Please select your country code');
                                 return;
-                              if (authenticationProvider
-                                      .phoneNumberController.text.isEmpty ||
-                                  authenticationProvider
-                                          .phoneNumberController.text.length <
-                                      10 ||
-                                  authenticationProvider
-                                          .phoneNumberController.text.length >
-                                      10) {
-                                CustomToast.sucessToast(
-                                    text: 'Please re-enter a valid number');
-                                return;
-                              }
-                              LoadingLottie.showLoading(
-                                  context: context, text: 'Sending OTP...');
+                                }
+                             
+                                if (authenticationProvider
+                                        .phoneNumberController.text.isEmpty ||
+                                    authenticationProvider
+                                            .phoneNumberController.text.length <
+                                        6 ||
+                                    authenticationProvider
+                                            .phoneNumberController.text.length >
+                                        12) {
+                                  CustomToast.errorToast(
+                                      text: 'Please re-enter a valid number');
+                                  return;
+                                }
+                                LoadingLottie.showLoading(
+                                    context: context, text: 'Sending OTP...');
 
-                              authenticationProvider.setNumber();
-                              authenticationProvider.verifyPhoneNumber(
-                                  context: context);
-                            },
-                            buttonWidget: const Text(
-                              'Sent OTP',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: BColors.white),
+                                authenticationProvider.setNumber();
+                                authenticationProvider.verifyPhoneNumber(
+                                    context: context, resend: false);
+                              },
+                              buttonWidget: const Text(
+                                'Sent OTP',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.white),
+                              ),
+                              buttonColor: BColors.buttonDarkColor,
                             ),
-                            buttonColor: BColors.buttonDarkColor,
-                          ),
-                          const Gap(24),
-                        ],
-                      ),
-                    ],
+                            const Gap(24),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )),

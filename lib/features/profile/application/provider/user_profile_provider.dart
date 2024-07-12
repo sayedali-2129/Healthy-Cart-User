@@ -16,7 +16,7 @@ class UserProfileProvider with ChangeNotifier {
   UserProfileProvider(this.iUserProfileFacade);
   final IUserProfileFacade iUserProfileFacade;
 
-  String? userId = FirebaseAuth.instance.currentUser?.uid;
+
   String? imageUrl;
   File? imageFile;
   UserModel? userModel;
@@ -34,6 +34,7 @@ class UserProfileProvider with ChangeNotifier {
   }
 
   Future<void> pickUserImage() async {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
     final result = await iUserProfileFacade.pickUserImage();
     result.fold((error) {
       CustomToast.errorToast(text: error.errMsg);
@@ -64,6 +65,7 @@ class UserProfileProvider with ChangeNotifier {
   }
 
   Future<void> addUserDetails({required BuildContext context}) async {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
     userModel = UserModel(
       userName: nameController.text,
       userEmail: emailController.text,
@@ -93,6 +95,7 @@ class UserProfileProvider with ChangeNotifier {
   }
 
   Future<void> updateUserDetails({required BuildContext context}) async {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
     userModel = UserModel(
       userName: nameController.text,
       userEmail: emailController.text,

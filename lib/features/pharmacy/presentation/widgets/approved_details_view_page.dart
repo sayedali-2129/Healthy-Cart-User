@@ -15,6 +15,7 @@ import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmac
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/product_details_page_view.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class ApprovedOrderDetailsScreen extends StatefulWidget {
@@ -421,6 +422,7 @@ class _ApprovedOrderDetailsScreenState
                   EasyNavigation.pop(context: context);
                   EasyNavigation.push(
                       context: context,
+                       type: PageTransitionType.bottomToTop,
                       page: const OrderRequestSuccessScreen(
                         title: 'Your order has been sucessfully placed.',
                       ));

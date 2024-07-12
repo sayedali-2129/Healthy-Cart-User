@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
@@ -38,7 +39,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         pharmacyProvider
-          ..clearPharmacyLocationData()
+          ..clearPharmacyFetchData()
           ..pharmacyFetchInitData(context: context);
       },
     );
@@ -120,20 +121,19 @@ class _PharmacyMainState extends State<PharmacyMain> {
                                   type: PageTransitionType.rightToLeft,
                                   context: context,
                                   page: const LoginScreen());
-                              CustomToast.infoToast(
-                                  text: 'Login to continue !');
+                              CustomToast.infoToast(text: 'Login to continue !');
                             } else {
-                              if (authProvider
-                                      .userFetchlDataFetched!.userName ==
+                              if (authProvider.userFetchlDataFetched!.userName ==
                                   null) {
                                 EasyNavigation.push(
-                                    context: context,
-                                    page: const ProfileSetup());
+                                    context: context, page: const ProfileSetup());
                               } else {
+                                pharmacyProvider.setUserId(
+                                    authProvider.userFetchlDataFetched?.id ?? '');
                                 pharmacyProvider.setPharmacyIdAndCategoryList(
-                                    selectedpharmacyId: pharmacyProvider
-                                            .pharmacyList[index].id ??
-                                        '',
+                                    selectedpharmacyId:
+                                        pharmacyProvider.pharmacyList[index].id ??
+                                            '',
                                     categoryIdList: pharmacyProvider
                                             .pharmacyList[index]
                                             .selectedCategoryId ??

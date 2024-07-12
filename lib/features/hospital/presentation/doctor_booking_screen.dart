@@ -8,7 +8,7 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
-import 'package:healthy_cart_user/features/hospital/presentation/patient_details_screen.dart';
+import 'package:healthy_cart_user/features/hospital/presentation/patient_member.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/doctor_details_top_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:intl/intl.dart';
@@ -141,7 +141,7 @@ class DoctorBookingScreen extends StatelessWidget {
                 log(hospitalProvider.seletedBookingDate!);
                 EasyNavigation.push(
                     context: context,
-                    page: PatientDetailsScreen(
+                    page: PatientMemberScreen(
                       selectedDoctor: doctorDetail,
                       hospital: hospital,
                       
