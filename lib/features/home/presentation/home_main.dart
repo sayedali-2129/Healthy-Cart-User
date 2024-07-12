@@ -6,7 +6,6 @@ import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
-import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
@@ -16,7 +15,6 @@ import 'package:healthy_cart_user/features/home/presentation/widgets/hospital_ho
 import 'package:healthy_cart_user/features/home/presentation/widgets/lab_list_card_home.dart';
 import 'package:healthy_cart_user/features/home/presentation/widgets/pharmacy_horizontal_card.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
-import 'package:healthy_cart_user/features/hospital/domain/models/hospital_category_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/all_categories_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/all_doctors_screen.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/hospital_details.dart';

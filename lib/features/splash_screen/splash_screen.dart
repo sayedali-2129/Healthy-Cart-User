@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
+import 'package:healthy_cart_user/core/controller/no_internet_controller.dart';
 import 'package:healthy_cart_user/core/custom/user_block_alert_dialogur.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
@@ -35,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
+           DependencyInjection.init();
         final authProvider = context.read<AuthenticationProvider>();
         if (authProvider.userFetchlDataFetched?.isActive == false) {
           UserBlockedAlertBox.userBlockedAlert();

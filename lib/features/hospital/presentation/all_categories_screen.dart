@@ -62,8 +62,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
                         type: PageTransitionType.rightToLeft,
                         duration: 250,
                         page: AllDoctorsScreen(
-                          category: category,
-                         
+                          category: category,  
                         ),
                         );
                   },

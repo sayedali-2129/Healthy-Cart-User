@@ -2,7 +2,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:healthy_cart_user/core/controller/no_internet_controller.dart';
 import 'package:healthy_cart_user/core/di/injection.dart';
 import 'package:healthy_cart_user/core/services/foreground_notification.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
@@ -42,7 +41,6 @@ Future<void> main() async {
       channel: channel,
       flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
   runApp(const MyApp());
-   DependencyInjection.init();
 }
 
 class MyApp extends StatefulWidget {
@@ -63,7 +61,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // CustomToast(context: context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
