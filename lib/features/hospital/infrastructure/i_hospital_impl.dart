@@ -470,8 +470,8 @@ class IHospitalImpl implements IHospitalFacade {
       if (hospitalLastDoc != null) {
         query = query.startAfterDocument(hospitalLastDoc!);
       }
-      final snapshot = await query.limit(4).get();
-      if (snapshot.docs.length < 4 || snapshot.docs.isEmpty) {
+      final snapshot = await query.limit(5).get();
+      if (snapshot.docs.length < 5 || snapshot.docs.isEmpty) {
         hospitalNoMoreData = true;
       } else {
         hospitalLastDoc =
