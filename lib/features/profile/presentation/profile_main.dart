@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
@@ -11,6 +10,7 @@ import 'package:healthy_cart_user/features/hospital/presentation/hospital_bookin
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_orders_tab.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_order_tabs.dart';
 import 'package:healthy_cart_user/features/profile/presentation/my_address_screen.dart';
+import 'package:healthy_cart_user/features/profile/presentation/my_family_screen.dart';
 import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
 import 'package:healthy_cart_user/features/profile/presentation/widgets/contact_us_sheet.dart';
 import 'package:healthy_cart_user/features/profile/presentation/widgets/profile_buttons.dart';
@@ -31,8 +31,6 @@ class ProfileMain extends StatefulWidget {
 class _ProfileMainState extends State<ProfileMain> {
   @override
   void initState() {
-    final auth = FirebaseAuth.instance;
-
     super.initState();
   }
 
@@ -62,13 +60,13 @@ class _ProfileMainState extends State<ProfileMain> {
                 FadeInRight(
                   child: ProfileCard(
                     district:
-                        authProvider.userFetchlDataFetched!.placemark?.district,
+                        authProvider.userFetchlDataFetched?.placemark?.district,
                     localArea: authProvider
                         .userFetchlDataFetched!.placemark?.localArea,
-                    userName: authProvider.userFetchlDataFetched!.userName,
+                    userName: authProvider.userFetchlDataFetched?.userName,
                     userLocation:
-                        '${authProvider.userFetchlDataFetched!.placemark?.localArea}, ${authProvider.userFetchlDataFetched!.placemark?.district}',
-                    userImage: authProvider.userFetchlDataFetched!.image,
+                        '${authProvider.userFetchlDataFetched?.placemark?.localArea}, ${authProvider.userFetchlDataFetched?.placemark?.district}',
+                    userImage: authProvider.userFetchlDataFetched?.image,
                   ),
                 ),
                 FadeInUp(
@@ -85,6 +83,31 @@ class _ProfileMainState extends State<ProfileMain> {
                               userModel: authProvider.userFetchlDataFetched,
                             ),
                           );
+                        },
+                      ),
+                      ProfileButtons(
+                        buttonName: 'My Address',
+                        onPressed: () {
+                          EasyNavigation.push(
+                              type: PageTransitionType.rightToLeft,
+                              duration: 300,
+                              context: context,
+                              page: MyAddressScreen(
+                                userId: authProvider.userFetchlDataFetched?.id?? '',
+                              ));
+                        },
+                      ),
+                      ProfileButtons(
+                        buttonName: 'My Family',
+                        onPressed: () {
+                           EasyNavigation.push(
+                              type: PageTransitionType.rightToLeft,
+                              duration: 300,
+                              context: context,
+                              page: MyFamilyScreen(
+                                userId: authProvider.userFetchlDataFetched?.id?? '',
+                              ));
+                          
                         },
                       ),
                       ProfileButtons(
@@ -120,23 +143,13 @@ class _ProfileMainState extends State<ProfileMain> {
                           );
                         },
                       ),
-                      ProfileButtons(
-                        buttonName: 'My Address',
-                        onPressed: () {
-                          EasyNavigation.push(
-                              type: PageTransitionType.rightToLeft,
-                              duration: 300,
-                              context: context,
-                              page: MyAddressScreen(
-                                userId: authProvider.userFetchlDataFetched!.id!,
-                              ));
-                        },
-                      ),
-                      const Gap(16),
+                      
+                      const Gap(40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           OutlineButtonWidget(
+
                             buttonHeight: 40,
                             buttonWidth: 160,
                             buttonColor: Colors.transparent,

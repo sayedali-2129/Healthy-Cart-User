@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
@@ -11,7 +11,7 @@ import 'package:healthy_cart_user/core/custom/prescription_bottom_sheet/precript
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/address_card.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/address_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/checkout_item_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_summary_pharmacy.dart';
@@ -28,7 +28,6 @@ class PharmacyCheckOutScreen extends StatefulWidget {
   @override
   State<PharmacyCheckOutScreen> createState() => _PharmacyCheckOutScreenState();
 }
-
 class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
   @override
   void initState() {
@@ -93,9 +92,10 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
               padding: const EdgeInsets.all(16),
               sliver: SliverToBoxAdapter(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Gap(8),
+                  const Divider(),
+                  const Gap(4),
                     pharmacyProvider.selectedRadio == 'Home'
                         ? const AddressCard()
                         : Row(
@@ -104,7 +104,7 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                                 Icons.location_on_outlined,
                                 size: 15,
                               ),
-                              const Gap(5),
+                              const Gap(4),
                               Expanded(
                                 child: RichText(
                                   overflow: TextOverflow.ellipsis,
@@ -138,12 +138,12 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                           ),
                     const Gap(8),
                     const Divider(),
-                    const Gap(8),
                     /* -------------------------------- CART LIST ------------------------------- */
                     ListView.separated(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        separatorBuilder: (context, index) => const Gap(8),
+                        padding:const  EdgeInsets.symmetric(vertical: 8),
+                        separatorBuilder: (context, index) => const Gap(4),
                         itemCount: pharmacyProvider.pharmacyCartProducts.length,
                         itemBuilder: (context, index) {
                           return CheckOutItemsCard(
@@ -164,7 +164,7 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                                 .requirePrescription,
                           );
                         }),
-                    const Gap(8),
+                    const Gap(4),
                     /* ------------------------- TOTAL AMOUNT CONTAINER ------------------------- */
                     OrderSummaryPharmacyCard(
                       totalProductPrice: pharmacyProvider.totalAmount,
@@ -178,25 +178,28 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                     pharmacyProvider.pharmacyCartProducts.any(
                             (element) => element.requirePrescription == true)
                         ? Column(
+                
+                          
                             children: [
+                              if(pharmacyProvider.prescriptionImageFile == null)
                               const Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Icon(Icons.priority_high_rounded,
-                                      color: Colors.red, size: 18),
+                                      color: Colors.red, size: 24),
                                   Expanded(
                                     child: Text(
                                       'One or more products in your list require prescription, Kindly upload the prescription to proceed.',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          color: BColors.black,
+                                          color: BColors.textLightBlack,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600),
                                     ),
                                   ),
                                 ],
                               ),
-                              const Gap(8),
+                              const Gap(16),
                               pharmacyProvider.prescriptionImageFile == null
                                   ? ButtonWidget(
                                       buttonHeight: 36,
@@ -251,14 +254,17 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                                       },
                                     )
                                   : Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         PrescriptionImageWidget(
+                                          height: 160,
+                                          width: 168,
                                             pharmacyProvider: pharmacyProvider),
                                       ],
                                     )
                             ],
                           )
-                        : const Gap(0),
+                        : const SizedBox(),
                   ],
                 ),
               ),

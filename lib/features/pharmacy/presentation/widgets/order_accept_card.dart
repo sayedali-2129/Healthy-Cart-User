@@ -7,7 +7,7 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/address_card.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_address_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/approved_details_view_page.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/date_and_order_id.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmacy_detail_container.dart';
@@ -261,7 +261,7 @@ class PharmacyAcceptedCard extends StatelessWidget {
                             ),
                             const Gap(8),
                             Expanded(
-                              child: AddressOrderCard(
+                              child: AddressPharmacyOrderCard(
                                   addressData: onProcessOrderData.addresss!),
                             ),
                           ],

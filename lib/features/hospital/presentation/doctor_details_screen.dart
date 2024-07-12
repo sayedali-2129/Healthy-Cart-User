@@ -92,7 +92,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                     child: DoctorDetailsTopCard(
                         doctors: doctor ?? DoctorModel(), isBooking: false)),
               ),
-              const SliverGap(10),
+              const SliverGap(8),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -132,7 +132,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                   ),
                 ),
               ),
-              const SliverGap(30),
+              const SliverGap(24),
               const SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.all(16),

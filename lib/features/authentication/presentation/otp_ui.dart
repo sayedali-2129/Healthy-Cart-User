@@ -14,8 +14,7 @@ import 'package:provider/provider.dart';
 
 class OTPScreen extends StatefulWidget {
   const OTPScreen(
-      {super.key, required this.verificationId, required this.phoneNumber});
-  final String verificationId;
+      {super.key, required this.phoneNumber});
   final String phoneNumber;
 
   @override
@@ -60,7 +59,7 @@ class _OTPScreenState extends State<OTPScreen> {
         appBar: AppBar(
           surfaceTintColor: BColors.white,
           backgroundColor: BColors.white,
-          leading: GestureDetector(
+          leading: InkWell(
               onTap: () {
                 EasyNavigation.pop(context: context);
               },
@@ -85,7 +84,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             height: 260, width: 218, BImage.otpImage),
                       ),
                     ),
-                    const Gap(40),
+                    const Gap(48),
                     const Text(
                       'Verification',
                       style: TextStyle(
@@ -136,7 +135,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       },
                       buttonWidget: const Text(
                         'Verify Code',
-                        style: TextStyle(fontSize: 18, color: BColors.white),
+                        style: TextStyle(fontSize: 18, color: BColors.white,fontWeight: FontWeight.w600),
                       ),
                       buttonColor: BColors.buttonLightColor,
                     ),
@@ -146,10 +145,12 @@ class _OTPScreenState extends State<OTPScreen> {
                       text: TextSpan(
                         children: [
                           const TextSpan(
-                              text: "Didn't get OTP ? ",
+                              text: "Didn't get OTP ?  ",
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12,
+                                 fontFamily: 'Montserrat',
+                                 color: BColors.textLightBlack
                               )),
                           (seconds == 0)
                               ? TextSpan(
@@ -158,19 +159,23 @@ class _OTPScreenState extends State<OTPScreen> {
                                     decoration: TextDecoration.underline,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
+                                       fontFamily: 'Montserrat',
+                                 color: BColors.textBlack
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       LoadingLottie.showLoading(
                                           context: context, text: 'Loading...');
                                       authenticationProvider.verifyPhoneNumber(
-                                          context: context);
+                                          context: context, resend: true);
                                     })
                               : TextSpan(
                                   text: 'in 00:$seconds',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w700,
+                                      fontFamily: 'Montserrat',
+                                 color: BColors.textLightBlack
                                   ),
                                 ),
                         ],

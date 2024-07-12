@@ -28,13 +28,13 @@ class PhoneField extends StatelessWidget {
       },
       controller: phoneNumberController,
       dropdownTextStyle:
-          const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+          const TextStyle(fontSize: 16, fontWeight: FontWeight.w500,),
       initialCountryCode: 'IN',
       keyboardType: TextInputType.number,
-      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       decoration: InputDecoration(
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 13),
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
         filled: true,
         fillColor: BColors.textWhite,
         hintText: "Number goes here",

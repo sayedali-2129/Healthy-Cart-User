@@ -5,8 +5,8 @@ import 'package:healthy_cart_user/features/profile/domain/models/user_address_mo
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 
 
-class AddressOrderCard extends StatelessWidget {
-  const AddressOrderCard({
+class AddressPharmacyOrderCard extends StatelessWidget {
+  const AddressPharmacyOrderCard({
     super.key,
     required this.addressData,
   });
@@ -60,8 +60,8 @@ class AddressOrderCard extends StatelessWidget {
                   const Gap(5),
                   Text(
                     '${addressData.address ?? 'Address'} ${addressData.landmark}, pincode : ${addressData.pincode}',
-                    // overflow: TextOverflow.ellipsis,
-                    // maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                         color: BColors.textBlack,
                         fontWeight: FontWeight.w600,
@@ -75,8 +75,8 @@ class AddressOrderCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge!.copyWith(
                     color: BColors.textBlack,
                     fontWeight: FontWeight.w600,
-                    fontSize: 12),
-              )
+                    fontSize: 12,),
+              ),
             ],
           ),
         ),

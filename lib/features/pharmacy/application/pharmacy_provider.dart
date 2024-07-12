@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
@@ -22,6 +20,7 @@ import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 @injectable
@@ -42,7 +41,12 @@ class PharmacyProvider extends ChangeNotifier {
   List<String> productImageUrlList = [];
 
   final TextEditingController searchController = TextEditingController();
-  String? userId = FirebaseAuth.instance.currentUser?.uid;
+  String? userId;
+  void setUserId(String id) {
+    userId = id;
+    notifyListeners();
+    log('User id in pharmacy $userId');
+  }
 
 /* ---------------------------------- prescription image --------------------------------- */
   String? prescriptionImageUrl;
@@ -76,8 +80,9 @@ class PharmacyProvider extends ChangeNotifier {
     });
   }
 
-  void clearImageFile() {
+  void clearImageFileAndPrescriptionDetails() {
     prescriptionImageFile = null;
+    prescriptionDescription.clear();
     notifyListeners();
   }
 
@@ -327,6 +332,7 @@ class PharmacyProvider extends ChangeNotifier {
       notifyListeners();
       CustomToast.errorToast(text: "Couldn't able to show products");
     }, (products) {
+      log('Called all products');
       productAllList.addAll(products); //// here we are assigning the doctor
     });
     fetchLoading = false;
@@ -420,8 +426,6 @@ class PharmacyProvider extends ChangeNotifier {
   int quantityCount = 1;
   Map<String, dynamic> cartProductMap = {};
   Map<String, int> productCartDataAdded = {};
-  // List<int> productCartQuantityList = [];
-  // List<String> productCartIdList = [];
   List<PharmacyProductAddModel> pharmacyCartProducts = [];
   List<ProductAndQuantityModel> productAndQuantityDetails = [];
   PharmacyOrderModel? orderProducts;
@@ -476,8 +480,8 @@ class PharmacyProvider extends ChangeNotifier {
     if (productAllList.isEmpty) return; // if no product present no need to get
     fetchLoading = true;
     final result = await _iPharmacyFacade.createOrGetProductToUserCart(
-      pharmacyId: pharmacyId!,
-      userId: userId!,
+      pharmacyId: pharmacyId ?? '',
+      userId: userId ?? '',
     );
     result.fold(
       (failure) {
@@ -486,13 +490,8 @@ class PharmacyProvider extends ChangeNotifier {
         notifyListeners();
       },
       (cartProductsData) {
+        log(cartProductsData.toString());
         if (cartProductsData.isNotEmpty) {
-          // cartProductsData.forEach(
-          //   (key, value) {
-          //     productCartQuantityList.add(value);
-          //     productCartIdList.add(key);
-          //   },
-          // );
           cartProductMap.addAll(cartProductsData);
         }
         fetchLoading = false;
@@ -642,7 +641,7 @@ class PharmacyProvider extends ChangeNotifier {
 /* -------------------------- ORDER CREATE SECTION -------------------------- */
   final String homeDelivery = 'Home';
   final String pharmacyPickup = 'Pharmacy'; // choose what kind delivery
-
+  final TextEditingController prescriptionDescription = TextEditingController();
   Future<void> createProductOrderDetails({
     required BuildContext context,
   }) async {
@@ -660,9 +659,9 @@ class PharmacyProvider extends ChangeNotifier {
       (orderProduct) {
         orderProductsAdded = orderProduct;
         notifyListeners();
-        clearImageFile();
         EasyNavigation.pop(context: context);
         EasyNavigation.push(
+            type: PageTransitionType.bottomToTop,
             context: context,
             page: const OrderRequestSuccessScreen(
               title: 'Your order is in review, we will notify you soon.',
@@ -674,6 +673,7 @@ class PharmacyProvider extends ChangeNotifier {
             title: 'New Booking Received!!!');
         log('Order Request Send Successfully');
         CustomToast.sucessToast(text: "The order is in review");
+        clearImageFileAndPrescriptionDetails();
         clearProductAndUserInCheckOutDetails();
       },
     );
@@ -696,6 +696,7 @@ class PharmacyProvider extends ChangeNotifier {
       createdAt: Timestamp.now(),
       prescription:
           (prescriptionImageUrl != null) ? prescriptionImageUrl : null,
+      description: prescriptionDescription.text,
     );
   }
 
@@ -724,12 +725,13 @@ class PharmacyProvider extends ChangeNotifier {
   }
 
   void clearProductAndUserInCheckOutDetails() {
-    log('Calledd clear selectedRadoi');
+    log('Calledd clear selectedRadio');
     userAddress = null;
     userDetails = null;
     selectedRadio = null;
     prescriptionImageUrl = null;
     prescriptionImageFile = null;
+    prescriptionDescription.clear();
     productIdList.clear();
     productAndQuantityDetails.clear();
   }

@@ -252,11 +252,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                             'No Name',
                                                     testPrice:
                                                         '${testList.testPrice ?? 000}',
-                                                    offerPrice: testList
-                                                                .offerPrice ==
-                                                            0
-                                                        ? 'Free'
-                                                        : '₹${testList.offerPrice}',
+                                                    offerPrice:
+                                                        '${testList.offerPrice}',
                                                     isSelected: labProvider
                                                         .selectedTestIds
                                                         .contains(testList.id),
@@ -308,11 +305,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                             'No Name',
                                                     testPrice:
                                                         '${doorStepList.testPrice ?? 000}',
-                                                    offerPrice: doorStepList
-                                                                .offerPrice ==
-                                                            0
-                                                        ? 'Free'
-                                                        : '₹${doorStepList.offerPrice ?? 0}',
+                                                    offerPrice:
+                                                        '${doorStepList.offerPrice}',
                                                     isSelected: labProvider
                                                         .selectedTestIds
                                                         .contains(

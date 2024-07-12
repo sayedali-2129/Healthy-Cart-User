@@ -53,7 +53,7 @@ class PrescriptionImageWidget extends StatelessWidget {
               backgroundColor: BColors.red,
               child: GestureDetector(
                 onTap: () {
-                  pharmacyProvider.clearImageFile();
+                  pharmacyProvider.clearImageFileAndPrescriptionDetails();
                 },
                 child: const Icon(
                   Icons.close_rounded,
