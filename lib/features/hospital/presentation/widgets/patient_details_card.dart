@@ -31,7 +31,7 @@ class PatientDetailsContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Patient Details',
               style: TextStyle(
                   fontSize: 12,
@@ -57,13 +57,13 @@ class PatientDetailsContainer extends StatelessWidget {
                     children: [
                       RowTwoTextWidget(
                           text1: 'Age', text2: patientAge, gap: 48),
-                      Gap(4),
+                     const Gap(4),
                       RowTwoTextWidget(
                           text1: 'Place', text2: patientPlace, gap: 38),
-                      Gap(4),
+                     const Gap(4),
                       RowTwoTextWidget(
                           text1: 'Gender', text2: patientGender, gap: 26),
-                      Gap(4),
+                     const Gap(4),
                       RowTwoTextWidget(
                           text1: 'Phone No', text2: patientNumber, gap: 11),
                     ],

@@ -51,15 +51,18 @@ class TextfieldWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         enableHeading == true
-            ? Text(
-                fieldHeading ?? '',
-                style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: BColors.black),
-              )
-            : const Gap(0),
-        const Gap(8),
+            ? Padding(
+              padding: const EdgeInsets.only(left: 8, bottom: 8),
+              child: Text(
+                  fieldHeading ?? '',
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: BColors.black),
+                ),
+            )
+            : const SizedBox(),
+        
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: SizedBox(
@@ -84,7 +87,7 @@ class TextfieldWidget extends StatelessWidget {
                 labelStyle: Theme.of(context).textTheme.labelMedium,
                 hintStyle: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                     color: BColors.grey),
                 hintText: hintText,
                 labelText: labelText,

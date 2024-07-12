@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
@@ -66,168 +67,167 @@ class LabPrescriptionPage extends StatelessWidget {
                             ],
                           ),
                     labProvider.prescriptionFile == null
-                        ? ButtonWidget(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                showDragHandle: true,
-                                elevation: 10,
-                                backgroundColor: Colors.white,
-                                context: context,
-                                builder: (context) {
-                                  return ChoosePrescriptionBottomSheet(
-                                    cameraButtonTap: () {
-                                      labProvider
-                                          .pickPrescription(
-                                              source: ImageSource.camera)
-                                          .whenComplete(() =>
-                                              EasyNavigation.pop(
-                                                  context: context));
-                                    },
-                                    galleryButtonTap: () {
-                                      labProvider
-                                          .pickPrescription(
-                                              source: ImageSource.gallery)
-                                          .whenComplete(() =>
-                                              EasyNavigation.pop(
-                                                  context: context));
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                            buttonHeight: 40,
-                            buttonWidth: double.infinity,
-                            buttonColor: BColors.darkblue,
-                            buttonWidget: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.file_upload_outlined,
-                                  color: BColors.white,
-                                  size: 24,
-                                ),
-                                Gap(8),
-                                Text(
-                                  'Upload Prescription',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Montserrat',
-                                      color: BColors.white),
-                                ),
-                              ],
-                            ),
-                          )
-                        : ButtonWidget(
-                            onPressed: () {
-                              if (authProvider
-                                      .userFetchlDataFetched!.userName ==
-                                  null) {
-                                EasyNavigation.push(
-                                   type: PageTransitionType.rightToLeft,
-                                    context: context,
-                                    page: const ProfileSetup());
-                                CustomToast.infoToast(
-                                    text: 'Fill user details');
-                              } else {
-                                showDialog(
+                        ? FadeInDown(
+                          child: ButtonWidget(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  showDragHandle: true,
+                                  elevation: 10,
+                                  backgroundColor: Colors.white,
                                   context: context,
-                                  builder: (context) => TestTypeRadiopopup(
-                                    onConfirm: () {
-                                      if (labProvider.selectedRadio == 'Lab') {
-                                        ConfirmAlertBoxWidget
-                                            .showAlertConfirmBox(
-                                                context: context,
-                                                titleText: 'Confirm Order',
-                                                subText:
-                                                    'This will send your order to the laboratory and check the availability of the test. Are you sure you want to proceed?',
-                                                confirmButtonTap: () async {
-                                                  LoadingLottie.showLoading(
-                                                      context: context,
-                                                      text: 'Please wait...');
-
-                                                  if (labProvider
-                                                          .prescriptionFile !=
-                                                      null) {
-                                                    await labProvider
-                                                        .uploadPrescription();
-                                                  }
-                                                  await labProvider
-                                                      .addLabOrders(
-                                                          prescriptionOnly:
-                                                              true,
-                                                          selectedTests: [],
-                                                          labModel: labModel,
-                                                          labId: labModel.id!,
-                                                          userId: authProvider
-                                                              .userFetchlDataFetched!
-                                                              .id!,
-                                                          userModel: authProvider
-                                                              .userFetchlDataFetched!,
-                                                          selectedAddress:
-                                                              addressProvider
-                                                                      .selectedAddress ??
-                                                                  UserAddressModel(),
-                                                          fcmtoken: labModel
-                                                              .fcmToken!,
-                                                          userName: authProvider
-                                                              .userFetchlDataFetched!
-                                                              .userName!)
-                                                      .whenComplete(
-                                                        () {
-                                                           labProvider.selectedRadio =
-                                                      null;
-                                                  addressProvider
-                                                      .selectedAddress = null;
-                                                  EasyNavigation.pushAndRemoveUntil(
-                                                    type: PageTransitionType.bottomToTop,
-                                                    context : context,
-                                                   
-                                                  page:  const OrderRequestSuccessScreen(
-                                                        title:
-                                                            'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
-                                                      ),
-                                                  );
-                                                  labProvider
-                                                      .clearCurrentDetails();
-                                                        },
-                                                      );
-
-                                               
-                                                });
-                                      } else {
-                                        EasyNavigation.push(
-                                            context: context,
-                                            type:
-                                                PageTransitionType.rightToLeft,
-                                            duration: 250,
-                                            page:
-                                                LabPrescriptionOrderAddressScreen(
-                                              labModel: labModel,
-                                              userId: authProvider
-                                                      .userFetchlDataFetched!
-                                                      .id ??
-                                                  '',
-                                            ));
-                                      }
-                                    },
-                                  ),
+                                  builder: (context) {
+                                    return ChoosePrescriptionBottomSheet(
+                                      cameraButtonTap: () {
+                                        labProvider.pickPrescription(
+                                            source: ImageSource.camera);
+                                        EasyNavigation.pop(context: context);
+                                      },
+                                      galleryButtonTap: () {
+                                        labProvider.pickPrescription(
+                                            source: ImageSource.gallery);
+                                        EasyNavigation.pop(context: context);
+                                      },
+                                    );
+                                  },
                                 );
-                              }
-                            },
-                            buttonHeight: 40,
-                            buttonWidth: double.infinity,
-                            buttonColor: BColors.lightgreen,
-                            buttonWidget: const Text(
-                              'Send for review',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Montserrat',
-                                color: BColors.black,
+                              },
+                              buttonHeight: 40,
+                              buttonWidth: double.infinity,
+                              buttonColor: BColors.darkblue,
+                              buttonWidget: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.file_upload_outlined,
+                                    color: BColors.white,
+                                    size: 24,
+                                  ),
+                                  Gap(8),
+                                  Text(
+                                    'Upload Prescription',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Montserrat',
+                                        color: BColors.white),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
+                        )
+                        : FadeInUp(
+                          child: ButtonWidget(
+                              onPressed: () {
+                                if (authProvider
+                                        .userFetchlDataFetched!.userName ==
+                                    null) {
+                                  EasyNavigation.push(
+                                      type: PageTransitionType.rightToLeft,
+                                      context: context,
+                                      page: const ProfileSetup());
+                                  CustomToast.infoToast(
+                                      text: 'Fill user details');
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => TestTypeRadiopopup(
+                                      onConfirm: () {
+                                        if (labProvider.selectedRadio == 'Lab') {
+                                          ConfirmAlertBoxWidget
+                                              .showAlertConfirmBox(
+                                                  context: context,
+                                                  titleText: 'Confirm Order',
+                                                  subText:
+                                                      'This will send your order to the laboratory and check the availability of the test. Are you sure you want to proceed?',
+                                                  confirmButtonTap: () async {
+                                                    LoadingLottie.showLoading(
+                                                        context: context,
+                                                        text: 'Please wait...');
+                          
+                                                    if (labProvider
+                                                            .prescriptionFile !=
+                                                        null) {
+                                                      await labProvider
+                                                          .uploadPrescription();
+                                                    }
+                                                    await labProvider
+                                                        .addLabOrders(
+                                                            prescriptionOnly:
+                                                                true,
+                                                            selectedTests: [],
+                                                            labModel: labModel,
+                                                            labId: labModel.id!,
+                                                            userId: authProvider
+                                                                .userFetchlDataFetched!
+                                                                .id!,
+                                                            userModel: authProvider
+                                                                .userFetchlDataFetched!,
+                                                            selectedAddress:
+                                                                addressProvider
+                                                                        .selectedAddress ??
+                                                                    UserAddressModel(),
+                                                            fcmtoken: labModel
+                                                                .fcmToken!,
+                                                            userName: authProvider
+                                                                .userFetchlDataFetched!
+                                                                .userName!)
+                                                        .whenComplete(
+                                                      () {
+                                                        labProvider
+                                                            .selectedRadio = null;
+                                                        addressProvider
+                                                                .selectedAddress =
+                                                            null;
+                                                        EasyNavigation
+                                                            .pushAndRemoveUntil(
+                                                          type: PageTransitionType
+                                                              .bottomToTop,
+                                                          context: context,
+                                                          page:
+                                                              const OrderRequestSuccessScreen(
+                                                            title:
+                                                                'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
+                                                          ),
+                                                        );
+                                                        labProvider
+                                                            .clearCurrentDetails();
+                                                      },
+                                                    );
+                                                  });
+                                        } else {
+                                          EasyNavigation.push(
+                                              context: context,
+                                              type:
+                                                  PageTransitionType.rightToLeft,
+                                              duration: 250,
+                                              page:
+                                                  LabPrescriptionOrderAddressScreen(
+                                                labModel: labModel,
+                                                userId: authProvider
+                                                        .userFetchlDataFetched!
+                                                        .id ??
+                                                    '',
+                                              ));
+                                        }
+                                      },
+                                    ),
+                                  );
+                                }
+                              },
+                              buttonHeight: 40,
+                              buttonWidth: double.infinity,
+                              buttonColor: BColors.lightgreen,
+                              buttonWidget: const Text(
+                                'Send for review',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Montserrat',
+                                  color: BColors.black,
+                                ),
+                              ),
+                            ),
+                        ),
                     const Gap(24),
                     const Padding(
                       padding: EdgeInsets.all(8.0),

@@ -1,5 +1,5 @@
+import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
@@ -8,6 +8,7 @@ import 'package:healthy_cart_user/core/general/typdef.dart';
 import 'package:healthy_cart_user/core/services/image_picker.dart';
 import 'package:healthy_cart_user/features/profile/domain/facade/i_user_profile_facade.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_family_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
@@ -57,7 +58,8 @@ class IUserProfileImpl implements IUserProfileFacade {
   /* ---------------------------- PICK USER IMAGE ---------------------------- */
   @override
   FutureResult<File> pickUserImage() async {
-    return await _imageService.getGalleryImage(imagesource: ImageSource.gallery);
+    return await _imageService.getGalleryImage(
+        imagesource: ImageSource.gallery);
   }
 
 /* ----------------------------- SAVE USER IMAGE ---------------------------- */
@@ -209,6 +211,135 @@ class IUserProfileImpl implements IUserProfileFacade {
       } else {
         return left(
             const MainFailure.generalException(errMsg: 'Address not found'));
+      }
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+/* ---------------------------- ADD USER FAMILY MEMBER ---------------------------- */
+  @override
+  FutureResult<UserFamilyMembersModel> addUserFamilyMember(
+      {required String userId,
+      required UserFamilyMembersModel familyMemberModel,
+      required String familyMemberId}) async {
+    try {
+      Map<String, dynamic> familyMembeMap = familyMemberModel.toMap();
+      log(familyMembeMap.toString());
+
+      final docRef = _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.userFamilyMemberCollection)
+          .doc('user_family_members');
+
+      DocumentSnapshot snapshot = await docRef.get();
+      Map<String, dynamic> familyMembeData = {};
+      if (snapshot.exists) {
+        familyMembeData = snapshot.data() as Map<String, dynamic>;
+      }
+
+      String newAddressKey = familyMemberId;
+      familyMembeMap['id'] = newAddressKey;
+      familyMembeData[newAddressKey] = familyMembeMap;
+
+      await docRef.set(familyMembeData);
+
+      return right(UserFamilyMembersModel.fromMap(familyMembeMap)
+          .copyWith(id: familyMemberId, userId: userId));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+/* ---------------------------- GET USER FAMILY MEMBERS ---------------------------- */
+  @override
+  FutureResult<List<UserFamilyMembersModel>> getUserFamilyMember(
+      {required String userId}) async {
+    try {
+      final docRef = _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.userFamilyMemberCollection)
+          .doc('user_family_members');
+
+      DocumentSnapshot snapshot = await docRef.get();
+      Map<String, dynamic> familyMemberData = {};
+      if (snapshot.exists) {
+        familyMemberData = snapshot.data() as Map<String, dynamic>;
+
+        final familyMemberList = familyMemberData.values
+            .map((e) =>
+                UserFamilyMembersModel.fromMap(e as Map<String, dynamic>))
+            .toList();
+
+        return right(familyMemberList);
+      } else {
+        return right([]);
+      }
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+/* --------------------------- UPDATE USER FAMILY MEMBER -------------------------- */
+
+  @override
+  FutureResult<UserFamilyMembersModel> updateUserFamilyMember(
+      {required String userId,
+      required UserFamilyMembersModel familyMemberModel,
+      required String familyMemberId}) async {
+    try {
+      Map<String, dynamic> familyMemberMap = familyMemberModel.toEditMap();
+
+      final docRef = _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.userFamilyMemberCollection)
+          .doc('user_family_members');
+
+      DocumentSnapshot snapshot = await docRef.get();
+      Map<String, dynamic> familyMemberData = {};
+      if (snapshot.exists) {
+        familyMemberData = snapshot.data() as Map<String, dynamic>;
+      }
+
+      familyMemberMap['id'] = familyMemberId;
+      familyMemberData[familyMemberId] = familyMemberMap;
+
+      await docRef.set(familyMemberData);
+
+      return right(UserFamilyMembersModel.fromMap(familyMemberMap)
+          .copyWith(id: familyMemberId, userId: userId));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+  /* -----------------------------USER REMOVE FAMILY MEMBER ----------------------------- */
+  @override
+  FutureResult<String> deleteFamilyMember({
+    required String userId,
+    required String familyMemberId,
+  }) async {
+    try {
+      final docRef = _firestore
+          .collection(FirebaseCollections.userCollection)
+          .doc(userId)
+          .collection(FirebaseCollections.userFamilyMemberCollection)
+          .doc('user_family_members');
+
+      DocumentSnapshot snapshot = await docRef.get();
+      Map<String, dynamic> familyMemberData = {};
+      if (snapshot.exists) {
+        familyMemberData = snapshot.data() as Map<String, dynamic>;
+      }
+      if (familyMemberData.containsKey(familyMemberId)) {
+        familyMemberData.remove(familyMemberId);
+        await docRef.set(familyMemberData);
+        return right('Removed Successfully');
+      } else {
+        return left(const MainFailure.generalException(errMsg: 'Not found'));
       }
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));

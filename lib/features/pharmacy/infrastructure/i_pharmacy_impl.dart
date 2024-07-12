@@ -679,6 +679,7 @@ class IPharmacyImpl implements IPharmacyFacade {
     required String pharmacyId,
     required String userId,
   }) async {
+    
     try {
       final docRef = _firebaseFirestore
           .collection(FirebaseCollections.userCollection)

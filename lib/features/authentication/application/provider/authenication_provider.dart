@@ -1,15 +1,13 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
-import 'package:healthy_cart_user/core/custom/no_data/no_internet.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
+import 'package:healthy_cart_user/core/custom/user_block_alert_dialogur.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/otp_ui.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:healthy_cart_user/features/splash_screen/splash_screen.dart';
-import 'package:healthy_cart_user/main.dart';
 import 'package:injectable/injectable.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -18,7 +16,6 @@ class AuthenticationProvider extends ChangeNotifier {
   AuthenticationProvider(this.iAuthFacade);
   final IAuthFacade iAuthFacade;
   UserModel? userFetchlDataFetched;
-  String? verificationId;
   String? smsCode;
   final TextEditingController phoneNumberController = TextEditingController();
   String? countryCode;
@@ -31,17 +28,6 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void userStreamFetchData(
-      {required String userId, required BuildContext context}) {
-    iAuthFacade.userStreamFetchData(userId).listen((event) {
-      event.fold((failure) {}, (snapshot) {
-        userFetchlDataFetched = snapshot;
-        // isRequsetedPendingPage = snapshot.requested;
-        notifyListeners();
-      });
-    });
-  }
-
   bool userStreamFetchedData({required String userId}) {
     bool result = false;
     iAuthFacade.userStreamFetchData(userId).listen((event) {
@@ -51,6 +37,9 @@ class AuthenticationProvider extends ChangeNotifier {
         userFetchlDataFetched = snapshot;
         // isRequsetedPendingPage = snapshot.requested;
         result = true;
+        if (snapshot.isActive == false) {
+          UserBlockedAlertBox.userBlockedAlert();
+        }
         notifyListeners();
       });
     });
@@ -58,26 +47,6 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   void navigationUserFuction({required BuildContext context}) async {
-    // if (userFetchlDataFetched?.address == null ||
-    //     userFetchlDataFetched?.image == null ||
-    //     userFetchlDataFetched?.laboratoryName == null ||
-    //     userFetchlDataFetched?.uploadLicense == null ||
-    //     userFetchlDataFetched?.ownerName == null) {
-    //   EasyNavigation.pushReplacement(
-    //     type: PageTransitionType.bottomToTop,
-    //     context: context,
-    //     page:
-    //         LaboratoryFormScreen(phoneNo: userFetchlDataFetched?.phoneNo ?? ''),
-    //   );
-    //   notifyListeners();
-    // } else if (userFetchlDataFetched?.placemark == null) {
-    //   EasyNavigation.pushReplacement(
-    //     type: PageTransitionType.bottomToTop,
-    //     context: context,
-    //     page: const LocationPage(),
-    //   );
-    //   notifyListeners();
-    // }  else {
 
     EasyNavigation.pushAndRemoveUntil(
         type: PageTransitionType.bottomToTop,
@@ -86,20 +55,22 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void verifyPhoneNumber({required BuildContext context}) {
+  void verifyPhoneNumber({required BuildContext context,  bool? resend}) {
     iAuthFacade.verifyPhoneNumber(phoneNumber!).listen((result) {
       result.fold((failure) {
         Navigator.pop(context);
         CustomToast.errorToast(text: failure.errMsg);
       }, (isVerified) {
         Navigator.pop(context);
-        EasyNavigation.push(
+        if(resend == false){
+          EasyNavigation.push(
             type: PageTransitionType.rightToLeft,
             context: context,
             page: OTPScreen(
-              verificationId: verificationId ?? 'No veriId',
               phoneNumber: phoneNumber ?? 'No Number',
-            ));
+            ),);
+        }
+ 
       });
     });
   }
@@ -125,12 +96,12 @@ class AuthenticationProvider extends ChangeNotifier {
       CustomToast.errorToast(text: failure.errMsg);
     }, (sucess) {
       Navigator.pop(context);
+      userFetchlDataFetched = null;
       CustomToast.sucessToast(text: sucess);
       EasyNavigation.pushReplacement(
           context: context, page: const SplashScreen());
     });
-  }
-  /* -------------------------- INTERNET CONNECTIVITY ------------------------- */
+  } 
 
 
 }

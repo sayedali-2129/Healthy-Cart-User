@@ -73,15 +73,16 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
-                          Icons.info_outline_rounded,
+                          Icons.warning_amber_outlined,
                           color: BColors.offRed,
+                          size: 32,
                         ),
-                        const Gap(6),
+                        const Gap(8),
                         const Expanded(
                           child: Text(
-                            "At this time, our pharmacy only offers order pickup and does not provide home delivery services.",
+                            "At this time, our pharmacy only offers order Pick-Up and does not provide Home Delivery services.",
                             style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 12,
                                 color: BColors.textLightBlack,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'Montserrat'),
@@ -241,7 +242,8 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                               if (pharmacyProvider
                                       .selectedpharmacyData?.isHomeDelivery ==
                                   false) {
-                                pharmacyProvider.selectedRadio = pharmacyProvider.pharmacyPickup;
+                                pharmacyProvider.selectedRadio =
+                                    pharmacyProvider.pharmacyPickup;
                                 EasyNavigation.push(
                                   type: PageTransitionType.rightToLeft,
                                   context: context,
@@ -253,7 +255,8 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                                   builder: (context) {
                                     return DeliveryTypeRadiopopup(
                                       onConfirm: () {
-                                        if (pharmacyProvider.selectedRadio == null) {
+                                        if (pharmacyProvider.selectedRadio ==
+                                            null) {
                                           CustomToast.errorToast(
                                               text:
                                                   'Select a delivery type to check out.');

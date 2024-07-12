@@ -6,9 +6,9 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicat
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
-import 'package:healthy_cart_user/features/profile/presentation/widgets/address_bottom_sheet.dart';
-import 'package:healthy_cart_user/features/profile/presentation/widgets/address_list_container.dart';
+import 'package:healthy_cart_user/features/profile/application/provider/user_family_provider.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/member_bottom_sheet.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/member_list_container.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
@@ -25,25 +25,25 @@ class _MyFamilyScreenState extends State<MyFamilyScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = context.read<UserAddressProvider>();
-      provider.getUserAddress(userId: widget.userId);
+      final provider = context.read<UserFamilyMembersProvider>();
+      provider.getUserFamilyMember(userId: widget.userId);
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AuthenticationProvider, UserAddressProvider>(
-        builder: (context, provider, addressProvider, _) {
+    return Consumer2<AuthenticationProvider, UserFamilyMembersProvider>(
+        builder: (context, provider, familyMemberProvider, _) {
       return PopScope(
         onPopInvoked: (didPop) {
-          addressProvider.selectedAddress = null;
+          familyMemberProvider.selectedFamilyMember = null;
         },
         child: Scaffold(
           body: CustomScrollView(
             slivers: [
               SliverCustomAppbar(
-                title: 'Saved Addresses',
+                title: 'Saved Members',
                 onBackTap: () {
                   EasyNavigation.pop(context: context);
                 },
@@ -85,18 +85,18 @@ class _MyFamilyScreenState extends State<MyFamilyScreen> {
                   ],
                 ),
               ),
-              const SliverGap(10),
+              const SliverGap(16),
               const SliverToBoxAdapter(
                 child: Divider(),
               ),
-              if (addressProvider.isLoading == true &&
-                  addressProvider.userAddressList.isEmpty)
+              if (familyMemberProvider.isLoading == true &&
+                  familyMemberProvider.userFamilyMemberList.isEmpty)
                 const SliverFillRemaining(
                   child: Center(
                     child: LoadingIndicater(),
                   ),
                 )
-              else if (addressProvider.userAddressList.isEmpty)
+              else if (familyMemberProvider.userFamilyMemberList.isEmpty)
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
@@ -107,9 +107,9 @@ class _MyFamilyScreenState extends State<MyFamilyScreen> {
                         BImage.noDataPng,
                         scale: 2.5,
                       ),
-                      const Gap(15),
+                      const Gap(16),
                       const Text(
-                        'No Saved Address Found!',
+                        'No Saved Members Found!',
                         style: TextStyle(
                             fontSize: 14,
                             color: BColors.black,
@@ -122,11 +122,12 @@ class _MyFamilyScreenState extends State<MyFamilyScreen> {
                 SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     sliver: SliverList.separated(
-                      itemCount: addressProvider.userAddressList.length,
+                      itemCount: familyMemberProvider.userFamilyMemberList.length,
                       separatorBuilder: (context, index) => const Gap(10),
-                      itemBuilder: (context, index) => AddressListCard(
+                      itemBuilder: (context, index) => FamilyMemberListCard(
                         isDeleteAvailable: true,
                         index: index,
+                        familyMember:familyMemberProvider.userFamilyMemberList[index],
                       ),
                     )),
             ],
@@ -147,7 +148,7 @@ class _MyFamilyScreenState extends State<MyFamilyScreen> {
                   isScrollControlled: true,
                   useSafeArea: true,
                   context: context,
-                  builder: (context) => const AddressBottomSheet(),
+                  builder: (context) => const FamilyMemberBottomSheet(),
                 );
               },
             ),

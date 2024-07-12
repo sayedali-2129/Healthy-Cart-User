@@ -5,31 +5,32 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
-import 'package:healthy_cart_user/features/profile/presentation/widgets/address_bottom_sheet.dart';
+import 'package:healthy_cart_user/features/profile/application/provider/user_family_provider.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_family_model.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/member_bottom_sheet.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
-class AddressListCard extends StatelessWidget {
-  const AddressListCard({
+class FamilyMemberListCard extends StatelessWidget {
+  const FamilyMemberListCard({
     super.key,
-    required this.index,
     this.onTap,
-    required this.isDeleteAvailable,
+    required this.isDeleteAvailable, required this.familyMember, required this.index,
   });
-  final int index;
+    final int index;
+  final UserFamilyMembersModel familyMember;
   final void Function()? onTap;
   final bool isDeleteAvailable;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<UserAddressProvider, AuthenticationProvider>(
-        builder: (context, addressProvider, authProvider, _) {
+    return Consumer2<UserFamilyMembersProvider, AuthenticationProvider>(
+        builder: (context, familyMemberProvider, authProvider, _) {
       return GestureDetector(
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: BColors.profileButtonGrey,
+            color:BColors.profileButtonGrey,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
@@ -48,55 +49,40 @@ class AddressListCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                addressProvider.userAddressList[index].name ??
-                                    'User',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w600),
-                              ),
-                              const Gap(8),
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all()),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: Center(
-                                    child: Text(
-                                      addressProvider.userAddressList[index]
-                                              .addressType ??
-                                          'Home',
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Gap(5),
-                          Text(
-                            '${addressProvider.userAddressList[index].address ?? 'Address'} ${addressProvider.userAddressList[index].landmark ?? 'Landmark'} - ${addressProvider.userAddressList[index].pincode ?? 'Pincode'}',
-                            // overflow: TextOverflow.ellipsis,
-                            // maxLines: 3,
-                            style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
-                          ),
-                          const Gap(5)
-                        ],
-                      ),
                       Text(
-                        addressProvider.userAddressList[index].phoneNumber ??
-                            'Phone',
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                        familyMember.name ??
+                            'Unknown member',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600),
+                      ),
+                      const Gap(8),
+                      Text(
+                            'Age : ${familyMember.age ??'Unknown age'}',
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      const Gap(4),
+                      Text(
+                            'Gender : ${familyMember.gender ??'Unknown gender'}',
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600),
+                      ),
+                        const Gap(4),
+                      Text(
+                            'Place : ${familyMember.place ??'Unknown place'}',
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      const Gap(4),
+                      Text(
+                        'Phone No : ${familyMember.phoneNo ??'Unknown phone'}'
+                            ,
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12,),
                       )
                     ],
                   ),
@@ -117,11 +103,7 @@ class AddressListCard extends StatelessWidget {
                           isScrollControlled: true,
                           useSafeArea: true,
                           context: context,
-                          builder: (context) => AddressBottomSheet(
-                            userAddressModel:
-                                addressProvider.userAddressList[index],
-                            index: index,
-                          ),
+                          builder: (context) =>  FamilyMemberBottomSheet(userFamilyMembersModel:familyMember, index: index,)
                         );
                       },
                       child: Text(
@@ -141,11 +123,10 @@ class AddressListCard extends StatelessWidget {
                                 LoadingLottie.showLoading(
                                     context: context,
                                     text: 'Removing Address...');
-                                await addressProvider.removeAddress(
+                                await familyMemberProvider.deleteFamilyMember(
                                     userId:
                                         authProvider.userFetchlDataFetched!.id!,
-                                    addressId: addressProvider
-                                        .userAddressList[index].id!,
+                                    familyMemberId: familyMemberProvider.userFamilyMemberList[index].id ?? '',
                                     index: index);
                                 Navigator.pop(context);
                               },

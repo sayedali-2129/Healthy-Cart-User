@@ -6,6 +6,7 @@ import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
+import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/lottie/lotties.dart';
@@ -16,13 +17,13 @@ class LocationPage extends StatelessWidget {
   const LocationPage({
     super.key,
     required this.locationSetter,
-  
   });
   final int locationSetter;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<LocationProvider>(builder: (context, locationProvider, _) {
+      body: Consumer2<LocationProvider, AuthenticationProvider>(
+          builder: (context, locationProvider, authProvider, _) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: FadeInUp(
@@ -66,7 +67,10 @@ class LocationPage extends StatelessWidget {
                                             isUserEditProfile: false,
                                             locationSetter: locationSetter,
                                             onSucess: () {
-                                             EasyNavigation.pushReplacement(context: context, page: const BottomNavigationWidget());
+                                              EasyNavigation.pushReplacement(
+                                                  context: context,
+                                                  page:
+                                                      const BottomNavigationWidget());
                                             },
                                           );
                                         } else {
@@ -75,16 +79,19 @@ class LocationPage extends StatelessWidget {
                                             context: context,
                                             locationSetter: locationSetter,
                                             onSucess: () {
-                                                EasyNavigation.pushReplacement(context: context, page: const BottomNavigationWidget());
+                                              EasyNavigation.pushReplacement(
+                                                  context: context,
+                                                  page:
+                                                      const BottomNavigationWidget());
                                             },
                                           );
                                         }
                                       },
                                     );
-                                  }else{
+                                  } else {
                                     CustomToast.errorToast(
-                                              text:
-                                                  "Please enable location to continue.");
+                                        text:
+                                            "Please enable location to continue.");
                                   }
                                 },
                               );

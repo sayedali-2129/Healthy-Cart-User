@@ -198,9 +198,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                 title:
                                                     'Your Booking is Successfull!!',
                                               ),
-                                              type: PageTransitionType
-                                                  .rightToLeft,
-                                              duration: 200);
+                                               type: PageTransitionType.bottomToTop,
+                                              duration: 300);
                                           ordersProvider.paymentType == null;
 
                                           Navigator.pop(context);

@@ -7,6 +7,7 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_p
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/lottie/lotties.dart';
 import 'package:lottie/lottie.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class OrderRequestSuccessScreen extends StatefulWidget {
@@ -76,6 +77,7 @@ class _OrderRequestSuccessScreenState extends State<OrderRequestSuccessScreen>
         bottomNavigationBar: GestureDetector(
           onTap: () {
             EasyNavigation.pushAndRemoveUntil(
+              type: PageTransitionType.topToBottom,
                 context: context, page: const BottomNavigationWidget());
           },
           child: Container(

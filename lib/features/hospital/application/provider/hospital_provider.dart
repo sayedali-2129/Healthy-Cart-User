@@ -13,6 +13,7 @@ import 'package:healthy_cart_user/features/hospital/domain/models/hospital_categ
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_family_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:provider/provider.dart';
@@ -31,15 +32,10 @@ class HospitalProvider with ChangeNotifier {
 
   bool hospitalFetchLoading = false;
   bool isLoading = true;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  //final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final doctorSearchController = TextEditingController();
 
   /* ---------------------------- TEXT CONTROLLERS ---------------------------- */
-  TextEditingController nameController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
-  TextEditingController placeController = TextEditingController();
-  TextEditingController numberController = TextEditingController();
-  String? genderDropdownValue;
   //booking date
   String? seletedBookingDate;
   //booking time
@@ -310,16 +306,16 @@ class HospitalProvider with ChangeNotifier {
     required DoctorModel selectedDoctor,
     required String fcmtoken,
     required String userName,
-    // required String fcmtoken,
+    required UserFamilyMembersModel selectedMember,
   }) async {
     hospitalBookingModel = HospitalBookingModel(
       hospitalId: hospitalId,
       bookedAt: Timestamp.now(),
-      patientName: nameController.text,
-      patientAge: ageController.text,
-      patientGender: genderDropdownValue,
-      patientNumber: numberController.text,
-      patientPlace: placeController.text,
+      patientName: selectedMember.name,
+      patientAge: selectedMember.age,
+      patientGender: selectedMember.gender,
+      patientNumber: selectedMember.phoneNo,
+      patientPlace: selectedMember.place,
       orderStatus: 0,
       paymentStatus: 0,
       totalAmount: totalAmount,
@@ -352,11 +348,6 @@ class HospitalProvider with ChangeNotifier {
   }
 
   void clearControllerData() {
-    nameController.clear();
-    ageController.clear();
-    placeController.clear();
-    numberController.clear();
-    genderDropdownValue = null;
     selectedSlot = null;
     seletedBookingDate = null;
     notifyListeners();

@@ -94,7 +94,7 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                               ),
                               Text(
                                 '(${widget.bookingModel.selectedDoctor!.doctorSpecialization!})',
-                                style: TextStyle(
+                                style:const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12,
                                     color: BColors.grey),
@@ -198,12 +198,13 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                               orderId: widget.bookingModel.id!);
 
                                           await EasyNavigation.push(
+                                            
                                               context: context,
-                                              page: OrderRequestSuccessScreen(
+                                              page: const OrderRequestSuccessScreen(
                                                   title:
                                                       'Your Booking is successfully completed!'),
                                               type: PageTransitionType
-                                                  .rightToLeft,
+                                                  .bottomToTop,
                                               duration: 200);
                                           ordersProvider.hospitalpPaymentType ==
                                               null;
