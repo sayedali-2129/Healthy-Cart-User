@@ -140,7 +140,7 @@ class TestListCard extends StatelessWidget {
                                               fontWeight: FontWeight.w500),
                                         ),
                                         TextSpan(
-                                          text: '  ₹$offerPrice',
+                                          text: '  $offerPrice',
                                           style: TextStyle(
                                               fontFamily: 'Montserrat',
                                               color: BColors.green,

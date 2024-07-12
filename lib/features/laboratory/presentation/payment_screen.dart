@@ -15,6 +15,7 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/payment_type_radio.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/selected_tests_card.dart';
+import 'package:healthy_cart_user/features/payment_gateway/application/gateway_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,11 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        context.read<GatewayProvider>().getGatewayKey();
+      },
+    );
     super.initState();
   }
 
@@ -46,8 +52,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LabOrdersProvider>(
-      builder: (context, ordersProvider, _) {
+    return Consumer2<LabOrdersProvider, GatewayProvider>(
+      builder: (context, ordersProvider, gatewayProvider, _) {
         return PopScope(
           onPopInvoked: (didPop) {
             ordersProvider.paymentType = null;
@@ -140,9 +146,10 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                         }),
                     const Gap(10),
                     /* --------------------------------- ADDRESS -------------------------------- */
-                    AddressCardPaymentScreen(
-                        labOrdersModel: widget.labOrdersModel),
-                    Gap(10),
+                    if (widget.labOrdersModel.testMode == 'Home')
+                      AddressCardPaymentScreen(
+                          labOrdersModel: widget.labOrdersModel),
+                    const Gap(10),
 
                     /* ------------------------------ ORDER SUMMARY ----------------------------- */
                     OrderSummaryCardPayment(
@@ -179,6 +186,13 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                 'Select preffered payment method');
                                         return;
                                       } else {
+                                        if (gatewayProvider.gatewayModel?.key ==
+                                            null) {
+                                          CustomToast.errorToast(
+                                              text:
+                                                  'Unable to process the payment');
+                                          return;
+                                        }
                                         LoadingLottie.showLoading(
                                             context: context,
                                             text: 'Loading...');
@@ -208,7 +222,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                           razorpayService.openRazorpay(
                                             amount: widget
                                                 .labOrdersModel.finalAmount!,
-                                            key: 'rzp_test_ky3Rg3L4nSwYE1',
+                                            key: gatewayProvider
+                                                .gatewayModel!.key,
                                             orgName: 'Healthy Cart',
                                             userPhoneNumber: widget
                                                 .labOrdersModel

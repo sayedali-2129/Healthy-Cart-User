@@ -252,8 +252,11 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                             'No Name',
                                                     testPrice:
                                                         '${testList.testPrice ?? 000}',
-                                                    offerPrice:
-                                                        '${testList.offerPrice}',
+                                                    offerPrice: testList
+                                                                .offerPrice ==
+                                                            0
+                                                        ? 'Free'
+                                                        : '₹${testList.offerPrice}',
                                                     isSelected: labProvider
                                                         .selectedTestIds
                                                         .contains(testList.id),
@@ -305,8 +308,11 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                             'No Name',
                                                     testPrice:
                                                         '${doorStepList.testPrice ?? 000}',
-                                                    offerPrice:
-                                                        '${doorStepList.offerPrice}',
+                                                    offerPrice: doorStepList
+                                                                .offerPrice ==
+                                                            0
+                                                        ? 'Free'
+                                                        : '₹${doorStepList.offerPrice ?? 0}',
                                                     isSelected: labProvider
                                                         .selectedTestIds
                                                         .contains(
@@ -356,7 +362,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                       if (authProvider.userFetchlDataFetched!.userName ==
                           null) {
                         EasyNavigation.push(
-                            context: context, page:const ProfileSetup());
+                            context: context, page: const ProfileSetup());
                         CustomToast.infoToast(text: 'Fill user details');
                       } else {
                         showDialog(
