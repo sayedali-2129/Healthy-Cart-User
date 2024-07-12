@@ -68,7 +68,8 @@ class LabPrescriptionPage extends StatelessWidget {
                           ),
                     labProvider.prescriptionFile == null
                         ? FadeInDown(
-                          child: ButtonWidget(
+                            duration: const Duration(milliseconds: 250),
+                            child: ButtonWidget(
                               onPressed: () {
                                 showModalBottomSheet(
                                   showDragHandle: true,
@@ -114,9 +115,9 @@ class LabPrescriptionPage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                        )
+                          )
                         : FadeInUp(
-                          child: ButtonWidget(
+                            child: ButtonWidget(
                               onPressed: () {
                                 if (authProvider
                                         .userFetchlDataFetched!.userName ==
@@ -132,7 +133,8 @@ class LabPrescriptionPage extends StatelessWidget {
                                     context: context,
                                     builder: (context) => TestTypeRadiopopup(
                                       onConfirm: () {
-                                        if (labProvider.selectedRadio == 'Lab') {
+                                        if (labProvider.selectedRadio ==
+                                            'Lab') {
                                           ConfirmAlertBoxWidget
                                               .showAlertConfirmBox(
                                                   context: context,
@@ -143,7 +145,7 @@ class LabPrescriptionPage extends StatelessWidget {
                                                     LoadingLottie.showLoading(
                                                         context: context,
                                                         text: 'Please wait...');
-                          
+
                                                     if (labProvider
                                                             .prescriptionFile !=
                                                         null) {
@@ -174,14 +176,16 @@ class LabPrescriptionPage extends StatelessWidget {
                                                         .whenComplete(
                                                       () {
                                                         labProvider
-                                                            .selectedRadio = null;
+                                                                .selectedRadio =
+                                                            null;
                                                         addressProvider
                                                                 .selectedAddress =
                                                             null;
                                                         EasyNavigation
                                                             .pushAndRemoveUntil(
-                                                          type: PageTransitionType
-                                                              .bottomToTop,
+                                                          type:
+                                                              PageTransitionType
+                                                                  .bottomToTop,
                                                           context: context,
                                                           page:
                                                               const OrderRequestSuccessScreen(
@@ -197,8 +201,8 @@ class LabPrescriptionPage extends StatelessWidget {
                                         } else {
                                           EasyNavigation.push(
                                               context: context,
-                                              type:
-                                                  PageTransitionType.rightToLeft,
+                                              type: PageTransitionType
+                                                  .rightToLeft,
                                               duration: 250,
                                               page:
                                                   LabPrescriptionOrderAddressScreen(
@@ -227,7 +231,7 @@ class LabPrescriptionPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                        ),
+                          ),
                     const Gap(24),
                     const Padding(
                       padding: EdgeInsets.all(8.0),

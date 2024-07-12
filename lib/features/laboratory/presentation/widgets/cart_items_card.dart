@@ -18,8 +18,8 @@ class CartItemsCard extends StatelessWidget {
 
   final String? image;
   final String? testName;
-  final String? testPrice;
-  final String? offerPrice;
+  final num? testPrice;
+  final num? offerPrice;
   final void Function()? onDelete;
   final int index;
 
@@ -103,7 +103,9 @@ class CartItemsCard extends StatelessWidget {
                                               fontWeight: FontWeight.w500),
                                         ),
                                         TextSpan(
-                                          text: '  ₹$offerPrice',
+                                          text: offerPrice == 0
+                                              ? '  Free'
+                                              : '  ₹$offerPrice',
                                           style: TextStyle(
                                               fontFamily: 'Montserrat',
                                               color: BColors.green,

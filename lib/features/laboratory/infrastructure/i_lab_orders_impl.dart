@@ -183,7 +183,9 @@ class ILabOrdersImpl implements ILabOrdersFacade {
 /* -------------------------------------------------------------------------- */
   @override
   FutureResult<String> acceptOrder(
-      {required String orderId, required String paymentMethod}) async {
+      {required String orderId,
+      required String paymentMethod,
+      required int paymentStatus}) async {
     try {
       await _firestore
           .collection(FirebaseCollections.labOrdersCollection)
@@ -191,7 +193,7 @@ class ILabOrdersImpl implements ILabOrdersFacade {
           .update({
         'isUserAccepted': true,
         'paymentMethod': paymentMethod,
-        'paymentStatus': 1
+        'paymentStatus': paymentStatus
       });
       return right('Booking Accepted Successfully');
     } catch (e) {

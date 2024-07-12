@@ -13,7 +13,9 @@ abstract class ILabOrdersFacade {
   Stream<Either<MainFailure, List<LabOrdersModel>>> getLabOrders(
       {required String userId});
   FutureResult<String> acceptOrder(
-      {required String orderId, required String paymentMethod});
+      {required String orderId,
+      required String paymentMethod,
+      required int paymentStatus});
   FutureResult<String> cancelOrder(
       {required String orderId, String? rejectReason});
   FutureResult<List<LabOrdersModel>> getPendingOrders({required String userId});

@@ -7,6 +7,7 @@ import 'package:healthy_cart_user/core/custom/order_request/order_request_succes
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/core/services/razorpay_service.dart';
+import 'package:healthy_cart_user/features/payment_gateway/application/gateway_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
@@ -34,6 +35,17 @@ class ApprovedOrderDetailsScreen extends StatefulWidget {
 class _ApprovedOrderDetailsScreenState
     extends State<ApprovedOrderDetailsScreen> {
   RazorpayService razorpayService = RazorpayService();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        context.read<GatewayProvider>().getGatewayKey();
+      },
+    );
+    super.initState();
+  }
+
   @override
   void dispose() {
     razorpayService.dispose();
@@ -42,8 +54,8 @@ class _ApprovedOrderDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PharmacyOrderProvider>(
-        builder: (context, orderProvider, _) {
+    return Consumer2<PharmacyOrderProvider, GatewayProvider>(
+        builder: (context, orderProvider, gatewayProvider, _) {
       return Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -399,10 +411,14 @@ class _ApprovedOrderDetailsScreenState
               CustomToast.errorToast(text: 'Please select a payment method.');
               return;
             }
+            if (gatewayProvider.gatewayModel?.key == null) {
+              CustomToast.errorToast(text: 'Unable to process the payment');
+              return;
+            }
             if (orderProvider.selectedPaymentRadio == 'Online') {
               razorpayService.openRazorpay(
                 amount: widget.orderData.finalAmount!,
-                key: 'rzp_test_ky3Rg3L4nSwYE1',
+                key: gatewayProvider.gatewayModel!.key,
                 orgName: 'Healthy Cart',
                 userPhoneNumber: widget.orderData.userDetails!.phoneNo!,
                 userEmail: widget.orderData.userDetails!.userEmail!,
@@ -422,7 +438,7 @@ class _ApprovedOrderDetailsScreenState
                   EasyNavigation.pop(context: context);
                   EasyNavigation.push(
                       context: context,
-                       type: PageTransitionType.bottomToTop,
+                      type: PageTransitionType.bottomToTop,
                       page: const OrderRequestSuccessScreen(
                         title: 'Your order has been sucessfully placed.',
                       ));
