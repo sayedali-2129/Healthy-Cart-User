@@ -53,105 +53,114 @@ class _PharmacyMainState extends State<PharmacyMain> {
         builder: (context, pharmacyProvider, authProvider, orderProvider,
             locationProvider, _) {
       return Scaffold(
-        body: CustomScrollView(
-          controller: pharmacyProvider.mainScrollController,
-          slivers: [
-            HomeSliverAppbar(
-              onSearchTap: () {
-                EasyNavigation.push(
-                    type: PageTransitionType.topToBottom,
-                    context: context,
-                    page: const PharmaciesMainSearch());
-              },
-              locationText:
-                  "${locationProvider.locallySavedPharmacyplacemark?.localArea},${locationProvider.locallySavedPharmacyplacemark?.district},${locationProvider.locallySavedPharmacyplacemark?.state}",
-              searchHint: 'Search Pharmacies',
-              searchController: pharmacyProvider.searchController,
-              locationTap: () {
-                EasyNavigation.push(
-                    context: context,
-                    page: UserLocationSearchWidget(
-                      isUserEditProfile: false,
-                      locationSetter: 3,
-                      onSucess: () {
-                        pharmacyProvider.pharmacyFetchInitData(
-                            context: context);
-                      },
-                    ));
-              },
-            ),
-            SliverToBoxAdapter(
-                child: (pharmacyProvider.pharmacyList.isNotEmpty &&
-                        pharmacyProvider.checkNearestPharmacyLocation())
-                    ? NoDataInSelectedLocation(
-                        locationTitle:
-                            '${locationProvider.locallySavedPharmacyplacemark?.localArea}',
-                        typeOfService: 'Pharmacies',
-                      )
-                    : null),
-            if (pharmacyProvider.isFirebaseDataLoding == true &&
-                pharmacyProvider.pharmacyList.isEmpty)
-              const SliverFillRemaining(
-                child: Center(child: LoadingIndicater()),
-              )
-            else if (pharmacyProvider.pharmacyList.isEmpty)
-              const ErrorOrNoDataPage(text: 'No Pharmacies Found!')
-            else
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                sliver: SliverList.separated(
-                  separatorBuilder: (context, index) => const Gap(12),
-                  itemCount: pharmacyProvider.pharmacyList.length,
-                  itemBuilder: (context, index) {
-                    return FadeInUp(
-                      child: PharmacyListCard(
-                        screenwidth: screenwidth,
-                        pharmacy: pharmacyProvider.pharmacyList[index],
-                        onTap: () {
-                          if (authProvider.auth.currentUser == null) {
-                            EasyNavigation.push(
-                                type: PageTransitionType.rightToLeft,
-                                context: context,
-                                page: const LoginScreen());
-                            CustomToast.infoToast(text: 'Login to continue !');
-                          } else {
-                            if (authProvider.userFetchlDataFetched!.userName ==
-                                null) {
-                              EasyNavigation.push(
-                                  context: context, page: const ProfileSetup());
-                            } else {
-                              pharmacyProvider.setUserId(
-                                  authProvider.userFetchlDataFetched?.id ?? '');
-                              pharmacyProvider.setPharmacyIdAndCategoryList(
-                                  selectedpharmacyId:
-                                      pharmacyProvider.pharmacyList[index].id ??
-                                          '',
-                                  categoryIdList: pharmacyProvider
-                                          .pharmacyList[index]
-                                          .selectedCategoryId ??
-                                      [],
-                                  pharmacy:
-                                      pharmacyProvider.pharmacyList[index]);
+        body: RefreshIndicator(
+          color: BColors.darkblue,
+          backgroundColor: BColors.white,
+          onRefresh: () async {
+            pharmacyProvider
+              ..clearPharmacyLocationData()
+              ..pharmacyFetchInitData(context: context);
+          },
+          child: CustomScrollView(
+            controller: pharmacyProvider.mainScrollController,
+            slivers: [
+              HomeSliverAppbar(
+                onSearchTap: () {
+                  EasyNavigation.push(
+                      type: PageTransitionType.topToBottom,
+                      context: context,
+                      page: const PharmaciesMainSearch());
+                },
+                locationText:
+                    "${locationProvider.locallySavedPharmacyplacemark?.localArea},${locationProvider.locallySavedPharmacyplacemark?.district},${locationProvider.locallySavedPharmacyplacemark?.state}",
+                searchHint: 'Search Pharmacies',
+                searchController: pharmacyProvider.searchController,
+                locationTap: () {
+                  EasyNavigation.push(
+                      context: context,
+                      page: UserLocationSearchWidget(
+                        isUserEditProfile: false,
+                        locationSetter: 3,
+                        onSucess: () {
+                          pharmacyProvider.pharmacyFetchInitData(
+                              context: context);
+                        },
+                      ));
+                },
+              ),
+              SliverToBoxAdapter(
+                  child: (pharmacyProvider.pharmacyList.isNotEmpty &&
+                          pharmacyProvider.checkNearestPharmacyLocation())
+                      ? NoDataInSelectedLocation(
+                          locationTitle:
+                              '${locationProvider.locallySavedPharmacyplacemark?.localArea}',
+                          typeOfService: 'Pharmacies',
+                        )
+                      : null),
+              if (pharmacyProvider.isFirebaseDataLoding == true &&
+                  pharmacyProvider.pharmacyList.isEmpty)
+                const SliverFillRemaining(
+                  child: Center(child: LoadingIndicater()),
+                )
+              else if (pharmacyProvider.pharmacyList.isEmpty)
+                const ErrorOrNoDataPage(text: 'No Pharmacies Found!')
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                  sliver: SliverList.separated(
+                    separatorBuilder: (context, index) => const Gap(12),
+                    itemCount: pharmacyProvider.pharmacyList.length,
+                    itemBuilder: (context, index) {
+                      return FadeInUp(
+                        child: PharmacyListCard(
+                          screenwidth: screenwidth,
+                          pharmacy: pharmacyProvider.pharmacyList[index],
+                          onTap: () {
+                            if (authProvider.auth.currentUser == null) {
                               EasyNavigation.push(
                                   type: PageTransitionType.rightToLeft,
                                   context: context,
-                                  page: const PharmacyProductScreen());
+                                  page: const LoginScreen());
+                              CustomToast.infoToast(text: 'Login to continue !');
+                            } else {
+                              if (authProvider.userFetchlDataFetched!.userName ==
+                                  null) {
+                                EasyNavigation.push(
+                                    context: context, page: const ProfileSetup());
+                              } else {
+                                pharmacyProvider.setUserId(
+                                    authProvider.userFetchlDataFetched?.id ?? '');
+                                pharmacyProvider.setPharmacyIdAndCategoryList(
+                                    selectedpharmacyId:
+                                        pharmacyProvider.pharmacyList[index].id ??
+                                            '',
+                                    categoryIdList: pharmacyProvider
+                                            .pharmacyList[index]
+                                            .selectedCategoryId ??
+                                        [],
+                                    pharmacy:
+                                        pharmacyProvider.pharmacyList[index]);
+                                EasyNavigation.push(
+                                    type: PageTransitionType.rightToLeft,
+                                    context: context,
+                                    page: const PharmacyProductScreen());
+                              }
                             }
-                          }
-                        },
-                      ),
-                    );
-                  },
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            SliverToBoxAdapter(
-                child: (pharmacyProvider.circularProgressLOading == true &&
-                        pharmacyProvider.pharmacyList.isNotEmpty)
-                    ? const Center(
-                        child: LoadingIndicater(),
-                      )
-                    : null),
-          ],
+              SliverToBoxAdapter(
+                  child: (pharmacyProvider.circularProgressLOading == true &&
+                          pharmacyProvider.pharmacyList.isNotEmpty)
+                      ? const Center(
+                          child: LoadingIndicater(),
+                        )
+                      : null),
+            ],
+          ),
         ),
         floatingActionButton: authProvider.auth.currentUser == null
             ? null

@@ -52,89 +52,100 @@ class _LabMainState extends State<LabMain> {
             locationProvider, _) {
       final screenwidth = MediaQuery.of(context).size.width;
       return Scaffold(
-        body: CustomScrollView(
-          controller: labProvider.mainScrollController,
-          slivers: [
-            HomeSliverAppbar(
-              onSearchTap: () {
-                EasyNavigation.push(
-                  type: PageTransitionType.topToBottom,
-                    context: context, page: const LaboratoriesMainSearch());
-              },
-              searchHint: 'Search Laboratories',
-              locationText:
-                  "${locationProvider.locallySavedLabortaryplacemark?.localArea},${locationProvider.locallySavedLabortaryplacemark?.district},${locationProvider.locallySavedLabortaryplacemark?.state}",
-              locationTap: () {
-                EasyNavigation.push(
-                  type: PageTransitionType.topToBottom,
-                  context: context,
-                  page: UserLocationSearchWidget(
-                    isUserEditProfile: false,
-                    locationSetter: 2,
-                    onSucess: () {
-                      labProvider.labortaryFetchInitData(context: context);
-                    },
-                  ),
-                );
-              },
-            ),
-            SliverToBoxAdapter(
-                child: (labProvider.labList.isNotEmpty &&
-                        labProvider.checkNearestLabortaryLocation())
-                    ? NoDataInSelectedLocation(
-                        locationTitle:
-                            '${locationProvider.locallySavedLabortaryplacemark?.localArea}',
-                        typeOfService: 'Labortaries',
-                      )
-                    : null),
-            if (labProvider.isFirebaseDataLoding == true &&
-                labProvider.labList.isEmpty)
-              const SliverFillRemaining(
-                child: Center(
-                  child: LoadingIndicater(),
-                ),
-              )
-            else if (labProvider.labList.isEmpty)
-              const ErrorOrNoDataPage(text: 'No Laboratories Found')
-            else
-              SliverPadding(
-                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                sliver: SliverList.separated(
-                  separatorBuilder: (context, index) => const Gap(12),
-                  itemCount: labProvider.labList.length,
-                  itemBuilder: (context, index) => FadeInUp(
-                    child: LabListCard(
-                      screenwidth: screenwidth,
-                      labortaryData: labProvider.labList[index],
-                      onTap: () {
-                        if (authProvider.auth.currentUser == null) {
-                          EasyNavigation.push(
-                            type: PageTransitionType.rightToLeft,
-                            context: context, page:const LoginScreen() );
-                       
-                          CustomToast.infoToast(text: 'Login to continue !');
-                        } else {
-                          EasyNavigation.push(
-                            context: context,
-                            type: PageTransitionType.rightToLeft,
-                            duration: 300,
-                            page: LabDetailsScreen(
-                              index: index,
-                              labId: labProvider.labList[index].id!,
-                            ),
-                          );
-                        }
+        body: RefreshIndicator(
+          color: BColors.darkblue,
+          backgroundColor: BColors.white,
+          onRefresh: () async {
+            labProvider
+              ..clearLabortaryLocationData()
+              ..labortaryFetchInitData(context: context);
+          },
+          child: CustomScrollView(
+            controller: labProvider.mainScrollController,
+            slivers: [
+              HomeSliverAppbar(
+                onSearchTap: () {
+                  EasyNavigation.push(
+                      type: PageTransitionType.topToBottom,
+                      context: context,
+                      page: const LaboratoriesMainSearch());
+                },
+                searchHint: 'Search Laboratories',
+                locationText:
+                    "${locationProvider.locallySavedLabortaryplacemark?.localArea},${locationProvider.locallySavedLabortaryplacemark?.district},${locationProvider.locallySavedLabortaryplacemark?.state}",
+                locationTap: () {
+                  EasyNavigation.push(
+                    type: PageTransitionType.topToBottom,
+                    context: context,
+                    page: UserLocationSearchWidget(
+                      isUserEditProfile: false,
+                      locationSetter: 2,
+                      onSucess: () {
+                        labProvider.labortaryFetchInitData(context: context);
                       },
+                    ),
+                  );
+                },
+              ),
+              SliverToBoxAdapter(
+                  child: (labProvider.labList.isNotEmpty &&
+                          labProvider.checkNearestLabortaryLocation())
+                      ? NoDataInSelectedLocation(
+                          locationTitle:
+                              '${locationProvider.locallySavedLabortaryplacemark?.localArea}',
+                          typeOfService: 'Labortaries',
+                        )
+                      : null),
+              if (labProvider.isFirebaseDataLoding == true &&
+                  labProvider.labList.isEmpty)
+                const SliverFillRemaining(
+                  child: Center(
+                    child: LoadingIndicater(),
+                  ),
+                )
+              else if (labProvider.labList.isEmpty)
+                const ErrorOrNoDataPage(text: 'No Laboratories Found')
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                  sliver: SliverList.separated(
+                    separatorBuilder: (context, index) => const Gap(12),
+                    itemCount: labProvider.labList.length,
+                    itemBuilder: (context, index) => FadeInUp(
+                      child: LabListCard(
+                        screenwidth: screenwidth,
+                        labortaryData: labProvider.labList[index],
+                        onTap: () {
+                          if (authProvider.auth.currentUser == null) {
+                            EasyNavigation.push(
+                                type: PageTransitionType.rightToLeft,
+                                context: context,
+                                page: const LoginScreen());
+
+                            CustomToast.infoToast(text: 'Login to continue !');
+                          } else {
+                            EasyNavigation.push(
+                              context: context,
+                              type: PageTransitionType.rightToLeft,
+                              duration: 300,
+                              page: LabDetailsScreen(
+                                index: index,
+                                labId: labProvider.labList[index].id!,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            SliverToBoxAdapter(
-                child: (labProvider.circularProgressLOading == true &&
-                        labProvider.labList.isNotEmpty)
-                    ? const Center(child: LoadingIndicater())
-                    : null),
-          ],
+              SliverToBoxAdapter(
+                  child: (labProvider.circularProgressLOading == true &&
+                          labProvider.labList.isNotEmpty)
+                      ? const Center(child: LoadingIndicater())
+                      : null),
+            ],
+          ),
         ),
         floatingActionButton: authProvider.auth.currentUser == null
             ? null

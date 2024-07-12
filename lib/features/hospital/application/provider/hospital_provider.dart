@@ -176,8 +176,8 @@ class HospitalProvider with ChangeNotifier {
   }
 
   void searchAllDoctorsCategoryWise({required String categoryId}) {
-        iHospitalFacade.clearAllDoctorsCategoryWiseData();
-      categoryWiseDoctorIds.clear();
+    iHospitalFacade.clearAllDoctorsCategoryWiseData();
+    categoryWiseDoctorIds.clear();
     categoryWiseDoctorsList = [];
     getAllDoctorsCategoryWise(categoryId: categoryId);
     notifyListeners();
@@ -223,7 +223,8 @@ class HospitalProvider with ChangeNotifier {
   }
 
   /* ------------------------------- GET DOCTORS ------------------------------ */
-  Future<void> getDoctors({required String hospitalId, String? categoryId}) async {
+  Future<void> getDoctors(
+      {required String hospitalId, String? categoryId}) async {
     isLoading = true;
     notifyListeners();
     final result = await iHospitalFacade.getDoctors(
@@ -420,6 +421,7 @@ class HospitalProvider with ChangeNotifier {
     required BuildContext context,
   }) async {
     notifyListeners();
+    log('called');
     final placeMark =
         context.read<LocationProvider>().locallySavedHospitalplacemark!;
     if (hospitalList.isEmpty ||
