@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -79,9 +80,13 @@ class LabOrdersProvider with ChangeNotifier {
   Future<void> acceptOrder(
       {required String orderId,
       required String fcmtoken,
+      required String? paymentType,
+      required int paymentStatus,
       required String userName}) async {
     final result = await iLabOrdersFacade.acceptOrder(
-        orderId: orderId, paymentMethod: paymentType!);
+        orderId: orderId,
+        paymentMethod: paymentType!,
+        paymentStatus: paymentStatus);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to accept booking');
       log('Error :: ${err.errMsg}');

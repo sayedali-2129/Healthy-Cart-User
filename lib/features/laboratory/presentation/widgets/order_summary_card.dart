@@ -57,8 +57,10 @@ class OrderSummaryCard extends StatelessWidget {
             const Gap(8),
             AmountRow(
               text: 'Total Amount',
-              amountValue: '₹$totalAmount',
-              amountColor: BColors.black.withOpacity(0.7),
+              amountValue: totalAmount == 0 ? 'Free' : '₹$totalAmount',
+              amountColor: totalAmount == 0
+                  ? BColors.green
+                  : BColors.black.withOpacity(0.7),
               textColor: BColors.black.withOpacity(0.7),
               fontSize: 18,
             ),

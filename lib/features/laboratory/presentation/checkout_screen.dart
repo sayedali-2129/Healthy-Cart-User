@@ -15,12 +15,12 @@ import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
-import 'package:healthy_cart_user/features/profile/presentation/widgets/address_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/cart_items_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/order_summary_card.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
+import 'package:healthy_cart_user/features/profile/presentation/widgets/address_card.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
@@ -145,12 +145,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               return CartItemsCard(
                                 index: index,
                                 testName: labProvider.cartItems[index].testName,
-                                testPrice: labProvider
-                                    .cartItems[index].testPrice
-                                    .toString(),
-                                offerPrice: labProvider
-                                    .cartItems[index].offerPrice
-                                    .toString(),
+                                testPrice:
+                                    labProvider.cartItems[index].testPrice,
+                                offerPrice:
+                                    labProvider.cartItems[index].offerPrice,
                                 image: labProvider.cartItems[index].testImage,
                                 onDelete: () {
                                   labProvider.removeFromCart(index);
@@ -361,12 +359,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       addressProvider.selectedAddress = null;
                       EasyNavigation.pushAndRemoveUntil(
                         context: context,
-                         type: PageTransitionType.bottomToTop,
-                        page: const  OrderRequestSuccessScreen(
-                            title:
-                                'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
-                          ),
-                    
+                        type: PageTransitionType.bottomToTop,
+                        page: const OrderRequestSuccessScreen(
+                          title:
+                              'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
+                        ),
                       );
                       labProvider.prescriptionFile = null;
                       labProvider.prescriptionUrl = null;

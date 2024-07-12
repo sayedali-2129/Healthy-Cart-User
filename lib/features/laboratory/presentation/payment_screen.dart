@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
+import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/launch_dialer.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
@@ -15,6 +16,7 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/payment_type_radio.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/selected_tests_card.dart';
+import 'package:healthy_cart_user/features/payment_gateway/application/gateway_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +37,11 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        context.read<GatewayProvider>().getGatewayKey();
+      },
+    );
     super.initState();
   }
 
@@ -46,8 +53,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LabOrdersProvider>(
-      builder: (context, ordersProvider, _) {
+    return Consumer2<LabOrdersProvider, GatewayProvider>(
+      builder: (context, ordersProvider, gatewayProvider, _) {
         return PopScope(
           onPopInvoked: (didPop) {
             ordersProvider.paymentType = null;
@@ -114,7 +121,17 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                     ),
                     const Gap(8),
                     const Divider(),
-                    const Gap(8),
+                    const Gap(4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Booking ID :- ${widget.labOrdersModel.id}',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    const Gap(10),
                     /* -------------------------------- TEST LIST ------------------------------- */
                     ListView.separated(
                         physics: const NeverScrollableScrollPhysics(),
@@ -128,11 +145,9 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                             testName: widget.labOrdersModel
                                 .selectedTest![testIndex].testName,
                             testPrice: widget.labOrdersModel
-                                .selectedTest![testIndex].testPrice
-                                .toString(),
+                                .selectedTest![testIndex].testPrice,
                             offerPrice: widget.labOrdersModel
-                                .selectedTest![testIndex].offerPrice
-                                .toString(),
+                                .selectedTest![testIndex].offerPrice,
                             image: widget.labOrdersModel
                                     .selectedTest![testIndex].testImage ??
                                 '',
@@ -140,9 +155,10 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                         }),
                     const Gap(10),
                     /* --------------------------------- ADDRESS -------------------------------- */
-                    AddressCardPaymentScreen(
-                        labOrdersModel: widget.labOrdersModel),
-                    Gap(10),
+                    if (widget.labOrdersModel.testMode == 'Home')
+                      AddressCardPaymentScreen(
+                          labOrdersModel: widget.labOrdersModel),
+                    const Gap(10),
 
                     /* ------------------------------ ORDER SUMMARY ----------------------------- */
                     OrderSummaryCardPayment(
@@ -157,66 +173,94 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                     const Gap(10),
 
                     /* ----------------------------- PAYMENT BUTTON ----------------------------- */
-                    ButtonWidget(
-                        buttonHeight: 45,
-                        buttonWidth: double.infinity,
-                        buttonColor: const Color(0xff367CBD),
-                        buttonWidget: const Text(
-                          'Choose Payment Method',
-                          style: TextStyle(
-                              color: BColors.white,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => PaymentTypeRadioLab(
-                                    onConfirm: () async {
-                                      log(ordersProvider.paymentType ?? 'null');
-                                      if (ordersProvider.paymentType == null) {
-                                        CustomToast.infoToast(
-                                            text:
-                                                'Select preffered payment method');
-                                        return;
-                                      } else {
-                                        LoadingLottie.showLoading(
+
+                    widget.labOrdersModel.finalAmount == 0
+                        ? ButtonWidget(
+                            buttonHeight: 45,
+                            buttonWidth: double.infinity,
+                            buttonColor: const Color(0xff367CBD),
+                            buttonWidget: const Text(
+                              'Accept Booking',
+                              style: TextStyle(
+                                  color: BColors.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            onPressed: () {
+                              ConfirmAlertBoxWidget.showAlertConfirmBox(
+                                  context: context,
+                                  confirmButtonTap: () async {
+                                    LoadingLottie.showLoading(
+                                        context: context,
+                                        text: 'Please Wait..');
+
+                                    await ordersProvider
+                                        .acceptOrder(
+                                            paymentType: 'Doorstep Payment',
+                                            paymentStatus: 1,
+                                            userName: widget.labOrdersModel
+                                                .userDetails!.userName!,
+                                            fcmtoken: widget.labOrdersModel
+                                                .labDetails!.fcmToken!,
+                                            orderId: widget.labOrdersModel.id!)
+                                        .whenComplete(
+                                      () {
+                                        EasyNavigation.push(
                                             context: context,
-                                            text: 'Loading...');
-                                        if (ordersProvider.paymentType ==
-                                            'Doorstep Payment') {
-                                          await ordersProvider.acceptOrder(
-                                              userName: widget.labOrdersModel
-                                                  .userDetails!.userName!,
-                                              fcmtoken: widget.labOrdersModel
-                                                  .labDetails!.fcmToken!,
-                                              orderId:
-                                                  widget.labOrdersModel.id!);
-
-                                          await EasyNavigation.push(
-                                              context: context,
-                                              page: OrderRequestSuccessScreen(
+                                            page: const OrderRequestSuccessScreen(
                                                 title:
-                                                    'Your Booking is Successfull!!',
-                                              ),
-                                               type: PageTransitionType.bottomToTop,
-                                              duration: 300);
-                                          ordersProvider.paymentType == null;
-
-                                          Navigator.pop(context);
-                                        } else {
-                                          razorpayService.openRazorpay(
-                                            amount: widget
-                                                .labOrdersModel.finalAmount!,
-                                            key: 'rzp_test_ky3Rg3L4nSwYE1',
-                                            orgName: 'Healthy Cart',
-                                            userPhoneNumber: widget
-                                                .labOrdersModel
-                                                .userDetails!
-                                                .phoneNo!,
-                                            userEmail: widget.labOrdersModel
-                                                .userDetails!.userEmail!,
-                                            onSuccess: (paymentId) async {
+                                                    'Your Booking is successfully completed!'),
+                                            type:
+                                                PageTransitionType.bottomToTop,
+                                            duration: 200);
+                                      },
+                                    );
+                                  },
+                                  titleText: 'Confirm',
+                                  subText:
+                                      'Are you sure want to confirm this booking?');
+                            },
+                          )
+                        : ButtonWidget(
+                            buttonHeight: 45,
+                            buttonWidth: double.infinity,
+                            buttonColor: const Color(0xff367CBD),
+                            buttonWidget: const Text(
+                              'Choose Payment Method',
+                              style: TextStyle(
+                                  color: BColors.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => PaymentTypeRadioLab(
+                                        onConfirm: () async {
+                                          log(ordersProvider.paymentType ??
+                                              'null');
+                                          if (ordersProvider.paymentType ==
+                                              null) {
+                                            CustomToast.infoToast(
+                                                text:
+                                                    'Select preffered payment method');
+                                            return;
+                                          } else {
+                                            if (gatewayProvider
+                                                    .gatewayModel?.key ==
+                                                null) {
+                                              CustomToast.errorToast(
+                                                  text:
+                                                      'Unable to process the payment');
+                                              return;
+                                            }
+                                            LoadingLottie.showLoading(
+                                                context: context,
+                                                text: 'Loading...');
+                                            if (ordersProvider.paymentType ==
+                                                'Doorstep Payment') {
                                               await ordersProvider.acceptOrder(
+                                                  paymentStatus: 0,
+                                                  paymentType: ordersProvider
+                                                      .paymentType,
                                                   userName: widget
                                                       .labOrdersModel
                                                       .userDetails!
@@ -227,15 +271,61 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                       .fcmToken!,
                                                   orderId: widget
                                                       .labOrdersModel.id!);
-                                            },
-                                          );
-                                        }
-                                      }
 
-                                      Navigator.pop(context);
-                                    },
-                                  ));
-                        }),
+                                              await EasyNavigation.push(
+                                                  context: context,
+                                                  page:
+                                                      const OrderRequestSuccessScreen(
+                                                    title:
+                                                        'Your Booking is Successfull!!',
+                                                  ),
+                                                  type: PageTransitionType
+                                                      .bottomToTop,
+                                                  duration: 300);
+                                              ordersProvider.paymentType ==
+                                                  null;
+
+                                              Navigator.pop(context);
+                                            } else {
+                                              razorpayService.openRazorpay(
+                                                amount: widget.labOrdersModel
+                                                    .finalAmount!,
+                                                key: gatewayProvider
+                                                    .gatewayModel!.key,
+                                                orgName: 'Healthy Cart',
+                                                userPhoneNumber: widget
+                                                    .labOrdersModel
+                                                    .userDetails!
+                                                    .phoneNo!,
+                                                userEmail: widget.labOrdersModel
+                                                    .userDetails!.userEmail!,
+                                                onSuccess: (paymentId) async {
+                                                  await ordersProvider
+                                                      .acceptOrder(
+                                                          paymentStatus: 1,
+                                                          paymentType:
+                                                              ordersProvider
+                                                                  .paymentType,
+                                                          userName: widget
+                                                              .labOrdersModel
+                                                              .userDetails!
+                                                              .userName!,
+                                                          fcmtoken: widget
+                                                              .labOrdersModel
+                                                              .labDetails!
+                                                              .fcmToken!,
+                                                          orderId: widget
+                                                              .labOrdersModel
+                                                              .id!);
+                                                },
+                                              );
+                                            }
+                                          }
+
+                                          Navigator.pop(context);
+                                        },
+                                      ));
+                            }),
                     const Gap(20),
                     ButtonWidget(
                         onPressed: () async {
@@ -327,7 +417,7 @@ class OrderSummaryCardPayment extends StatelessWidget {
             const Gap(16),
             AmountRow(
               text: 'Total Test Fee',
-              amountValue: '₹$totalTestFee',
+              amountValue: totalTestFee == 0 ? 'Free Test' : '₹$totalTestFee',
               fontSize: 14,
             ),
             const Gap(8),
@@ -355,8 +445,10 @@ class OrderSummaryCardPayment extends StatelessWidget {
             const Gap(8),
             AmountRow(
               text: 'Total Amount',
-              amountValue: '₹$totalAmount',
-              amountColor: BColors.black.withOpacity(0.7),
+              amountValue: totalAmount == 0 ? 'Free Test' : '₹$totalAmount',
+              amountColor: totalAmount == 0
+                  ? BColors.green
+                  : BColors.black.withOpacity(0.7),
               textColor: BColors.black.withOpacity(0.7),
               fontSize: 16,
               fontWeight: FontWeight.w600,

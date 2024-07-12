@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_test_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -17,17 +18,21 @@ class TestListCard extends StatelessWidget {
     required this.index,
     this.isDoorstepAvailable,
     this.doorstepList,
+    this.labTestModel,
+    this.doorStepTestModel,
   });
 
   final String image;
   final String testName;
-  final String testPrice;
-  final String? offerPrice;
+  final num testPrice;
+  final num? offerPrice;
   final bool isSelected;
   final void Function()? onAdd;
   final int index;
   final bool? isDoorstepAvailable;
   final bool? doorstepList;
+  final LabTestModel? labTestModel;
+  final LabTestModel? doorStepTestModel;
   @override
   Widget build(BuildContext context) {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {
@@ -96,8 +101,7 @@ class TestListCard extends StatelessWidget {
                           ),
                           const Gap(8),
                           Expanded(
-                            child: labProvider.testList[index].offerPrice ==
-                                    null
+                            child: offerPrice == null
                                 ? RichText(
                                     text: TextSpan(
                                       children: [
@@ -140,7 +144,9 @@ class TestListCard extends StatelessWidget {
                                               fontWeight: FontWeight.w500),
                                         ),
                                         TextSpan(
-                                          text: '  ₹$offerPrice',
+                                          text: offerPrice == 0
+                                              ? '  Free'
+                                              : '  ₹$offerPrice',
                                           style: TextStyle(
                                               fontFamily: 'Montserrat',
                                               color: BColors.green,

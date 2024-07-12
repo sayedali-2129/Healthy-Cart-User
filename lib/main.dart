@@ -12,6 +12,7 @@ import 'package:healthy_cart_user/features/laboratory/application/provider/lab_o
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
+import 'package:healthy_cart_user/features/payment_gateway/application/gateway_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
@@ -99,7 +100,10 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (context) => sl<HospitalBookingProivder>(),
         ),
-       ChangeNotifierProvider(
+        ChangeNotifierProvider(
+          create: (context) => sl<GatewayProvider>(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => sl<UserFamilyMembersProvider>(),
         ),
       ],

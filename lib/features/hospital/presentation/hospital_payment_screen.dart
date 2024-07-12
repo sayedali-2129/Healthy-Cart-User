@@ -16,6 +16,7 @@ import 'package:healthy_cart_user/features/hospital/application/provider/hosp_bo
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/patient_details_card.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/payment_radio_hosp.dart';
+import 'package:healthy_cart_user/features/payment_gateway/application/gateway_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,16 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
   RazorpayService razorpayService = RazorpayService();
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        context.read<GatewayProvider>().getGatewayKey();
+      },
+    );
+    super.initState();
+  }
+
+  @override
   void dispose() {
     razorpayService.dispose();
     super.dispose();
@@ -39,8 +50,8 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HospitalBookingProivder>(
-      builder: (context, ordersProvider, _) {
+    return Consumer2<HospitalBookingProivder, GatewayProvider>(
+      builder: (context, ordersProvider, gatewayProvider, _) {
         // final bookingModel = ordersProvider.approvedOrders[index];
         return PopScope(
           onPopInvoked: (didPop) {
@@ -94,7 +105,7 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                               ),
                               Text(
                                 '(${widget.bookingModel.selectedDoctor!.doctorSpecialization!})',
-                                style:const TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12,
                                     color: BColors.grey),
@@ -184,6 +195,13 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                                 'Select preffered payment method');
                                         return;
                                       } else {
+                                        if (gatewayProvider.gatewayModel?.key ==
+                                            null) {
+                                          CustomToast.errorToast(
+                                              text:
+                                                  'Unable to process the payment');
+                                          return;
+                                        }
                                         LoadingLottie.showLoading(
                                             context: context,
                                             text: 'Loading...');
@@ -198,7 +216,6 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                               orderId: widget.bookingModel.id!);
 
                                           await EasyNavigation.push(
-                                            
                                               context: context,
                                               page: const OrderRequestSuccessScreen(
                                                   title:
@@ -214,7 +231,8 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                           razorpayService.openRazorpay(
                                             amount: widget
                                                 .bookingModel.totalAmount!,
-                                            key: 'rzp_test_ky3Rg3L4nSwYE1',
+                                            key: gatewayProvider
+                                                .gatewayModel!.key,
                                             orgName: 'Healthy Cart',
                                             userPhoneNumber: widget.bookingModel
                                                 .userDetails!.phoneNo!,

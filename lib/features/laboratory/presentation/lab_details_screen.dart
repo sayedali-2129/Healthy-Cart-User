@@ -249,6 +249,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                 labProvider.testList[index];
                                             return FadeIn(
                                               child: TestListCard(
+                                                labTestModel: testList,
                                                 isDoorstepAvailable: testList
                                                     .isDoorstepAvailable,
                                                 index: index,
@@ -256,9 +257,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                 testName: testList.testName ??
                                                     'No Name',
                                                 testPrice:
-                                                    '${testList.testPrice ?? 000}',
-                                                offerPrice:
-                                                    '${testList.offerPrice}',
+                                                    testList.testPrice ?? 0,
+                                                offerPrice: testList.offerPrice,
                                                 isSelected: labProvider
                                                     .selectedTestIds
                                                     .contains(testList.id),
@@ -296,6 +296,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                 .doorStepTestList[index];
                                             return FadeIn(
                                               child: TestListCard(
+                                                doorStepTestModel: doorStepList,
                                                 doorstepList: true,
                                                 isDoorstepAvailable: true,
                                                 index: index,
@@ -304,9 +305,9 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                     doorStepList.testName ??
                                                         'No Name',
                                                 testPrice:
-                                                    '${doorStepList.testPrice ?? 000}',
+                                                    doorStepList.testPrice ?? 0,
                                                 offerPrice:
-                                                    '${doorStepList.offerPrice}',
+                                                    doorStepList.offerPrice,
                                                 isSelected: labProvider
                                                     .selectedTestIds
                                                     .contains(doorStepList.id),
