@@ -59,7 +59,7 @@ class HomeSliverAppbar extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                InkWell(
+                GestureDetector(
                   onTap: locationTap,
                   child: Row(
                     children: [

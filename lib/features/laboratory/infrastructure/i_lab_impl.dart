@@ -462,7 +462,10 @@ class ILabImpl implements ILabFacade {
           .where('requested', isEqualTo: 2)
           .where('isActive', isEqualTo: true);
       if (labSearch != null && labSearch.isNotEmpty) {
-        query = query.where('keywords', arrayContains: labSearch.toLowerCase());
+        query = query.where(
+          'keywords',
+          arrayContains: labSearch.toLowerCase().replaceAll(' ', ''),
+        );
       }
       if (lastDoc != null) {
         query = query.startAfterDocument(lastDoc!);

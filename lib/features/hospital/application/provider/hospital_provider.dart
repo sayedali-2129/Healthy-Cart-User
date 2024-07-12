@@ -55,8 +55,7 @@ class HospitalProvider with ChangeNotifier {
     hospitalFetchLoading = true;
     notifyListeners();
 
-    final result = await iHospitalFacade.getAllHospitals(
-        hospitalSearch: hospitalSearchController.text);
+    final result = await iHospitalFacade.getAllHospitals( hospitalSearch: hospitalSearchController.text);
     result.fold((err) {
       CustomToast.errorToast(text: "Couldn't able to show hospitals near you.");
     }, (success) {
@@ -154,6 +153,9 @@ class HospitalProvider with ChangeNotifier {
   /* ------------------------------- GET ALL CATEGORY WISE DOCTORS FOR HOME PAGE ------------------------------ */
   List<DoctorModel> categoryWiseDoctorsList = [];
   Set<String> categoryWiseDoctorIds = {};
+
+  final ScrollController doctorSearchScrollController = ScrollController();
+
   Future<void> getAllDoctorsCategoryWise({required String categoryId}) async {
     isLoading = true;
     notifyListeners();
@@ -164,11 +166,13 @@ class HospitalProvider with ChangeNotifier {
       CustomToast.errorToast(text: 'Unable to fetch doctors.');
       log('ERROR IN GET DOCTOR :: ${err.errMsg}');
     }, (success) {
+          log('SEARCH DOCTOR LENGTH:::::::${success.length}');
       final uniqueDoctors = success
           .where((doctor) => !categoryWiseDoctorIds.contains(doctor.id))
           .toList();
       categoryWiseDoctorIds.addAll(uniqueDoctors.map((doctor) => doctor.id!));
       categoryWiseDoctorsList.addAll(uniqueDoctors);
+  
       notifyListeners();
     });
     isLoading = false;
@@ -179,7 +183,11 @@ class HospitalProvider with ChangeNotifier {
     iHospitalFacade.clearAllDoctorsCategoryWiseData();
     categoryWiseDoctorIds.clear();
     categoryWiseDoctorsList = [];
-    getAllDoctorsCategoryWise(categoryId: categoryId);
+    getAllDoctorsCategoryWise(categoryId: categoryId,);
+    getAllDoctorsCategoryWiseinit(
+      scrollController: doctorSearchScrollController,
+      categoryId: categoryId,
+    );
     notifyListeners();
   }
 
@@ -426,7 +434,7 @@ class HospitalProvider with ChangeNotifier {
         context.read<LocationProvider>().locallySavedHospitalplacemark!;
     if (hospitalList.isEmpty ||
         _checkPlaceMark?.localArea != placeMark.localArea) {
-      fecthUserLocaltion(
+      fecthHospitalLocation(
         context: context,
         success: () async {
           clearHospitalLocationData();
@@ -454,7 +462,7 @@ class HospitalProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fecthUserLocaltion({
+  Future<void> fecthHospitalLocation({
     required BuildContext context,
     required void Function() success,
   }) async {

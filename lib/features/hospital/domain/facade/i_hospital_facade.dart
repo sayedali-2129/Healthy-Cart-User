@@ -33,4 +33,5 @@ abstract class IHospitalFacade {
   void clearHospitalLocationData() {
     throw UnimplementedError('clearData is not implemented');
   }
+
 }

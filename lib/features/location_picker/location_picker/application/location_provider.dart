@@ -122,6 +122,7 @@ class LocationProvider extends ChangeNotifier {
   PlaceMark? locallySavedHospitalplacemark;
   PlaceMark? locallySavedPharmacyplacemark;
   PlaceMark? locallySavedLabortaryplacemark;
+  PlaceMark? locallySavedDoctorplacemark;
   Future<void> clearLocationLocally() async {
     await iLocationFacade.clearLocation();
   }
@@ -163,12 +164,15 @@ class LocationProvider extends ChangeNotifier {
         } else if (locationSetter == 4) {
           localsavedHomeplacemark = selectedPlaceMark;
           notifyListeners();
+        } else if (locationSetter == 5) {
+          locallySavedDoctorplacemark = selectedPlaceMark;
         } else {
           log('Called:::');
           locallySavedHospitalplacemark = selectedPlaceMark;
           locallySavedLabortaryplacemark = selectedPlaceMark;
           locallySavedPharmacyplacemark = selectedPlaceMark;
           localsavedHomeplacemark = selectedPlaceMark;
+          locallySavedDoctorplacemark = selectedPlaceMark;
         }
         log(isUserEditProfile.toString());
         onSucess.call();

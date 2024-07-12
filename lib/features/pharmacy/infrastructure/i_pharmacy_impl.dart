@@ -488,8 +488,10 @@ class IPharmacyImpl implements IPharmacyFacade {
           .where('isActive', isEqualTo: true);
 
       if (searchText != null && searchText.isNotEmpty) {
-        query = query.where('pharmacyKeywords',
-            arrayContains: searchText.toLowerCase());
+        query = query.where(
+          'pharmacyKeywords',
+          arrayContains: searchText.toLowerCase().replaceAll(' ', ''),
+        );
       }
       if (lastPharmacyDoc != null) {
         query = query.startAfterDocument(lastPharmacyDoc!);
@@ -537,8 +539,10 @@ class IPharmacyImpl implements IPharmacyFacade {
           .where('pharmacyId', isEqualTo: pharmacyId);
 
       if (searchText != null && searchText.isNotEmpty) {
-        query =
-            query.where('keywords', arrayContains: searchText.toLowerCase());
+        query = query.where(
+          'keywords',
+          arrayContains: searchText.toLowerCase().replaceAll(' ', ''),
+        );
       }
       if (lastAllProductDoc != null) {
         query = query.startAfterDocument(lastAllProductDoc!);
@@ -679,7 +683,6 @@ class IPharmacyImpl implements IPharmacyFacade {
     required String pharmacyId,
     required String userId,
   }) async {
-    
     try {
       final docRef = _firebaseFirestore
           .collection(FirebaseCollections.userCollection)

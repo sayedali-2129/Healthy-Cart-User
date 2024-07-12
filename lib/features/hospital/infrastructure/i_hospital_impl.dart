@@ -447,10 +447,10 @@ class IHospitalImpl implements IHospitalFacade {
     return degrees * (pi / 180);
   }
 
+/* ---------------------------- GET ALL HOSPITALS --------------------------- */
+
   DocumentSnapshot<Map<String, dynamic>>? hospitalLastDoc;
   bool hospitalNoMoreData = false;
-
-/* ---------------------------- GET ALL HOSPITALS --------------------------- */
   @override
   FutureResult<List<HospitalModel>> getAllHospitals(
       {String? hospitalSearch}) async {
@@ -464,14 +464,14 @@ class IHospitalImpl implements IHospitalFacade {
 
       if (hospitalSearch != null && hospitalSearch.isNotEmpty) {
         query = query.where('keywords',
-            arrayContains: hospitalSearch.toLowerCase());
+            arrayContains: hospitalSearch.toLowerCase().replaceAll(' ', ''));
       }
 
       if (hospitalLastDoc != null) {
         query = query.startAfterDocument(hospitalLastDoc!);
       }
-      final snapshot = await query.limit(4).get();
-      if (snapshot.docs.length < 4 || snapshot.docs.isEmpty) {
+      final snapshot = await query.limit(5).get();
+      if (snapshot.docs.length < 5 || snapshot.docs.isEmpty) {
         hospitalNoMoreData = true;
       } else {
         hospitalLastDoc =
@@ -580,8 +580,10 @@ class IHospitalImpl implements IHospitalFacade {
       }
 
       if (doctorSearch != null && doctorSearch.isNotEmpty) {
-        query =
-            query.where('keywords', arrayContains: doctorSearch.toLowerCase());
+        query = query.where(
+          'keywords',
+          arrayContains: doctorSearch.toLowerCase().replaceAll(' ', ''),
+        );
       }
       if (lastDoc != null) {
         query = query.startAfterDocument(lastDoc!);
@@ -615,14 +617,15 @@ class IHospitalImpl implements IHospitalFacade {
       {String? doctorSearch, required String categoryId}) async {
     if (noCategoryDoctorMoreData) return right([]);
     try {
+      log.log('Called doctor home search:::::::');
       Query query = firebaseFirestore
           .collection(FirebaseCollections.doctorCollection)
           .where('categoryId', isEqualTo: categoryId)
           .orderBy('createdAt', descending: true);
 
       if (doctorSearch != null && doctorSearch.isNotEmpty) {
-        query =
-            query.where('keywords', arrayContains: doctorSearch.toLowerCase());
+        query = query.where('keywords',
+            arrayContains: doctorSearch.toLowerCase().replaceAll(' ', ''));
       }
       if (lastCategoryDoctorDoc != null) {
         query = query.startAfterDocument(lastCategoryDoctorDoc!);
@@ -634,6 +637,7 @@ class IHospitalImpl implements IHospitalFacade {
         lastCategoryDoctorDoc =
             snapshot.docs.last as DocumentSnapshot<Map<String, dynamic>>;
       }
+      log.log(snapshot.docs.isNotEmpty.toString());
       return right(snapshot.docs
           .map((e) => DoctorModel.fromMap(e.data() as Map<String, dynamic>)
               .copyWith(id: e.id))
