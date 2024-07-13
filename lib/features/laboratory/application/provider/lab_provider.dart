@@ -114,10 +114,11 @@ class LabProvider with ChangeNotifier {
     isFunctionProcessing = false;
     notifyListeners();
   }
+
   bool checkNearestLabortaryLocation() {
-    return (labList.first.placemark?.localArea !=
-        _checkPlaceMark?.localArea);
+    return (labList.first.placemark?.localArea != _checkPlaceMark?.localArea);
   }
+
   void labortaryFetchInitData({
     required BuildContext context,
   }) {

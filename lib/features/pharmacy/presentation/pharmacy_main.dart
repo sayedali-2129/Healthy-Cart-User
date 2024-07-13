@@ -36,11 +36,16 @@ class _PharmacyMainState extends State<PharmacyMain> {
   void initState() {
     super.initState();
     final pharmacyProvider = context.read<PharmacyProvider>();
+    final orderProvider = context.read<PharmacyOrderProvider>();
+    final userId = FirebaseAuth.instance.currentUser?.uid;
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         pharmacyProvider
           ..clearPharmacyFetchData()
           ..pharmacyFetchInitData(context: context);
+        if (userId != null) {
+          orderProvider.getSingleOrderDoc(userId: userId);
+        }
       },
     );
   }
@@ -121,19 +126,23 @@ class _PharmacyMainState extends State<PharmacyMain> {
                                   type: PageTransitionType.rightToLeft,
                                   context: context,
                                   page: const LoginScreen());
-                              CustomToast.infoToast(text: 'Login to continue !');
+                              CustomToast.infoToast(
+                                  text: 'Login to continue !');
                             } else {
-                              if (authProvider.userFetchlDataFetched!.userName ==
+                              if (authProvider
+                                      .userFetchlDataFetched!.userName ==
                                   null) {
                                 EasyNavigation.push(
-                                    context: context, page: const ProfileSetup());
+                                    context: context,
+                                    page: const ProfileSetup());
                               } else {
                                 pharmacyProvider.setUserId(
-                                    authProvider.userFetchlDataFetched?.id ?? '');
+                                    authProvider.userFetchlDataFetched?.id ??
+                                        '');
                                 pharmacyProvider.setPharmacyIdAndCategoryList(
-                                    selectedpharmacyId:
-                                        pharmacyProvider.pharmacyList[index].id ??
-                                            '',
+                                    selectedpharmacyId: pharmacyProvider
+                                            .pharmacyList[index].id ??
+                                        '',
                                     categoryIdList: pharmacyProvider
                                             .pharmacyList[index]
                                             .selectedCategoryId ??
@@ -183,8 +192,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                           duration: 200);
                     },
                   ),
-                  if (orderProvider.approvedOrderList
-                      .any((element) => element.isUserAccepted == false))
+                  if (orderProvider.singleOrderDoc != null)
                     const Positioned(
                       right: 2,
                       top: 2,

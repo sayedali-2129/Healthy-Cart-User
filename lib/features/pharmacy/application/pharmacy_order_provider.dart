@@ -201,11 +201,13 @@ class PharmacyOrderProvider extends ChangeNotifier {
 
   Future<void> updateOrderCompleteDetails({
     required PharmacyOrderModel productData,
+    String? paymentId,
     required BuildContext context,
   }) async {
     log('Data payment $selectedPaymentRadio');
     final data = productData.copyWith(
       isUserAccepted: true,
+      paymentId: paymentId,
       paymentType: selectedPaymentRadio,
       paymentStatus: (selectedPaymentRadio == 'COD') ? 0 : 1,
       isPaymentRecieved: (selectedPaymentRadio == 'COD') ? false : true,
@@ -256,6 +258,20 @@ class PharmacyOrderProvider extends ChangeNotifier {
       CustomToast.sucessToast(text: "Order is cancelled.");
     });
     fetchLoading = false;
+    notifyListeners();
+  }
+
+  /* --------------------- GET SINGLE ORDER DOC FOR NOTIFY -------------------- */
+  PharmacyOrderModel? singleOrderDoc;
+  Future<void> getSingleOrderDoc({required String userId}) async {
+    final result =
+        await _iPharmacyOrderFacade.getSingleOrderDoc(userId: userId);
+
+    result.fold((err) {
+      log('ERRROR :: ${err.errMsg}');
+    }, (success) {
+      singleOrderDoc = success;
+    });
     notifyListeners();
   }
 }

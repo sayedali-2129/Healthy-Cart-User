@@ -7,7 +7,6 @@ import 'package:healthy_cart_user/core/services/send_fcm_message.dart';
 import 'package:healthy_cart_user/features/hospital/domain/facade/i_hospital_booking_facade.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
-import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 import 'package:injectable/injectable.dart';
@@ -163,13 +162,30 @@ class HospitalBookingProivder extends ChangeNotifier {
     );
   }
 
+  /* --------------------- GET SINGLE ORDER DOC FOR NOTIFY -------------------- */
+  HospitalBookingModel? singleOrderDoc;
+  Future<void> getSingleOrderDoc({required String userId}) async {
+    final result =
+        await iHospitalBookingFacade.getSingleOrderDoc(userId: userId);
+
+    result.fold((err) {
+      log('ERRROR :: ${err.errMsg}');
+    }, (success) {
+      singleOrderDoc = success;
+    });
+    notifyListeners();
+  }
+
   /* ---------------------------- USER ACCEPT ORDER --------------------------- */
   Future<void> acceptOrder(
       {required String orderId,
       required String fcmtoken,
+      String? paymentId,
       required String userName}) async {
     final result = await iHospitalBookingFacade.acceptOrder(
-        orderId: orderId, paymentMethod: hospitalpPaymentType!);
+        paymentId: paymentId,
+        orderId: orderId,
+        paymentMethod: hospitalpPaymentType!);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to accept booking');
       log('Error :: ${err.errMsg}');

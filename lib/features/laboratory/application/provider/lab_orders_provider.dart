@@ -77,16 +77,19 @@ class LabOrdersProvider with ChangeNotifier {
   }
 
   /* ---------------------------- USER ACCEPT ORDER --------------------------- */
-  Future<void> acceptOrder(
-      {required String orderId,
-      required String fcmtoken,
-      required String? paymentType,
-      required int paymentStatus,
-      required String userName}) async {
+  Future<void> acceptOrder({
+    required String orderId,
+    required String fcmtoken,
+    required String? paymentType,
+    required int paymentStatus,
+    required String userName,
+    String? paymentId,
+  }) async {
     final result = await iLabOrdersFacade.acceptOrder(
         orderId: orderId,
         paymentMethod: paymentType!,
-        paymentStatus: paymentStatus);
+        paymentStatus: paymentStatus,
+        paymentId: paymentId);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to accept booking');
       log('Error :: ${err.errMsg}');
@@ -192,6 +195,20 @@ class LabOrdersProvider with ChangeNotifier {
         }
       },
     );
+  }
+
+  /* --------------------- GET SINGLE ORDER DOC FOR NOTIFY -------------------- */
+  LabOrdersModel? singleOrderDoc;
+  Future<void> getSingleOrderDoc({required String userId}) async {
+    final result = await iLabOrdersFacade.getSingleOrderDoc(userId: userId);
+
+    result.fold((err) {
+      log('ERRROR :: ${err.errMsg}');
+    }, (success) {
+      log(success.toMap().toString());
+      singleOrderDoc = success;
+    });
+    notifyListeners();
   }
 
   /* ------------------------------ DOWNLOAD PDF ------------------------------ */

@@ -185,7 +185,8 @@ class ILabOrdersImpl implements ILabOrdersFacade {
   FutureResult<String> acceptOrder(
       {required String orderId,
       required String paymentMethod,
-      required int paymentStatus}) async {
+      required int paymentStatus,
+      String? paymentId}) async {
     try {
       await _firestore
           .collection(FirebaseCollections.labOrdersCollection)
@@ -193,7 +194,8 @@ class ILabOrdersImpl implements ILabOrdersFacade {
           .update({
         'isUserAccepted': true,
         'paymentMethod': paymentMethod,
-        'paymentStatus': paymentStatus
+        'paymentStatus': paymentStatus,
+        'paymentId': paymentId
       });
       return right('Booking Accepted Successfully');
     } catch (e) {
@@ -213,9 +215,28 @@ class ILabOrdersImpl implements ILabOrdersFacade {
         'orderStatus': 3,
         'rejectedAt': Timestamp.now(),
         'isRejectedByUser': true,
-        'rejectReason': rejectReason
+        'rejectReason': rejectReason,
       });
       return right('Booking Cancelled Successfully');
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+
+/* -------------------------- GET SINGLR ACCEPT DOC ------------------------- */
+
+  @override
+  FutureResult<LabOrdersModel> getSingleOrderDoc(
+      {required String userId}) async {
+    try {
+      final responce = await _firestore
+          .collection(FirebaseCollections.labOrdersCollection)
+          .where(Filter.and(Filter('isUserAccepted', isEqualTo: false),
+              Filter('orderStatus', isEqualTo: 1)))
+          .limit(1)
+          .get();
+
+      return right(LabOrdersModel.fromMap(responce.docs.first.data()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }

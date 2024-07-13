@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
@@ -33,10 +34,15 @@ class _HospitalMainState extends State<HospitalMain> {
   @override
   void initState() {
     final hospitalProvider = context.read<HospitalProvider>();
+    final bookingProvider = context.read<HospitalBookingProivder>();
+    final userId = FirebaseAuth.instance.currentUser?.uid;
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         hospitalProvider.clearHospitalData();
         hospitalProvider.hospitalFetchInitData(context: context);
+        if (userId != null) {
+          bookingProvider.getSingleOrderDoc(userId: userId);
+        }
       },
     );
     super.initState();
@@ -174,8 +180,7 @@ class _HospitalMainState extends State<HospitalMain> {
                             type: PageTransitionType.bottomToTop,
                             duration: 200);
                       }),
-                  if (bookingProvider.approvedBookings
-                      .any((element) => element.isUserAccepted == false))
+                  if (bookingProvider.singleOrderDoc != null)
                     const Positioned(
                       right: 2,
                       top: 2,

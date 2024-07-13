@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -694,6 +695,7 @@ class PharmacyProvider extends ChangeNotifier {
       totalDiscountAmount: totalFinalAmount,
       totalAmount: totalAmount,
       createdAt: Timestamp.now(),
+      isUserAccepted: false,
       prescription:
           (prescriptionImageUrl != null) ? prescriptionImageUrl : null,
       description: prescriptionDescription.text,

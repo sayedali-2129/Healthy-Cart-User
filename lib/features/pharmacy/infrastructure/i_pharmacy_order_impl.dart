@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
@@ -8,18 +9,26 @@ import 'package:healthy_cart_user/core/general/typdef.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/i_pharmacy_order_facade.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:injectable/injectable.dart';
+
 @LazySingleton(as: IPharmacyOrderFacade)
-class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
-  IPharmacyOrdersImpl(this._firebaseFirestore,);
+class IPharmacyOrdersImpl implements IPharmacyOrderFacade {
+  IPharmacyOrdersImpl(
+    this._firebaseFirestore,
+  );
   final FirebaseFirestore _firebaseFirestore;
- late StreamSubscription _streamSubscription;
+  late StreamSubscription _streamSubscription;
   @override
-  FutureResult<List<PharmacyOrderModel>> getPendingOrders({required String userId,}) async{
+  FutureResult<List<PharmacyOrderModel>> getPendingOrders({
+    required String userId,
+  }) async {
     try {
       final responce = await _firebaseFirestore
-          .collection(FirebaseCollections.pharmacyOrder).orderBy('createdAt', descending: true)
-          .where(Filter.and(Filter('userId', isEqualTo: userId),
-              Filter('orderStatus', isEqualTo: 0), ))      
+          .collection(FirebaseCollections.pharmacyOrder)
+          .orderBy('createdAt', descending: true)
+          .where(Filter.and(
+            Filter('userId', isEqualTo: userId),
+            Filter('orderStatus', isEqualTo: 0),
+          ))
           .get();
 
       return right(responce.docs
@@ -29,7 +38,8 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
-    @override
+
+  @override
   FutureResult<Unit> cancelOrder(
       {required String orderId, required PharmacyOrderModel orderData}) async {
     try {
@@ -45,10 +55,12 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
+
   /* -------------------------------------------------------------------------- */
   /* ------------------------- APPROVED ORDER GET AND UPDATE ------------------------ */
   @override
-  Stream<Either<MainFailure, List<PharmacyOrderModel>>> getPharmacyApprovedOrderData({
+  Stream<Either<MainFailure, List<PharmacyOrderModel>>>
+      getPharmacyApprovedOrderData({
     required String userId,
   }) async* {
     final StreamController<Either<MainFailure, List<PharmacyOrderModel>>>
@@ -65,8 +77,10 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
           .snapshots()
           .listen(
         (docsList) {
-          final newOrderList = docsList.docs.map((e) =>
-                  PharmacyOrderModel.fromMap(e.data()).copyWith(id: e.id)).toList();
+          final newOrderList = docsList.docs
+              .map((e) =>
+                  PharmacyOrderModel.fromMap(e.data()).copyWith(id: e.id))
+              .toList();
           onProcessController.add(right(newOrderList));
         },
       );
@@ -79,10 +93,12 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
     }
     yield* onProcessController.stream;
   }
- @override
+
+  @override
   Future<void> cancelStream() async {
     await _streamSubscription.cancel();
   }
+
   /* ------------------------- UPDATE ------------------------ */
   @override
   FutureResult<PharmacyOrderModel> updateProductApprovedDetails(
@@ -102,6 +118,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
+
   /* -------------------------------------------------------------------------- */
   /* ---------------------------- GET COMPLETED ORDER---------------------------- */
   DocumentSnapshot<Map<String, dynamic>>? lastDoc;
@@ -149,8 +166,9 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
     noMoreData = false;
     lastDoc = null;
   }
+
 /* ------------------------- CANCELLED ORDER SECTION ------------------------ */
-   @override
+  @override
   FutureResult<List<PharmacyOrderModel>> getCancelledOrderDetails({
     required String userId,
   }) async {
@@ -187,10 +205,12 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
   }
-  
+
   @override
-  FutureResult<PharmacyOrderModel> updateOrderCompleteDetails({required String orderId, required PharmacyOrderModel orderProducts}) async{
-        try {
+  FutureResult<PharmacyOrderModel> updateOrderCompleteDetails(
+      {required String orderId,
+      required PharmacyOrderModel orderProducts}) async {
+    try {
       await _firebaseFirestore
           .collection(FirebaseCollections.pharmacyOrder)
           .doc(orderId)
@@ -204,6 +224,21 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade{
     }
   }
 
+/* -------------------------- GET SINGLR ACCEPT DOC ------------------------- */
+  @override
+  FutureResult<PharmacyOrderModel> getSingleOrderDoc(
+      {required String userId}) async {
+    try {
+      final responce = await _firebaseFirestore
+          .collection(FirebaseCollections.pharmacyOrder)
+          .where(Filter.and(Filter('isUserAccepted', isEqualTo: false),
+              Filter('orderStatus', isEqualTo: 1)))
+          .limit(1)
+          .get();
 
-
+      return right(PharmacyOrderModel.fromMap(responce.docs.first.data()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
 }

@@ -8,21 +8,28 @@ abstract class IPharmacyOrderFacade {
     required String userId,
   });
 
-  FutureResult<Unit> cancelOrder( {required String orderId, required PharmacyOrderModel orderData });
-  Stream<Either<MainFailure, List<PharmacyOrderModel>>> getPharmacyApprovedOrderData({
+  FutureResult<Unit> cancelOrder(
+      {required String orderId, required PharmacyOrderModel orderData});
+  Stream<Either<MainFailure, List<PharmacyOrderModel>>>
+      getPharmacyApprovedOrderData({
     required String userId,
   });
   Future<void> cancelStream();
-    FutureResult<PharmacyOrderModel> updateProductApprovedDetails(
-      {required String orderId, required PharmacyOrderModel orderProducts,});
-   FutureResult<List<PharmacyOrderModel>> getCompletedOrderDetails({
-    required String userId,
-  }); 
- FutureResult<List<PharmacyOrderModel>> getCancelledOrderDetails({
+  FutureResult<PharmacyOrderModel> updateProductApprovedDetails({
+    required String orderId,
+    required PharmacyOrderModel orderProducts,
+  });
+  FutureResult<List<PharmacyOrderModel>> getCompletedOrderDetails({
     required String userId,
   });
-void clearFetchData();
-  FutureResult<PharmacyOrderModel> updateOrderCompleteDetails(
-      {required String orderId, required PharmacyOrderModel orderProducts,});
+  FutureResult<List<PharmacyOrderModel>> getCancelledOrderDetails({
+    required String userId,
+  });
+  FutureResult<PharmacyOrderModel> getSingleOrderDoc({required String userId});
 
+  void clearFetchData();
+  FutureResult<PharmacyOrderModel> updateOrderCompleteDetails({
+    required String orderId,
+    required PharmacyOrderModel orderProducts,
+  });
 }

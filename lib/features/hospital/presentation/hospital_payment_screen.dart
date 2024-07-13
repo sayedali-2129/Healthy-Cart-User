@@ -225,6 +225,7 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                               duration: 200);
                                           ordersProvider.hospitalpPaymentType ==
                                               null;
+                                          ordersProvider.singleOrderDoc = null;
 
                                           Navigator.pop(context);
                                         } else {
@@ -240,6 +241,7 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                                 .userDetails!.userEmail!,
                                             onSuccess: (paymentId) async {
                                               await ordersProvider.acceptOrder(
+                                                  paymentId: paymentId,
                                                   userName: widget.bookingModel
                                                       .userDetails!.userName!,
                                                   fcmtoken: widget
@@ -252,7 +254,7 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                           );
                                         }
                                       }
-
+                                      ordersProvider.singleOrderDoc = null;
                                       Navigator.pop(context);
                                     },
                                   ));

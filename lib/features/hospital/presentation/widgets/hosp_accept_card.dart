@@ -201,6 +201,7 @@ class HospAcceptCard extends StatelessWidget {
                                             orderId: hospitalBookingModel.id!)
                                         .whenComplete(
                                       () {
+                                        ordersProvider.singleOrderDoc = null;
                                         EasyNavigation.pop(context: context);
                                       },
                                     );
