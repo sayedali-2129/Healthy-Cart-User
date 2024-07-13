@@ -15,7 +15,8 @@ abstract class ILabOrdersFacade {
   FutureResult<String> acceptOrder(
       {required String orderId,
       required String paymentMethod,
-      required int paymentStatus});
+      required int paymentStatus,
+      String? paymentId});
   FutureResult<String> cancelOrder(
       {required String orderId, String? rejectReason});
   FutureResult<List<LabOrdersModel>> getPendingOrders({required String userId});
@@ -23,6 +24,7 @@ abstract class ILabOrdersFacade {
       {required String userId});
   FutureResult<List<LabOrdersModel>> getCompletedOrders(
       {required String userId});
+  FutureResult<LabOrdersModel> getSingleOrderDoc({required String userId});
   void clearCancelledData();
   void clearCompletedOrderData();
 }

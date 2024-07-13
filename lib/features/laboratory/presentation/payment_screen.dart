@@ -204,6 +204,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                             orderId: widget.labOrdersModel.id!)
                                         .whenComplete(
                                       () {
+                                        ordersProvider.singleOrderDoc = null;
+
                                         EasyNavigation.push(
                                             context: context,
                                             page: const OrderRequestSuccessScreen(
@@ -284,6 +286,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                   duration: 300);
                                               ordersProvider.paymentType ==
                                                   null;
+                                              ordersProvider.singleOrderDoc =
+                                                  null;
 
                                               Navigator.pop(context);
                                             } else {
@@ -302,6 +306,7 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                 onSuccess: (paymentId) async {
                                                   await ordersProvider
                                                       .acceptOrder(
+                                                          paymentId: paymentId,
                                                           paymentStatus: 1,
                                                           paymentType:
                                                               ordersProvider
@@ -321,7 +326,7 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                               );
                                             }
                                           }
-
+                                          ordersProvider.singleOrderDoc = null;
                                           Navigator.pop(context);
                                         },
                                       ));

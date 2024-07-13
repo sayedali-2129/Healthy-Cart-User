@@ -29,6 +29,7 @@ class HospitalBookingModel {
   UserModel? userDetails;
   String? newBookingDate;
   String? newTimeSlot;
+  String? paymentId;
   HospitalBookingModel({
     this.id,
     this.hospitalId,
@@ -55,6 +56,7 @@ class HospitalBookingModel {
     this.userDetails,
     this.newBookingDate,
     this.newTimeSlot,
+    this.paymentId,
   });
 
   Map<String, dynamic> toMap() {
@@ -84,6 +86,7 @@ class HospitalBookingModel {
       'userDetails': userDetails!.toMap(),
       'newTimeSlot': newTimeSlot,
       'newBookingDate': newBookingDate,
+      'paymentId': paymentId,
     };
   }
 
@@ -142,6 +145,7 @@ class HospitalBookingModel {
           : null,
       newTimeSlot:
           map['newTimeSlot'] != null ? map['newTimeSlot'] as String : null,
+      paymentId: map['paymentId'] != null ? map['paymentId'] as String : null,
     );
   }
 
@@ -171,6 +175,7 @@ class HospitalBookingModel {
     UserModel? userDetails,
     String? newBookingDate,
     String? newTimeSlot,
+    String? paymentId,
   }) {
     return HospitalBookingModel(
       id: id ?? this.id,
@@ -198,6 +203,7 @@ class HospitalBookingModel {
       userDetails: userDetails ?? this.userDetails,
       newTimeSlot: newTimeSlot ?? this.newTimeSlot,
       newBookingDate: newBookingDate ?? this.newBookingDate,
+      paymentId: paymentId ?? this.paymentId,
     );
   }
 }

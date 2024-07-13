@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/product_quantity_model.dart';
@@ -35,7 +33,8 @@ class PharmacyOrderModel {
   final bool? isPaymentRecieved;
   final String? productBillPdf;
   final String? paymentType;
-    final String? description;
+  final String? description;
+  final String? paymentId;
   PharmacyOrderModel({
     this.id,
     this.pharmacyId,
@@ -66,6 +65,7 @@ class PharmacyOrderModel {
     this.productBillPdf,
     this.paymentType,
     this.description,
+    this.paymentId,
   });
 
   PharmacyOrderModel copyWith({
@@ -98,6 +98,7 @@ class PharmacyOrderModel {
     String? productBillPdf,
     String? paymentType,
     String? description,
+    String? paymentId,
   }) {
     return PharmacyOrderModel(
       id: id ?? this.id,
@@ -128,7 +129,8 @@ class PharmacyOrderModel {
       isPaymentRecieved: isPaymentRecieved ?? this.isPaymentRecieved,
       productBillPdf: productBillPdf ?? this.productBillPdf,
       paymentType: paymentType ?? this.paymentType,
-       description: description ?? this.description
+      description: description ?? this.description,
+      paymentId: paymentId ?? this.paymentId,
     );
   }
 
@@ -162,7 +164,8 @@ class PharmacyOrderModel {
       'isPaymentRecieved': isPaymentRecieved,
       'productBillPdf': productBillPdf,
       'paymentType': paymentType,
-       'description': description,
+      'description': description,
+      'paymentId': paymentId,
     };
   }
 
@@ -182,7 +185,6 @@ class PharmacyOrderModel {
       'isOrderPacked': isOrderPacked,
       'isOrderDelivered': isOrderDelivered,
       'isPaymentRecieved': isPaymentRecieved,
-
     };
   }
 
@@ -259,7 +261,9 @@ class PharmacyOrderModel {
           : null,
       paymentType:
           map['paymentType'] != null ? map['paymentType'] as String : null,
-           description: map['description'] != null ? map['description'] as String : null,     
+      description:
+          map['description'] != null ? map['description'] as String : null,
+      paymentId: map['paymentId'] != null ? map['paymentId'] as String : null,
     );
   }
 }

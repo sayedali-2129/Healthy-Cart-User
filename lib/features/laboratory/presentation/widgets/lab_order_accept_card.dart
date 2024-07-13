@@ -12,7 +12,7 @@ import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
-class AcceptCard extends StatelessWidget {
+class AcceptCard extends StatefulWidget {
   const AcceptCard({
     super.key,
     required this.screenWidth,
@@ -23,11 +23,16 @@ class AcceptCard extends StatelessWidget {
   final int index;
 
   @override
+  State<AcceptCard> createState() => _AcceptCardState();
+}
+
+class _AcceptCardState extends State<AcceptCard> {
+  @override
   Widget build(BuildContext context) {
     return Consumer<LabOrdersProvider>(builder: (context, ordersProvider, _) {
-      final orders = ordersProvider.approvedOrders[index];
+      final orders = ordersProvider.approvedOrders[widget.index];
       return Container(
-        width: screenWidth,
+        width: widget.screenWidth,
         decoration: BoxDecoration(
           color: BColors.white,
           borderRadius: BorderRadius.circular(16),
@@ -154,16 +159,22 @@ class AcceptCard extends StatelessWidget {
                                     LoadingLottie.showLoading(
                                         context: context,
                                         text: 'Cancelling...');
-                                    await ordersProvider.cancelOrder(
+                                    await ordersProvider
+                                        .cancelOrder(
                                       fromPending: false,
                                       fcmtoken:
                                           orders.labDetails!.fcmToken ?? '',
                                       userName: orders.userDetails!.userName ??
                                           'User',
                                       orderId: orders.id!,
+                                    )
+                                        .whenComplete(
+                                      () {
+                                        ordersProvider.singleOrderDoc = null;
+
+                                        EasyNavigation.pop(context: context);
+                                      },
                                     );
-                                    // ignore: use_build_context_synchronously
-                                    Navigator.pop(context);
                                   },
                                 );
                               },

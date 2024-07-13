@@ -423,8 +423,16 @@ class _ApprovedOrderDetailsScreenState
                 userPhoneNumber: widget.orderData.userDetails!.phoneNo!,
                 userEmail: widget.orderData.userDetails!.userEmail!,
                 onSuccess: (paymentId) async {
-                  await orderProvider.updateOrderCompleteDetails(
-                      productData: widget.orderData, context: context);
+                  await orderProvider
+                      .updateOrderCompleteDetails(
+                          paymentId: paymentId,
+                          productData: widget.orderData,
+                          context: context)
+                      .whenComplete(
+                    () {
+                      orderProvider.singleOrderDoc = null;
+                    },
+                  );
                 },
               );
             } else {
@@ -435,6 +443,8 @@ class _ApprovedOrderDetailsScreenState
                       productData: widget.orderData, context: context)
                   .whenComplete(
                 () {
+                  orderProvider.singleOrderDoc = null;
+
                   EasyNavigation.pop(context: context);
                   EasyNavigation.push(
                       context: context,

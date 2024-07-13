@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/home_sliver_appbar.dart';
@@ -33,12 +36,18 @@ class _LabMainState extends State<LabMain> {
   @override
   void initState() {
     final labProvider = context.read<LabProvider>();
+    final labOrderProvider = context.read<LabOrdersProvider>();
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    log(userId ?? 'null');
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         labProvider
           ..clearLabData()
           ..labortaryFetchInitData(context: context);
+        if (userId != null) {
+          labOrderProvider.getSingleOrderDoc(userId: userId);
+        }
       },
     );
     super.initState();
@@ -167,8 +176,7 @@ class _LabMainState extends State<LabMain> {
                             type: PageTransitionType.bottomToTop,
                             duration: 200);
                       }),
-                  if (labOrders.approvedOrders
-                      .any((element) => element.isUserAccepted == false))
+                  if (labOrders.singleOrderDoc != null)
                     const Positioned(
                       right: 2,
                       top: 2,

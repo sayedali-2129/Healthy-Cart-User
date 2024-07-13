@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:developer' as log;
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
@@ -9,7 +10,6 @@ import 'package:healthy_cart_user/core/general/typdef.dart';
 import 'package:healthy_cart_user/features/hospital/domain/facade/i_hospital_booking_facade.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/doctor_model.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
-import 'package:healthy_cart_user/features/hospital/domain/models/hospital_model.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/model/location_model.dart';
 import 'package:healthy_cart_user/utils/constants/enums/location_enum.dart';
 import 'package:injectable/injectable.dart';
@@ -143,7 +143,9 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
 /* -------------------------------------------------------------------------- */
   @override
   FutureResult<String> acceptOrder(
-      {required String orderId, required String paymentMethod}) async {
+      {required String orderId,
+      required String paymentMethod,
+      String? paymentId}) async {
     try {
       await _firestore
           .collection(FirebaseCollections.hospitalBookingCollection)
@@ -151,7 +153,8 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
           .update({
         'isUserAccepted': true,
         'paymentMethod': paymentMethod,
-        'paymentStatus': 1
+        'paymentStatus': 1,
+        'paymentId': paymentId,
       });
       return right('Booking Accepted Successfully');
     } catch (e) {
@@ -200,6 +203,23 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
   void clearCompletedOrderData() {
     completedNoMoreData = false;
     completedLastDoc = null;
+  }
+
+  @override
+  FutureResult<HospitalBookingModel> getSingleOrderDoc(
+      {required String userId}) async {
+    try {
+      final responce = await _firestore
+          .collection(FirebaseCollections.hospitalBookingCollection)
+          .where(Filter.and(Filter('isUserAccepted', isEqualTo: false),
+              Filter('orderStatus', isEqualTo: 1)))
+          .limit(1)
+          .get();
+
+      return right(HospitalBookingModel.fromMap(responce.docs.first.data()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
   }
 
   /* --------------------- Getting Doctor Location Based -------------------- */

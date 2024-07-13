@@ -7,9 +7,9 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_address_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/approved_details_view_page.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/date_and_order_id.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_address_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmacy_detail_container.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/quantity_container.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
@@ -198,7 +198,8 @@ class PharmacyAcceptedCard extends StatelessWidget {
                         text2Color: BColors.green,
                       ),
                     const Gap(4),
-                    if (onProcessOrderData.deliveryType == orderProvider.homeDelivery)
+                    if (onProcessOrderData.deliveryType ==
+                        orderProvider.homeDelivery)
                       Column(children: [
                         RowTextContainerWidget(
                           text1: 'Delivery Charge :',
@@ -246,7 +247,8 @@ class PharmacyAcceptedCard extends StatelessWidget {
                 children: [
                   const Divider(),
                   (onProcessOrderData.addresss != null &&
-                          onProcessOrderData.deliveryType == orderProvider.homeDelivery )
+                          onProcessOrderData.deliveryType ==
+                              orderProvider.homeDelivery)
                       ? Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -325,7 +327,10 @@ class PharmacyAcceptedCard extends StatelessWidget {
                               orderProvider
                                   .cancelPharmacyApprovedOrder(
                                       orderData: onProcessOrderData)
-                                  .whenComplete(() => Navigator.pop(context));
+                                  .whenComplete(() {
+                                orderProvider.singleOrderDoc = null;
+                                EasyNavigation.pop(context: context);
+                              });
                             },
                           );
                         },
