@@ -90,7 +90,16 @@ class _HomeMainState extends State<HomeMain> {
                 "${locationProvider.localsavedHomeplacemark?.localArea},${locationProvider.localsavedHomeplacemark?.district},${locationProvider.localsavedHomeplacemark?.state}",
             locationTap: () {},
           ),
-          const SliverGap(10),
+          const SliverGap(8),
+           if (homeProvider.homeBannerList.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: FadeInRight(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          child: AdSliderHome(screenWidth: screenwidth),
+                        ),
+                      ),
+                    ),
           if (homeProvider.isLoading == true &&
               hospitalProvier.hospitalFetchLoading == true &&
               labProvider.labFetchLoading == true &&
@@ -100,7 +109,11 @@ class _HomeMainState extends State<HomeMain> {
               pharmacyProvider.pharmacyList.isEmpty &&
               homeProvider.homeBannerList.isEmpty &&
               hospitalProvier.hospitalList.isEmpty)
-            const SliverFillRemaining(child: Center(child: LoadingIndicater()))
+            const SliverFillRemaining(
+              child: Center(
+                child: LoadingIndicater(),
+              ),
+            )
           else if (homeProvider.isLoading == false &&
               hospitalProvier.hospitalFetchLoading == false &&
               labProvider.labFetchLoading == false &&
@@ -115,17 +128,12 @@ class _HomeMainState extends State<HomeMain> {
                 text: "We are still working to get our services to your area.",
               ),
             )
-          else
+          
+              else      
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  if (homeProvider.homeBannerList.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: FadeInRight(
-                        child: AdSliderHome(screenWidth: screenwidth),
-                      ),
-                    ),
+                  
                   if (hospitalProvier.hospitalList.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -208,11 +216,20 @@ class _HomeMainState extends State<HomeMain> {
                           ),
                           ViewAllButton(
                             onTap: () {
-                              EasyNavigation.push(
-                                type: PageTransitionType.rightToLeft,
-                                context: context,
-                                page: const AllCategoriesScreen(),
-                              );
+                              if (authProvider.auth.currentUser == null) {
+                                EasyNavigation.push(
+                                    type: PageTransitionType.rightToLeft,
+                                    context: context,
+                                    page: const LoginScreen());
+                                CustomToast.infoToast(
+                                    text: 'Login to continue !');
+                              } else {
+                                EasyNavigation.push(
+                                  type: PageTransitionType.rightToLeft,
+                                  context: context,
+                                  page: const AllCategoriesScreen(),
+                                );
+                              }
                             },
                           )
                         ],

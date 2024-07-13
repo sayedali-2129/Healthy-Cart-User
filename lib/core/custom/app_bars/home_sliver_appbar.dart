@@ -196,7 +196,7 @@ class MainHomeAppBar extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    InkWell(
+                    GestureDetector(
                       onTap: locationTap,
                       child: Row(
                         children: [

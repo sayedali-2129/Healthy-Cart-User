@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
@@ -30,7 +29,7 @@ class AdPharmacySlider extends StatelessWidget {
                   color: BColors.white,
                   surfaceTintColor: BColors.white,
                   borderRadius: BorderRadius.circular(16),
-                  elevation: 5,
+                  elevation: 4,
                   child: Container(
                       clipBehavior: Clip.antiAlias,
                       width: double.infinity,
@@ -43,7 +42,8 @@ class AdPharmacySlider extends StatelessWidget {
                             ? imageUrlList[pharmacyProvider.selectedIndex]
                             : imageUrlList[index],
                         fit: fit,
-                      )),
+                      ),
+                      ),
                 ),
               ),
               options: CarouselOptions(
