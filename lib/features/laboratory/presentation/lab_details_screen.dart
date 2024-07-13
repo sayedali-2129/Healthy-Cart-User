@@ -11,6 +11,7 @@ import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/checkout_screen.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_prescription_page.dart';
@@ -151,39 +152,55 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                               ),
                               const Gap(6),
                               ButtonWidget(
-                                buttonHeight: 36,
-                                buttonWidth: 160,
-                                buttonColor: BColors.buttonGreen,
-                                buttonWidget: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.maps_ugc_outlined,
-                                      color: BColors.black,
-                                      size: 19,
-                                    ),
-                                    Gap(6),
-                                    Text(
-                                      'Prescription',
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w700,
-                                          color: BColors.black),
-                                    )
-                                  ],
-                                ),
-                                onPressed: () {
-                                  labProvider.clearCurrentDetails();
-                                  addressProvider.selectedAddress = null;
-                                  EasyNavigation.push(
-                                    context: context,
-                                    page: LabPrescriptionPage(
-                                      labModel: labList,
-                                    ),
-                                    duration: 250,
-                                    type: PageTransitionType.rightToLeft,
-                                  );
-                                },
-                              )
+                                  buttonHeight: 36,
+                                  buttonWidth: 160,
+                                  buttonColor: BColors.buttonGreen,
+                                  buttonWidget: const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.maps_ugc_outlined,
+                                        color: BColors.black,
+                                        size: 19,
+                                      ),
+                                      Gap(6),
+                                      Text(
+                                        'Prescription',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w700,
+                                            color: BColors.black),
+                                      )
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    if (authProvider.auth.currentUser == null) {
+                                      EasyNavigation.push(
+                                          type: PageTransitionType.rightToLeft,
+                                          context: context,
+                                          page: const LoginScreen());
+                                      CustomToast.infoToast(
+                                          text: 'Login to continue !');
+                                    } else {
+                                      if (authProvider.userFetchlDataFetched!
+                                              .userName ==
+                                          null) {
+                                        EasyNavigation.push(
+                                            context: context,
+                                            page: const ProfileSetup());
+                                      } else {
+                                        labProvider.clearCurrentDetails();
+                                        addressProvider.selectedAddress = null;
+                                        EasyNavigation.push(
+                                          context: context,
+                                          page: LabPrescriptionPage(
+                                            labModel: labList,
+                                          ),
+                                          duration: 250,
+                                          type: PageTransitionType.rightToLeft,
+                                        );
+                                      }
+                                    }
+                                  },),
                             ],
                           ),
                           const Gap(10),

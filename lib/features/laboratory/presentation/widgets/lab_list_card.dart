@@ -42,15 +42,9 @@ class LabListCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: BColors.white,
                   borderRadius: BorderRadius.circular(16),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //       color: BColors.black.withOpacity(0.1),
-                  //       blurRadius: 7,
-                  //       spreadRadius: 5),
-                  // ],
+                  
                 ),
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       height: 160,
@@ -98,32 +92,10 @@ class LabListCard extends StatelessWidget {
                                       fontWeight: FontWeight.w600),
                                 ),
                               ),
-                              // Container(
-                              //   decoration: BoxDecoration(
-                              //       borderRadius: BorderRadius.circular(5),
-                              //       color: BColors.buttonGreen),
-                              //   child: const Padding(
-                              //     padding: EdgeInsets.all(3),
-                              //     child: Row(
-                              //       children: [
-                              //         Text(
-                              //           '4.54',
-                              //           style: TextStyle(
-                              //               fontSize: 12,
-                              //               fontWeight: FontWeight.w500),
-                              //         ),
-                              //         Icon(
-                              //           Icons.star,
-                              //           size: 14,
-                              //           color: BColors.black,
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
+                             
                             ],
                           ),
-                          const Gap(5),
+                          const Gap(6),
                           Row(
                             children: [
                               const Icon(
@@ -171,7 +143,7 @@ class LabListCard extends StatelessWidget {
                   child: Image.asset(
                     BImage.currentlyUnavailable,
                     scale: 5,
-                  )),
+                  ),),
           ],
         ),
       );

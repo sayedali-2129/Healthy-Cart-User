@@ -29,7 +29,7 @@ class LoginScreen extends StatelessWidget {
               },
               child: const Icon(Icons.arrow_back_ios_new_rounded)),
         ),
-        body: InkWell(
+        body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
           },

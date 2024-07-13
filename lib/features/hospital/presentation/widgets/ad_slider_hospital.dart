@@ -30,18 +30,16 @@ class _AdSliderHospitalState extends State<AdSliderHospital> {
       } else {
         return CarouselSlider.builder(
           itemCount: hospitalProvider.hospitalBanner.length,
-          itemBuilder: (context, index, realIndex) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Container(
-              clipBehavior: Clip.antiAlias,
-              width: widget.screenWidth,
-              height: 202,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: CustomCachedNetworkImage(
-                  image: hospitalProvider.hospitalBanner[index].image!),
+          itemBuilder: (context, index, realIndex) => Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            clipBehavior: Clip.antiAlias,
+            width: widget.screenWidth,
+            height: 202,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
             ),
+            child: CustomCachedNetworkImage(
+                image: hospitalProvider.hospitalBanner[index].image!),
           ),
           options: CarouselOptions(
             viewportFraction: 1,

@@ -1,8 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/custom_textfields/textfield_widget.dart';
@@ -10,7 +8,6 @@ import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.
 import 'package:healthy_cart_user/core/general/validator.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
-import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_profile_provider.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_model.dart';
@@ -102,10 +99,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                     fieldHeading: 'Email*',
                     hintText: 'Please Enter Your Email',
                     controller: profileProvider.emailController,
-                    validator: (value) => EmailValidator.validate(
-                            profileProvider.emailController.text)
-                        ? null
-                        : "Please enter valid email",
+                    validator:BValidator.validate
                   ),
                   const Gap(16),
                   /* ----------------------------------- AGE ---------------------------------- */
@@ -114,6 +108,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                     hintText: 'Please Enter Your Age',
                     controller: profileProvider.ageController,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     validator: BValidator.validate,
                   ),
                   const Gap(16),
