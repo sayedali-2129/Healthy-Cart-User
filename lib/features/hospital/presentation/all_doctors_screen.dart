@@ -1,7 +1,6 @@
-import 'dart:developer';
+//import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
@@ -37,7 +36,7 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
     final hospitalProvider = context.read<HospitalProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        log(widget.category!.id.toString());
+      //  log(widget.category!.id.toString());
         hospitalProvider.clearAllDoctorsCategoryWiseData();
         hospitalBookingProivder.allDoctorsCategoryWiseFetchInitData(
             context: context, categoryId: widget.category!.id!);

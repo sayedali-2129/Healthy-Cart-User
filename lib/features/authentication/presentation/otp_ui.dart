@@ -63,7 +63,8 @@ class _OTPScreenState extends State<OTPScreen> {
               onTap: () {
                 EasyNavigation.pop(context: context);
               },
-              child: const Icon(Icons.arrow_back_ios_new_rounded)),
+              child: const Icon(Icons.arrow_back_ios_new_rounded),
+              ),
         ),
         body: Consumer<AuthenticationProvider>(
             builder: (context, authenticationProvider, _) {

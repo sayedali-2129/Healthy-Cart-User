@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:healthy_cart_user/core/custom/payment_status_screen.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -35,10 +33,9 @@ class RazorpayService {
         (response) => handlePaymentSuccess(response, onSuccess));
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
     try {
-      log('$options');
       _razorpay.open(options);
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
     }
   }
 

@@ -1,7 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
@@ -44,9 +41,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final labProvider = context.read<LabProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      log(labProvider.selectedRadio.toString());
+    //  log(labProvider.selectedRadio.toString());
       if (labProvider.selectedRadio == 'Home') {
-        log('called');
+
         provider.getUserAddress(userId: widget.userId);
       }
     });

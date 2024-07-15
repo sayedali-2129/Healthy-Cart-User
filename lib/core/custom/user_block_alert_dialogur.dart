@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -16,7 +16,7 @@ class UserBlockedAlertBox {
         builder: (_) => PopScope(
               canPop: false,
               onPopInvoked: (didPop) {
-                log("on invoked");
+              
               },
               child: AlertDialog(
                 backgroundColor: BColors.white,

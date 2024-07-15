@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer' as log;
+//import 'dart:developer' as log;
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -244,7 +244,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
     required PlaceMark placeMark,
     required String categoryId,
   }) async {
-    log.log('categoryId fffffffffff $categoryId');
+   // log.log('categoryId fffffffffff $categoryId');
     if (locationSortEnum == LocationSortEnum.noDataFound) {
       return left(
         const MainFailure.generalException(errMsg: 'No data found!'),
@@ -417,7 +417,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
         );
 
         if (stateList.isNotEmpty) {
-          log.log(stateList.toString());
+        //  log.log(stateList.toString());
 
           do {
             QuerySnapshot<Map<String, dynamic>> refreshedClass;
@@ -464,7 +464,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
               break;
             }
 
-            log.log('currentStateIndex=$currentStateIndex');
+          //  log.log('currentStateIndex=$currentStateIndex');
           } while (currentStateIndex <= (stateList.length - 1));
         } else {
           lastdoc = null;

@@ -99,7 +99,7 @@ class _HospitalMainState extends State<HospitalMain> {
                       ? NoDataInSelectedLocation(
                           locationTitle:
                               '${locationProvider.locallySavedHospitalplacemark?.localArea}',
-                          typeOfService: 'Hospitals',
+                          typeOfService: 'hospitals',
                         )
                       : null),
               if (hospitalProvider.isFirebaseDataLoding == true &&

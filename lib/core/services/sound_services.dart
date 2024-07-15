@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:soundpool/soundpool.dart';
@@ -14,7 +13,7 @@ class SoundServices {
       return pool.load(soundData);
     });
     int streamId = await pool.play(soundId);
-    log('Sound played with stream id $streamId');
+   // log('Sound played with stream id $streamId');
   }
 
   Future<void> recievedSound() async {
@@ -24,6 +23,6 @@ class SoundServices {
       return pool.load(soundData);
     });
     int streamId = await pool.play(soundId);
-    log('Sound played with stream id $streamId');
+    //log('Sound played with stream id $streamId');
   }
 }

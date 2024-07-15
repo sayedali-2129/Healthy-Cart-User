@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+
 
 // ignore: depend_on_referenced_packages
 import 'package:geocoding/geocoding.dart';
@@ -27,7 +27,7 @@ class OpenStritMapServices {
           double.tryParse(latitude)!, double.tryParse(longitude)!);
       final placemark = placemarks[0];
 
-      log(placemark.toJson().toString());
+     // log(placemark.toJson().toString());
 
       final localArea = (placemark.locality ?? '').isNotEmpty
           ? placemark.locality
@@ -48,7 +48,7 @@ class OpenStritMapServices {
         state: openStreetMap.state ?? '',
       );
     } else {
-      log('ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
+     // log('ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
       CustomToast.errorToast(text: 'Please try again');
       throw Exception('Failed to load album');
     }
@@ -85,7 +85,7 @@ class OpenStritMapServices {
       }
       return placeMarks;
     } else {
-      log('ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
+     // log('ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
       CustomToast.errorToast(
           text: 'ERROR IN CONVERT TO ADRESS FUNCTION : ${response.statusCode}');
 

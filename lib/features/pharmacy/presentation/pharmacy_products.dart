@@ -114,7 +114,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                   child: StillWorkingPage(
                 text:
                     "We are still working on our Pharmacy, will be soon available.",
-              )),
+              ),),
             const RowProductCategoryWidget(),
             if (pharmacyProvider.bannerImageList.isNotEmpty)
               SliverToBoxAdapter(
@@ -155,7 +155,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 6,
                         mainAxisSpacing: 6,
-                        mainAxisExtent: 368,
+                        mainAxisExtent: 384,
                       ),
                       itemBuilder: (context, index) {
                         return FadeInUp(
@@ -185,7 +185,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                   width: 56,
                   child: FloatingActionButton(
                     elevation: 12,
-                    tooltip: 'Add to cart',
+                    tooltip: 'Cart',
                     clipBehavior: Clip.antiAlias,
                     isExtended: true,
                     backgroundColor: BColors.darkblue,

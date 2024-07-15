@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
@@ -104,7 +102,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade {
   FutureResult<PharmacyOrderModel> updateProductApprovedDetails(
       {required String orderId,
       required PharmacyOrderModel orderProducts}) async {
-    log(orderId);
+
     try {
       await _firebaseFirestore
           .collection(FirebaseCollections.pharmacyOrder)
@@ -140,7 +138,6 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade {
 
       if (lastDoc != null) {
         query = query.startAfterDocument(lastDoc!);
-        log(lastDoc!.id.toString());
       }
       final snapshots = await query.limit(limit).get();
       if (snapshots.docs.length < limit || snapshots.docs.isEmpty) {
@@ -185,7 +182,6 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade {
 
       if (lastDoc != null) {
         query = query.startAfterDocument(lastDoc!);
-        log(lastDoc!.id.toString());
       }
       final snapshots = await query.limit(limit).get();
       if (snapshots.docs.length < limit || snapshots.docs.isEmpty) {

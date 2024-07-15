@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -212,9 +210,7 @@ class _AddressBottomSheetState extends State<AddressBottomSheet> {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               } else {
-                                log(widget.userAddressModel!
-                                    .toMap()
-                                    .toString());
+                                
                                 LoadingLottie.showLoading(
                                     context: context, text: 'Updating...');
 

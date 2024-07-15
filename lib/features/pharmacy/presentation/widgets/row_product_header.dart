@@ -26,7 +26,7 @@ class RowProductCategoryWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
               child: (pharmacyProvider.pharmacyCategoryList.isNotEmpty)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,7 +76,7 @@ class RowProductCategoryWidget extends StatelessWidget {
             (pharmacyProvider.pharmacyCategoryList.isNotEmpty &&
                     pharmacyProvider.pharmacyCategoryList.length >= 4)
                 ? Padding(
-                    padding: const EdgeInsets.only(right: 24, bottom: 4),
+                    padding: const EdgeInsets.only(right: 24, bottom: 16),
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: ViewAllButton(

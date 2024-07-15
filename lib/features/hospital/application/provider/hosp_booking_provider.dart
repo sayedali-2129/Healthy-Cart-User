@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -36,7 +35,7 @@ class HospitalBookingProivder extends ChangeNotifier {
     iHospitalBookingFacade.getAcceptedOrders(userId: userId).listen(
       (event) {
         event.fold((err) {
-          log(err.errMsg);
+        //  log(err.errMsg);
           isLoading = false;
           notifyListeners();
         }, (success) {
@@ -59,7 +58,7 @@ class HospitalBookingProivder extends ChangeNotifier {
     final result = await iHospitalBookingFacade.cancelOrder(orderId: orderId);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to cancel booking');
-      log(err.errMsg);
+     // log(err.errMsg);
     }, (success) {
       if (fromPending == true) {
         pendingList.removeAt(index!);
@@ -81,9 +80,9 @@ class HospitalBookingProivder extends ChangeNotifier {
     final result =
         await iHospitalBookingFacade.getPendingOrders(userId: userId);
     result.fold((err) {
-      log('Error :: ${err.errMsg}');
+     // log('Error :: ${err.errMsg}');
     }, (success) {
-      log("SUCCES:${success.length}");
+     // log("SUCCES:${success.length}");
       pendingList = success;
     });
     isLoading = false;
@@ -99,7 +98,7 @@ class HospitalBookingProivder extends ChangeNotifier {
         await iHospitalBookingFacade.getCompletedOrders(userId: userId);
 
     result.fold((err) {
-      log('ERROR :: ${err.errMsg}');
+      //log('ERROR :: ${err.errMsg}');
     }, (success) {
       completedBookings.addAll(success);
     });
@@ -135,7 +134,7 @@ class HospitalBookingProivder extends ChangeNotifier {
     final result =
         await iHospitalBookingFacade.getCancelledOrders(userId: userId);
     result.fold((err) {
-      log('ERROR :: ${err.errMsg}');
+    //  log('ERROR :: ${err.errMsg}');
     }, (success) {
       cancelledHospBooking.addAll(success);
     });
@@ -169,7 +168,7 @@ class HospitalBookingProivder extends ChangeNotifier {
         await iHospitalBookingFacade.getSingleOrderDoc(userId: userId);
 
     result.fold((err) {
-      log('ERRROR :: ${err.errMsg}');
+     // log('ERRROR :: ${err.errMsg}');
     }, (success) {
       singleOrderDoc = success;
     });
@@ -188,7 +187,7 @@ class HospitalBookingProivder extends ChangeNotifier {
         paymentMethod: hospitalpPaymentType!);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to accept booking');
-      log('Error :: ${err.errMsg}');
+      //log('Error :: ${err.errMsg}');
     }, (success) {
       CustomToast.sucessToast(text: success);
       sendFcmMessage(
@@ -196,7 +195,7 @@ class HospitalBookingProivder extends ChangeNotifier {
           body:
               '$userName accepted an order, Please check the status. Booking ID : $orderId',
           title: 'User Accepted An order');
-      log(fcmtoken);
+     // log(fcmtoken);
     });
   }
 
@@ -257,7 +256,7 @@ class HospitalBookingProivder extends ChangeNotifier {
   Future<void> allDoctorsCategoryWiseFetchInitData(
       {required BuildContext context, required String categoryId}) async {
     notifyListeners();
-    log('called $categoryId');
+   // log('called $categoryId');
     final placeMark =
         context.read<LocationProvider>().locallySavedDoctorplacemark!;
     if (allDoctorHomeList.isEmpty ||

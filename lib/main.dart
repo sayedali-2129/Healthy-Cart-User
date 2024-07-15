@@ -31,9 +31,9 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await configureDependancy();
-}
+// Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await configureDependancy();
+// }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

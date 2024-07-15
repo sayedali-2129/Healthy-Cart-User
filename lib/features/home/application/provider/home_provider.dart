@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -27,7 +26,7 @@ class HomeProvider with ChangeNotifier {
     final result = await iHomeFacade.getBanner();
     result.fold(
       (err) {
-        log("'ERROR IN PROVIDER getBanner(): ${err.errMsg}");
+       // log("'ERROR IN PROVIDER getBanner(): ${err.errMsg}");
       },
       (success) {
         homeBannerList = success;

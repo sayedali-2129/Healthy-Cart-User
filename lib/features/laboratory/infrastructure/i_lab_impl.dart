@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:developer' as log;
+//import 'dart:developer' as log;
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
 import 'package:healthy_cart_user/core/general/firebase_collection.dart';
@@ -218,7 +218,7 @@ class ILabImpl implements ILabFacade {
         );
 
         if (stateList.isNotEmpty) {
-          log.log(stateList.toString());
+         // log.log(stateList.toString());
 
           do {
             QuerySnapshot<Map<String, dynamic>> refreshedClass;
@@ -267,7 +267,7 @@ class ILabImpl implements ILabFacade {
               break;
             }
 
-            log.log('currentStateIndex=$currentStateIndex');
+           // log.log('currentStateIndex=$currentStateIndex');
           } while (currentStateIndex <= (stateList.length - 1));
         } else {
           lastdoc = null;
@@ -277,7 +277,7 @@ class ILabImpl implements ILabFacade {
 
       return right(docList.map((e) => LabModel.fromMap(e.data())).toList());
     } on FirebaseException catch (e) {
-      log.log(e.toString());
+     // log.log(e.toString());
       return left(
         MainFailure.firebaseException(errMsg: e.code),
       );

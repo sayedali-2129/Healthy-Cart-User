@@ -92,7 +92,7 @@ class _PrescriptionOrderAddressScreenState
       bottomNavigationBar: GestureDetector(
         onTap: () {
           log('pharmacy product and quantity details :::${pharmacyProvider.productAndQuantityDetails.length}');
-          if (pharmacyProvider.selectedRadio == 'Home' &&
+          if (pharmacyProvider.selectedRadio == pharmacyProvider.homeDelivery &&
               addressProvider.selectedAddress == null) {
             CustomToast.errorToast(text: 'Please select an address.');
             return;
@@ -108,8 +108,7 @@ class _PrescriptionOrderAddressScreenState
                     context: context, text: 'Please wait...');
                 pharmacyProvider.saveImage().whenComplete(
                   () {
-                    pharmacyProvider.createProductOrderDetails(
-                        context: context);
+                    pharmacyProvider.createProductOrderDetails(context: context);
                   },
                 );
               },

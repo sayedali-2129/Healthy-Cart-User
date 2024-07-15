@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -24,7 +23,7 @@ class LocationProvider extends ChangeNotifier {
     bool? isPermissionEnabled;
     await iLocationFacade.getLocationPermisson().then(
       (value) {
-        log(value.toString());
+     
         isPermissionEnabled = value;
         locationGetLoading = false;
         notifyListeners();
@@ -40,7 +39,7 @@ class LocationProvider extends ChangeNotifier {
     result.fold((error) {
       locationGetLoading =
           false; // this is the loading in the on the initial page
-      log("ERROR IN CURRENT LOCATION:$error");
+  
       searchLoading = false;
     }, (placeMark) {
       selectedPlaceMark = placeMark;
@@ -54,7 +53,7 @@ class LocationProvider extends ChangeNotifier {
     notifyListeners();
     final result = await iLocationFacade.getSearchPlaces(searchController.text);
     result.fold((error) {
-      log("ERROR IN Search LOCATION:$error");
+    
       CustomToast.errorToast(text: error.errMsg);
       searchLoading = false;
       notifyListeners();
@@ -80,7 +79,7 @@ class LocationProvider extends ChangeNotifier {
     }
     locationGetLoading = true;
     notifyListeners();
-    log('Location selected::::$selectedPlaceMark');
+ 
     final result = await iLocationFacade.updateUserLocation(
         selectedPlaceMark!, userId ?? '');
     result.fold((failure) {
@@ -151,12 +150,11 @@ class LocationProvider extends ChangeNotifier {
       () {
         if (locationSetter == 1) {
           locallySavedHospitalplacemark = selectedPlaceMark;
-          log(selectedPlaceMark!.toMap().toString());
-          log('Called::: Hospital Place Mark');
+
           notifyListeners();
         } else if (locationSetter == 2) {
           locallySavedLabortaryplacemark = selectedPlaceMark;
-          log('Called::: Labortary Place Mark');
+     
           notifyListeners();
         } else if (locationSetter == 3) {
           locallySavedPharmacyplacemark = selectedPlaceMark;
@@ -167,14 +165,14 @@ class LocationProvider extends ChangeNotifier {
         } else if (locationSetter == 5) {
           locallySavedDoctorplacemark = selectedPlaceMark;
         } else {
-          log('Called:::');
+   
           locallySavedHospitalplacemark = selectedPlaceMark;
           locallySavedLabortaryplacemark = selectedPlaceMark;
           locallySavedPharmacyplacemark = selectedPlaceMark;
           localsavedHomeplacemark = selectedPlaceMark;
           locallySavedDoctorplacemark = selectedPlaceMark;
         }
-        log(isUserEditProfile.toString());
+  
         onSucess.call();
         locationGetLoading = false;
         CustomToast.sucessToast(text: 'Location added sucessfully');

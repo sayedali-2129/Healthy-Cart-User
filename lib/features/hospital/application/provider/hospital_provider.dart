@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +101,7 @@ class HospitalProvider with ChangeNotifier {
     final result =
         await iHospitalFacade.getHospitalBanner(hospitalId: hospitalId);
     result.fold((err) {
-      log('ERROR :: ${err.errMsg}');
+     // log('ERROR :: ${err.errMsg}');
     }, (success) {
       hospitalBanner = success;
     });
@@ -121,7 +121,7 @@ class HospitalProvider with ChangeNotifier {
     result.fold((err) {
       CustomToast.errorToast(
           text: "Couldn't able to fetch hospital categories.");
-      log('ERROR IN CATEGORY :: ${err.errMsg}');
+      //log('ERROR IN CATEGORY :: ${err.errMsg}');
     }, (success) {
       hospitalCategoryList = success;
     });
@@ -142,7 +142,7 @@ class HospitalProvider with ChangeNotifier {
     result.fold((err) {
       CustomToast.errorToast(
           text: "Couldn't able to fetch hospital categories.");
-      log('ERROR IN CATEGORY :: ${err.errMsg}');
+    //  log('ERROR IN CATEGORY :: ${err.errMsg}');
     }, (success) {
       hospitalAllCategoryList = success;
     });
@@ -164,9 +164,9 @@ class HospitalProvider with ChangeNotifier {
 
     result.fold((err) {
       CustomToast.errorToast(text: 'Unable to fetch doctors.');
-      log('ERROR IN GET DOCTOR :: ${err.errMsg}');
+     // log('ERROR IN GET DOCTOR :: ${err.errMsg}');
     }, (success) {
-          log('SEARCH DOCTOR LENGTH:::::::${success.length}');
+         // log('SEARCH DOCTOR LENGTH:::::::${success.length}');
       final uniqueDoctors = success
           .where((doctor) => !categoryWiseDoctorIds.contains(doctor.id))
           .toList();
@@ -222,7 +222,7 @@ class HospitalProvider with ChangeNotifier {
     final result =
         await iHospitalFacade.getCategoryWiseHospital(hospitalId: hospitalId);
     result.fold((err) {
-      log('ERROR :: ${err.errMsg}');
+    //  log('ERROR :: ${err.errMsg}');
     }, (success) {
       selectedCategoryWiseHospital = success;
     });
@@ -242,7 +242,7 @@ class HospitalProvider with ChangeNotifier {
 
     result.fold((err) {
       CustomToast.errorToast(text: 'Unable to fetch doctors.');
-      log('ERROR IN GET DOCTOR :: ${err.errMsg}');
+    //  log('ERROR IN GET DOCTOR :: ${err.errMsg}');
     }, (success) {
       final uniqueDoctors =
           success.where((doctor) => !doctorIds.contains(doctor.id)).toList();
@@ -341,7 +341,7 @@ class HospitalProvider with ChangeNotifier {
         hospitalBookingModel: hospitalBookingModel!);
     result.fold(
       (err) {
-        log('error in addHospitalOrders() :: ${err.errMsg}');
+      //  log('error in addHospitalOrders() :: ${err.errMsg}');
       },
       (success) {
         sendFcmMessage(
@@ -350,7 +350,7 @@ class HospitalProvider with ChangeNotifier {
                 'New Booking Received from $userName. Please check the details and accept the order',
             title: 'New Booking Received!!!');
         CustomToast.sucessToast(text: success);
-        log('Order Request Send Successfully');
+      //  log('Order Request Send Successfully');
       },
     );
     notifyListeners();
@@ -371,7 +371,7 @@ class HospitalProvider with ChangeNotifier {
       },
     );
     relatedSelectedDoctor = result;
-    log(relatedSelectedDoctor.toString());
+    //log(relatedSelectedDoctor.toString());
     notifyListeners();
   }
 
@@ -429,7 +429,7 @@ class HospitalProvider with ChangeNotifier {
     required BuildContext context,
   }) async {
     notifyListeners();
-    log('called');
+   // log('called');
     final placeMark =
         context.read<LocationProvider>().locallySavedHospitalplacemark!;
     if (hospitalList.isEmpty ||

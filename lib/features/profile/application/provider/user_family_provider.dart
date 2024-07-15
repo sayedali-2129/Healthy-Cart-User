@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class UserFamilyMembersProvider with ChangeNotifier {
     result.fold(
       (err) {
         CustomToast.errorToast(text: err.errMsg);
-        log('Error: ${err.errMsg}');
+        //log('Error: ${err.errMsg}');
       },
       (success) {
         CustomToast.sucessToast(text: 'Member added successfully');
@@ -70,14 +70,14 @@ class UserFamilyMembersProvider with ChangeNotifier {
     final result = await iUserProfileFacade.getUserFamilyMember(userId: userId);
     result.fold(
       (err) {
-        log('Error: ${err.errMsg}');
+       // log('Error: ${err.errMsg}');
         isLoading = false;
         notifyListeners();
       },
       (memberList) {
-        log('user member fetched');
+       // log('user member fetched');
         userFamilyMemberList = memberList;
-        log('userFamilyMemberList: ${userFamilyMemberList.length}');
+        //log('userFamilyMemberList: ${userFamilyMemberList.length}');
         if (userFamilyMemberList.isNotEmpty) {
           selectedFamilyMember = userFamilyMemberList.first;
         }
@@ -108,13 +108,13 @@ class UserFamilyMembersProvider with ChangeNotifier {
     result.fold(
       (err) {
         CustomToast.errorToast(text: err.errMsg);
-        log('Error: ${err.errMsg}');
+       // log('Error: ${err.errMsg}');
       },
       (success) {
         CustomToast.sucessToast(text: 'User updated successfully');
         userFamilyMemberList.removeAt(index);
         userFamilyMemberList.insert(index, success);
-        log(success.toMap().toString());
+       // log(success.toMap().toString());
         clearFields();
       },
     );

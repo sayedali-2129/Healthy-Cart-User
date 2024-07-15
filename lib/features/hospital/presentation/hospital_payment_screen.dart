@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -186,8 +185,8 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                               context: context,
                               builder: (context) => PaymentTypeRadioHospital(
                                     onConfirm: () async {
-                                      log(ordersProvider.hospitalpPaymentType ??
-                                          'null');
+                                      // log(ordersProvider.hospitalpPaymentType ??
+                                      //     'null');
                                       if (ordersProvider.hospitalpPaymentType ==
                                           null) {
                                         CustomToast.infoToast(

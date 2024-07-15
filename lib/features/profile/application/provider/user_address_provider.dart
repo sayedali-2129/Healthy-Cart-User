@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -51,7 +49,7 @@ class UserAddressProvider with ChangeNotifier {
     result.fold(
       (err) {
         CustomToast.errorToast(text: err.errMsg);
-        log('Error: ${err.errMsg}');
+      //  log('Error: ${err.errMsg}');
       },
       (success) {
         CustomToast.sucessToast(text: 'User address added successfully');
@@ -72,14 +70,14 @@ class UserAddressProvider with ChangeNotifier {
     final result = await iUserProfileFacade.getUserAddress(userId: userId);
     result.fold(
       (err) {
-        log('Error: ${err.errMsg}');
+       // log('Error: ${err.errMsg}');
         isLoading = false;
         notifyListeners();
       },
       (addressList) {
-        log('user address fetched');
+       // log('user address fetched');
         userAddressList = addressList;
-        log('userAddressList: ${userAddressList.length}');
+       // log('userAddressList: ${userAddressList.length}');
         if (userAddressList.isNotEmpty) {
           selectedAddress = userAddressList.first;
         }
@@ -111,13 +109,13 @@ class UserAddressProvider with ChangeNotifier {
     result.fold(
       (err) {
         CustomToast.errorToast(text: err.errMsg);
-        log('Error: ${err.errMsg}');
+      //  log('Error: ${err.errMsg}');
       },
       (success) {
         CustomToast.sucessToast(text: 'User updated successfully');
         userAddressList.removeAt(index);
         userAddressList.insert(index, success);
-        log(success.toMap().toString());
+        //log(success.toMap().toString());
         clearFields();
       },
     );

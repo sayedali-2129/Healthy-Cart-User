@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
@@ -237,7 +236,7 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                                                             ImageSource.camera)
                                                     .whenComplete(() =>
                                                         EasyNavigation.pop(
-                                                            context: context));
+                                                            context: context),);
                                               },
                                               galleryButtonTap: () {
                                                 pharmacyProvider
@@ -292,8 +291,7 @@ class _PharmacyCheckOutScreenState extends State<PharmacyCheckOutScreen> {
                 pharmacyProvider.setDeliveryAddressAndUserData(
                     userData: authProvider.userFetchlDataFetched ?? UserModel(),
                     address: addressProvider.selectedAddress);
-                LoadingLottie.showLoading(
-                    context: context, text: 'Please wait...');
+                LoadingLottie.showLoading( context: context, text: 'Please wait...');
                 pharmacyProvider.saveImage().whenComplete(
                   () {
                     pharmacyProvider.createProductOrderDetails(

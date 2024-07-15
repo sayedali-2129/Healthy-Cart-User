@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,7 +15,6 @@ class LocationService {
     // Check if location services are enabled
     isServiceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isServiceEnabled) {
-      log('called;;;');
       // Request to enable location services
       permission = await Geolocator.requestPermission();
     }
@@ -70,7 +67,6 @@ class LocationService {
     final prefs = await SharedPreferences.getInstance();
     final placeMarkJson = prefs.getString(_locationKey);
     if (placeMarkJson != null) {
-      log(placeMarkJson, name: "JSON");
       return PlaceMark.fromJson(placeMarkJson);
     }
     return null;

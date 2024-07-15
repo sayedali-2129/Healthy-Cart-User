@@ -99,7 +99,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                       ? NoDataInSelectedLocation(
                           locationTitle:
                               '${locationProvider.locallySavedPharmacyplacemark?.localArea}',
-                          typeOfService: 'Pharmacies',
+                          typeOfService: 'pharmacies',
                         )
                       : null),
               if (pharmacyProvider.isFirebaseDataLoding == true &&

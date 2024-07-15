@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -363,8 +362,6 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                             ? 5
                             : hospitalProvider.doctorsList.length,
                         itemBuilder: (context, doctorIndex) {
-                          log(hospitalProvider.doctorsList[doctorIndex].id ??
-                              'NO IDDD');
                           return GestureDetector(
                             onTap: () {
                               EasyNavigation.push(

@@ -13,11 +13,11 @@ class ProfileButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 2),
+      padding: const EdgeInsets.only(bottom: 4),
       child: GestureDetector(
         onTap: onPressed,
         child: Container(
-          height: 60,
+          height: 56,
           width: double.infinity,
           color: BColors.profileButtonGrey,
           child: Padding(
@@ -28,9 +28,9 @@ class ProfileButtons extends StatelessWidget {
                 Text(
                   buttonName,
                   style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w600),
+                      fontSize: 14, fontWeight: FontWeight.w600),
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded)
+                const Icon(Icons.arrow_forward_ios_rounded, size: 22,)
               ],
             ),
           ),
