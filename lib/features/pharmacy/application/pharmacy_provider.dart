@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
@@ -478,6 +479,7 @@ class PharmacyProvider extends ChangeNotifier {
 
 // creating a cart or getting the product cart id and quantity from user document
   Future<void> createOrGetProductToUserCart() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
     if (productAllList.isEmpty) return; // if no product present no need to get
     fetchLoading = true;
     final result = await _iPharmacyFacade.createOrGetProductToUserCart(
@@ -486,7 +488,8 @@ class PharmacyProvider extends ChangeNotifier {
     );
     result.fold(
       (failure) {
-        CustomToast.errorToast(text: "Something went wrong");
+        log(failure.errMsg);
+        CustomToast.errorToast(text: failure.errMsg);
         fetchLoading = false;
         notifyListeners();
       },

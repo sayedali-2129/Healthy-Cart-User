@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
@@ -107,7 +106,9 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
                             EasyNavigation.push(
                                 type: PageTransitionType.topToBottom,
                                 context: context,
-                                page:  AllDoctorsSearchScreen(category: widget.category,));
+                                page: AllDoctorsSearchScreen(
+                                  category: widget.category,
+                                ));
                           },
                           showCursor: false,
                           readOnly: true,

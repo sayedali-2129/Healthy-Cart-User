@@ -242,7 +242,7 @@ class HospAcceptCard extends StatelessWidget {
                                         TextStyle(fontWeight: FontWeight.w500),
                                   )
                                 : Text(
-                                    'Youe time slot is changed to :',
+                                    'Your time slot changed to :',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: BColors.red),
