@@ -1,6 +1,7 @@
 //import 'dart:developer' as log;
 import 'dart:io';
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
@@ -11,9 +12,9 @@ import 'package:healthy_cart_user/features/location_picker/location_picker/domai
 import 'package:healthy_cart_user/features/pharmacy/domain/i_pharmacy_facade.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_banner_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_category_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_product_model.dart';
 import 'package:healthy_cart_user/utils/constants/enums/location_enum.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
@@ -683,6 +684,8 @@ class IPharmacyImpl implements IPharmacyFacade {
     required String pharmacyId,
     required String userId,
   }) async {
+    log.log('userId $userId');
+    log.log('pharmacyId $pharmacyId');
     try {
       final docRef = _firebaseFirestore
           .collection(FirebaseCollections.userCollection)

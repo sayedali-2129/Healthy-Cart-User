@@ -106,7 +106,9 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
                             EasyNavigation.push(
                                 type: PageTransitionType.topToBottom,
                                 context: context,
-                                page:  AllDoctorsSearchScreen(category: widget.category,));
+                                page: AllDoctorsSearchScreen(
+                                  category: widget.category,
+                                ));
                           },
                           showCursor: false,
                           readOnly: true,
