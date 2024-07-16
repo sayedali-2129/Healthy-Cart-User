@@ -146,7 +146,7 @@ class DoctorBookingScreen extends StatelessWidget {
                       
                     ),
                     type: PageTransitionType.rightToLeft,
-                    duration: 250);
+                   );
               }
             },
             child: Container(

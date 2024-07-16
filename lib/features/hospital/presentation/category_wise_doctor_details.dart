@@ -121,7 +121,7 @@ class _CategoryWiseDoctorDetailsScreenState
                               null) {
                             EasyNavigation.push(
                                 type: PageTransitionType.rightToLeft,
-                                duration: 250,
+                              
                                 context: context,
                                 page: const ProfileSetup());
                             CustomToast.infoToast(text: 'Fill user details');
@@ -135,7 +135,7 @@ class _CategoryWiseDoctorDetailsScreenState
                                   doctorModel: doctor ?? DoctorModel(),
                                 ),
                                 type: PageTransitionType.rightToLeft,
-                                duration: 250);
+                                );
                           }
                         }
                       : () {

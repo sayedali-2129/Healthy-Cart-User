@@ -113,7 +113,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                             null) {
                           EasyNavigation.push(
                               type: PageTransitionType.rightToLeft,
-                              duration: 250,
+                             
                               context: context,
                               page: const ProfileSetup());
                           CustomToast.infoToast(text: 'Fill user details');
@@ -125,7 +125,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                 doctorModel: doctor ?? DoctorModel(),
                               ),
                               type: PageTransitionType.rightToLeft,
-                              duration: 250);
+                            
+                              );
                         }
                       },
                     ),

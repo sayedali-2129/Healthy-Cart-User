@@ -223,7 +223,7 @@ class HospAcceptCard extends StatelessWidget {
                                 EasyNavigation.push(
                                     context: context,
                                     type: PageTransitionType.fade,
-                                    duration: 200,
+                                   
                                     page: HospitalPaymentScreen(
                                       bookingModel: hospitalBookingModel,
                                     ));

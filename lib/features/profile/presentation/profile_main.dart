@@ -77,7 +77,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         onPressed: () {
                           EasyNavigation.push(
                             type: PageTransitionType.rightToLeft,
-                            duration: 300,
+                           
                             context: context,
                             page: ProfileSetup(
                               userModel: authProvider.userFetchlDataFetched,
@@ -90,7 +90,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         onPressed: () {
                           EasyNavigation.push(
                               type: PageTransitionType.rightToLeft,
-                              duration: 300,
+                              
                               context: context,
                               page: MyAddressScreen(
                                 userId: authProvider.userFetchlDataFetched?.id?? '',
@@ -102,7 +102,7 @@ class _ProfileMainState extends State<ProfileMain> {
                         onPressed: () {
                            EasyNavigation.push(
                               type: PageTransitionType.rightToLeft,
-                              duration: 300,
+                             
                               context: context,
                               page: MyFamilyScreen(
                                 userId: authProvider.userFetchlDataFetched?.id?? '',
@@ -117,7 +117,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             context: context,
                             page: const HospitalBookingTab(),
                             type: PageTransitionType.rightToLeft,
-                            duration: 300,
+                     
                           );
                         },
                       ),
@@ -128,7 +128,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             context: context,
                             page: const LabOrdersTab(),
                             type: PageTransitionType.rightToLeft,
-                            duration: 300,
+                           
                           );
                         },
                       ),
@@ -139,7 +139,7 @@ class _ProfileMainState extends State<ProfileMain> {
                             context: context,
                             page: const PharmacyOrdersTab(),
                             type: PageTransitionType.rightToLeft,
-                            duration: 300,
+                           
                           );
                         },
                       ),

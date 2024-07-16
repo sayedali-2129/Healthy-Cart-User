@@ -115,7 +115,7 @@ class HomeSliverAppbar extends StatelessWidget {
                             EasyNavigation.push(
                                 context: context,
                                 type: PageTransitionType.topToBottom,
-                                duration: 400,
+                                
                                 page: const NotificationScreen());
                           },
                           child: const Icon(
@@ -219,7 +219,7 @@ class MainHomeAppBar extends StatelessWidget {
                             EasyNavigation.push(
                                 context: context,
                                 type: PageTransitionType.topToBottom,
-                                duration: 400,
+                          
                                 page: const NotificationScreen());
                           },
                           child: const Icon(

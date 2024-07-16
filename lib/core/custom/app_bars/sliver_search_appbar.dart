@@ -7,7 +7,8 @@ class CustomSliverSearchAppBar extends StatelessWidget {
     required this.onTapBackButton,
     required this.searchOnChanged,
     required this.searchHint,
-    this.controller, this.onSubmitted,
+    this.controller, 
+    this.onSubmitted,
   });
   final String searchHint;
   final VoidCallback onTapBackButton;
@@ -22,7 +23,7 @@ class CustomSliverSearchAppBar extends StatelessWidget {
       pinned: true,
       floating: true,
       forceElevated: true,
-      toolbarHeight: 80,
+      toolbarHeight: 72,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           bottomRight: Radius.circular(12),
@@ -38,7 +39,7 @@ class CustomSliverSearchAppBar extends StatelessWidget {
       ),
       centerTitle: true,
       title: Padding(
-        padding: const EdgeInsets.only(right: 8, bottom: 8, top: 8),
+        padding: const EdgeInsets.only(right: 8, bottom: 8, top: 10),
         child: TextField(
           onSubmitted: onSubmitted,
           onChanged: searchOnChanged,

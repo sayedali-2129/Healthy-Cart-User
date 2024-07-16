@@ -72,6 +72,7 @@ class _LaborataryMainSearchState extends State<PharmaciesMainSearch> {
                 )
               else if (pharmacyProvider.pharmacySearchList.isEmpty)
                 SliverFillRemaining(
+                  hasScrollBody: false,
                   child: NoDataImageWidget(
                       text: (pharmacyProvider.searchController.text == '')
                           ? 'Search results will be shown here.'
@@ -99,9 +100,7 @@ class _LaborataryMainSearchState extends State<PharmaciesMainSearch> {
                                 CustomToast.infoToast(
                                     text: 'Login to continue !');
                               } else {
-                                if (authProvider
-                                        .userFetchlDataFetched!.userName ==
-                                    null) {
+                                if (authProvider.userFetchlDataFetched!.userName == null) {
                                   EasyNavigation.push(
                                       context: context,
                                       page: const ProfileSetup());
@@ -114,12 +113,11 @@ class _LaborataryMainSearchState extends State<PharmaciesMainSearch> {
                                               .pharmacyList[index]
                                               .selectedCategoryId ??
                                           [],
-                                      pharmacy:
-                                          pharmacyProvider.pharmacyList[index]);
+                                      pharmacy: pharmacyProvider.pharmacyList[index],);
                                   EasyNavigation.push(
                                       type: PageTransitionType.rightToLeft,
                                       context: context,
-                                      page: const PharmacyProductScreen());
+                                      page: const PharmacyProductScreen(),);
                                 }
                               }
                             },

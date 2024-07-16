@@ -152,7 +152,7 @@ class _HospitalDoctorsScreenState extends State<HospitalDoctorsScreen> {
                                   hospitalProvider.doctorsList[doctorIndex],
                             ),
                             type: PageTransitionType.rightToLeft,
-                            duration: 250);
+                            );
                       },
                       child: FadeIn(child: DoctorCard(
                         fromHomePage: false,

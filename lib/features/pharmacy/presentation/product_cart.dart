@@ -235,8 +235,7 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                               if (pharmacyProvider
                                   .cartContainsOutOfStockProduct()) {
                                 CustomToast.errorToast(
-                                    text:
-                                        'Cart contains item out of stock, please remove the item.');
+                                    text: 'Cart contains item out of stock, please remove the item.');
                                 return;
                               }
                               if (pharmacyProvider
@@ -258,8 +257,7 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                                         if (pharmacyProvider.selectedRadio ==
                                             null) {
                                           CustomToast.errorToast(
-                                              text:
-                                                  'Select a delivery type to check out.');
+                                              text:'Select a delivery type to check out.');
                                           return;
                                         }
                                         EasyNavigation.pop(context: context);
@@ -285,7 +283,8 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'Montserrat',
-                                  color: BColors.white),
+                                  color: BColors.white,
+                                  ),
                             ),
                           ),
                         ],

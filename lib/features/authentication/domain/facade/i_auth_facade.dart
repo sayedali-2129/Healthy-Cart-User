@@ -12,5 +12,5 @@ abstract class IAuthFacade {
   Stream<Either<MainFailure, UserModel>> userStreamFetchData(String userId);
 
   Future<Either<MainFailure, String>> userLogOut();
-  Future<void> cancelStream();
+
 }

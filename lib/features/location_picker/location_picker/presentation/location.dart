@@ -13,12 +13,29 @@ import 'package:healthy_cart_user/utils/constants/lottie/lotties.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class LocationPage extends StatelessWidget {
+class LocationPage extends StatefulWidget {
   const LocationPage({
     super.key,
     required this.locationSetter,
   });
   final int locationSetter;
+
+  @override
+  State<LocationPage> createState() => _LocationPageState();
+}
+
+class _LocationPageState extends State<LocationPage> {
+  @override
+  void initState() {
+         WidgetsBinding.instance.addPostFrameCallback(
+          (timeStamp) {
+            context.read<LocationProvider>().setUserId(context
+                    .read<AuthenticationProvider>()
+                    .userFetchlDataFetched?.id);
+          },
+        );
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +82,7 @@ class LocationPage extends StatelessWidget {
                                           locationProvider.setLocationOfUser(
                                             context: context,
                                             isUserEditProfile: false,
-                                            locationSetter: locationSetter,
+                                            locationSetter: widget.locationSetter,
                                             onSucess: () {
                                               EasyNavigation.pushReplacement(
                                                   context: context,
@@ -77,7 +94,7 @@ class LocationPage extends StatelessWidget {
                                           locationProvider.saveLocationLocally(
                                             isUserEditProfile: false,
                                             context: context,
-                                            locationSetter: locationSetter,
+                                            locationSetter: widget.locationSetter,
                                             onSucess: () {
                                               EasyNavigation.pushReplacement(
                                                   context: context,
@@ -98,11 +115,12 @@ class LocationPage extends StatelessWidget {
                             },
                             buttonWidget: const Text(
                               'Pick Your Location',
-                                style: TextStyle(
+                              style: TextStyle(
                                   fontFamily: 'Montserrat',
-                                    color: BColors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600),),
+                                  color: BColors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
                             buttonColor: BColors.darkblue,
                           ),
                   ],

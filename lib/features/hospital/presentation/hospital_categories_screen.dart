@@ -60,7 +60,7 @@ class _HospitalCategoriesScreenState extends State<HospitalCategoriesScreen> {
                     EasyNavigation.push(
                         context: context,
                         type: PageTransitionType.rightToLeft,
-                        duration: 250,
+                        
                         page: HospitalDoctorsScreen(
                           hospitalDetails: widget.hospitalDetails,
                           category: category,
