@@ -71,6 +71,7 @@ class _LaborataryMainSearchState extends State<LaboratoriesMainSearch> {
                 )
               else if (labProvider.labSearchList.isEmpty)
                 SliverFillRemaining(
+                  hasScrollBody: false,
                   child: NoDataImageWidget(
                       text: (labProvider.labSearchController.text == '')
                           ? 'Search results will be shown here.'
@@ -99,7 +100,6 @@ class _LaborataryMainSearchState extends State<LaboratoriesMainSearch> {
                                 EasyNavigation.push(
                                     context: context,
                                     type: PageTransitionType.rightToLeft,
-                                    duration: 250,
                                     page: LabDetailsScreen(
                                       labId: labDetails.id!,
                                       index: index,

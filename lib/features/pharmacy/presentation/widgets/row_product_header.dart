@@ -84,7 +84,8 @@ class RowProductCategoryWidget extends StatelessWidget {
                           EasyNavigation.push(
                               context: context,
                               type: PageTransitionType.leftToRight,
-                              page: const PharmacyCategoriesScreen());
+                              page: const PharmacyCategoriesScreen(),
+                              );
                         },
                       ),
                     ),
@@ -122,7 +123,7 @@ class RowProductCategoryWidget extends StatelessWidget {
                   );
                 },
               ),
-            ): const Gap(0)
+            ): const SizedBox(),
           ],
         ),
       );

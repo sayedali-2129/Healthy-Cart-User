@@ -221,7 +221,7 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                                       'Your Booking is successfully completed!'),
                                               type: PageTransitionType
                                                   .bottomToTop,
-                                              duration: 200);
+                                              );
                                           ordersProvider.hospitalpPaymentType ==
                                               null;
                                           ordersProvider.singleOrderDoc = null;

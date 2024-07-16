@@ -74,7 +74,8 @@ class _PharmacyMainState extends State<PharmacyMain> {
                   EasyNavigation.push(
                       type: PageTransitionType.topToBottom,
                       context: context,
-                      page: const PharmaciesMainSearch());
+                      page: const PharmaciesMainSearch(),
+                      );
                 },
                 locationText:
                     "${locationProvider.locallySavedPharmacyplacemark?.localArea},${locationProvider.locallySavedPharmacyplacemark?.district},${locationProvider.locallySavedPharmacyplacemark?.state}",
@@ -90,7 +91,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                           pharmacyProvider.pharmacyFetchInitData(
                               context: context);
                         },
-                      ));
+                      ),);
                 },
               ),
               SliverToBoxAdapter(
@@ -189,7 +190,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                           context: context,
                           page: const PharmacyOrdersTab(),
                           type: PageTransitionType.bottomToTop,
-                          duration: 200);
+                          );
                     },
                   ),
                   if (orderProvider.singleOrderDoc != null)

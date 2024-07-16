@@ -55,12 +55,8 @@ class IAuthImpl implements IAuthFacade {
     required String smsCode,
   }) async {
     try {
-      final PhoneAuthCredential phoneAuthCredential =
-          PhoneAuthProvider.credential(
-              verificationId: verificationId ?? "", smsCode: smsCode);
-
-      UserCredential userCredential =
-          await _firebaseAuth.signInWithCredential(phoneAuthCredential);
+      final PhoneAuthCredential phoneAuthCredential =  PhoneAuthProvider.credential(verificationId: verificationId!, smsCode: smsCode);
+      UserCredential userCredential = await _firebaseAuth.signInWithCredential(phoneAuthCredential);
 
       await saveUser(
         phoneNo: userCredential.user!.phoneNumber!,
@@ -101,8 +97,7 @@ class IAuthImpl implements IAuthFacade {
                   fcmToken: fcmToken,
                   id: uid,
                   isActive: true,
-                )
-                .toMap(),
+                ).toMap(),
           );
     }
   }
@@ -134,15 +129,12 @@ class IAuthImpl implements IAuthFacade {
     yield* hospitalStreamController.stream;
   }
 
-  @override
-  Future<void> cancelStream() async {
-    await _streamSubscription.cancel();
-  }
+
 
   @override
   Future<Either<MainFailure, String>> userLogOut() async {
     try {
-      cancelStream();
+      await _streamSubscription.cancel();
       await _firebaseAuth.signOut();
       return right('Sucessfully Logged Out');
     } catch (e) {

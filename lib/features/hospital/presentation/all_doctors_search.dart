@@ -33,7 +33,6 @@ class _AllDoctorsSearchScreenState extends State<AllDoctorsSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
       return Scaffold(
         body: PopScope(
@@ -75,6 +74,7 @@ class _AllDoctorsSearchScreenState extends State<AllDoctorsSearchScreen> {
                 )
               else if (hospitalProvider.categoryWiseDoctorsList.isEmpty)
                 SliverFillRemaining(
+                    hasScrollBody: false,
                     child: NoDataImageWidget(
                         text:
                             (hospitalProvider.doctorSearchController.text == '')
@@ -89,13 +89,13 @@ class _AllDoctorsSearchScreenState extends State<AllDoctorsSearchScreen> {
                     itemBuilder: (context, doctorIndex) => GestureDetector(
                       onTap: () {
                         EasyNavigation.push(
-                            context: context,
-                            page: CategoryWiseDoctorDetailsScreen(
-                              doctorModel: hospitalProvider
-                                  .categoryWiseDoctorsList[doctorIndex],
-                            ),
-                            type: PageTransitionType.rightToLeft,
-                            duration: 250);
+                          context: context,
+                          page: CategoryWiseDoctorDetailsScreen(
+                            doctorModel: hospitalProvider
+                                .categoryWiseDoctorsList[doctorIndex],
+                          ),
+                          type: PageTransitionType.rightToLeft,
+                        );
                       },
                       child: FadeIn(
                         child: DoctorCard(

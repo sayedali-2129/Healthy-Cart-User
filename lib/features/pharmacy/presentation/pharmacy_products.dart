@@ -9,7 +9,7 @@ import 'package:healthy_cart_user/features/pharmacy/presentation/product_cart.da
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/ad_pharmacy_slider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/grid_product.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_product_header.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/search_list.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/product_search_list.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -99,22 +99,21 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                 ),
               ),
             ),
-            if (pharmacyProvider.fetchLoading == true &&
-                pharmacyProvider.productAllList.isEmpty &&
-                pharmacyProvider.pharmacyCategoryList.isEmpty)
+            if (pharmacyProvider.fetchLoading == true &&(pharmacyProvider.productAllList.isEmpty ||
+                pharmacyProvider.pharmacyCategoryList.isEmpty))
               const SliverFillRemaining(
                 child: Center(
                   child: LoadingIndicater(),
                 ),
               )
             else if (pharmacyProvider.fetchLoading == false &&
-                pharmacyProvider.productAllList.isEmpty &&
-                pharmacyProvider.pharmacyCategoryList.isEmpty)
+                (pharmacyProvider.productAllList.isEmpty &&
+                pharmacyProvider.pharmacyCategoryList.isEmpty))
               const SliverFillRemaining(
                   child: StillWorkingPage(
-                text:
-                    "We are still working on our Pharmacy, will be soon available.",
+                text: "We are still working on our Pharmacy, will be soon available.",
               ),),
+              if(pharmacyProvider.pharmacyCategoryList.isNotEmpty&&pharmacyProvider.productAllList.isNotEmpty)
             const RowProductCategoryWidget(),
             if (pharmacyProvider.bannerImageList.isNotEmpty)
               SliverToBoxAdapter(
@@ -155,7 +154,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 6,
                         mainAxisSpacing: 6,
-                        mainAxisExtent: 384,
+                        mainAxisExtent: 376,
                       ),
                       itemBuilder: (context, index) {
                         return FadeInUp(

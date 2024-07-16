@@ -266,7 +266,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                     EasyNavigation.push(
                                         context: context,
                                         type: PageTransitionType.rightToLeft,
-                                        duration: 250,
+                                       
                                         page: HospitalCategoriesScreen(
                                           hospitalDetails: hospital,
                                         ));
@@ -303,7 +303,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                             context: context,
                                             type:
                                                 PageTransitionType.rightToLeft,
-                                            duration: 250,
+                                           
                                             page: HospitalDoctorsScreen(
                                               hospitalDetails: hospital,
                                               category: selectedCategory,
@@ -341,7 +341,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                 EasyNavigation.push(
                                     context: context,
                                     type: PageTransitionType.rightToLeft,
-                                    duration: 250,
+                                    
                                     page: HospitalDoctorsScreen(
                                       isCategoryWise: false,
                                       hospitalDetails: hospital,
@@ -373,7 +373,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                                     hospital: hospital,
                                   ),
                                   type: PageTransitionType.rightToLeft,
-                                  duration: 250);
+                                  );
                             },
                             child: FadeInRight(
                               duration: const Duration(milliseconds: 500),

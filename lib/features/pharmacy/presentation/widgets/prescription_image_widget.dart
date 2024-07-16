@@ -26,7 +26,6 @@ class PrescriptionImageWidget extends StatelessWidget {
               EasyNavigation.push(
                 context: context,
                 type: PageTransitionType.rightToLeft,
-                duration: 200,
                 page: ImageView(
                   imageFile: pharmacyProvider.prescriptionImageFile!,
                 ),

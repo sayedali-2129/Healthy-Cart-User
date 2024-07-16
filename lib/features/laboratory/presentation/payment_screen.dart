@@ -212,7 +212,7 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                     'Your Booking is successfully completed!'),
                                             type:
                                                 PageTransitionType.bottomToTop,
-                                            duration: 200);
+                                            );
                                       },
                                     );
                                   },
@@ -281,8 +281,7 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                         'Your Booking is Successfull!!',
                                                   ),
                                                   type: PageTransitionType
-                                                      .bottomToTop,
-                                                  duration: 300);
+                                                      .bottomToTop,);
                                               ordersProvider.paymentType ==
                                                   null;
                                               ordersProvider.singleOrderDoc =

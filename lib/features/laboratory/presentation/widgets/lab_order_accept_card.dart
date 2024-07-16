@@ -193,7 +193,6 @@ class _AcceptCardState extends State<AcceptCard> {
                                 EasyNavigation.push(
                                     context: context,
                                     type: PageTransitionType.fade,
-                                    duration: 200,
                                     page: LabPaymentScreen(
                                       labOrdersModel: orders,
                                     ));

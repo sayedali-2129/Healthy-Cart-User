@@ -84,8 +84,7 @@ class AuthenticationProvider extends ChangeNotifier {
     }, (userId) {
       userId = userId;
       Navigator.pop(context);
-      EasyNavigation.pushAndRemoveUntil(
-          context: context, page: const SplashScreen());
+      EasyNavigation.pushAndRemoveUntil(context: context, page: const SplashScreen());
     });
   }
 

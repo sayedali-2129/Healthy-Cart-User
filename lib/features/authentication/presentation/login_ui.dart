@@ -22,12 +22,11 @@ class LoginScreen extends StatelessWidget {
         appBar: AppBar(
           surfaceTintColor: BColors.white,
           backgroundColor: BColors.white,
-          leading: GestureDetector(
-              onTap: () {
-                EasyNavigation.pushReplacement(
+          leading: IconButton(onPressed: (){
+                            EasyNavigation.pushReplacement(
                     context: context, page: const BottomNavigationWidget());
-              },
-              child: const Icon(Icons.arrow_back_ios_new_rounded)),
+          }, icon: const Icon(Icons.arrow_back_ios_new_rounded),),
+
         ),
         body: GestureDetector(
           onTap: () {
