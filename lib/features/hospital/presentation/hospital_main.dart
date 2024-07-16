@@ -180,7 +180,7 @@ class _HospitalMainState extends State<HospitalMain> {
                             type: PageTransitionType.bottomToTop,
                             duration: 200);
                       }),
-                  if (bookingProvider.singleOrderDoc != null)
+                  if (bookingProvider.singleOrderDoc?.isUserAccepted == false)
                     const Positioned(
                       right: 2,
                       top: 2,

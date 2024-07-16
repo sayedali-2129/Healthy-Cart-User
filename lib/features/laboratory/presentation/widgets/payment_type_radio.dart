@@ -29,34 +29,6 @@ class PaymentTypeRadioLab extends StatelessWidget {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // ListTile(
-              //   horizontalTitleGap: 0,
-              //   leading: Radio(
-              //       activeColor: BColors.mainlightColor,
-              //       value: 'Online',
-              //       groupValue: provider.hospitalpPaymentType,
-              //       onChanged: (value) {
-              //         provider.setPaymentType(value);
-              //       }),
-              //   title: const Text('Online',
-              //       style:
-              //           TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-              // ),
-              // ListTile(
-              //   horizontalTitleGap: 0,
-              //   leading: Radio(
-              //     activeColor: BColors.mainlightColor,
-              //     value: 'Doorstep Payment',
-              //     groupValue: provider.hospitalpPaymentType,
-              //     onChanged: (value) {
-              //       provider.setPaymentType(value);
-              //     },
-              //   ),
-              //   title: const Text('Doorstep Payment',
-              //       style:
-              //           TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-              // ),
-
               RadioMenuButton(
                 value: 'Online',
                 groupValue: provider.paymentType,
