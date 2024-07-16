@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
@@ -206,13 +205,12 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                         ordersProvider.singleOrderDoc = null;
 
                                         EasyNavigation.push(
-                                            context: context,
-                                            page: const OrderRequestSuccessScreen(
-                                                title:
-                                                    'Your Booking is successfully completed!'),
-                                            type:
-                                                PageTransitionType.bottomToTop,
-                                            );
+                                          context: context,
+                                          page: const OrderRequestSuccessScreen(
+                                              title:
+                                                  'Your Booking is successfully completed!'),
+                                          type: PageTransitionType.bottomToTop,
+                                        );
                                       },
                                     );
                                   },
@@ -258,34 +256,41 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                 text: 'Loading...');
                                             if (ordersProvider.paymentType ==
                                                 'Doorstep Payment') {
-                                              await ordersProvider.acceptOrder(
-                                                  paymentStatus: 0,
-                                                  paymentType: ordersProvider
-                                                      .paymentType,
-                                                  userName: widget
-                                                      .labOrdersModel
-                                                      .userDetails!
-                                                      .userName!,
-                                                  fcmtoken: widget
-                                                      .labOrdersModel
-                                                      .labDetails!
-                                                      .fcmToken!,
-                                                  orderId: widget
-                                                      .labOrdersModel.id!);
+                                              await ordersProvider
+                                                  .acceptOrder(
+                                                      paymentStatus: 0,
+                                                      paymentType:
+                                                          ordersProvider
+                                                              .paymentType,
+                                                      userName: widget
+                                                          .labOrdersModel
+                                                          .userDetails!
+                                                          .userName!,
+                                                      fcmtoken: widget
+                                                          .labOrdersModel
+                                                          .labDetails!
+                                                          .fcmToken!,
+                                                      orderId: widget
+                                                          .labOrdersModel.id!)
+                                                  .whenComplete(
+                                                () {
+                                                  ordersProvider
+                                                      .singleOrderDoc = null;
+                                                  ordersProvider.paymentType ==
+                                                      null;
+                                                },
+                                              );
 
                                               await EasyNavigation.push(
-                                                  context: context,
-                                                  page:
-                                                      const OrderRequestSuccessScreen(
-                                                    title:
-                                                        'Your Booking is Successfull!!',
-                                                  ),
-                                                  type: PageTransitionType
-                                                      .bottomToTop,);
-                                              ordersProvider.paymentType ==
-                                                  null;
-                                              ordersProvider.singleOrderDoc =
-                                                  null;
+                                                context: context,
+                                                page:
+                                                    const OrderRequestSuccessScreen(
+                                                  title:
+                                                      'Your Booking is Successfull!!',
+                                                ),
+                                                type: PageTransitionType
+                                                    .bottomToTop,
+                                              );
 
                                               Navigator.pop(context);
                                             } else {
@@ -319,12 +324,22 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                               .fcmToken!,
                                                           orderId: widget
                                                               .labOrdersModel
-                                                              .id!);
+                                                              .id!)
+                                                      .whenComplete(
+                                                    () {
+                                                      ordersProvider
+                                                              .paymentType ==
+                                                          null;
+                                                      ordersProvider
+                                                              .singleOrderDoc =
+                                                          null;
+                                                    },
+                                                  );
                                                 },
                                               );
                                             }
                                           }
-                                          ordersProvider.singleOrderDoc = null;
+
                                           Navigator.pop(context);
                                         },
                                       ));

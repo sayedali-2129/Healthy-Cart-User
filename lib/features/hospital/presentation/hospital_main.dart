@@ -135,17 +135,17 @@ class _HospitalMainState extends State<HospitalMain> {
                                     text: 'Login to continue !');
                               } else {
                                 EasyNavigation.push(
-                                    context: context,
-                                    type: PageTransitionType.rightToLeft,
-                                    
-                                    page: HospitalDetails(
-                                      hospitalId: hospitalProvider
-                                          .hospitalList[index].id!,
-                                      categoryIdList: hospitalProvider
-                                              .hospitalList[index]
-                                              .selectedCategoryId ??
-                                          [],
-                                    ),);
+                                  context: context,
+                                  type: PageTransitionType.rightToLeft,
+                                  page: HospitalDetails(
+                                    hospitalId: hospitalProvider
+                                        .hospitalList[index].id!,
+                                    categoryIdList: hospitalProvider
+                                            .hospitalList[index]
+                                            .selectedCategoryId ??
+                                        [],
+                                  ),
+                                );
                               }
                             },
                           ),
@@ -175,13 +175,12 @@ class _HospitalMainState extends State<HospitalMain> {
                       ),
                       onPressed: () {
                         EasyNavigation.push(
-                            context: context,
-                            page: const HospitalBookingTab(),
-                            type: PageTransitionType.bottomToTop,
-                          
-                            );
+                          context: context,
+                          page: const HospitalBookingTab(),
+                          type: PageTransitionType.bottomToTop,
+                        );
                       }),
-                  if (bookingProvider.singleOrderDoc?.isUserAccepted == false)
+                  if (bookingProvider.singleOrderDoc != null)
                     const Positioned(
                       right: 2,
                       top: 2,

@@ -231,7 +231,9 @@ class ILabOrdersImpl implements ILabOrdersFacade {
     try {
       final responce = await _firestore
           .collection(FirebaseCollections.labOrdersCollection)
-          .where(Filter.and(Filter('isUserAccepted', isEqualTo: false),
+          .where(Filter.and(
+              Filter('userId', isEqualTo: userId),
+              Filter('isUserAccepted', isEqualTo: false),
               Filter('orderStatus', isEqualTo: 1)))
           .limit(1)
           .get();

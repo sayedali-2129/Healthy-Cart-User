@@ -133,7 +133,6 @@ class _LabMainState extends State<LabMain> {
                             EasyNavigation.push(
                               context: context,
                               type: PageTransitionType.rightToLeft,
-                              
                               page: LabDetailsScreen(
                                 index: index,
                                 labId: labProvider.labList[index].id!,
@@ -168,10 +167,10 @@ class _LabMainState extends State<LabMain> {
                       ),
                       onPressed: () {
                         EasyNavigation.push(
-                            context: context,
-                            page: const LabOrdersTab(),
-                            type: PageTransitionType.bottomToTop,
-                            );
+                          context: context,
+                          page: const LabOrdersTab(),
+                          type: PageTransitionType.bottomToTop,
+                        );
                       }),
                   if (labOrders.singleOrderDoc != null)
                     const Positioned(
