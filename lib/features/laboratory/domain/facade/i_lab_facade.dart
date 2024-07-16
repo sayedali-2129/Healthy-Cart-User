@@ -25,4 +25,7 @@ abstract class ILabFacade {
   void clearLabortaryLocationData() {
     throw UnimplementedError('clearData is not implemented');
   }
+      FutureResult<LabModel>getSingleLab({
+    required String labId,
+  });
 }

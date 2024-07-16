@@ -229,11 +229,14 @@ class ProductDetailsScreen extends StatelessWidget {
                                         boxColor: BColors.offRed)),
                               ],
                             ),
-                      const Gap(24),
-                      if (productData.productType != null)
-                        ProductDetailsStraightWidget(
-                          title: 'Product type : ',
-                          text: '${productData.productType}',
+                    
+                      if (productData.productType != null && productData.productType!.isNotEmpty )
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24),
+                          child: ProductDetailsStraightWidget(
+                            title: 'Product type : ',
+                            text: '${productData.productType}',
+                          ),
                         ),
                       const Gap(16),
                       (productData.typeOfProduct != "Equipment")

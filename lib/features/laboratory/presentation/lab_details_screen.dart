@@ -25,9 +25,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class LabDetailsScreen extends StatefulWidget {
-  const LabDetailsScreen({super.key, required this.index, required this.labId});
-  final int index;
-  final String labId;
+  const LabDetailsScreen({super.key,});
+
 
   @override
   State<LabDetailsScreen> createState() => _LabDetailsScreenState();
@@ -40,8 +39,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        labProvider.getAllTests(labId: widget.labId);
-        labProvider.getLabBanner(labId: widget.labId);
+        labProvider.getAllTests(labId: labProvider.labId!);
+        labProvider.getLabBanner(labId: labProvider.labId!);
 
         // await labProvider.getDoorStepOnly(labId: widget.labId);
       },
@@ -55,7 +54,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     return Consumer3<LabProvider, AuthenticationProvider, UserAddressProvider>(
         builder: (context, labProvider, authProvider, addressProvider, _) {
-      final labList = labProvider.labList[widget.index];
+      final labList = labProvider.selectedLabData;
 
       return PopScope(
         onPopInvoked: (didPop) {
@@ -69,14 +68,14 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
             body: CustomScrollView(
               slivers: [
                 SliverCustomAppbar(
-                  title: labList.laboratoryName ?? 'Labortary',
+                  title: labList?.laboratoryName ?? 'Labortary',
                   onBackTap: () {
                     EasyNavigation.pop(context: context);
                   },
                 ),
                 if (labProvider.detailsScreenLoading == true &&
-                    labProvider.testList.isEmpty &&
-                    labProvider.doorStepTestList.isEmpty &&
+                        labProvider.testList.isEmpty ||
+                    labProvider.doorStepTestList.isEmpty ||
                     labProvider.labBannerList.isEmpty)
                   const SliverFillRemaining(
                       child: Center(child: LoadingIndicater()))
@@ -107,7 +106,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                           ),
                           child: Stack(
                             children: [
-                              CustomCachedNetworkImage(image: labList.image!),
+                              CustomCachedNetworkImage(image: labList!.image!),
                               Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
@@ -131,131 +130,164 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                     labProvider.testList.isNotEmpty &&
                     labProvider.doorStepTestList.isNotEmpty)
                   SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Row(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 6),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
                                 child: FadeInDown(
                                   duration: const Duration(milliseconds: 500),
                                   child: Text(
-                                    labList.laboratoryName ?? 'No Name',
+                                    labList?.laboratoryName ?? 'No Name',
                                     style: const TextStyle(
                                         fontSize: 18,
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w700,
                                         color: BColors.black),
                                   ),
                                 ),
                               ),
-                              const Gap(6),
-                              ButtonWidget(
-                                  buttonHeight: 36,
-                                  buttonWidth: 160,
-                                  buttonColor: BColors.buttonGreen,
-                                  buttonWidget: const Row(
-                                    children: [
-                                      Icon(
-                                        Icons.maps_ugc_outlined,
-                                        color: BColors.black,
-                                        size: 19,
-                                      ),
-                                      Gap(6),
-                                      Text(
-                                        'Prescription',
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w700,
-                                            color: BColors.black),
-                                      )
-                                    ],
-                                  ),
-                                  onPressed: () {
-                                    if (authProvider.auth.currentUser == null) {
-                                      EasyNavigation.push(
-                                          type: PageTransitionType.rightToLeft,
-                                          context: context,
-                                          page: const LoginScreen());
-                                      CustomToast.infoToast(
-                                          text: 'Login to continue !');
-                                    } else {
-                                      if (authProvider.userFetchlDataFetched!
-                                              .userName ==
-                                          null) {
-                                        EasyNavigation.push(
-                                            context: context,
-                                            page: const ProfileSetup());
-                                      } else {
-                                        labProvider.clearCurrentDetails();
-                                        addressProvider.selectedAddress = null;
-                                        EasyNavigation.push(
-                                          context: context,
-                                          page: LabPrescriptionPage(
-                                            labModel: labList,
-                                          ),
-                                         
-                                          type: PageTransitionType.rightToLeft,
-                                        );
-                                      }
-                                    }
-                                  },),
                             ],
                           ),
-                          const Gap(10),
-                          FadeInDown(
-                            duration: const Duration(milliseconds: 500),
+                        ),
+                        FadeInDown(
+                          duration: const Duration(milliseconds: 500),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                const Icon(Icons.location_on_outlined),
-                                const Gap(6),
+                                const Icon(
+                                  Icons.location_on_outlined,
+                                  size: 20,
+                                ),
                                 Expanded(
                                   child: Text(
-                                    labList.address ?? 'No Address',
+                                    labList?.address ?? 'No Address',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 3,
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.w500),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12),
                                   ),
                                 )
                               ],
                             ),
                           ),
-                          const Divider(),
-                          if (labProvider.labBannerList.isNotEmpty)
-                            FadeInRight(
+                        ),
+                        const Divider(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: FadeIn(
                               duration: const Duration(milliseconds: 500),
-                              child: AdSlider(
-                                screenWidth: double.infinity,
-                                labId: widget.labId,
+                              child: ButtonWidget(
+                                buttonHeight: 36,
+                                buttonWidth: 168,
+                                buttonColor: BColors.buttonGreen,
+                                buttonWidget: const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(
+                                      Icons.maps_ugc_outlined,
+                                      color: BColors.black,
+                                      size: 20,
+                                    ),
+                                    Text(
+                                      'Prescription',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: BColors.black),
+                                    )
+                                  ],
+                                ),
+                                onPressed: () {
+                                  if (authProvider.auth.currentUser == null) {
+                                    EasyNavigation.push(
+                                        type: PageTransitionType.rightToLeft,
+                                        context: context,
+                                        page: const LoginScreen());
+                                    CustomToast.infoToast(
+                                        text: 'Login to continue !');
+                                  } else {
+                                    if (authProvider
+                                            .userFetchlDataFetched!.userName ==
+                                        null) {
+                                      EasyNavigation.push(
+                                          context: context,
+                                          page: const ProfileSetup());
+                                    } else {
+                                      labProvider.clearCurrentDetails();
+                                      addressProvider.selectedAddress = null;
+                                      EasyNavigation.push(
+                                        context: context,
+                                        page: LabPrescriptionPage(
+                                          labModel: labList!,
+                                        ),
+                                        type: PageTransitionType.rightToLeft,
+                                      );
+                                    }
+                                  }
+                                },
                               ),
                             ),
-                          const Gap(8),
-                          CustomTabBar(
-                            screenWidth: screenWidth,
-                            text1: 'All Tests',
-                            text2: 'Door Step Tests',
-                            tab1Color: labProvider.isLabOnlySelected
-                                ? BColors.mainlightColor
-                                : BColors.white,
-                            tab2Color: labProvider.isLabOnlySelected
-                                ? BColors.white
-                                : BColors.mainlightColor,
-                            onTapTab1: () => labProvider.labTabSelection(true),
-                            onTapTab2: () => labProvider.labTabSelection(false),
                           ),
-                          const Gap(8),
-                          /* -------------------------------- ALL TESTS ------------------------------- */
-                          labProvider.isLabOnlySelected
-                              ? SizedBox(
+                        ),
+                        const Divider(),
+                        if (labProvider.labBannerList.isNotEmpty)
+                          FadeInRight(
+                            duration: const Duration(milliseconds: 500),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 4),
+                              child: AdSlider(
+                                screenWidth: double.infinity,
+                                labId: labProvider.labId!,
+                              ),
+                            ),
+                          ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          child: FadeIn(
+                              duration: const Duration(milliseconds: 500),
+                            child: CustomTabBar(
+                              screenWidth: screenWidth,
+                              text1: 'All Tests',
+                              text2: 'Door Step Tests',
+                              tab1Color: labProvider.isLabOnlySelected
+                                  ? BColors.mainlightColor
+                                  : BColors.white,
+                              tab2Color: labProvider.isLabOnlySelected
+                                  ? BColors.white
+                                  : BColors.mainlightColor,
+                              onTapTab1: () => labProvider.labTabSelection(true),
+                              onTapTab2: () => labProvider.labTabSelection(false),
+                            ),
+                          ),
+                        ),
+
+                        /* -------------------------------- ALL TESTS ------------------------------- */
+                        labProvider.isLabOnlySelected
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                child: SizedBox(
                                   width: double.infinity,
                                   child: labProvider.testList.isEmpty
                                       ? const Center(
                                           child: Text('No Tests Available!'))
                                       : ListView.separated(
+                                          padding: const EdgeInsets.symmetric(vertical: 16),
                                           separatorBuilder: (context, index) =>
-                                              const Gap(5),
+                                              const Gap(6),
                                           physics:
                                               const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
@@ -264,7 +296,9 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                           itemBuilder: (context, index) {
                                             final testList =
                                                 labProvider.testList[index];
-                                            return FadeIn(
+                                            return FadeInUp(
+                                              duration: const Duration(
+                                                  milliseconds: 500),
                                               child: TestListCard(
                                                 labTestModel: testList,
                                                 isDoorstepAvailable: testList
@@ -293,9 +327,14 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                             );
                                           },
                                         ),
-                                )
-                              /* ----------------------------- DOOR STEP TESTS ---------------------------- */
-                              : SizedBox(
+                                ),
+                              )
+                            /* ----------------------------- DOOR STEP TESTS ---------------------------- */
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                child: SizedBox(
                                   width: double.infinity,
                                   child: labProvider.doorStepTestList.isEmpty
                                       ? const Center(
@@ -311,16 +350,16 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                           itemBuilder: (context, index) {
                                             final doorStepList = labProvider
                                                 .doorStepTestList[index];
-                                            return FadeIn(
+                                            return FadeInUp(
+                                              duration: const Duration(
+                                                  milliseconds: 500),
                                               child: TestListCard(
                                                 doorStepTestModel: doorStepList,
                                                 doorstepList: true,
                                                 isDoorstepAvailable: true,
                                                 index: index,
                                                 image: doorStepList.testImage!,
-                                                testName:
-                                                    doorStepList.testName ??
-                                                        'No Name',
+                                                testName: doorStepList.testName ??'No Name',
                                                 testPrice:
                                                     doorStepList.testPrice ?? 0,
                                                 offerPrice:
@@ -348,8 +387,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                           },
                                         ),
                                 ),
-                        ],
-                      ),
+                              ),
+                      ],
                     ),
                   )
               ],
@@ -395,12 +434,11 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 Navigator.pop(context);
                                 EasyNavigation.push(
                                   type: PageTransitionType.rightToLeft,
-                                  
                                   context: context,
                                   page: CheckoutScreen(
                                     userId:
                                         authProvider.userFetchlDataFetched!.id!,
-                                    index: widget.index,
+                                    labData:labProvider.selectedLabData! ,
                                     userModel:
                                         authProvider.userFetchlDataFetched!,
                                   ),

@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/view_all_button.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
@@ -25,8 +24,48 @@ class RowProductCategoryWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 24, 16, 8),
+                child: FadeIn(
+                  duration: const Duration(milliseconds: 500),
+                  child: ButtonWidget(
+                    buttonColor: BColors.buttonGreen,
+                    onPressed: () {
+                      pharmacyProvider.clearProductAndUserInCheckOutDetails();
+                      EasyNavigation.push(
+                        context: context,
+                        page: const PrescriptionScreen(),
+                        type: PageTransitionType.rightToLeft,
+                      );
+                    },
+                    buttonHeight: 36,
+                    buttonWidth: 168,
+                    buttonWidget: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(
+                          Icons.maps_ugc_outlined,
+                          color: BColors.textBlack,
+                          size: 20,
+                        ),
+                        Text(
+                          'Prescription',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Montserrat',
+                              color: BColors.textBlack),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+              padding: const EdgeInsets.all(16),
               child: (pharmacyProvider.pharmacyCategoryList.isNotEmpty)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -38,97 +77,63 @@ class RowProductCategoryWidget extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Montserrat'),
                         ),
-                        ButtonWidget(
-                          buttonColor: BColors.buttonGreen,
-                          onPressed: () {
-                            pharmacyProvider.clearProductAndUserInCheckOutDetails();
-                            EasyNavigation.push(
-                              context: context,
-                              page: const PrescriptionScreen(),
-                              type: PageTransitionType.rightToLeft,
-                            );
-                          },
-                          buttonHeight: 36,
-                          buttonWidth: 176,
-                          buttonWidget: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                Icons.maps_ugc_outlined,
-                                color: BColors.textBlack,
-                                size: 24,
-                              ),
-                              Text(
-                                'Prescription',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Montserrat',
-                                    color: BColors.textBlack),
-                              ),
-                            ],
-                          ),
-                        ),
+                        (pharmacyProvider.pharmacyCategoryList.isNotEmpty &&
+                                pharmacyProvider.pharmacyCategoryList.length >=
+                                    4)
+                            ? FadeIn(
+                  duration: const Duration(milliseconds: 500),
+                              child: ViewAllButton(
+                                  onTap: () {
+                                    EasyNavigation.push(
+                                      context: context,
+                                      type: PageTransitionType.leftToRight,
+                                      page: const PharmacyCategoriesScreen(),
+                                    );
+                                  },
+                                ),
+                            )
+                            : const SizedBox(),
                       ],
                     )
                   : const SizedBox(),
             ),
-            (pharmacyProvider.pharmacyCategoryList.isNotEmpty &&
-                    pharmacyProvider.pharmacyCategoryList.length >= 4)
-                ? Padding(
-                    padding: const EdgeInsets.only(right: 24, bottom: 16),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: ViewAllButton(
-                        onTap: () {
-                          EasyNavigation.push(
-                              context: context,
-                              type: PageTransitionType.leftToRight,
-                              page: const PharmacyCategoriesScreen(),
-                              );
-                        },
-                      ),
+            (pharmacyProvider.pharmacyCategoryList.isNotEmpty)
+                ? SizedBox(
+                    height: 112,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: pharmacyProvider.pharmacyCategoryList.length,
+                      itemBuilder: (context, index) {
+                        return FadeInRight(
+                          duration: const Duration(milliseconds: 500),
+                          child: VerticalImageText(
+                              rightPadding: 4,
+                              leftPadding: 2,
+                              onTap: () {
+                                pharmacyProvider.setCategoryId(
+                                    selectedCategoryId: pharmacyProvider
+                                            .pharmacyCategoryList[index].id ??
+                                        '',
+                                    selectedCategoryName: pharmacyProvider
+                                        .pharmacyCategoryList[index].category);
+                                EasyNavigation.push(
+                                    context: context,
+                                    page:
+                                        const PharmacyCategoryWiseProductScreen());
+                              },
+                              image: pharmacyProvider
+                                  .pharmacyCategoryList[index].image,
+                              title: pharmacyProvider
+                                  .pharmacyCategoryList[index].category),
+                        );
+                      },
                     ),
                   )
                 : const SizedBox(),
-          (pharmacyProvider.pharmacyCategoryList.isNotEmpty)?      
-            SizedBox(
-              height: 112,
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                scrollDirection: Axis.horizontal,
-                itemCount: pharmacyProvider.pharmacyCategoryList.length,
-                itemBuilder: (context, index) {
-                  return FadeInRight(
-                    duration: const Duration(milliseconds: 500),
-                    child: VerticalImageText(
-                        rightPadding: 4,
-                        leftPadding: 2,
-                        onTap: () {
-                          pharmacyProvider.setCategoryId(
-                              selectedCategoryId: pharmacyProvider
-                                      .pharmacyCategoryList[index].id ??
-                                  '',
-                              selectedCategoryName: pharmacyProvider
-                                  .pharmacyCategoryList[index].category);
-                          EasyNavigation.push(
-                              context: context,
-                              page:
-                                  const PharmacyCategoryWiseProductScreen());
-                        },
-                        image: pharmacyProvider
-                            .pharmacyCategoryList[index].image,
-                        title: pharmacyProvider
-                            .pharmacyCategoryList[index].category),
-                  );
-                },
-              ),
-            ): const SizedBox(),
           ],
         ),
       );
     });
   }
 }
-
-

@@ -80,7 +80,7 @@ class TestListCard extends StatelessWidget {
                                           height: 23,
                                           width: 118,
                                           decoration: BoxDecoration(
-                                              color: BColors.grey,
+                                              color: BColors.darkblue,
                                               borderRadius:
                                                   BorderRadius.circular(8)),
                                           child: Center(
@@ -99,7 +99,7 @@ class TestListCard extends StatelessWidget {
                                       : const Gap(0),
                             ],
                           ),
-                          const Gap(8),
+                          const Gap(6),
                           Expanded(
                             child: offerPrice == null
                                 ? RichText(

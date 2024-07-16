@@ -16,6 +16,8 @@ class BIcon {
   static const String medicineColor =
       'assets/icons/bottom_nav_icons/pharmacy-color.png';
   static const String labColor = 'assets/icons/bottom_nav_icons/lab-color.png';
+  static const String labDark = 'assets/icons/bottom_nav_icons/lab_dark_icon.png';
+  static const String pharmacyDark = 'assets/icons/bottom_nav_icons/pharmacy_dark_icon.png';
   static const String profileColor =
       'assets/icons/bottom_nav_icons/profile-color.png';
   static const String rxIcon = 'assets/icons/rx_icon.png';

@@ -130,13 +130,14 @@ class _LabMainState extends State<LabMain> {
 
                             CustomToast.infoToast(text: 'Login to continue !');
                           } else {
+                            labProvider.setLabIdAndLab(
+                                selectedLabId: labProvider.labList[index].id!,
+                                selectedLab: labProvider.labList[index],
+                                );
                             EasyNavigation.push(
                               context: context,
                               type: PageTransitionType.rightToLeft,
-                              page: LabDetailsScreen(
-                                index: index,
-                                labId: labProvider.labList[index].id!,
-                              ),
+                              page: const LabDetailsScreen(),
                             );
                           }
                         },

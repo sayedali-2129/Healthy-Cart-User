@@ -71,7 +71,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                   RoundedContainer(
                     height: 160,
                     width: double.infinity,
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(8),
                     backgroundColor: BColors.lightGrey,
                     child: RoundedImage(
                         backgroundColor: BColors.white,
@@ -79,7 +79,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                         child: CustomCachedNetworkImage(
                           image: widget.productData.productImage?.first ??
                               BImage.healthycartText,
-                          fit: BoxFit.fitHeight,
+                          fit: BoxFit.contain,
                         )),
                   ),
                   Padding(
@@ -95,7 +95,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                           widget.productData.productName ?? 'Unknown Name',
                           style: const TextStyle(
                               fontFamily: 'Montserrat',
-                              fontSize: 15,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                               color: BColors.black),
                           overflow: TextOverflow.ellipsis,

@@ -107,7 +107,7 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
           child: InkWell(
             onTap: () {
               LoadingLottie.showLoading(
-                  context: context, text: 'Setting location...');
+                  context: context, text: 'Setting Location...');
               if (locationProvider.userId != null &&
                   widget.isUserEditProfile == true) {
                 locationProvider.setLocationOfUser(
@@ -132,8 +132,7 @@ class _UserLocationSearchWidgetState extends State<UserLocationSearchWidget> {
               }
             },
             child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 4),
+              padding:const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 4),
               child: SizedBox(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

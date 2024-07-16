@@ -113,8 +113,8 @@ class _HomeMainState extends State<HomeMain> {
           if (homeProvider.isLoading == true ||
               hospitalProvider.isFirebaseDataLoding == true ||
               labProvider.isFirebaseDataLoding == true ||
-              pharmacyProvider.isFirebaseDataLoding == true
-              || hospitalProvider.isLoading == true)
+              pharmacyProvider.isFirebaseDataLoding == true ||
+              hospitalProvider.isLoading == true)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
@@ -122,7 +122,8 @@ class _HomeMainState extends State<HomeMain> {
             )
           else if ((homeProvider.homeBannerList.isEmpty &&
                   homeProvider.isLoading == false) &&
-              (hospitalProvider.isFirebaseDataLoding == false && hospitalProvider.isLoading == false &&
+              (hospitalProvider.isFirebaseDataLoding == false &&
+                  hospitalProvider.isLoading == false &&
                   hospitalProvider.hospitalAllCategoryList.isEmpty &&
                   hospitalProvider.hospitalList.isEmpty) &&
               (labProvider.isFirebaseDataLoding == false &&
@@ -288,7 +289,6 @@ class _HomeMainState extends State<HomeMain> {
                                 EasyNavigation.push(
                                   context: context,
                                   type: PageTransitionType.rightToLeft,
-                                  
                                   page: AllDoctorsScreen(
                                     category: category,
                                   ),
@@ -426,14 +426,16 @@ class _HomeMainState extends State<HomeMain> {
                                     CustomToast.infoToast(
                                         text: 'Login to continue !');
                                   } else {
+                                    labProvider.setLabIdAndLab(
+                                      selectedLabId:
+                                          labProvider.labList[index].id!,
+                                      selectedLab: labProvider.labList[index],
+                                    );
                                     EasyNavigation.push(
-                                        context: context,
-                                        type: PageTransitionType.rightToLeft,
-                                       
-                                        page: LabDetailsScreen(
-                                          labId: labProvider.labList[index].id!,
-                                          index: index,
-                                        ));
+                                      context: context,
+                                      type: PageTransitionType.rightToLeft,
+                                      page: const LabDetailsScreen(),
+                                    );
                                   }
                                 },
                               ),
