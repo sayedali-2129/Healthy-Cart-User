@@ -684,8 +684,8 @@ class IPharmacyImpl implements IPharmacyFacade {
     required String pharmacyId,
     required String userId,
   }) async {
-    log.log('userId $userId');
-    log.log('pharmacyId $pharmacyId');
+    //log.log('userId $userId');
+    //log.log('pharmacyId $pharmacyId');
     try {
       final docRef = _firebaseFirestore
           .collection(FirebaseCollections.userCollection)

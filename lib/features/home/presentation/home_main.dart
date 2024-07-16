@@ -110,38 +110,25 @@ class _HomeMainState extends State<HomeMain> {
             },
           ),
           const SliverGap(8),
-          if (homeProvider.homeBannerList.isNotEmpty && !hospitalProvider.hospitalFetchLoading)
-            SliverToBoxAdapter(
-              child: FadeInRight(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  child: AdSliderHome(screenWidth: screenwidth),
-                ),
-              ),
-            ),
-          if ((homeProvider.homeBannerList.isEmpty && homeProvider.isLoading == true)||
-              hospitalProvider.hospitalFetchLoading == true &&
-              labProvider.labFetchLoading == true &&
-              pharmacyProvider.fetchLoading == true &&
-              hospitalProvider.hospitalAllCategoryList.isEmpty &&
-              labProvider.labList.isEmpty &&
-              pharmacyProvider.pharmacyList.isEmpty &&
-              hospitalProvider.hospitalList.isEmpty)
+          if (homeProvider.isLoading == true ||
+              hospitalProvider.isFirebaseDataLoding == true ||
+              labProvider.isFirebaseDataLoding == true ||
+              pharmacyProvider.isFirebaseDataLoding == true
+              || hospitalProvider.isLoading == true)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
               ),
             )
-          else if (homeProvider.isLoading == false &&
-              hospitalProvider.hospitalFetchLoading == false &&
-              labProvider.labFetchLoading == false &&
-              pharmacyProvider.fetchLoading == false &&
-              labProvider.labList.isEmpty &&
-              hospitalProvider.hospitalAllCategoryList.isEmpty &&
-              homeProvider.homeBannerList.isEmpty &&
-              pharmacyProvider.pharmacyList.isEmpty &&
-              hospitalProvider.hospitalList.isEmpty)
+          else if ((homeProvider.homeBannerList.isEmpty &&
+                  homeProvider.isLoading == false) &&
+              (hospitalProvider.isFirebaseDataLoding == false && hospitalProvider.isLoading == false &&
+                  hospitalProvider.hospitalAllCategoryList.isEmpty &&
+                  hospitalProvider.hospitalList.isEmpty) &&
+              (labProvider.isFirebaseDataLoding == false &&
+                  labProvider.labList.isEmpty) &&
+              (pharmacyProvider.isFirebaseDataLoding == false &&
+                  pharmacyProvider.pharmacyList.isEmpty))
             const SliverFillRemaining(
               child: StillWorkingPage(
                 text: "We are still working to get our services to your area.",
@@ -151,6 +138,15 @@ class _HomeMainState extends State<HomeMain> {
             SliverToBoxAdapter(
               child: Column(
                 children: [
+                  if (homeProvider.homeBannerList.isNotEmpty &&
+                      !hospitalProvider.hospitalFetchLoading)
+                    FadeInRight(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 16),
+                        child: AdSliderHome(screenWidth: screenwidth),
+                      ),
+                    ),
                   if (hospitalProvider.hospitalList.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(

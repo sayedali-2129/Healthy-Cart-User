@@ -482,11 +482,11 @@ class PharmacyProvider extends ChangeNotifier {
     fetchLoading = true;
     final result = await _iPharmacyFacade.createOrGetProductToUserCart(
       pharmacyId: pharmacyId ?? '',
-      userId: userId ?? '',
+      userId: userId,
     );
     result.fold(
       (failure) {
-        log(failure.errMsg);
+        //log(failure.errMsg);
         CustomToast.errorToast(text: failure.errMsg);
         fetchLoading = false;
         notifyListeners();

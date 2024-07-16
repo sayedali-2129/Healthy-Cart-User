@@ -362,6 +362,7 @@ class _HospitalDetailsState extends State<HospitalDetails> {
                             ? 5
                             : hospitalProvider.doctorsList.length,
                         itemBuilder: (context, doctorIndex) {
+
                           return GestureDetector(
                             onTap: () {
                               EasyNavigation.push(

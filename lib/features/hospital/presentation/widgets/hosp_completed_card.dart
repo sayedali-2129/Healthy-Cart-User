@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
-import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class HospitalCompletedCard extends StatelessWidget {
   const HospitalCompletedCard({super.key, required this.completedOrderData});
   final HospitalBookingModel completedOrderData;
   @override
   Widget build(BuildContext context) {
-    final orderProvider = Provider.of<PharmacyOrderProvider>(context);
+
     final formattedDate = DateFormat('dd/MM/yyyy')
         .format(completedOrderData.completedAt!.toDate());
     return Padding(

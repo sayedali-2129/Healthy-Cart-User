@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/pdf_viewer/pdf_viewer.dart';
-import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/lab_details_card_on_orders.dart';
@@ -11,14 +10,12 @@ import 'package:healthy_cart_user/features/laboratory/presentation/widgets/order
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class LabOrderCompletedCard extends StatelessWidget {
   const LabOrderCompletedCard({super.key, required this.completedOrderData});
   final LabOrdersModel completedOrderData;
   @override
   Widget build(BuildContext context) {
-    final orderProvider = Provider.of<LabOrdersProvider>(context);
     final formattedDate = DateFormat('dd/MM/yyyy')
         .format(completedOrderData.completedAt!.toDate());
 

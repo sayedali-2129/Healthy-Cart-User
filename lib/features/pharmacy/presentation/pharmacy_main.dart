@@ -130,7 +130,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                                   text: 'Login to continue !');
                             } else {
                               if (authProvider
-                                      .userFetchlDataFetched!.userName ==
+                                      .userFetchlDataFetched?.userName ==
                                   null) {
                                 EasyNavigation.push(
                                     context: context,

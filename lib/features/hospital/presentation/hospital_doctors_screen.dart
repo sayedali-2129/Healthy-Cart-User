@@ -38,7 +38,7 @@ class _HospitalDoctorsScreenState extends State<HospitalDoctorsScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         if (widget.isCategoryWise == true) {
-    
+          // log(widget.category?.id ?? 'null');
           hospitalProvider.getCategoryWiseDoctor(
               hospitalId: widget.hospitalDetails.id ?? '',
               categoryId: widget.category?.id ?? '');
