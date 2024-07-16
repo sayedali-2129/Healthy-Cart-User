@@ -70,7 +70,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RoundedContainer(
-                    height: 152,
+                    height: 160,
                     width: double.infinity,
                     padding: const EdgeInsets.all(12),
                     backgroundColor: BColors.lightGrey,
@@ -242,7 +242,8 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                         RichText(
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            text: TextSpan(children: [
+                                            text: TextSpan(
+                                              children: [
                                               const TextSpan(
                                                   text: "₹ ",
                                                   style: TextStyle(
@@ -264,7 +265,9 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                                       color: BColors.textBlack,
                                                       decoration: TextDecoration
                                                           .lineThrough)),
-                                            ])),
+                                            ],
+                                            ),
+                                            ),
                                       ],
                                     ),
                                   ),

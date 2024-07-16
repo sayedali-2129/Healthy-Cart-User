@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +36,7 @@ class UserProfileProvider with ChangeNotifier {
     final result = await iUserProfileFacade.pickUserImage();
     result.fold((error) {
       CustomToast.errorToast(text: error.errMsg);
-      log('ERROR IN PICK IMAGE:$error');
+    //  log('ERROR IN PICK IMAGE:$error');
     }, (imageSuccess) async {
       if (imageUrl != null) {
         await iUserProfileFacade.deleteStorageImage(
@@ -57,7 +55,7 @@ class UserProfileProvider with ChangeNotifier {
     final result = await iUserProfileFacade.uploadUserImage(imageFile!);
     result.fold((error) {
       CustomToast.errorToast(text: error.errMsg);
-      log('ERROR IN UPLOAD IMAGE:$error');
+    //  log('ERROR IN UPLOAD IMAGE:$error');
     }, (url) {
       imageUrl = url;
       notifyListeners();

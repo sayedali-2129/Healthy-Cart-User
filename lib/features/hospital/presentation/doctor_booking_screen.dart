@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
@@ -137,8 +137,7 @@ class DoctorBookingScreen extends StatelessWidget {
                   hospitalProvider.seletedBookingDate == null) {
                 CustomToast.infoToast(text: 'Please select date and time');
               } else {
-                log(hospitalProvider.selectedSlot!);
-                log(hospitalProvider.seletedBookingDate!);
+
                 EasyNavigation.push(
                     context: context,
                     page: PatientMemberScreen(

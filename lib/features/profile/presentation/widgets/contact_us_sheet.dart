@@ -16,12 +16,13 @@ class ContactUsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
+      width: screenWidth,
       decoration: const BoxDecoration(
           color: BColors.white,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(40), topRight: Radius.circular(40))),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 26),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -30,29 +31,29 @@ class ContactUsBottomSheet extends StatelessWidget {
                 LaunchDialer.lauchDialer(phoneNumber: AppDetails.phoneNumber);
               },
               child: Container(
-                height: 55,
-                width: screenWidth,
+                height: 48,
+                
                 decoration: BoxDecoration(
-                    color: BColors.lightGrey.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(16)),
+                    color: BColors.darkblue,
+                    borderRadius: BorderRadius.circular(12)),
                 child: const Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.phone),
-                      Gap(10),
+                      Icon(Icons.phone,color: BColors.white,),
+                      Gap(12),
                       Text(
                         'Call',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
+                            fontSize: 18, fontWeight: FontWeight.w500,color: BColors.white,),
                       )
                     ],
                   ),
                 ),
               ),
             ),
-            const Gap(10),
+            const Gap(12),
             GestureDetector(
               onTap: () {
                 UrlService().redirectToLink(
@@ -65,22 +66,22 @@ class ContactUsBottomSheet extends StatelessWidget {
                 );
               },
               child: Container(
-                height: 55,
-                width: screenWidth,
+                height: 48,
+                
                 decoration: BoxDecoration(
-                    color: BColors.lightGrey.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(16)),
+                    color: BColors.darkblue,
+                    borderRadius: BorderRadius.circular(12)),
                 child: const Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.email_outlined),
-                      Gap(10),
+                      Icon(Icons.email_outlined, color: BColors.white,),
+                      Gap(12),
                       Text(
-                        'Mail',
+                        'E-Mail',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
+                            fontSize: 18, fontWeight: FontWeight.w500,color: BColors.white,),
                       )
                     ],
                   ),

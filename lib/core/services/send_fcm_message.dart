@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:healthy_cart_user/utils/app_details.dart';
 import 'package:http/http.dart' as http;
@@ -53,10 +51,10 @@ Future<void> sendFcmMessage({
 
   // Check the response
   if (response.statusCode == 200) {
-    log('FCM message sent successfully (V1)');
+    //log('FCM message sent successfully (V1)');
   } else {
-    log('Failed to send FCM message. Status code: ${response.statusCode}');
-    log('Response body: ${response.body}');
+    //log('Failed to send FCM message. Status code: ${response.statusCode}');
+   // log('Response body: ${response.body}');
   }
 }
 

@@ -156,8 +156,12 @@ class _ProfileMainState extends State<ProfileMain> {
                             borderColor: BColors.black,
                             onPressed: () {
                               showModalBottomSheet(
+                                backgroundColor: BColors.white,
+                                barrierColor: BColors.black.withOpacity(0.5),
+                                elevation: 5,
+                                showDragHandle: true,
                                 context: context,
-                                builder: (context) => ContactUsBottomSheet(),
+                                builder: (context) => const ContactUsBottomSheet(),
                               );
                             },
                             buttonWidget: const Row(
@@ -169,7 +173,7 @@ class _ProfileMainState extends State<ProfileMain> {
                                 ),
                                 Text(
                                   'Contact Us',
-                                  style: TextStyle(color: BColors.black),
+                                  style: TextStyle(color: BColors.black, ),
                                 )
                               ],
                             ),
@@ -196,7 +200,7 @@ class _ProfileMainState extends State<ProfileMain> {
                               children: [
                                 const Text(
                                   'Log Out',
-                                  style: TextStyle(color: BColors.white),
+                                  style: TextStyle(color: BColors.white,),
                                 ),
                                 Image.asset(
                                   BIcon.logoutIcon,

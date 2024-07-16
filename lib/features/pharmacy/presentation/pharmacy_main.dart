@@ -99,7 +99,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                       ? NoDataInSelectedLocation(
                           locationTitle:
                               '${locationProvider.locallySavedPharmacyplacemark?.localArea}',
-                          typeOfService: 'Pharmacies',
+                          typeOfService: 'pharmacies',
                         )
                       : null),
               if (pharmacyProvider.isFirebaseDataLoding == true &&
@@ -130,7 +130,7 @@ class _PharmacyMainState extends State<PharmacyMain> {
                                   text: 'Login to continue !');
                             } else {
                               if (authProvider
-                                      .userFetchlDataFetched!.userName ==
+                                      .userFetchlDataFetched?.userName ==
                                   null) {
                                 EasyNavigation.push(
                                     context: context,

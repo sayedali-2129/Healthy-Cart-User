@@ -140,7 +140,7 @@ class _ApprovedOrderDetailsScreenState
                               const Divider(),
                               (widget.orderData.addresss != null &&
                                       widget.orderData.deliveryType == "Home")
-                                  ? Row(
+                                  ? const Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisAlignment:
@@ -148,15 +148,14 @@ class _ApprovedOrderDetailsScreenState
                                       children: [
                                         Text(
                                           'Delivery Address : ',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelLarge!
-                                              .copyWith(
-                                                  color: BColors.textLightBlack,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 12),
+                                          style:
+                                                  TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              color: BColors.textLightBlack,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
                                         ),
-                                        const Gap(8),
+                                         Gap(8),
                                       ],
                                     )
                                   : Row(
@@ -165,15 +164,13 @@ class _ApprovedOrderDetailsScreenState
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
+                                       const  Text(
                                           'Pick-Up Address : ',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelLarge!
-                                              .copyWith(
-                                                  color: BColors.textLightBlack,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 12),
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              color: BColors.textLightBlack,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
                                         ),
                                         const Gap(8),
                                         Expanded(
@@ -181,13 +178,11 @@ class _ApprovedOrderDetailsScreenState
                                             '${widget.orderData.pharmacyDetails?.pharmacyName ?? 'Pharmacy'}-${widget.orderData.pharmacyDetails?.pharmacyAddress ?? 'Pharmacy'}',
                                             maxLines: 3,
                                             overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelLarge!
-                                                .copyWith(
-                                                    color: BColors.textBlack,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 12),
+                                            style:const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              color: BColors.textBlack,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
                                           ),
                                         )
                                       ],
@@ -203,32 +198,29 @@ class _ApprovedOrderDetailsScreenState
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                       border: Border.all(
-                                          color: BColors.mainlightColor),
+                                          color: BColors.buttonRedShade),
                                       borderRadius: BorderRadius.circular(8)),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Change reason :',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium!
-                                            .copyWith(
-                                                color: BColors.textLightBlack,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 12),
+                                        style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              color: BColors.textLightBlack,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
                                       ),
                                       const Gap(6),
                                       Text(
                                         widget.orderData.rejectReason ??
                                             'Unknown reason',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium!
-                                            .copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 12),
+                                        style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              color: BColors.textBlack,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600),
                                       ),
                                     ],
                                   ),

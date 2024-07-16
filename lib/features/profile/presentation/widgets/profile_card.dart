@@ -52,7 +52,7 @@ class ProfileCard extends StatelessWidget {
                     : Text(userLocation!,
                         style: const TextStyle(
                             fontSize: 14,
-                            color: BColors.black,
+                            color: BColors.textLightBlack,
                             fontWeight: FontWeight.w500))
               ],
             )

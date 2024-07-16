@@ -1,4 +1,4 @@
-import 'dart:developer';
+//import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
     final hospitalProvider = context.read<HospitalProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        log(widget.category!.id.toString());
+      //  log(widget.category!.id.toString());
         hospitalProvider.clearAllDoctorsCategoryWiseData();
         hospitalBookingProivder.allDoctorsCategoryWiseFetchInitData(
             context: context, categoryId: widget.category!.id!);

@@ -153,24 +153,19 @@ class PrescriptionScreen extends StatelessWidget {
                                 ButtonWidget(
                                   onPressed: () {
                                     if (pharmacyProvider.selectedpharmacyData
-                                            ?.isHomeDelivery ==
-                                        false) {
-                                      pharmacyProvider.selectedRadio =
-                                          'Pharmacy';
-                                      LoadingLottie.showLoading(
-                                          context: context,
-                                          text: 'Please wait...');
-                                      pharmacyProvider
-                                          .setDeliveryAddressAndUserData(
-                                              userData: authProvider
-                                                      .userFetchlDataFetched ??
+                                            ?.isHomeDelivery == false) {
+                                      pharmacyProvider.selectedRadio = pharmacyProvider.pharmacyPickup;
+                                      
+                                      pharmacyProvider.setDeliveryAddressAndUserData(
+                                              userData: authProvider.userFetchlDataFetched ??
                                                   UserModel(),
                                               address: addressProvider
                                                   .selectedAddress);
+                                            LoadingLottie.showLoading( context: context, text: 'Please wait...');      
+
                                       pharmacyProvider.saveImage().whenComplete(
                                         () {
-                                          pharmacyProvider
-                                              .createProductOrderDetails(
+                                          pharmacyProvider.createProductOrderDetails(
                                                   context: context);
                                         },
                                       );
@@ -190,14 +185,38 @@ class PrescriptionScreen extends StatelessWidget {
                                               }
                                               EasyNavigation.pop(
                                                   context: context);
-
-                                              EasyNavigation.push(
-                                                type: PageTransitionType
-                                                    .rightToLeft,
-                                                context: context,
-                                                page:
-                                                    const PrescriptionOrderAddressScreen(),
-                                              );
+                                              if (pharmacyProvider
+                                                      .selectedRadio ==
+                                                  pharmacyProvider
+                                                      .homeDelivery) {
+                                                EasyNavigation.push(
+                                                  type: PageTransitionType
+                                                      .rightToLeft,
+                                                  context: context,
+                                                  page:
+                                                      const PrescriptionOrderAddressScreen(),
+                                                );
+                                              } else {
+                                                pharmacyProvider
+                                                    .setDeliveryAddressAndUserData(
+                                                        userData: authProvider
+                                                                .userFetchlDataFetched ??
+                                                            UserModel(),
+                                                        address: addressProvider
+                                                            .selectedAddress);
+                                                LoadingLottie.showLoading(
+                                                    context: context,
+                                                    text: 'Please wait...');
+                                                pharmacyProvider
+                                                    .saveImage()
+                                                    .whenComplete(
+                                                  () {
+                                                    pharmacyProvider
+                                                        .createProductOrderDetails(
+                                                            context: context);
+                                                  },
+                                                );
+                                              }
                                             },
                                           );
                                         },

@@ -34,7 +34,7 @@ class NoDataInSelectedLocation extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     const TextSpan(
-                        text:"Oops! We're not in " ,
+                        text:"Oops ! We're not in " ,
                         style:  TextStyle(
                           color: BColors.darkblue,
                           fontWeight: FontWeight.w500,
@@ -50,7 +50,7 @@ class NoDataInSelectedLocation extends StatelessWidget {
                           color: BColors.black),
                     ),
                        TextSpan(
-                      text: " yet, but don't worry! Here are some great $typeOfService nearby that you can check out.",
+                      text: " yet. But don't worry, here are some great $typeOfService nearby that you can check out.",
                       style: const TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 12,

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
@@ -225,7 +224,7 @@ class IUserProfileImpl implements IUserProfileFacade {
       required String familyMemberId}) async {
     try {
       Map<String, dynamic> familyMembeMap = familyMemberModel.toMap();
-      log(familyMembeMap.toString());
+      
 
       final docRef = _firestore
           .collection(FirebaseCollections.userCollection)

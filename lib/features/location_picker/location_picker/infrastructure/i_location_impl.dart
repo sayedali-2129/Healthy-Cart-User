@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,13 +22,13 @@ class ILocationImpl implements ILocationFacade {
   @override
   Future<Either<MainFailure, PlaceMark?>> getCurrentLocationAddress() async {
     try {
-      log('Calledd:::::::::::');
+   
       final getCurrentPosition = await Geolocator.getCurrentPosition();
 
       final getCurrentLocation = await OpenStritMapServices.fetchCurrentLocaion(
           latitude: getCurrentPosition.latitude.toString(),
           longitude: getCurrentPosition.longitude.toString());
-      log(getCurrentLocation.toString());
+ 
       return right(getCurrentLocation);
     } catch (ex) {
       return left(MainFailure.locationError(errMsg: ex.toString()));

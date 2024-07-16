@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +27,12 @@ class NotificationProvider with ChangeNotifier {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      log('User granted permission');
+      //log('User granted permission');
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      log('User granted provisional permission');
+      //log('User granted provisional permission');
     } else {
-      log('User declined or has not accepted permission');
+     // log('User declined or has not accepted permission');
     }
     notifyListeners();
   }
@@ -47,7 +46,7 @@ class NotificationProvider with ChangeNotifier {
     final result = await iNotificationFacade.getAllNotifications();
     result.fold((err) {
       CustomToast.errorToast(text: 'Unable get notifications');
-      log('ERROR :: ${err.errMsg}');
+     // log('ERROR :: ${err.errMsg}');
     }, (success) {
       notificationList.addAll(success);
     });

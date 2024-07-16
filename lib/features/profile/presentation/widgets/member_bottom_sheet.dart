@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -10,6 +8,7 @@ import 'package:healthy_cart_user/core/custom/custom_textfields/textfield_widget
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/validator.dart';
+import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_family_provider.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_family_model.dart';
@@ -169,12 +168,9 @@ class _FamilyMemberBottomSheetState extends State<FamilyMemberBottomSheet> {
                                     userId: authProvider
                                             .userFetchlDataFetched!.id ??
                                         '');
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+                               EasyNavigation.pop(context: context);
+                               EasyNavigation.pop(context: context);
                               } else {
-                                log(widget.userFamilyMembersModel!
-                                    .toMap()
-                                    .toString());
                                 LoadingLottie.showLoading(
                                     context: context, text: 'Updating...');
 
@@ -186,8 +182,8 @@ class _FamilyMemberBottomSheetState extends State<FamilyMemberBottomSheet> {
                                             widget.userFamilyMembersModel?.id ??
                                                 '',
                                         index: widget.index!);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
+                                EasyNavigation.pop(context: context);
+                               EasyNavigation.pop(context: context);
                               }
                             }
                           },

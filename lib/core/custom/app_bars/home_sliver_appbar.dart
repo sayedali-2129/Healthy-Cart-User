@@ -121,7 +121,7 @@ class HomeSliverAppbar extends StatelessWidget {
                           child: const Icon(
                             Icons.notifications_outlined,
                             color: BColors.buttonDarkColor,
-                            size: 35,
+                            size: 32,
                           ),
                         ),
                         // const Positioned(
@@ -200,7 +200,8 @@ class MainHomeAppBar extends StatelessWidget {
                       onTap: locationTap,
                       child: Row(
                         children: [
-                          const Icon(Icons.location_on_outlined),
+                       const Icon(Icons.location_on_outlined),
+                          const Gap(4),
                           Text(
                             locationText,
                             style: const TextStyle(
@@ -224,7 +225,7 @@ class MainHomeAppBar extends StatelessWidget {
                           child: const Icon(
                             Icons.notifications_outlined,
                             color: BColors.buttonDarkColor,
-                            size: 35,
+                            size: 32,
                           ),
                         ),
                         // const Positioned(

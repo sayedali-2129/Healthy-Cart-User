@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'dart:developer' as log;
+//import 'dart:developer' as log;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';
@@ -217,7 +217,7 @@ class IHospitalImpl implements IHospitalFacade {
         );
 
         if (stateList.isNotEmpty) {
-          log.log(stateList.toString());
+        //  log.log(stateList.toString());
 
           do {
             QuerySnapshot<Map<String, dynamic>> refreshedClass;
@@ -266,7 +266,7 @@ class IHospitalImpl implements IHospitalFacade {
               break;
             }
 
-            log.log('currentStateIndex=$currentStateIndex');
+          //  log.log('currentStateIndex=$currentStateIndex');
           } while (currentStateIndex <= (stateList.length - 1));
         } else {
           lastdoc = null;
@@ -617,7 +617,7 @@ class IHospitalImpl implements IHospitalFacade {
       {String? doctorSearch, required String categoryId}) async {
     if (noCategoryDoctorMoreData) return right([]);
     try {
-      log.log('Called doctor home search:::::::');
+     // log.log('Called doctor home search:::::::');
       Query query = firebaseFirestore
           .collection(FirebaseCollections.doctorCollection)
           .where('categoryId', isEqualTo: categoryId)
@@ -637,7 +637,7 @@ class IHospitalImpl implements IHospitalFacade {
         lastCategoryDoctorDoc =
             snapshot.docs.last as DocumentSnapshot<Map<String, dynamic>>;
       }
-      log.log(snapshot.docs.isNotEmpty.toString());
+     // log.log(snapshot.docs.isNotEmpty.toString());
       return right(snapshot.docs
           .map((e) => DoctorModel.fromMap(e.data() as Map<String, dynamic>)
               .copyWith(id: e.id))

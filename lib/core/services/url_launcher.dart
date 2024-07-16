@@ -27,6 +27,7 @@ class UrlService {
         onFailure!();
       }
     } on Exception catch (e) {
+      print(e.toString());
       onFailure!();
     }
   }

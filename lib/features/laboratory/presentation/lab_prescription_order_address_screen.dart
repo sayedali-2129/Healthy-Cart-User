@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +39,6 @@ class _LabPrescriptionOrderAddressScreenState
       if (labProvider.selectedRadio == 'Home') {
         addressProvider.getUserAddress(userId: widget.userId ?? '');
       }
-      log(addressProvider.selectedAddress.toString());
     });
     super.initState();
   }

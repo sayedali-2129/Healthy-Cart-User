@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +38,7 @@ class _HospitalDoctorsScreenState extends State<HospitalDoctorsScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         if (widget.isCategoryWise == true) {
-          log(widget.category?.id ?? 'null');
+          // log(widget.category?.id ?? 'null');
           hospitalProvider.getCategoryWiseDoctor(
               hospitalId: widget.hospitalDetails.id ?? '',
               categoryId: widget.category?.id ?? '');

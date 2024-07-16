@@ -22,6 +22,7 @@ import 'package:healthy_cart_user/features/hospital/presentation/widgets/categor
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_details_screen.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/application/location_provider.dart';
+import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location_search.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/pharmacy_products.dart';
 import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
@@ -79,7 +80,7 @@ class _HomeMainState extends State<HomeMain> {
     final screenwidth = MediaQuery.of(context).size.width;
     return Consumer6<HomeProvider, HospitalProvider, LabProvider,
             PharmacyProvider, AuthenticationProvider, LocationProvider>(
-        builder: (context, homeProvider, hospitalProvier, labProvider,
+        builder: (context, homeProvider, hospitalProvider, labProvider,
             pharmacyProvider, authProvider, locationProvider, _) {
       return Scaffold(
           body: CustomScrollView(
@@ -88,53 +89,65 @@ class _HomeMainState extends State<HomeMain> {
             searchHint: 'Search',
             locationText:
                 "${locationProvider.localsavedHomeplacemark?.localArea},${locationProvider.localsavedHomeplacemark?.district},${locationProvider.localsavedHomeplacemark?.state}",
-            locationTap: () {},
+            locationTap: () async {
+              await EasyNavigation.push(
+                type: PageTransitionType.topToBottom,
+                context: context,
+                page: UserLocationSearchWidget(
+                  isUserEditProfile: false,
+                  locationSetter: 0,
+                  onSucess: () {
+                    hospitalProvider.hospitalFetchInitData(
+                      context: context,
+                    );
+                    labProvider.labortaryFetchInitData(
+                      context: context,
+                    );
+                    pharmacyProvider.pharmacyFetchInitData(context: context);
+                  },
+                ),
+              );
+            },
           ),
           const SliverGap(8),
-           if (homeProvider.homeBannerList.isNotEmpty)
-                    SliverToBoxAdapter(
-                      child: FadeInRight(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                          child: AdSliderHome(screenWidth: screenwidth),
-                        ),
-                      ),
-                    ),
-          if (homeProvider.isLoading == true &&
-              hospitalProvier.hospitalFetchLoading == true &&
-              labProvider.labFetchLoading == true &&
-              pharmacyProvider.fetchLoading == true &&
-              hospitalProvier.hospitalAllCategoryList.isEmpty &&
-              labProvider.labList.isEmpty &&
-              pharmacyProvider.pharmacyList.isEmpty &&
-              homeProvider.homeBannerList.isEmpty &&
-              hospitalProvier.hospitalList.isEmpty)
+          if (homeProvider.isLoading == true ||
+              hospitalProvider.isFirebaseDataLoding == true ||
+              labProvider.isFirebaseDataLoding == true ||
+              pharmacyProvider.isFirebaseDataLoding == true
+              || hospitalProvider.isLoading == true)
             const SliverFillRemaining(
               child: Center(
                 child: LoadingIndicater(),
               ),
             )
-          else if (homeProvider.isLoading == false &&
-              hospitalProvier.hospitalFetchLoading == false &&
-              labProvider.labFetchLoading == false &&
-              pharmacyProvider.fetchLoading == false &&
-              labProvider.labList.isEmpty &&
-              hospitalProvier.hospitalAllCategoryList.isEmpty &&
-              homeProvider.homeBannerList.isEmpty &&
-              pharmacyProvider.pharmacyList.isEmpty &&
-              hospitalProvier.hospitalList.isEmpty)
+          else if ((homeProvider.homeBannerList.isEmpty &&
+                  homeProvider.isLoading == false) &&
+              (hospitalProvider.isFirebaseDataLoding == false && hospitalProvider.isLoading == false &&
+                  hospitalProvider.hospitalAllCategoryList.isEmpty &&
+                  hospitalProvider.hospitalList.isEmpty) &&
+              (labProvider.isFirebaseDataLoding == false &&
+                  labProvider.labList.isEmpty) &&
+              (pharmacyProvider.isFirebaseDataLoding == false &&
+                  pharmacyProvider.pharmacyList.isEmpty))
             const SliverFillRemaining(
               child: StillWorkingPage(
                 text: "We are still working to get our services to your area.",
               ),
             )
-          
-              else      
+          else
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  
-                  if (hospitalProvier.hospitalList.isNotEmpty)
+                  if (homeProvider.homeBannerList.isNotEmpty &&
+                      !hospitalProvider.hospitalFetchLoading)
+                    FadeInRight(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 16),
+                        child: AdSliderHome(screenWidth: screenwidth),
+                      ),
+                    ),
+                  if (hospitalProvider.hospitalList.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
@@ -154,16 +167,16 @@ class _HomeMainState extends State<HomeMain> {
                         ],
                       ),
                     ),
-                  if (hospitalProvier.hospitalList.isNotEmpty)
+                  if (hospitalProvider.hospitalList.isNotEmpty)
                     SizedBox(
                       height: 224,
                       child: ListView.separated(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),
                         scrollDirection: Axis.horizontal,
-                        itemCount: hospitalProvier.hospitalList.length > 5
+                        itemCount: hospitalProvider.hospitalList.length > 5
                             ? 5
-                            : hospitalProvier.hospitalList.length,
+                            : hospitalProvider.hospitalList.length,
                         separatorBuilder: (context, index) => const Gap(10),
                         itemBuilder: (context, index) => FadeInRight(
                             child: GestureDetector(
@@ -176,7 +189,7 @@ class _HomeMainState extends State<HomeMain> {
                               CustomToast.infoToast(
                                   text: 'Login to continue !');
                             } else {
-                              hospitalProvier
+                              hospitalProvider
                                           .hospitalList[index].ishospitalON ==
                                       false
                                   ? CustomToast.errorToast(
@@ -187,9 +200,9 @@ class _HomeMainState extends State<HomeMain> {
                                       type: PageTransitionType.rightToLeft,
                                       duration: 250,
                                       page: HospitalDetails(
-                                        hospitalId: hospitalProvier
+                                        hospitalId: hospitalProvider
                                             .hospitalList[index].id!,
-                                        categoryIdList: hospitalProvier
+                                        categoryIdList: hospitalProvider
                                             .hospitalList[index]
                                             .selectedCategoryId,
                                       ));
@@ -201,8 +214,8 @@ class _HomeMainState extends State<HomeMain> {
                         )),
                       ),
                     ),
-                  if (hospitalProvier.hospitalAllCategoryList.isNotEmpty &&
-                      hospitalProvier.hospitalList.isNotEmpty)
+                  if (hospitalProvider.hospitalAllCategoryList.isNotEmpty &&
+                      hospitalProvider.hospitalList.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
@@ -235,8 +248,8 @@ class _HomeMainState extends State<HomeMain> {
                         ],
                       ),
                     ),
-                  if (hospitalProvier.hospitalAllCategoryList.isNotEmpty &&
-                      hospitalProvier.hospitalList.isNotEmpty)
+                  if (hospitalProvider.hospitalAllCategoryList.isNotEmpty &&
+                      hospitalProvider.hospitalList.isNotEmpty)
                     GridView.builder(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
@@ -249,12 +262,12 @@ class _HomeMainState extends State<HomeMain> {
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount:
-                          hospitalProvier.hospitalAllCategoryList.length > 6
+                          hospitalProvider.hospitalAllCategoryList.length > 6
                               ? 6
-                              : hospitalProvier.hospitalAllCategoryList.length,
+                              : hospitalProvider.hospitalAllCategoryList.length,
                       itemBuilder: (context, index) {
                         final category =
-                            hospitalProvier.hospitalAllCategoryList[index];
+                            hospitalProvider.hospitalAllCategoryList[index];
                         return InkWell(
                           onTap: () {
                             if (authProvider.auth.currentUser == null) {

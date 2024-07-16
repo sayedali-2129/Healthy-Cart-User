@@ -1,4 +1,4 @@
-import 'dart:developer' as log;
+//import 'dart:developer' as log;
 import 'dart:io';
 import 'dart:math';
 
@@ -233,7 +233,7 @@ class IPharmacyImpl implements IPharmacyFacade {
         );
 
         if (stateList.isNotEmpty) {
-          log.log(stateList.toString());
+       //   log.log(stateList.toString());
 
           do {
             QuerySnapshot<Map<String, dynamic>> refreshedClass;
@@ -282,7 +282,7 @@ class IPharmacyImpl implements IPharmacyFacade {
               break;
             }
 
-            log.log('currentStateIndex=$currentStateIndex');
+           // log.log('currentStateIndex=$currentStateIndex');
           } while (currentStateIndex <= (stateList.length - 1));
         } else {
           lastdoc = null;
@@ -293,7 +293,7 @@ class IPharmacyImpl implements IPharmacyFacade {
       return right(
           docList.map((e) => PharmacyModel.fromMap(e.data())).toList());
     } on FirebaseException catch (e) {
-      log.log(e.toString());
+     // log.log(e.toString());
       return left(
         MainFailure.firebaseException(errMsg: e.code),
       );
@@ -496,7 +496,7 @@ class IPharmacyImpl implements IPharmacyFacade {
       }
       if (lastPharmacyDoc != null) {
         query = query.startAfterDocument(lastPharmacyDoc!);
-        log.log(lastPharmacyDoc!.id.toString());
+      //  log.log(lastPharmacyDoc!.id.toString());
       }
       final snapshots = await query.limit(6).get();
       if (snapshots.docs.length < 6 || snapshots.docs.isEmpty) {
@@ -511,8 +511,8 @@ class IPharmacyImpl implements IPharmacyFacade {
           .toList();
       return right(pharmacyList);
     } on FirebaseException catch (e) {
-      log.log(e.code);
-      log.log(e.message!);
+      //log.log(e.code);
+      //log.log(e.message!);
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -547,7 +547,7 @@ class IPharmacyImpl implements IPharmacyFacade {
       }
       if (lastAllProductDoc != null) {
         query = query.startAfterDocument(lastAllProductDoc!);
-        log.log(lastAllProductDoc!.id.toString());
+       // log.log(lastAllProductDoc!.id.toString());
       }
       final snapshots = await query.limit(4).get();
       if (snapshots.docs.length < 4 || snapshots.docs.isEmpty) {
@@ -563,8 +563,8 @@ class IPharmacyImpl implements IPharmacyFacade {
           .toList();
       return right(productList);
     } on FirebaseException catch (e) {
-      log.log(e.code);
-      log.log(e.message!);
+     // log.log(e.code);
+      //log.log(e.message!);
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -594,14 +594,14 @@ class IPharmacyImpl implements IPharmacyFacade {
           .orderBy('createdAt', descending: true)
           .where('pharmacyId', isEqualTo: pharmacyId)
           .where('categoryId', isEqualTo: categoryId);
-      log.log('Category Id from Implementation  $categoryId');
+     // log.log('Category Id from Implementation  $categoryId');
       if (searchText != null && searchText.isNotEmpty) {
         query =
             query.where('keywords', arrayContains: searchText.toLowerCase());
       }
       if (lastCategoryProductDoc != null) {
         query = query.startAfterDocument(lastCategoryProductDoc!);
-        log.log(lastCategoryProductDoc!.id.toString());
+       // log.log(lastCategoryProductDoc!.id.toString());
       }
       final snapshots = await query.limit(6).get();
       if (snapshots.docs.length < 6 || snapshots.docs.isEmpty) {
@@ -617,8 +617,8 @@ class IPharmacyImpl implements IPharmacyFacade {
           .toList();
       return right(productList);
     } on FirebaseException catch (e) {
-      log.log(e.code);
-      log.log(e.message!);
+    //  log.log(e.code);
+      //log.log(e.message!);
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -649,10 +649,10 @@ class IPharmacyImpl implements IPharmacyFacade {
 
       return right(categoryList);
     } on FirebaseException catch (e) {
-      log.log(e.toString());
+     // log.log(e.toString());
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
-      log.log(e.toString());
+    //  log.log(e.toString());
 
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
@@ -684,8 +684,8 @@ class IPharmacyImpl implements IPharmacyFacade {
     required String pharmacyId,
     required String userId,
   }) async {
-    log.log('userId $userId');
-    log.log('pharmacyId $pharmacyId');
+    //log.log('userId $userId');
+    //log.log('pharmacyId $pharmacyId');
     try {
       final docRef = _firebaseFirestore
           .collection(FirebaseCollections.userCollection)
@@ -812,7 +812,7 @@ class IPharmacyImpl implements IPharmacyFacade {
       await batch.commit();
       return right(orderProducts.copyWith(id: id));
     } on FirebaseException catch (e) {
-      log.log(e.message!);
+     // log.log(e.message!);
       return left(MainFailure.firebaseException(errMsg: e.message.toString()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
@@ -833,7 +833,7 @@ class IPharmacyImpl implements IPharmacyFacade {
           .where('userId', isEqualTo: userId);
       if (lastProductOrderDoc != null) {
         query = query.startAfterDocument(lastProductOrderDoc!);
-        log.log(lastProductOrderDoc!.id.toString());
+        //log.log(lastProductOrderDoc!.id.toString());
       }
       final snapshots = await query.limit(6).get();
       if (snapshots.docs.length < 6 || snapshots.docs.isEmpty) {
@@ -865,7 +865,7 @@ class IPharmacyImpl implements IPharmacyFacade {
   FutureResult<PharmacyOrderModel> updateProductOrderDetails(
       {required String orderProductId,
       required PharmacyOrderModel orderProducts}) async {
-    log.log(orderProductId);
+   // log.log(orderProductId);
     try {
       await _firebaseFirestore
           .collection(FirebaseCollections.pharmacyOrder)
@@ -893,7 +893,7 @@ class IPharmacyImpl implements IPharmacyFacade {
         return right(
             PharmacyModel.fromMap(result.data()!).copyWith(id: result.id));
       } else {
-        log.log('That pharmacy of hospital Not Available');
+        //log.log('That pharmacy of hospital Not Available');
         return left(const MainFailure.generalException(errMsg: ''));
       }
     } on FirebaseException catch (e) {

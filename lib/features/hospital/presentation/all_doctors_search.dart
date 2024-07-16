@@ -1,4 +1,4 @@
-import 'dart:developer';
+//import 'dart:developer';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -33,7 +33,7 @@ class _AllDoctorsSearchScreenState extends State<AllDoctorsSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.category!.id.toString(), name: '----------------------');
+
     return Consumer<HospitalProvider>(builder: (context, hospitalProvider, _) {
       return Scaffold(
         body: PopScope(

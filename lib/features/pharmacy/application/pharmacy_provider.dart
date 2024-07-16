@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +45,7 @@ class PharmacyProvider extends ChangeNotifier {
   void setUserId(String id) {
     userId = id;
     notifyListeners();
-    log('User id in pharmacy $userId');
+  //  log('User id in pharmacy $userId');
   }
 
 /* ---------------------------------- prescription image --------------------------------- */
@@ -334,7 +332,7 @@ class PharmacyProvider extends ChangeNotifier {
       notifyListeners();
       CustomToast.errorToast(text: "Couldn't able to show products");
     }, (products) {
-      log('Called all products');
+     
       productAllList.addAll(products); //// here we are assigning the doctor
     });
     fetchLoading = false;
@@ -371,7 +369,7 @@ class PharmacyProvider extends ChangeNotifier {
     notifyListeners();
     final result = await _iPharmacyFacade.getPharmacyCategoryProductDetails(
         categoryId: categoryId, pharmacyId: pharmacyId, searchText: searchText);
-    log(categoryId.toString());
+   // log(categoryId.toString());
     result.fold((failure) {
       fetchLoading = false;
       notifyListeners();
@@ -484,17 +482,17 @@ class PharmacyProvider extends ChangeNotifier {
     fetchLoading = true;
     final result = await _iPharmacyFacade.createOrGetProductToUserCart(
       pharmacyId: pharmacyId ?? '',
-      userId: userId ?? '',
+      userId: userId,
     );
     result.fold(
       (failure) {
-        log(failure.errMsg);
+        //log(failure.errMsg);
         CustomToast.errorToast(text: failure.errMsg);
         fetchLoading = false;
         notifyListeners();
       },
       (cartProductsData) {
-        log(cartProductsData.toString());
+       // log(cartProductsData.toString());
         if (cartProductsData.isNotEmpty) {
           cartProductMap.addAll(cartProductsData);
         }
@@ -627,7 +625,7 @@ class PharmacyProvider extends ChangeNotifier {
       totalFinalAmount += totalDiscountAmount;
     }
 
-    log("totalAmount  :$totalAmount");
+   // log("totalAmount  :$totalAmount");
 
     notifyListeners();
   }
@@ -675,7 +673,7 @@ class PharmacyProvider extends ChangeNotifier {
             body:
                 'New Order Received from ${userDetails?.userName ?? 'Customer'}. Please check the details and accept the order',
             title: 'New Booking Received!!!');
-        log('Order Request Send Successfully');
+       // log('Order Request Send Successfully');
         CustomToast.sucessToast(text: "The order is in review");
         clearImageFileAndPrescriptionDetails();
         clearProductAndUserInCheckOutDetails();
@@ -730,10 +728,12 @@ class PharmacyProvider extends ChangeNotifier {
   }
 
   void clearProductAndUserInCheckOutDetails() {
-    log('Calledd clear selectedRadio');
+   // log('Calledd clear selectedRadio');
     userAddress = null;
     userDetails = null;
     selectedRadio = null;
+    totalAmount = 0;
+    totalFinalAmount = 0;
     prescriptionImageUrl = null;
     prescriptionImageFile = null;
     prescriptionDescription.clear();

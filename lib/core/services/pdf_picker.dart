@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -19,7 +19,6 @@ class PdfPickerService {
         type: FileType.custom,
         allowedExtensions: ['pdf'],
       );
-      log(pickedFile.toString());
       if (pickedFile != null && pickedFile.files.isNotEmpty) {
         PlatformFile file = pickedFile.files.first;
         File pdfFile = File(file.path!);
@@ -38,7 +37,7 @@ class PdfPickerService {
     required File pdfFile,
   }) async {
     final String pdfName =
-        'hospital_pdf/${DateTime.now().microsecondsSinceEpoch}.pdf';
+        'user_pdf/${DateTime.now().microsecondsSinceEpoch}.pdf';
     final String? downloadPdfUrl;
     try {
       await _storage

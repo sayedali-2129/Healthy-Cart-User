@@ -119,8 +119,7 @@ class LabPrescriptionPage extends StatelessWidget {
                         : FadeInUp(
                             child: ButtonWidget(
                               onPressed: () {
-                                if (authProvider
-                                        .userFetchlDataFetched!.userName ==
+                                if (authProvider .userFetchlDataFetched!.userName ==
                                     null) {
                                   EasyNavigation.push(
                                       type: PageTransitionType.rightToLeft,
@@ -146,8 +145,7 @@ class LabPrescriptionPage extends StatelessWidget {
                                                         context: context,
                                                         text: 'Please wait...');
 
-                                                    if (labProvider
-                                                            .prescriptionFile !=
+                                                    if (labProvider.prescriptionFile !=
                                                         null) {
                                                       await labProvider
                                                           .uploadPrescription();

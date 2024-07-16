@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +36,6 @@ class _LabMainState extends State<LabMain> {
     final labProvider = context.read<LabProvider>();
     final labOrderProvider = context.read<LabOrdersProvider>();
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    log(userId ?? 'null');
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
@@ -102,7 +99,7 @@ class _LabMainState extends State<LabMain> {
                       ? NoDataInSelectedLocation(
                           locationTitle:
                               '${locationProvider.locallySavedLabortaryplacemark?.localArea}',
-                          typeOfService: 'Labortaries',
+                          typeOfService: 'labortaries',
                         )
                       : null),
               if (labProvider.isFirebaseDataLoding == true &&

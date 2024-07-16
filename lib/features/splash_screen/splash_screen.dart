@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +40,6 @@ class _SplashScreenState extends State<SplashScreen> {
         if (authProvider.userFetchlDataFetched?.isActive == false) {
           UserBlockedAlertBox.userBlockedAlert();
         } else {
-          log(authProvider.userFetchlDataFetched?.id ?? 'null');
           EasyNavigation.pushReplacement(
             context: context,
             page: const LocationPage(

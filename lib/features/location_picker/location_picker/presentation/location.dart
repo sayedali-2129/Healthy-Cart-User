@@ -96,11 +96,13 @@ class LocationPage extends StatelessWidget {
                                 },
                               );
                             },
-                            buttonWidget: const Text('Pick Your Location',
+                            buttonWidget: const Text(
+                              'Pick Your Location',
                                 style: TextStyle(
+                                  fontFamily: 'Montserrat',
                                     color: BColors.white,
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w600)),
+                                    fontWeight: FontWeight.w600),),
                             buttonColor: BColors.darkblue,
                           ),
                   ],

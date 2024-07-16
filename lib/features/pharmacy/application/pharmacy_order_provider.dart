@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -36,7 +34,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
       userId: userId ?? '',
     );
     result.fold((err) {
-      log('Error :: ${err.errMsg}');
+     // log('Error :: ${err.errMsg}');
     }, (success) {
       pendingOrders = success;
     });
@@ -61,7 +59,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
     );
     result.fold((err) {
       CustomToast.errorToast(text: "Couldn't able to cancel the order.");
-      log('Error :: ${err.errMsg}');
+      //log('Error :: ${err.errMsg}');
     }, (success) {
       pendingOrders.removeAt(index);
       CustomToast.sucessToast(text: "Order is cancelled.");
@@ -162,7 +160,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
     result.fold((failure) {
       CustomToast.errorToast(text: "Couldn't able to get completed orders");
     }, (completedOrders) {
-      log(completedOrders.length.toString());
+     // log(completedOrders.length.toString());
       completedOrderList
           .addAll(completedOrders); //// here we are assigning the doctor
     });
@@ -185,7 +183,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
     result.fold((failure) {
       CustomToast.errorToast(text: "Couldn't able to get completed orders");
     }, (cancelledOrders) {
-      log(cancelledOrders.length.toString());
+      //log(cancelledOrders.length.toString());
       cancelledOrderList
           .addAll(cancelledOrders); //// here we are assigning the doctor
     });
@@ -204,7 +202,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
     String? paymentId,
     required BuildContext context,
   }) async {
-    log('Data payment $selectedPaymentRadio');
+   // log('Data payment $selectedPaymentRadio');
     final data = productData.copyWith(
       isUserAccepted: true,
       paymentId: paymentId,
@@ -223,7 +221,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
         notifyListeners();
       },
       (orderProduct) {
-        log('FCM ::::: ${orderProduct.pharmacyDetails?.fcmToken}');
+        //log('FCM ::::: ${orderProduct.pharmacyDetails?.fcmToken}');
         sendFcmMessage(
             token: orderProduct.pharmacyDetails?.fcmToken ?? '',
             body:
@@ -253,7 +251,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
     );
     result.fold((err) {
       CustomToast.errorToast(text: "Couldn't able to cancel the order.");
-      log('Error :: ${err.errMsg}');
+     // log('Error :: ${err.errMsg}');
     }, (success) {
       CustomToast.sucessToast(text: "Order is cancelled.");
     });
@@ -268,7 +266,7 @@ class PharmacyOrderProvider extends ChangeNotifier {
         await _iPharmacyOrderFacade.getSingleOrderDoc(userId: userId);
 
     result.fold((err) {
-      log('ERRROR :: ${err.errMsg}');
+     // log('ERRROR :: ${err.errMsg}');
     }, (success) {
       singleOrderDoc = success;
     });

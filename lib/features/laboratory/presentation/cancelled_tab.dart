@@ -37,7 +37,7 @@ class _CancelledTabState extends State<LabCancelledTab> {
   @override
   Widget build(BuildContext context) {
     return Consumer<LabOrdersProvider>(builder: (context, ordersProvider, _) {
-      final screenWidth = MediaQuery.of(context).size.width;
+     
 
       return CustomScrollView(
         controller: scrollController,

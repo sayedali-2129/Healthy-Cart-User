@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/features/payment_gateway/domain/facade/i_gateway_facade.dart';
@@ -15,7 +15,7 @@ class GatewayProvider extends ChangeNotifier {
   Future<void> getGatewayKey() async {
     final result = await iGatewayFacade.getGetwayKey();
     result.fold((err) {
-      log('ERROR :: $err');
+     // log('ERROR :: $err');
     }, (success) {
       gatewayModel = success;
     });
