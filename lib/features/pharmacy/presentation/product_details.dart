@@ -29,8 +29,9 @@ class ProductDetailsScreen extends StatelessWidget {
       (timeStamp) {
         final pharmacyProvider =
             Provider.of<PharmacyProvider>(context, listen: false);
-        if (pharmacyProvider.cartProductMap.containsKey((productData.id))) 
-        { pharmacyProvider.quantityCount = pharmacyProvider.cartProductMap[productData.id];
+        if (pharmacyProvider.cartProductMap.containsKey((productData.id))) {
+          pharmacyProvider.quantityCount =
+              pharmacyProvider.cartProductMap[productData.id];
         } else {
           pharmacyProvider.quantityCount = 1;
         }
@@ -49,21 +50,21 @@ class ProductDetailsScreen extends StatelessWidget {
             SliverAppBar(
               backgroundColor: BColors.white,
               automaticallyImplyLeading: false,
-              toolbarHeight: 300,
+              toolbarHeight: 296,
               pinned: true,
               floating: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
                   padding: const EdgeInsets.only(
-                      top: 24, right: 16, left: 16, bottom: 32),
+                      top: 24, right: 16, left: 16, bottom: 16),
                   child: FadeInUp(
-                    duration: const Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 400),
                     child: const GalleryImagePicker(),
                   ),
                 ),
               ),
               bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(40),
+                preferredSize: const Size.fromHeight(32),
                 child: Material(
                   clipBehavior: Clip.antiAlias,
                   color: BColors.lightGrey.withOpacity(.5),
@@ -73,7 +74,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       topRight: Radius.circular(16)),
                   child: const SizedBox(
                     width: double.infinity,
-                    height: 24,
+                    height: 16,
                   ),
                 ),
               ),
@@ -91,8 +92,6 @@ class ProductDetailsScreen extends StatelessWidget {
                     children: [
                       Text(
                         productData.productName ?? 'Unknown Name',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
@@ -102,7 +101,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       const Gap(4),
                       RichText(
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                        maxLines: 2,
                         text: TextSpan(children: [
                           const TextSpan(
                             text: 'by  ', // remeber to put space
@@ -196,7 +195,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                         const TextSpan(
                                           text: "₹ ",
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               decoration:
                                                   TextDecoration.lineThrough,
                                               decorationThickness: 2,
@@ -207,7 +206,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                         TextSpan(
                                           text: "${productData.productMRPRate}",
                                           style: const TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               decoration:
                                                   TextDecoration.lineThrough,
                                               decorationThickness: 2,
@@ -224,18 +223,19 @@ class ProductDetailsScreen extends StatelessWidget {
                                     child: PercentageShowContainerWidget(
                                         width: 80,
                                         height: 32,
-                                        text:'${productData.discountPercentage}% off',
+                                        text:
+                                            '${productData.discountPercentage}% off',
                                         textColor: BColors.white,
                                         boxColor: BColors.offRed)),
                               ],
                             ),
-                      const Gap(16),
+                      const Gap(24),
                       if (productData.productType != null)
                         ProductDetailsStraightWidget(
                           title: 'Product type : ',
                           text: '${productData.productType}',
                         ),
-                      const Gap(24),
+                      const Gap(16),
                       (productData.typeOfProduct != "Equipment")
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -301,36 +301,24 @@ class ProductDetailsScreen extends StatelessWidget {
             if (productData.productInformation != null)
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 16),
                   child: Container(
-                    color: BColors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const ProductDetailsHeading(
-                              text: 'Product Information : '),
-                          const Gap(4),
-                          Text(
-                            productData.productInformation ?? '',
-                            style: const TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: BColors.textBlack,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                      color: BColors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
+                        child: TitleAndProductInformation(
+                          title: 'Product Information : ',
+                          content: productData.productInformation ?? '',
+                        ),
+                      )),
                 ),
               ),
             if (productData.requirePrescription == true)
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 16),
                   child: Container(
                     color: BColors.lightGrey,
                     child: Padding(
@@ -370,7 +358,8 @@ class ProductDetailsScreen extends StatelessWidget {
                 child: Container(
                   color: BColors.lightGrey.withOpacity(.5),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -392,7 +381,8 @@ class ProductDetailsScreen extends StatelessWidget {
                             text2:
                                 '${productData.productMeasurementNumber} ${productData.productMeasurement}',
                           ),
-                        if (productData.storingDegree != null)
+                        if (productData.storingDegree != null &&
+                            productData.storingDegree!.isNotEmpty)
                           ProductInfoWidget(
                             text1: 'Store Below :',
                             text2:
@@ -406,29 +396,55 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 16),
                 child: Container(
                   color: BColors.white,
-                  child:  Padding(
-                      padding: const EdgeInsets.all(16),
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          
-                          if(productData.specification != null && productData.specification != '')
-                          TitleAndProductInformation(title: 'Specification : ', content: productData.specification ?? '',),
-                          const Gap(8),
-                          if(productData.keyBenefits != null && productData.keyBenefits != '')
-                          TitleAndProductInformation(title: 'Key Benefits : ', content: productData.keyBenefits ?? '',),
-                          const Gap(8),
-                          if(productData.directionToUse != null && productData.directionToUse != '')
-                          TitleAndProductInformation(title: 'Diection To Use : ', content: productData.directionToUse ?? '',),
-                            const Gap(8),
-                         if(productData.safetyInformation != null && productData.safetyInformation != '')
-                          TitleAndProductInformation(title: 'Safety Information : ', content: productData.safetyInformation ?? '',),
-                                      
-                         const  Gap(40),
-                          const Divider(), 
+                          if (productData.specification != null &&
+                              productData.specification!.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: TitleAndProductInformation(
+                                title: 'Specification : ',
+                                content: productData.specification ?? '',
+                              ),
+                            ),
+                         
+                          if (productData.keyBenefits != null &&
+                              productData.keyBenefits!.isNotEmpty)
+                            Padding(
+                              padding:  const EdgeInsets.only(bottom: 16),
+                              child: TitleAndProductInformation(
+                                title: 'Key Benefits : ',
+                                content: productData.keyBenefits ?? '',
+                              ),
+                            ),
+                         
+                          if (productData.directionToUse != null &&
+                              productData.directionToUse!.isNotEmpty)
+                            Padding(
+                              padding:  const EdgeInsets.only(bottom: 16),
+                              child: TitleAndProductInformation(
+                                title: 'Diection To Use : ',
+                                content: productData.directionToUse ?? '',
+                              ),
+                            ),
+                        
+                          if (productData.safetyInformation != null &&
+                              productData.safetyInformation!.isNotEmpty)
+                            Padding(
+                              padding:  const EdgeInsets.only(bottom: 16),
+                              child: TitleAndProductInformation(
+                                title: 'Safety Information : ',
+                                content: productData.safetyInformation ?? '',
+                              ),
+                            ),
+                          const Gap(24),
+                          const Divider(),
                         ],
                       )),
                 ),
@@ -449,22 +465,24 @@ class ProductDetailsScreen extends StatelessWidget {
 
 class TitleAndProductInformation extends StatelessWidget {
   const TitleAndProductInformation({
-    super.key, required this.title, required this.content,
+    super.key,
+    required this.title,
+    required this.content,
   });
   final String title;
   final String content;
   @override
   Widget build(BuildContext context) {
     return Column(
-     crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProductDetailsHeading(text: title),
-       const Gap(4),
+        const Gap(6),
         Text(
           content,
           style: const TextStyle(
             fontFamily: 'Montserrat',
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: FontWeight.w500,
             color: BColors.textBlack,
           ),
@@ -528,116 +546,116 @@ class BottomSheetAddToCart extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8))),
-              child: (pharmacyProvider.cartProductMap.containsKey(productData.id))
-                  ? Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 16, top: 8, right: 24, left: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 200,
-                            child: ProductInfoWidget(
-                              fontSize1: 11,
-                              fontSize2: 12,
-                              text1: 'Quantity in cart : ',
-                              text2: (pharmacyProvider.quantityCount == 1)
-                                  ? '${pharmacyProvider.quantityCount} item already in your cart'
-                                  : '${pharmacyProvider.quantityCount} items already in your cart',
-                            ),
+              child:
+                  (pharmacyProvider.cartProductMap.containsKey(productData.id))
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 16, top: 8, right: 24, left: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 200,
+                                child: ProductInfoWidget(
+                                  fontSize1: 11,
+                                  fontSize2: 12,
+                                  text1: 'Quantity in cart : ',
+                                  text2: (pharmacyProvider.quantityCount == 1)
+                                      ? '${pharmacyProvider.quantityCount} item already in your cart'
+                                      : '${pharmacyProvider.quantityCount} items already in your cart',
+                                ),
+                              ),
+                              (!fromCart) // check wheather get to this page from cart or not
+                                  ? ButtonWidget(
+                                      onPressed: () {
+                                        EasyNavigation.push(
+                                          context: context,
+                                          page: const ProductCartScreen(),
+                                        );
+                                      },
+                                      buttonHeight: 48,
+                                      buttonWidth: 160,
+                                      buttonColor: BColors.darkblue,
+                                      buttonWidget: const Text(
+                                        'View Cart',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Montserrat',
+                                            color: BColors.white),
+                                      ),
+                                    )
+                                  : ButtonWidget(
+                                      onPressed: () {
+                                        EasyNavigation.pop(context: context);
+                                      },
+                                      buttonHeight: 48,
+                                      buttonWidth: 160,
+                                      buttonColor: BColors.darkblue,
+                                      buttonWidget: const Text(
+                                        'Back to Cart',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Montserrat',
+                                            color: BColors.white),
+                                      ),
+                                    )
+                            ],
                           ),
-                          (!fromCart) // check wheather get to this page from cart or not
-                              ? ButtonWidget(
-                                  onPressed: () {
-                                    EasyNavigation.push(
-                                      context: context,
-                                      page: const ProductCartScreen(),
-                                    );
-                                  },
-                                  buttonHeight: 48,
-                                  buttonWidth: 160,
-                                  buttonColor: BColors.darkblue,
-                                  buttonWidget: const Text(
-                                    'View Cart',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Montserrat',
-                                        color: BColors.white),
-                                  ),
-                                )
-                              : ButtonWidget(
-                                  onPressed: () {
-                                    EasyNavigation.pop(context: context);
-                                  },
-                                  buttonHeight: 48,
-                                  buttonWidth: 160,
-                                  buttonColor: BColors.darkblue,
-                                  buttonWidget: const Text(
-                                    'Back to Cart',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Montserrat',
-                                        color: BColors.white),
-                                  ),
-                                )
-                        ],
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 16, top: 8, right: 24, left: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          QuantityCountWidget(
-                            incrementTap: () {
-                              pharmacyProvider.increment();
-                            },
-                            decrementTap: () {
-                              pharmacyProvider.decrement();
-                            },
-                            quantityValue: pharmacyProvider.quantityCount,
-                          ),
-                          ButtonWidget(
-                            onPressed: () {
-
-                              LoadingLottie.showLoading(
-                                context: context,
-                                text: 'Adding to cart...',
-                              );
-                              pharmacyProvider
-                                  .addProductToUserCart(
-                                productId: productData.id ?? '',
-                                selectedQuantityCount:
-                                    pharmacyProvider.quantityCount,
-                                cartQuantityIncrement: null,
-                              )
-                                  .then(
-                                (value) {
-                                  EasyNavigation.pop(context: context);
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 16, top: 8, right: 24, left: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              QuantityCountWidget(
+                                incrementTap: () {
+                                  pharmacyProvider.increment();
                                 },
-                              );
-                            },
-                            buttonHeight: 48,
-                            buttonWidth: 160,
-                            buttonColor: BColors.offRed,
-                            buttonWidget: const Text(
-                              'Add to Cart',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat',
-                                  color: BColors.white),
-                            ),
+                                decrementTap: () {
+                                  pharmacyProvider.decrement();
+                                },
+                                quantityValue: pharmacyProvider.quantityCount,
+                              ),
+                              ButtonWidget(
+                                onPressed: () {
+                                  LoadingLottie.showLoading(
+                                    context: context,
+                                    text: 'Adding to cart...',
+                                  );
+                                  pharmacyProvider
+                                      .addProductToUserCart(
+                                    productId: productData.id ?? '',
+                                    selectedQuantityCount:
+                                        pharmacyProvider.quantityCount,
+                                    cartQuantityIncrement: null,
+                                  )
+                                      .then(
+                                    (value) {
+                                      EasyNavigation.pop(context: context);
+                                    },
+                                  );
+                                },
+                                buttonHeight: 48,
+                                buttonWidth: 160,
+                                buttonColor: BColors.offRed,
+                                buttonWidget: const Text(
+                                  'Add to Cart',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      color: BColors.white),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ));
+                        ));
     });
   }
 }

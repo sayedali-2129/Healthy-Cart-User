@@ -199,9 +199,8 @@ class LabPrescriptionPage extends StatelessWidget {
                                         } else {
                                           EasyNavigation.push(
                                               context: context,
-                                              type: PageTransitionType
-                                                  .rightToLeft,
-                                              duration: 250,
+                                              type: PageTransitionType.rightToLeft,
+                                             
                                               page:
                                                   LabPrescriptionOrderAddressScreen(
                                                 labModel: labModel,

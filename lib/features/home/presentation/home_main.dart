@@ -198,7 +198,6 @@ class _HomeMainState extends State<HomeMain> {
                                   : EasyNavigation.push(
                                       context: context,
                                       type: PageTransitionType.rightToLeft,
-                                      duration: 250,
                                       page: HospitalDetails(
                                         hospitalId: hospitalProvider
                                             .hospitalList[index].id!,
@@ -289,7 +288,7 @@ class _HomeMainState extends State<HomeMain> {
                                 EasyNavigation.push(
                                   context: context,
                                   type: PageTransitionType.rightToLeft,
-                                  duration: 250,
+                                  
                                   page: AllDoctorsScreen(
                                     category: category,
                                   ),
@@ -430,7 +429,7 @@ class _HomeMainState extends State<HomeMain> {
                                     EasyNavigation.push(
                                         context: context,
                                         type: PageTransitionType.rightToLeft,
-                                        duration: 250,
+                                       
                                         page: LabDetailsScreen(
                                           labId: labProvider.labList[index].id!,
                                           index: index,

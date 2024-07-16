@@ -20,7 +20,7 @@ class NoInternetPage extends StatelessWidget {
           ),
           const Gap(32),
           const Text(
-            "No Internet Connection !",
+            "No Internet Connection!",
             textAlign: TextAlign.center,
             style:  TextStyle(
                 fontFamily: 'Montserrat',

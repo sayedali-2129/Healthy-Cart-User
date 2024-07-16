@@ -72,6 +72,7 @@ class _HospitalsMainSearchState extends State<HospitalsMainSearch> {
                 )
               else if (hospitalProvider.hospitalListSearch.isEmpty)
                  SliverFillRemaining(
+                  hasScrollBody: false,
                   child: NoDataImageWidget(text:(hospitalProvider.hospitalSearchController.text == '')? 'Search results will be shown here.' : 'No Search results found.'),
                 )
               else
@@ -98,7 +99,7 @@ class _HospitalsMainSearchState extends State<HospitalsMainSearch> {
                                 EasyNavigation.push(
                                     context: context,
                                     type: PageTransitionType.rightToLeft,
-                                    duration: 250,
+                                    
                                     page: HospitalDetails(
                                       hospitalId: hospitalDetails.id!,
                                       categoryIdList:

@@ -37,8 +37,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
       elevation: 3,
       child: InkWell(
         onTap: () {
-          pharmacyProvider.selectedIndex =
-              0; // to make the  the first index as 0 of image url list
+          pharmacyProvider.selectedIndex = 0; // to make the  the first index as 0 of image url list
           pharmacyProvider
               .setProductImageList(widget.productData.productImage ?? []);
           EasyNavigation.push(
@@ -62,7 +61,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
           ),
-          padding: const EdgeInsets.only(top: 12, left: 6, right: 6, bottom: 8),
+          padding: const EdgeInsets.only(top: 8, left: 4, right: 4, bottom: 6),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -72,7 +71,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                   RoundedContainer(
                     height: 160,
                     width: double.infinity,
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10),
                     backgroundColor: BColors.lightGrey,
                     child: RoundedImage(
                         backgroundColor: BColors.white,
@@ -85,7 +84,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -103,7 +102,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                           maxLines: 2,
                           textAlign: TextAlign.left,
                         ),
-                        const Gap(8),
+                        const Gap(4),
                         RichText(
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -162,7 +161,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                             ),
                           ],
                         ),
-                        const Gap(8),
+                        const Gap(6),
 
                         (widget.productData.productDiscountRate == null)
                             ? Row(
@@ -248,7 +247,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                                   text: "₹ ",
                                                   style: TextStyle(
                                                       fontFamily: 'Montserrat',
-                                                      fontSize: 13,
+                                                      fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                       color: BColors.black,
@@ -259,7 +258,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                                                       '${widget.productData.productMRPRate ?? 0}',
                                                   style: const TextStyle(
                                                       fontFamily: 'Montserrat',
-                                                      fontSize: 13,
+                                                      fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                       color: BColors.textBlack,
@@ -310,7 +309,7 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                             style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 fontSize: 10,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 color: BColors.black),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,

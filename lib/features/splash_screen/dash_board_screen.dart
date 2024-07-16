@@ -136,7 +136,7 @@ class DashboardScreen extends StatelessWidget {
                               const Gap(16),
                               RichText(
                                   textAlign: TextAlign.center,
-                                  text: TextSpan(children: [
+                                  text: const TextSpan(children: [
                                     TextSpan(
                                         text:
                                             'Discover a world of wellness at ',
@@ -160,30 +160,7 @@ class DashboardScreen extends StatelessWidget {
                                             fontFamily: 'Montserrat'))
                                   ])),
 
-                              // GestureDetector(
-                              //   onTap: () {
-                              //     EasyNavigation.pushAndRemoveUntil(
-                              //         context: context,
-                              //         duration: 250,
-                              //         page: const SplashScreen());
-                              //   },
-                              //   child: Container(
-                              //     width: double.infinity,
-                              //     height: 54,
-                              //     decoration: BoxDecoration(
-                              //       borderRadius: BorderRadius.circular(16),
-                              //       color: const Color(0xff50C2C9),
-                              //     ),
-                              //     child: const Center(
-                              //         child: Text(
-                              //       'Get Started',
-                              //       style: TextStyle(
-                              //           fontSize: 18,
-                              //           fontWeight: FontWeight.w600,
-                              //           color: Colors.white),
-                              //     )),
-                              //   ),
-                              // )
+                              
                             ],
                           ),
                         ),
@@ -201,7 +178,7 @@ class DashboardScreen extends StatelessWidget {
       bottomNavigationBar: GestureDetector(
         onTap: () {
           EasyNavigation.pushAndRemoveUntil(
-              context: context, duration: 250, page: const SplashScreen());
+              context: context, page: const SplashScreen());
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

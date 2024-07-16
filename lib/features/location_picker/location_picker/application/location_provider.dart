@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/domain/i_location_facde.dart';
@@ -15,7 +14,10 @@ class LocationProvider extends ChangeNotifier {
 
   List<PlaceMark> searchResults = [];
   bool searchLoading = false;
-  String? userId = FirebaseAuth.instance.currentUser?.uid;
+  String? userId;
+  void setUserId(String? id) {
+    userId = id;
+  }
 
   Future<bool> getLocationPermisson() async {
     locationGetLoading = true;
@@ -23,7 +25,6 @@ class LocationProvider extends ChangeNotifier {
     bool? isPermissionEnabled;
     await iLocationFacade.getLocationPermisson().then(
       (value) {
-     
         isPermissionEnabled = value;
         locationGetLoading = false;
         notifyListeners();
@@ -39,7 +40,7 @@ class LocationProvider extends ChangeNotifier {
     result.fold((error) {
       locationGetLoading =
           false; // this is the loading in the on the initial page
-  
+
       searchLoading = false;
     }, (placeMark) {
       selectedPlaceMark = placeMark;
@@ -53,7 +54,6 @@ class LocationProvider extends ChangeNotifier {
     notifyListeners();
     final result = await iLocationFacade.getSearchPlaces(searchController.text);
     result.fold((error) {
-    
       CustomToast.errorToast(text: error.errMsg);
       searchLoading = false;
       notifyListeners();
@@ -73,15 +73,13 @@ class LocationProvider extends ChangeNotifier {
     if (selectedPlaceMark == null) {
       locationGetLoading = false;
       notifyListeners();
-      CustomToast.errorToast(
-          text: "Couldn't able to get the location,please try again");
+      CustomToast.errorToast(text: "Couldn't able to get the location,please try again");
       return;
     }
     locationGetLoading = true;
     notifyListeners();
- 
-    final result = await iLocationFacade.updateUserLocation(
-        selectedPlaceMark!, userId ?? '');
+
+    final result = await iLocationFacade.updateUserLocation(selectedPlaceMark!, userId ?? '');
     result.fold((failure) {
       CustomToast.errorToast(text: failure.errMsg);
       locationGetLoading = false;
@@ -150,11 +148,10 @@ class LocationProvider extends ChangeNotifier {
       () {
         if (locationSetter == 1) {
           locallySavedHospitalplacemark = selectedPlaceMark;
-
           notifyListeners();
         } else if (locationSetter == 2) {
           locallySavedLabortaryplacemark = selectedPlaceMark;
-     
+
           notifyListeners();
         } else if (locationSetter == 3) {
           locallySavedPharmacyplacemark = selectedPlaceMark;
@@ -165,14 +162,12 @@ class LocationProvider extends ChangeNotifier {
         } else if (locationSetter == 5) {
           locallySavedDoctorplacemark = selectedPlaceMark;
         } else {
-   
           locallySavedHospitalplacemark = selectedPlaceMark;
           locallySavedLabortaryplacemark = selectedPlaceMark;
           locallySavedPharmacyplacemark = selectedPlaceMark;
           localsavedHomeplacemark = selectedPlaceMark;
           locallySavedDoctorplacemark = selectedPlaceMark;
         }
-  
         onSucess.call();
         locationGetLoading = false;
         CustomToast.sucessToast(text: 'Location added sucessfully');

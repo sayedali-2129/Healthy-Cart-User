@@ -42,11 +42,10 @@ class _ProfileSetupState extends State<ProfileSetup> {
     return Consumer2<AuthenticationProvider, UserProfileProvider>(
         builder: (context, authProvider, profileProvider, _) {
       profileProvider.phoneNumberController.text = phoneNumber!;
-
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => EasyNavigation.pop(context: context),
               icon: const Icon(Icons.arrow_back_ios_new_rounded)),
           backgroundColor: BColors.mainlightColor,
           shape: const RoundedRectangleBorder(
@@ -61,164 +60,169 @@ class _ProfileSetupState extends State<ProfileSetup> {
           shadowColor: BColors.black.withOpacity(0.8),
           elevation: 5,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  /* ---------------------------------- IMAGE --------------------------------- */
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      UserImageContainer(
-                        userModel: widget.userModel,
-                      ),
-                    ],
-                  ),
-                  const Gap(16),
-                  /* ---------------------------------- NAME ---------------------------------- */
-                  TextfieldWidget(
-                    fieldHeading: 'Name*',
-                    hintText: 'Please Enter Your Name',
-                    controller: profileProvider.nameController,
-                    validator: BValidator.validate,
-                  ),
-                  const Gap(16),
-                  /* ------------------------------ PHONE NUMBER ------------------------------ */
-                  TextfieldWidget(
-                    fieldHeading: 'Phone Number*',
-                    controller: profileProvider.phoneNumberController,
-                    readOnly: true,
-                  ),
-                  const Gap(16),
-                  /* ---------------------------------- EMAIL --------------------------------- */
-                  TextfieldWidget(
-                    keyboardType: TextInputType.emailAddress,
-                    fieldHeading: 'Email*',
-                    hintText: 'Please Enter Your Email',
-                    controller: profileProvider.emailController,
-                    validator:BValidator.validate
-                  ),
-                  const Gap(16),
-                  /* ----------------------------------- AGE ---------------------------------- */
-                  TextfieldWidget(
-                    fieldHeading: 'Age*',
-                    hintText: 'Please Enter Your Age',
-                    controller: profileProvider.ageController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    validator: BValidator.validate,
-                  ),
-                  const Gap(16),
-                  /* ----------------------------- GENDER DROPDOWN ---------------------------- */
+        body: PopScope(
+          onPopInvoked: (didPop) {
+            profileProvider.clearData();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    /* ---------------------------------- IMAGE --------------------------------- */
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        UserImageContainer(
+                          userModel: widget.userModel,
+                        ),
+                      ],
+                    ),
+                    const Gap(16),
+                    /* ---------------------------------- NAME ---------------------------------- */
+                    TextfieldWidget(
+                      fieldHeading: 'Name*',
+                      hintText: 'Please Enter Your Name',
+                      controller: profileProvider.nameController,
+                      validator: BValidator.validate,
+                    ),
+                    const Gap(16),
+                    /* ------------------------------ PHONE NUMBER ------------------------------ */
+                    TextfieldWidget(
+                      fieldHeading: 'Phone Number*',
+                      controller: profileProvider.phoneNumberController,
+                      readOnly: true,
+                    ),
+                    const Gap(16),
+                    /* ---------------------------------- EMAIL --------------------------------- */
+                    TextfieldWidget(
+                        keyboardType: TextInputType.emailAddress,
+                        fieldHeading: 'Email*',
+                        hintText: 'Please Enter Your Email',
+                        controller: profileProvider.emailController,
+                        validator: BValidator.validate),
+                    const Gap(16),
+                    /* ----------------------------------- AGE ---------------------------------- */
+                    TextfieldWidget(
+                      fieldHeading: 'Age*',
+                      hintText: 'Please Enter Your Age',
+                      controller: profileProvider.ageController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: BValidator.validate,
+                    ),
+                    const Gap(16),
+                    /* ----------------------------- GENDER DROPDOWN ---------------------------- */
 
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Gender*',
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: BColors.black),
-                      ),
-                    ],
-                  ),
-                  const GenderDropDown(),
-                  const Gap(16),
-                  /* -------------------------------- LOCATION -------------------------------- */
-                  Column(
-                    children: [
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Location*',
-                            style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: BColors.grey),
-                          ),
-                        ],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          EasyNavigation.push(
-                              context: context,
-                              page:  UserLocationSearchWidget(
-                                isUserEditProfile: true,
-                                locationSetter: 0,
-                                 onSucess: () {
-                        EasyNavigation.pop(context: context);
-                      },
-                              ));
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          height: 40,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    "${authProvider.userFetchlDataFetched?.placemark?.localArea ?? 'Select Location'}, ${authProvider.userFetchlDataFetched?.placemark?.district ?? ''}, ${authProvider.userFetchlDataFetched?.placemark?.state ?? ''}",
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: BColors.black)),
-                                const Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 22,
-                                )
-                              ],
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Gender*',
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: BColors.black),
+                        ),
+                      ],
+                    ),
+                    const GenderDropDown(),
+                    const Gap(16),
+                    /* -------------------------------- LOCATION -------------------------------- */
+                    Column(
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Location*',
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: BColors.grey),
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            EasyNavigation.push(
+                                context: context,
+                                page: UserLocationSearchWidget(
+                                  isUserEditProfile: true,
+                                  locationSetter: 0,
+                                  onSucess: () {
+                                    //EasyNavigation.pop(context: context);
+                                    // no need to pop, 
+                                  },
+                                ));
+                          },
+                          child: Container(
+                            color: Colors.white,
+                            height: 40,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      "${authProvider.userFetchlDataFetched?.placemark?.localArea ?? 'Select Location'}, ${authProvider.userFetchlDataFetched?.placemark?.district ?? ''}, ${authProvider.userFetchlDataFetched?.placemark?.state ?? ''}",
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: BColors.black)),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 22,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const Gap(30),
-                  ButtonWidget(
-                    buttonHeight: 45,
-                    buttonWidth: double.infinity,
-                    buttonColor: BColors.mainlightColor,
-                    buttonWidget: const Text(
-                      'Save',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: BColors.white),
+                      ],
                     ),
-                    onPressed: () async {
-                      if (!_formKey.currentState!.validate()) {
-                        _formKey.currentState!.validate();
-                        return;
-                      } else {
-                        if (widget.userModel == null) {
-                          LoadingLottie.showLoading(
-                              context: context, text: 'Saving...');
-                          await profileProvider.uploadUserImage().then(
-                            (value) async {
-                              await profileProvider.addUserDetails(
-                                  context: context);
-                            },
-                          );
+                    const Gap(30),
+                    ButtonWidget(
+                      buttonHeight: 45,
+                      buttonWidth: double.infinity,
+                      buttonColor: BColors.mainlightColor,
+                      buttonWidget: const Text(
+                        'Save',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: BColors.white),
+                      ),
+                      onPressed: () {
+                        if (!_formKey.currentState!.validate()) {
+                          _formKey.currentState!.validate();
+                          return;
                         } else {
-                          LoadingLottie.showLoading(
-                              context: context, text: 'Updating...');
-                          if (profileProvider.imageUrl == null) {
-                            await profileProvider.uploadUserImage();
+                          if (widget.userModel?.userName == null) {
+                            LoadingLottie.showLoading(
+                                context: context, text: 'Saving...');
+                            profileProvider.uploadUserImage().then(
+                              (value) {
+                                profileProvider.addUserDetails(
+                                    context: context);
+                              },
+                            );
+                          } else {
+                            LoadingLottie.showLoading(
+                                context: context, text: 'Updating...');
+                            if (profileProvider.imageFile != null) {
+                              profileProvider.uploadUserImage();
+                            }
+                            profileProvider.updateUserDetails(context: context);
                           }
-                          await profileProvider.updateUserDetails(
-                              context: context);
                         }
-                      }
-                    },
-                  )
-                ],
+                      },
+                    )
+                  ],
+                ),
               ),
             ),
           ),

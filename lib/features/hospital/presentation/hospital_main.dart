@@ -137,7 +137,7 @@ class _HospitalMainState extends State<HospitalMain> {
                                 EasyNavigation.push(
                                     context: context,
                                     type: PageTransitionType.rightToLeft,
-                                    duration: 250,
+                                    
                                     page: HospitalDetails(
                                       hospitalId: hospitalProvider
                                           .hospitalList[index].id!,
@@ -145,7 +145,7 @@ class _HospitalMainState extends State<HospitalMain> {
                                               .hospitalList[index]
                                               .selectedCategoryId ??
                                           [],
-                                    ));
+                                    ),);
                               }
                             },
                           ),
@@ -178,7 +178,8 @@ class _HospitalMainState extends State<HospitalMain> {
                             context: context,
                             page: const HospitalBookingTab(),
                             type: PageTransitionType.bottomToTop,
-                            duration: 200);
+                          
+                            );
                       }),
                   if (bookingProvider.singleOrderDoc != null)
                     const Positioned(

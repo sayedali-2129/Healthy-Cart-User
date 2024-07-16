@@ -667,7 +667,8 @@ class PharmacyProvider extends ChangeNotifier {
             context: context,
             page: const OrderRequestSuccessScreen(
               title: 'Your order is in review, we will notify you soon.',
-            ));
+            ),
+            );
         sendFcmMessage(
             token: selectedpharmacyData?.fcmToken ?? '',
             body:

@@ -195,7 +195,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                           page: LabPrescriptionPage(
                                             labModel: labList,
                                           ),
-                                          duration: 250,
+                                         
                                           type: PageTransitionType.rightToLeft,
                                         );
                                       }
@@ -395,7 +395,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                 Navigator.pop(context);
                                 EasyNavigation.push(
                                   type: PageTransitionType.rightToLeft,
-                                  duration: 300,
+                                  
                                   context: context,
                                   page: CheckoutScreen(
                                     userId:

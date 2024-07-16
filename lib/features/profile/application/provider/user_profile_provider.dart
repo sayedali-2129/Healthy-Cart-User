@@ -14,7 +14,6 @@ class UserProfileProvider with ChangeNotifier {
   UserProfileProvider(this.iUserProfileFacade);
   final IUserProfileFacade iUserProfileFacade;
 
-
   String? imageUrl;
   File? imageFile;
   UserModel? userModel;
@@ -32,11 +31,11 @@ class UserProfileProvider with ChangeNotifier {
   }
 
   Future<void> pickUserImage() async {
-      String? userId = FirebaseAuth.instance.currentUser?.uid;
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
     final result = await iUserProfileFacade.pickUserImage();
     result.fold((error) {
       CustomToast.errorToast(text: error.errMsg);
-    //  log('ERROR IN PICK IMAGE:$error');
+      //  log('ERROR IN PICK IMAGE:$error');
     }, (imageSuccess) async {
       if (imageUrl != null) {
         await iUserProfileFacade.deleteStorageImage(
@@ -49,13 +48,13 @@ class UserProfileProvider with ChangeNotifier {
   }
 
   Future<void> uploadUserImage() async {
-    if (imageFile == null && imageUrl == null) {
+    if (imageFile == null) {
       return;
     }
     final result = await iUserProfileFacade.uploadUserImage(imageFile!);
     result.fold((error) {
       CustomToast.errorToast(text: error.errMsg);
-    //  log('ERROR IN UPLOAD IMAGE:$error');
+      //  log('ERROR IN UPLOAD IMAGE:$error');
     }, (url) {
       imageUrl = url;
       notifyListeners();
@@ -63,7 +62,7 @@ class UserProfileProvider with ChangeNotifier {
   }
 
   Future<void> addUserDetails({required BuildContext context}) async {
-      String? userId = FirebaseAuth.instance.currentUser?.uid;
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
     userModel = UserModel(
       userName: nameController.text,
       userEmail: emailController.text,
@@ -83,6 +82,7 @@ class UserProfileProvider with ChangeNotifier {
         Navigator.pop(context);
       },
       (success) {
+        removeProfileImage();
         clearData();
         CustomToast.sucessToast(text: success);
         Navigator.pop(context);
@@ -93,7 +93,7 @@ class UserProfileProvider with ChangeNotifier {
   }
 
   Future<void> updateUserDetails({required BuildContext context}) async {
-      String? userId = FirebaseAuth.instance.currentUser?.uid;
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
     userModel = UserModel(
       userName: nameController.text,
       userEmail: emailController.text,
@@ -111,6 +111,7 @@ class UserProfileProvider with ChangeNotifier {
       },
       (success) {
         clearData();
+        removeProfileImage();
         CustomToast.sucessToast(text: success);
         Navigator.pop(context);
         Navigator.pop(context);
@@ -136,6 +137,7 @@ class UserProfileProvider with ChangeNotifier {
   }
 
   void clearData() {
+    removeProfileImage();
     nameController.clear();
     emailController.clear();
     ageController.clear();

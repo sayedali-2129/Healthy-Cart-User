@@ -34,7 +34,7 @@ class _PatientMemberScreenState extends State<PatientMemberScreen> {
       final familyMemberProvider = context.read<UserFamilyMembersProvider>();
       final authProvider = context.read<AuthenticationProvider>();
       familyMemberProvider.getUserFamilyMember(
-          userId: authProvider.userFetchlDataFetched?.id ?? '');
+          userId: authProvider.userFetchlDataFetched!.id!);
     });
     super.initState();
   }

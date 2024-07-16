@@ -62,17 +62,15 @@ class _ProductSearchListScreenState extends State<ProductSearchListScreen> {
                       padding: const EdgeInsets.all(16),
                       sliver: SliverGrid.builder(
                         itemCount: pharmacyProvider.productAllList.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 6,
                           mainAxisSpacing: 6,
-                          mainAxisExtent: 360,
+                          mainAxisExtent: 376,
                         ),
                         itemBuilder: (context, index) {
                           return PostCardVertical(
-                            productData:
-                                pharmacyProvider.productAllList[index],
+                            productData: pharmacyProvider.productAllList[index],
                           );
                         },
                       ),

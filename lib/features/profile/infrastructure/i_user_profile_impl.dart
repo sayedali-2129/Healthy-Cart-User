@@ -30,7 +30,7 @@ class IUserProfileImpl implements IUserProfileFacade {
       final counterDoc = _firestore
           .collection(FirebaseCollections.counts)
           .doc('htfK5JIPTaZVlZi6fGdZ');
-      batch.update(userDoc, userModel.toMap());
+      batch.update(userDoc, userModel.toEditMap());
       batch.update(counterDoc, {'userCount': FieldValue.increment(1)});
       await batch.commit();
       return right('User Details Added Successfully');

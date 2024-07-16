@@ -36,10 +36,9 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
     final hospitalProvider = context.read<HospitalProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-      //  log(widget.category!.id.toString());
         hospitalProvider.clearAllDoctorsCategoryWiseData();
         hospitalBookingProivder.allDoctorsCategoryWiseFetchInitData(
-            context: context, categoryId: widget.category!.id!);
+            context: context, categoryId: widget.category?.id ?? '');
       },
     );
     super.initState();
@@ -51,147 +50,154 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
             HospitalProvider, LocationProvider>(
         builder: (context, hospitalBookingProivder, authProvider,
             hospitalProvider, locationProvider, _) {
-      return Scaffold(
-        body: RefreshIndicator(
-          color: BColors.darkblue,
-          backgroundColor: BColors.white,
-          onRefresh: () async {
-            hospitalBookingProivder
-              ..clearAllDoctorsCategoryWiseLocationData()
-              ..allDoctorsCategoryWiseFetchInitData(
-                  context: context, categoryId: widget.category?.id ?? '');
-          },
-          child: CustomScrollView(
-            controller: hospitalBookingProivder.mainScrollController,
-            slivers: [
-              SliverCustomAppbar(
-                title: widget.category?.category ?? 'Unknown Category',
-                onBackTap: () {
-                  Navigator.pop(context);
-                },
-                child: PreferredSize(
-                  preferredSize: const Size.fromHeight(80),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        InkWell(
-                          onTap: () async {
-                            await EasyNavigation.push(
-                              type: PageTransitionType.topToBottom,
-                              context: context,
-                              page: UserLocationSearchWidget(
-                                isUserEditProfile: false,
-                                locationSetter: 5,
-                                onSucess: () {},
-                              ),
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              const Icon(Icons.location_on_outlined),
-                              Text(
-                                "${locationProvider.locallySavedDoctorplacemark?.localArea},${locationProvider.locallySavedDoctorplacemark?.district},${locationProvider.locallySavedDoctorplacemark?.state}",
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: BColors.darkblue),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Gap(8),
-                        TextField(
-                          onTap: () {
-                            EasyNavigation.push(
+      return PopScope(
+        onPopInvoked: (didPop) {
+          hospitalBookingProivder.clearAllDoctorsCategoryWiseLocationData();
+        },
+        child: Scaffold(
+          body: RefreshIndicator(
+            color: BColors.darkblue,
+            backgroundColor: BColors.white,
+            onRefresh: () async {
+              hospitalBookingProivder
+                ..clearAllDoctorsCategoryWiseLocationData()
+                ..allDoctorsCategoryWiseFetchInitData(
+                    context: context, categoryId: widget.category?.id ?? '');
+            },
+            child: CustomScrollView(
+              controller: hospitalBookingProivder.mainScrollController,
+              slivers: [
+                SliverCustomAppbar(
+                  title: widget.category?.category ?? 'Unknown Category',
+                  onBackTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: PreferredSize(
+                    preferredSize: const Size.fromHeight(80),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              await EasyNavigation.push(
                                 type: PageTransitionType.topToBottom,
                                 context: context,
-                                page: AllDoctorsSearchScreen(
-                                  category: widget.category,
-                                ));
-                          },
-                          showCursor: false,
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(16, 4, 8, 4),
-                            hintText: 'Search Doctors',
-                            hintStyle: const TextStyle(fontSize: 14),
-                            suffixIcon: const Icon(
-                              Icons.search_outlined,
-                              color: BColors.darkblue,
-                            ),
-                            filled: true,
-                            fillColor: BColors.white,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(26),
+                                page: UserLocationSearchWidget(
+                                  isUserEditProfile: false,
+                                  locationSetter: 5,
+                                  onSucess: () {},
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                const Icon(Icons.location_on_outlined),
+                                Text(
+                                  "${locationProvider.locallySavedDoctorplacemark?.localArea},${locationProvider.locallySavedDoctorplacemark?.district},${locationProvider.locallySavedDoctorplacemark?.state}",
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: BColors.darkblue),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
+                          const Gap(8),
+                          TextField(
+                            onTap: () {
+                              EasyNavigation.push(
+                                  type: PageTransitionType.topToBottom,
+                                  context: context,
+                                  page: AllDoctorsSearchScreen(
+                                    category: widget.category,
+                                  ));
+                            },
+                            showCursor: false,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(16, 4, 8, 4),
+                              hintText: 'Search Doctors',
+                              hintStyle: const TextStyle(fontSize: 14),
+                              suffixIcon: const Icon(
+                                Icons.search_outlined,
+                                color: BColors.darkblue,
+                              ),
+                              filled: true,
+                              fillColor: BColors.white,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(26),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                  child: (hospitalBookingProivder
-                              .allDoctorHomeList.isNotEmpty &&
-                          hospitalBookingProivder.checkNearestDoctorLocation())
-                      ? NoDataInSelectedLocation(
-                          locationTitle:
-                              '${locationProvider.locallySavedHospitalplacemark?.localArea}',
-                          typeOfService: 'Doctors',
-                        )
-                      : null),
-              if (hospitalBookingProivder.isFirebaseDataLoding == true &&
-                  hospitalBookingProivder.allDoctorHomeList.isEmpty)
-                const SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(
-                    child: LoadingIndicater(),
-                  ),
-                )
-              else if (hospitalBookingProivder.allDoctorHomeList.isEmpty)
-                const SliverFillRemaining(
-                  child: NoDataImageWidget(text: 'No Doctors Found'),
-                )
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                  sliver: SliverList.separated(
-                      separatorBuilder: (context, index) => const Gap(12),
-                      itemCount:
-                          hospitalBookingProivder.allDoctorHomeList.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            EasyNavigation.push(
-                                context: context,
-                                page: CategoryWiseDoctorDetailsScreen(
-                                  doctorModel: hospitalBookingProivder
-                                      .allDoctorHomeList[index],
-                                ),
-                                type: PageTransitionType.rightToLeft,
-                                duration: 250);
-                          },
-                          child: FadeIn(
-                            child: DoctorCard(
-                              fromHomePage: true,
-                              doctor: hospitalBookingProivder
-                                  .allDoctorHomeList[index],
+                SliverToBoxAdapter(
+                    child:
+                        (hospitalBookingProivder.allDoctorHomeList.isNotEmpty &&
+                                hospitalBookingProivder
+                                    .checkNearestDoctorLocation())
+                            ? NoDataInSelectedLocation(
+                                locationTitle:
+                                    '${locationProvider.locallySavedHospitalplacemark?.localArea}',
+                                typeOfService: 'Doctors',
+                              )
+                            : null),
+                if (hospitalBookingProivder.isFirebaseDataLoding == true &&
+                    hospitalBookingProivder.allDoctorHomeList.isEmpty)
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: LoadingIndicater(),
+                    ),
+                  )
+                else if (hospitalBookingProivder.allDoctorHomeList.isEmpty)
+                  const SliverFillRemaining(
+                    child: NoDataImageWidget(text: 'No Doctors Found'),
+                  )
+                else
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                    sliver: SliverList.separated(
+                        separatorBuilder: (context, index) => const Gap(12),
+                        itemCount:
+                            hospitalBookingProivder.allDoctorHomeList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              EasyNavigation.push(
+                                  context: context,
+                                  page: CategoryWiseDoctorDetailsScreen(
+                                    doctorModel: hospitalBookingProivder
+                                        .allDoctorHomeList[index],
+                                  ),
+                                  type: PageTransitionType.rightToLeft,
+                                  );
+                            },
+                            child: FadeIn(
+                              child: DoctorCard(
+                                fromHomePage: true,
+                                doctor: hospitalBookingProivder
+                                    .allDoctorHomeList[index],
+                              ),
                             ),
-                          ),
-                        );
-                      }),
-                ),
-              SliverToBoxAdapter(
-                  child: (hospitalBookingProivder.circularProgressLOading ==
-                              true &&
-                          hospitalBookingProivder.allDoctorHomeList.isNotEmpty)
-                      ? const Center(child: LoadingIndicater())
-                      : null),
-            ],
+                          );
+                        }),
+                  ),
+                SliverToBoxAdapter(
+                    child: (hospitalBookingProivder.circularProgressLOading ==
+                                true &&
+                            hospitalBookingProivder
+                                .allDoctorHomeList.isNotEmpty)
+                        ? const Center(child: LoadingIndicater())
+                        : null),
+              ],
+            ),
           ),
         ),
       );

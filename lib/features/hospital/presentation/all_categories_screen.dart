@@ -60,7 +60,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
                     EasyNavigation.push(
                         context: context,
                         type: PageTransitionType.rightToLeft,
-                        duration: 250,
+                        
                         page: AllDoctorsScreen(
                           category: category,  
                         ),

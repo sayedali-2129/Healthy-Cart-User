@@ -13,8 +13,7 @@ import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
 
 class OTPScreen extends StatefulWidget {
-  const OTPScreen(
-      {super.key, required this.phoneNumber});
+  const OTPScreen({super.key, required this.phoneNumber});
   final String phoneNumber;
 
   @override
@@ -59,12 +58,12 @@ class _OTPScreenState extends State<OTPScreen> {
         appBar: AppBar(
           surfaceTintColor: BColors.white,
           backgroundColor: BColors.white,
-          leading: InkWell(
-              onTap: () {
-                EasyNavigation.pop(context: context);
-              },
-              child: const Icon(Icons.arrow_back_ios_new_rounded),
-              ),
+          leading: IconButton(
+            onPressed: () {
+              EasyNavigation.pop(context: context);
+            },
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          ),
         ),
         body: Consumer<AuthenticationProvider>(
             builder: (context, authenticationProvider, _) {
@@ -136,7 +135,10 @@ class _OTPScreenState extends State<OTPScreen> {
                       },
                       buttonWidget: const Text(
                         'Verify Code',
-                        style: TextStyle(fontSize: 18, color: BColors.white,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: BColors.white,
+                            fontWeight: FontWeight.w600),
                       ),
                       buttonColor: BColors.buttonLightColor,
                     ),
@@ -148,21 +150,19 @@ class _OTPScreenState extends State<OTPScreen> {
                           const TextSpan(
                               text: "Didn't get OTP ?  ",
                               style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                                 fontFamily: 'Montserrat',
-                                 color: BColors.textLightBlack
-                              )),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  fontFamily: 'Montserrat',
+                                  color: BColors.textLightBlack)),
                           (seconds == 0)
                               ? TextSpan(
                                   text: 'Resend',
                                   style: const TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                       fontFamily: 'Montserrat',
-                                 color: BColors.textBlack
-                                  ),
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: 'Montserrat',
+                                      color: BColors.textBlack),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       LoadingLottie.showLoading(
@@ -173,11 +173,10 @@ class _OTPScreenState extends State<OTPScreen> {
                               : TextSpan(
                                   text: 'in 00:$seconds',
                                   style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
                                       fontFamily: 'Montserrat',
-                                 color: BColors.textLightBlack
-                                  ),
+                                      color: BColors.textLightBlack),
                                 ),
                         ],
                       ),

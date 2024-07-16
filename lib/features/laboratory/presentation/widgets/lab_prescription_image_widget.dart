@@ -28,7 +28,6 @@ class LabPrescriptionImageWidget extends StatelessWidget {
               EasyNavigation.push(
                 context: context,
                 type: PageTransitionType.rightToLeft,
-                duration: 200,
                 page: ImageView(
                   imageFile: labProvider.prescriptionFile!,
                 ),
