@@ -11,6 +11,7 @@ import 'package:healthy_cart_user/core/custom/prescription_bottom_sheet/precript
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
+import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/cart_items_card.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/order_summary_card.dart';
@@ -24,11 +25,10 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen(
-      {super.key, required this.index, required this.userId, this.userModel});
-  final int index;
+  const CheckoutScreen({super.key, required this.userId, this.userModel, required this.labData});
   final String userId;
   final UserModel? userModel;
+  final LabModel labData;
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -41,9 +41,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final labProvider = context.read<LabProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    //  log(labProvider.selectedRadio.toString());
+      //  log(labProvider.selectedRadio.toString());
       if (labProvider.selectedRadio == 'Home') {
-
         provider.getUserAddress(userId: widget.userId);
       }
     });
@@ -106,16 +105,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         children: [
                                           TextSpan(
                                               text:
-                                                  '${labProvider.labList[widget.index].laboratoryName}- ',
+                                                  '${widget.labData.laboratoryName}- ',
                                               style: const TextStyle(
                                                 color: BColors.black,
                                                 fontWeight: FontWeight.w600,
                                                 fontFamily: 'Montserrat',
                                               )),
                                           TextSpan(
-                                            text: labProvider
-                                                    .labList[widget.index]
-                                                    .address ??
+                                            text: widget.labData.address ??
                                                 'No Address',
                                             style: const TextStyle(
                                                 fontFamily: 'Montserrat',
@@ -256,7 +253,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                         context: context,
                                                         type: PageTransitionType
                                                             .rightToLeft,
-                                                        
                                                         page: ImageView(
                                                           imageFile: labProvider
                                                               .prescriptionFile!,
@@ -312,7 +308,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         /* --------------------------------- BANNER --------------------------------- */
                         AdSlider(
                             screenWidth: double.infinity,
-                            labId: labProvider.labList[widget.index].id!)
+                            labId: widget.labData.id!)
                       ],
                     ),
                   ),
@@ -343,13 +339,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       await labProvider.addLabOrders(
                           prescriptionOnly: false,
                           selectedTests: labProvider.cartItems,
-                          labModel: labProvider.labList[widget.index],
-                          labId: labProvider.labList[widget.index].id!,
+                          labModel: widget.labData,
+                          labId: widget.labData.id!,
                           userId: widget.userId,
                           userModel: widget.userModel!,
                           selectedAddress: addressProvider.selectedAddress ??
                               UserAddressModel(),
-                          fcmtoken: labProvider.labList[widget.index].fcmToken!,
+                          fcmtoken: widget.labData.fcmToken!,
                           userName: widget.userModel!.userName!);
                       labProvider.clearCart();
                       labProvider.selectedRadio = null;

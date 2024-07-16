@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -173,6 +171,17 @@ class LabProvider with ChangeNotifier {
     );
   }
 
+  String? labId;
+  LabModel? selectedLabData;
+  void setLabIdAndLab({
+    required String selectedLabId,
+    required LabModel selectedLab,
+  }) {
+    labId = selectedLabId;
+    selectedLabData = selectedLab;
+    notifyListeners();
+  }
+
 /* --------------------------- GET AND SEARCH LABS -------------------------- */
   final ScrollController searchScrollController = ScrollController();
   Future<void> getLabs() async {
@@ -184,7 +193,7 @@ class LabProvider with ChangeNotifier {
 
     result.fold(
       (err) {
-       // log(err.errMsg);
+        // log(err.errMsg);
         CustomToast.errorToast(
             text: "Couldn't able to show pharmacies near you.");
 
@@ -193,7 +202,7 @@ class LabProvider with ChangeNotifier {
       (success) {
         labSearchList.addAll(success);
         notifyListeners();
-       // log('labs fetched successfully');
+        // log('labs fetched successfully');
       },
     );
     labFetchLoading = false;
@@ -228,6 +237,7 @@ class LabProvider with ChangeNotifier {
       },
     );
   }
+
   /* -------------------------------------------------------------------------- */
 
   /* ----------------------------- GET LAB BANNER ----------------------------- */
@@ -238,13 +248,13 @@ class LabProvider with ChangeNotifier {
     final result = await iLabFacade.getLabBanner(labId: labId);
     result.fold(
       (err) {
-       // log('error in banner fetch :: ${err.errMsg}');
+        // log('error in banner fetch :: ${err.errMsg}');
         detailsScreenLoading = false;
         notifyListeners();
       },
       (bannerList) {
         labBannerList = bannerList;
-       // log('banner fetched :: $labId');
+        // log('banner fetched :: $labId');
         detailsScreenLoading = false;
         notifyListeners();
       },
@@ -259,7 +269,7 @@ class LabProvider with ChangeNotifier {
     final result = await iLabFacade.getAvailableTests(labId: labId);
     result.fold(
       (err) {
-      //  log('error in getAllTests() :: ${err.errMsg}');
+        //  log('error in getAllTests() :: ${err.errMsg}');
         detailsScreenLoading = false;
         notifyListeners();
       },
@@ -378,7 +388,7 @@ class LabProvider with ChangeNotifier {
         await iLabOrdersFacade.createLabOrder(labOrdersModel: labOrderModel!);
     result.fold(
       (err) {
-       // log('error in addLabOrders() :: ${err.errMsg}');
+        // log('error in addLabOrders() :: ${err.errMsg}');
       },
       (success) {
         sendFcmMessage(
@@ -386,7 +396,7 @@ class LabProvider with ChangeNotifier {
             body:
                 'New Booking Received from $userName. Please check the details and accept the order',
             title: 'New Booking Received!!!');
-       // log('Order Request Send Successfully');
+        // log('Order Request Send Successfully');
       },
     );
     notifyListeners();
@@ -397,7 +407,7 @@ class LabProvider with ChangeNotifier {
     final result = await iLabOrdersFacade.pickPrescription(source: source);
     result.fold(
       (err) {
-       // log('error in pickPrescription() :: ${err.errMsg}');
+        // log('error in pickPrescription() :: ${err.errMsg}');
       },
       (success) {
         prescriptionFile = success;
@@ -411,7 +421,7 @@ class LabProvider with ChangeNotifier {
     final result = await iLabOrdersFacade.uploadPrescription(prescriptionFile!);
     result.fold(
       (err) {
-       // log('error in uploadPrescription() :: ${err.errMsg}');
+        // log('error in uploadPrescription() :: ${err.errMsg}');
       },
       (success) {
         prescriptionUrl = success;
@@ -434,4 +444,28 @@ class LabProvider with ChangeNotifier {
     cartItems = [];
     notifyListeners();
   }
+  /* --------------------------- Get Single Lab for fetch in hospital side -------------------------- */
+
+  LabModel? hospitalLabortary;
+  Future<void> getSingleLab({required String hospitalLabId}) async {
+    hospitalLabortary = null;
+    labFetchLoading = true;
+    notifyListeners();
+    final result = await iLabFacade.getSingleLab(labId: hospitalLabId);
+    result.fold((failure) {
+      labFetchLoading = false;
+      notifyListeners();
+    }, (lab) {
+      if (lab.isActive == true && lab.requested == 2) {
+        hospitalLabortary = lab;
+      } else {
+        hospitalLabortary = null;
+      }
+
+      labFetchLoading = false;
+      notifyListeners();
+    });
+  }
+
+/* -------------------------------------------------------------------------- */
 }

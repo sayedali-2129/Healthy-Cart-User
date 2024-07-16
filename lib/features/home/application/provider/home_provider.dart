@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/features/home/domain/facade/i_home_facade.dart';
@@ -20,13 +19,13 @@ class HomeProvider with ChangeNotifier {
   bool canPopNow = false;
 /* ---------------------------- FETCH HOME BANNER --------------------------- */
   Future<void> getBanner() async {
+    if (homeBannerList.isNotEmpty) return;
     isLoading = true;
     notifyListeners();
-
     final result = await iHomeFacade.getBanner();
     result.fold(
       (err) {
-       // log("'ERROR IN PROVIDER getBanner(): ${err.errMsg}");
+        // log("'ERROR IN PROVIDER getBanner(): ${err.errMsg}");
       },
       (success) {
         homeBannerList = success;
@@ -67,7 +66,4 @@ class HomeProvider with ChangeNotifier {
     }
     return isFirstTime;
   }
-
-  
-
 }

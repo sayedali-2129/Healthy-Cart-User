@@ -118,6 +118,7 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
             if (pharmacyProvider.bannerImageList.isNotEmpty)
               SliverToBoxAdapter(
                 child: FadeInLeft(
+                  duration: const Duration(milliseconds: 500),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: AdPharmacySlider(

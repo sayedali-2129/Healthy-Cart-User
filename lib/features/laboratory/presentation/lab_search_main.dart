@@ -97,13 +97,14 @@ class _LaborataryMainSearchState extends State<LaboratoriesMainSearch> {
                                 CustomToast.infoToast(
                                     text: 'Login to continue !');
                               } else {
+                                labProvider.setLabIdAndLab(
+                                selectedLabId: labDetails.id!,
+                                selectedLab: labDetails,
+                                );
                                 EasyNavigation.push(
                                     context: context,
                                     type: PageTransitionType.rightToLeft,
-                                    page: LabDetailsScreen(
-                                      labId: labDetails.id!,
-                                      index: index,
-                                    ));
+                                    page:const  LabDetailsScreen(),);
                               }
                             },
                           ),

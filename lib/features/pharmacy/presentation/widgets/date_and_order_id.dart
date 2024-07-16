@@ -25,7 +25,7 @@ class OrderIDAndDateSection extends StatelessWidget {
           },
           child: Container(
             height: 28,
-            width: 176,
+           padding: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: BColors.darkblue),

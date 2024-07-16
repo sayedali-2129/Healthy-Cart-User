@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/no_data/no_data_widget.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
-import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_accept_card.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_approved_card.dart';
 import 'package:provider/provider.dart';
 
 class PharmacyAcceptedTab extends StatefulWidget {

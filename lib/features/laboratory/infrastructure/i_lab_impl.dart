@@ -558,4 +558,27 @@ class ILabImpl implements ILabFacade {
   Future<void> playPaymentSound() async {
     await _soundServices.loadSound();
   }
+    /* ------------------------ GETTING A SINGLE Labortay FOR HOSPITAL SIDE----------------------- */
+  @override
+  FutureResult<LabModel> getSingleLab(
+      {required String labId}) async {
+    try {
+      final result = await _firestore
+          .collection(FirebaseCollections.laboratory)
+          .doc(labId)
+          .get();
+      if (result.exists) {
+        return right(
+            LabModel.fromMap(result.data()!).copyWith(id: result.id));
+      } else {
+        //log.log('That pharmacy of hospital Not Available');
+        return left(const MainFailure.generalException(errMsg: ''));
+      }
+    } on FirebaseException catch (e) {
+      return left(MainFailure.firebaseException(errMsg: e.message.toString()));
+    } catch (e) {
+      return left(MainFailure.generalException(errMsg: e.toString()));
+    }
+  }
+  /* -------------------------------------------------------------------------- */
 }

@@ -12,9 +12,11 @@ import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_p
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/product_quantity_model.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/order_address_card.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmacy_detail_container.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/product_details_page_view.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
+import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -96,7 +98,7 @@ class _ApprovedOrderDetailsScreenState
                                 },
                                 child: Container(
                                   height: 40,
-                                  width: 200,
+                                  padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       color: BColors.darkblue),
@@ -105,7 +107,7 @@ class _ApprovedOrderDetailsScreenState
                                       '${widget.orderData.id}',
                                       style: const TextStyle(
                                           fontFamily: 'Montserrat',
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           color: BColors.white),
                                     ),
@@ -140,22 +142,25 @@ class _ApprovedOrderDetailsScreenState
                               const Divider(),
                               (widget.orderData.addresss != null &&
                                       widget.orderData.deliveryType == "Home")
-                                  ? const Row(
+                                  ?  Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
+                                        const Text(
                                           'Delivery Address : ',
-                                          style:
-                                                  TextStyle(
+                                          style: TextStyle(
                                               fontFamily: 'Montserrat',
                                               color: BColors.textLightBlack,
                                               fontSize: 12,
                                               fontWeight: FontWeight.w600),
                                         ),
-                                         Gap(8),
+                                       const Gap(8),
+                                        Expanded(
+                                          child: AddressPharmacyOrderCard(
+                                              addressData: widget.orderData.addresss?? UserAddressModel()),
+                                        ),
                                       ],
                                     )
                                   : Row(
@@ -164,7 +169,7 @@ class _ApprovedOrderDetailsScreenState
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                       const  Text(
+                                        const Text(
                                           'Pick-Up Address : ',
                                           style: TextStyle(
                                               fontFamily: 'Montserrat',
@@ -178,11 +183,11 @@ class _ApprovedOrderDetailsScreenState
                                             '${widget.orderData.pharmacyDetails?.pharmacyName ?? 'Pharmacy'}-${widget.orderData.pharmacyDetails?.pharmacyAddress ?? 'Pharmacy'}',
                                             maxLines: 3,
                                             overflow: TextOverflow.ellipsis,
-                                            style:const TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.textBlack,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600),
+                                            style: const TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                color: BColors.textBlack,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600),
                                           ),
                                         )
                                       ],
@@ -207,20 +212,20 @@ class _ApprovedOrderDetailsScreenState
                                       const Text(
                                         'Change reason :',
                                         style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.textLightBlack,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600),
+                                            fontFamily: 'Montserrat',
+                                            color: BColors.textLightBlack,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600),
                                       ),
                                       const Gap(6),
                                       Text(
                                         widget.orderData.rejectReason ??
                                             'Unknown reason',
                                         style: const TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.textBlack,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600),
+                                            fontFamily: 'Montserrat',
+                                            color: BColors.textBlack,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600),
                                       ),
                                     ],
                                   ),
@@ -281,7 +286,7 @@ class _ApprovedOrderDetailsScreenState
                                     RowTextContainerWidget(
                                       text1: 'Total Discount :',
                                       text2:
-                                          "- ₹ ${widget.orderData.totalAmount ?? 0 - widget.orderData.totalDiscountAmount!}",
+                                          "- ₹ ${widget.orderData.totalAmount! - widget.orderData.totalDiscountAmount!}",
                                       text1Color: BColors.textLightBlack,
                                       fontSizeText1: 12,
                                       fontSizeText2: 12,

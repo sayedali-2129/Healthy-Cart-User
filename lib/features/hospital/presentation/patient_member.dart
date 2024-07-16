@@ -6,6 +6,7 @@ import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_w
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
+import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hospital_provider.dart';
@@ -19,8 +20,11 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class PatientMemberScreen extends StatefulWidget {
-  const PatientMemberScreen(
-      {super.key, required this.selectedDoctor, required this.hospital});
+  const PatientMemberScreen({
+    super.key,
+    required this.selectedDoctor,
+    required this.hospital,
+  });
   final DoctorModel selectedDoctor;
   final HospitalModel hospital;
   @override
@@ -41,7 +45,8 @@ class _PatientMemberScreenState extends State<PatientMemberScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final familyMemberProvider = Provider.of<UserFamilyMembersProvider>(context);
+    final familyMemberProvider =
+        Provider.of<UserFamilyMembersProvider>(context);
     final authProvider = Provider.of<AuthenticationProvider>(context);
     final hospitalProvider = Provider.of<HospitalProvider>(context);
     return Scaffold(
@@ -69,7 +74,7 @@ class _PatientMemberScreenState extends State<PatientMemberScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                         "Select Member",
+                        "Select Member",
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -88,44 +93,46 @@ class _PatientMemberScreenState extends State<PatientMemberScreen> {
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () {
-       
-            ConfirmAlertBoxWidget.showAlertConfirmBox(
-              context: context,
-              titleText: 'Confirm Booking',
-              subText:
-                  "Tap 'Yes' to send this booking to the Hospital to check the availability of the slot. Are you sure you want to proceed?",
-              confirmButtonTap: () async {
-                LoadingLottie.showLoading(
-                    context: context, text: 'Please wait...');
-                await hospitalProvider
-                    .addHospitalBooking(
-                        fcmtoken: widget.hospital.fcmToken ?? '',
-                        userName: authProvider.userFetchlDataFetched!.userName!,
-                        hospitalId: widget.hospital.id ?? '',
-                        userId: authProvider.userFetchlDataFetched!.id!,
-                        userModel: authProvider.userFetchlDataFetched!,
-                        hospitalModel: widget.hospital,
-                        totalAmount: widget.selectedDoctor.doctorFee!,
-                        selectedDoctor: widget.selectedDoctor, selectedMember: familyMemberProvider.selectedFamilyMember ?? UserFamilyMembersModel())
-                    .whenComplete(
-                  () {
-                    EasyNavigation.pushAndRemoveUntil(
-                      context: context,
-                      type: PageTransitionType.bottomToTop,
-                      page: const OrderRequestSuccessScreen(
-
-                        title:
-                            'Your Hospital appointment is currently being processed. We will notify you once its confirmed',
-                      ),
-                    );
-                    hospitalProvider.clearControllerData();
-                  },
-                  
-                );
-
-                
-              },
-            );
+          if (familyMemberProvider.selectedFamilyMember == null) {
+            CustomToast.infoToast(text: 'Please add the pateint details');
+            return;
+          }
+          ConfirmAlertBoxWidget.showAlertConfirmBox(
+            context: context,
+            titleText: 'Confirm Booking',
+            subText:
+                "Tap 'Yes' to send this booking to the Hospital to check the availability of the slot. Are you sure you want to proceed?",
+            confirmButtonTap: () async {
+              LoadingLottie.showLoading(
+                  context: context, text: 'Please wait...');
+              await hospitalProvider
+                  .addHospitalBooking(
+                      fcmtoken: widget.hospital.fcmToken ?? '',
+                      userName: authProvider.userFetchlDataFetched!.userName!,
+                      hospitalId: widget.hospital.id ?? '',
+                      userId: authProvider.userFetchlDataFetched!.id!,
+                      userModel: authProvider.userFetchlDataFetched!,
+                      hospitalModel: widget.hospital,
+                      totalAmount: widget.selectedDoctor.doctorFee!,
+                      selectedDoctor: widget.selectedDoctor,
+                      selectedMember:
+                          familyMemberProvider.selectedFamilyMember ??
+                              UserFamilyMembersModel())
+                  .whenComplete(
+                () {
+                  EasyNavigation.pushAndRemoveUntil(
+                    context: context,
+                    type: PageTransitionType.bottomToTop,
+                    page: const OrderRequestSuccessScreen(
+                      title:
+                          'Your Hospital appointment is currently being processed. We will notify you once its confirmed',
+                    ),
+                  );
+                  hospitalProvider.clearControllerData();
+                },
+              );
+            },
+          );
         },
         child: Container(
             height: 60,
