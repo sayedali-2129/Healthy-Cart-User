@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
@@ -207,24 +206,35 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                         if (ordersProvider
                                                 .hospitalpPaymentType ==
                                             'Cash in hand') {
-                                          await ordersProvider.acceptOrder(
-                                              userName: widget.bookingModel
-                                                  .userDetails!.userName!,
-                                              fcmtoken: widget.bookingModel
-                                                  .hospitalDetails!.fcmToken!,
-                                              orderId: widget.bookingModel.id!);
+                                          await ordersProvider
+                                              .acceptOrder(
+                                                  paymentStatus: 0,
+                                                  userName: widget.bookingModel
+                                                      .userDetails!.userName!,
+                                                  fcmtoken: widget
+                                                      .bookingModel
+                                                      .hospitalDetails!
+                                                      .fcmToken!,
+                                                  orderId:
+                                                      widget.bookingModel.id!)
+                                              .whenComplete(
+                                            () {
+                                              ordersProvider.singleOrderDoc =
+                                                  null;
+                                              ordersProvider
+                                                      .hospitalpPaymentType ==
+                                                  null;
+                                            },
+                                          );
 
                                           await EasyNavigation.push(
-                                              context: context,
-                                              page: const OrderRequestSuccessScreen(
-                                                  title:
-                                                      'Your Booking is successfully completed!'),
-                                              type: PageTransitionType
-                                                  .bottomToTop,
-                                              );
-                                          ordersProvider.hospitalpPaymentType ==
-                                              null;
-                                          ordersProvider.singleOrderDoc = null;
+                                            context: context,
+                                            page: const OrderRequestSuccessScreen(
+                                                title:
+                                                    'Your Booking is successfully completed!'),
+                                            type:
+                                                PageTransitionType.bottomToTop,
+                                          );
 
                                           Navigator.pop(context);
                                         } else {
@@ -239,21 +249,30 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                             userEmail: widget.bookingModel
                                                 .userDetails!.userEmail!,
                                             onSuccess: (paymentId) async {
-                                              await ordersProvider.acceptOrder(
-                                                  paymentId: paymentId,
-                                                  userName: widget.bookingModel
-                                                      .userDetails!.userName!,
-                                                  fcmtoken: widget
-                                                      .bookingModel
-                                                      .hospitalDetails!
-                                                      .fcmToken!,
-                                                  orderId:
-                                                      widget.bookingModel.id!);
+                                              await ordersProvider
+                                                  .acceptOrder(
+                                                      paymentStatus: 1,
+                                                      paymentId: paymentId,
+                                                      userName: widget
+                                                          .bookingModel
+                                                          .userDetails!
+                                                          .userName!,
+                                                      fcmtoken: widget
+                                                          .bookingModel
+                                                          .hospitalDetails!
+                                                          .fcmToken!,
+                                                      orderId: widget
+                                                          .bookingModel.id!)
+                                                  .whenComplete(
+                                                () {
+                                                  ordersProvider
+                                                      .singleOrderDoc = null;
+                                                },
+                                              );
                                             },
                                           );
                                         }
                                       }
-                                      ordersProvider.singleOrderDoc = null;
                                       Navigator.pop(context);
                                     },
                                   ));

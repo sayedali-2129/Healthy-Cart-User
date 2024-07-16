@@ -21,6 +21,7 @@ abstract class IHospitalBookingFacade {
   FutureResult<String> acceptOrder(
       {required String orderId,
       required String paymentMethod,
+      required int paymentStatus,
       String? paymentId});
 
   FutureResult<HospitalBookingModel> getSingleOrderDoc(

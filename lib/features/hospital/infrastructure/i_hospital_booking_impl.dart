@@ -145,6 +145,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
   FutureResult<String> acceptOrder(
       {required String orderId,
       required String paymentMethod,
+      required int paymentStatus,
       String? paymentId}) async {
     try {
       await _firestore
@@ -153,7 +154,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
           .update({
         'isUserAccepted': true,
         'paymentMethod': paymentMethod,
-        'paymentStatus': 1,
+        'paymentStatus': paymentStatus,
         'paymentId': paymentId,
       });
       return right('Booking Accepted Successfully');
@@ -204,6 +205,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
     completedNoMoreData = false;
     completedLastDoc = null;
   }
+/* -------------------------- GET SINGLR ACCEPT DOC ------------------------- */
 
   @override
   FutureResult<HospitalBookingModel> getSingleOrderDoc(
@@ -211,12 +213,14 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
     try {
       final responce = await _firestore
           .collection(FirebaseCollections.hospitalBookingCollection)
-          .where(Filter.and(Filter('isUserAccepted', isEqualTo: false),
+          .where(Filter.and(
+              Filter('userId', isEqualTo: userId),
+              Filter('isUserAccepted', isEqualTo: false),
               Filter('orderStatus', isEqualTo: 1)))
           .limit(1)
           .get();
 
-      return right(HospitalBookingModel.fromMap(responce.docs.first.data()));
+      return right(HospitalBookingModel.fromMap(responce.docs.single.data()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }
@@ -244,7 +248,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
     required PlaceMark placeMark,
     required String categoryId,
   }) async {
-   // log.log('categoryId fffffffffff $categoryId');
+    // log.log('categoryId fffffffffff $categoryId');
     if (locationSortEnum == LocationSortEnum.noDataFound) {
       return left(
         const MainFailure.generalException(errMsg: 'No data found!'),
@@ -417,7 +421,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
         );
 
         if (stateList.isNotEmpty) {
-        //  log.log(stateList.toString());
+          //  log.log(stateList.toString());
 
           do {
             QuerySnapshot<Map<String, dynamic>> refreshedClass;
@@ -464,7 +468,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
               break;
             }
 
-          //  log.log('currentStateIndex=$currentStateIndex');
+            //  log.log('currentStateIndex=$currentStateIndex');
           } while (currentStateIndex <= (stateList.length - 1));
         } else {
           lastdoc = null;
