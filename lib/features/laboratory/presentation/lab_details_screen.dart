@@ -73,10 +73,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                     EasyNavigation.pop(context: context);
                   },
                 ),
-                if (labProvider.detailsScreenLoading == true &&
-                        labProvider.testList.isEmpty ||
-                    labProvider.doorStepTestList.isEmpty ||
-                    labProvider.labBannerList.isEmpty)
+                if (labProvider.detailsScreenLoading == true)
                   const SliverFillRemaining(
                       child: Center(child: LoadingIndicater()))
                 else if (labProvider.detailsScreenLoading == false &&
@@ -88,8 +85,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                     text:
                         "We are still working on our Laboratory, will be soon available.",
                   )),
-                if (labProvider.labBannerList.isNotEmpty &&
-                    labProvider.testList.isNotEmpty &&
+                if (labProvider.labBannerList.isNotEmpty ||
+                    labProvider.testList.isNotEmpty ||
                     labProvider.doorStepTestList.isNotEmpty)
                   SliverToBoxAdapter(
                     child: FadeInDown(
@@ -126,8 +123,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                     ),
                   ),
                 /* -------------------------- LAB NAME AND ADDRESS -------------------------- */
-                if (labProvider.labBannerList.isNotEmpty &&
-                    labProvider.testList.isNotEmpty &&
+                if (labProvider.labBannerList.isNotEmpty ||
+                    labProvider.testList.isNotEmpty ||
                     labProvider.doorStepTestList.isNotEmpty)
                   SliverToBoxAdapter(
                     child: Column(

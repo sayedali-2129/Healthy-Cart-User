@@ -25,27 +25,29 @@ class _SplashScreenState extends State<SplashScreen> {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final notiProvider = context.read<NotificationProvider>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      
       FirebaseMessaging.instance.subscribeToTopic('All');
       notiProvider.notificationPermission();
       if (userId != null) {
-        context
-            .read<AuthenticationProvider>()
-            .userStreamFetchedData(userId: userId);
+        context.read<AuthenticationProvider>().userStreamFetchedData(userId: userId);
       }
     });
     Future.delayed(const Duration(seconds: 4)).then(
       (value) {
-           DependencyInjection.init();
-        final authProvider = context.read<AuthenticationProvider>();
-        if (authProvider.userFetchlDataFetched?.isActive == false) {
-          UserBlockedAlertBox.userBlockedAlert();
-        } else {
-          EasyNavigation.pushReplacement(
-            context: context,
-            page: const LocationPage(
-              locationSetter: 0,
-            ),
-          );
+        if (mounted) {
+          DependencyInjection.init();
+
+          final authProvider = context.read<AuthenticationProvider>();
+          if (authProvider.userFetchlDataFetched?.isActive == false) {
+            UserBlockedAlertBox.userBlockedAlert();
+          } else {
+            EasyNavigation.pushReplacement(
+              context: context,
+              page: const LocationPage(
+                locationSetter: 0,
+              ),
+            );
+          }
         }
       },
     );

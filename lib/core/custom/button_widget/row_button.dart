@@ -17,7 +17,7 @@ class RowElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       color: BColors.lightgreen,
       surfaceTintColor: BColors.white,
       child: InkWell(
@@ -40,7 +40,7 @@ class RowElevatedButton extends StatelessWidget {
                         fontFamily: 'Montserrat',
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: BColors.textLightBlack)),
+                        color: BColors.textBlack)),
               ],
             ),
           ),

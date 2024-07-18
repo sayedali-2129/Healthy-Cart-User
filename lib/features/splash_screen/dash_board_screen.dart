@@ -15,7 +15,7 @@ class DashboardScreen extends StatelessWidget {
     final screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Animate(
-        child: Container(
+        child: SizedBox(
           height: screenheight,
           // color: Colors.amber,
           child: SingleChildScrollView(

@@ -278,22 +278,13 @@ class _HomeMainState extends State<HomeMain> {
                               CustomToast.infoToast(
                                   text: 'Login to continue !');
                             } else {
-                              if (authProvider
-                                      .userFetchlDataFetched!.userName ==
-                                  null) {
-                                EasyNavigation.push(
-                                    type: PageTransitionType.rightToLeft,
-                                    context: context,
-                                    page: const ProfileSetup());
-                              } else {
-                                EasyNavigation.push(
-                                  context: context,
-                                  type: PageTransitionType.rightToLeft,
-                                  page: AllDoctorsScreen(
-                                    category: category,
-                                  ),
-                                );
-                              }
+                              EasyNavigation.push(
+                                context: context,
+                                type: PageTransitionType.rightToLeft,
+                                page: AllDoctorsScreen(
+                                  category: category,
+                                ),
+                              );
                             }
                           },
                           child: FadeInRight(

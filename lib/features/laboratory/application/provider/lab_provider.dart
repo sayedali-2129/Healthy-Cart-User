@@ -263,7 +263,7 @@ class LabProvider with ChangeNotifier {
 
   /* ------------------------------ GET LAB TESTS ----------------------------- */
   Future<void> getAllTests({required String labId}) async {
-    // detailsScreenLoading = true;
+    detailsScreenLoading = true;
     testList.clear();
     notifyListeners();
     final result = await iLabFacade.getAvailableTests(labId: labId);
@@ -449,11 +449,11 @@ class LabProvider with ChangeNotifier {
   LabModel? hospitalLabortary;
   Future<void> getSingleLab({required String hospitalLabId}) async {
     hospitalLabortary = null;
-    labFetchLoading = true;
+    detailsScreenLoading = true;
     notifyListeners();
     final result = await iLabFacade.getSingleLab(labId: hospitalLabId);
     result.fold((failure) {
-      labFetchLoading = false;
+      detailsScreenLoading = false;
       notifyListeners();
     }, (lab) {
       if (lab.isActive == true && lab.requested == 2) {
@@ -462,7 +462,7 @@ class LabProvider with ChangeNotifier {
         hospitalLabortary = null;
       }
 
-      labFetchLoading = false;
+      detailsScreenLoading = false;
       notifyListeners();
     });
   }
