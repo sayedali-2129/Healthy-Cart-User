@@ -80,7 +80,8 @@ class _PaymentSuccessScreenState extends State<PaymentStatusScreen>
               const Gap(20),
               Text(
                 widget.isErrorPage == false ? 'Booking ID :' : 'Reason :',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
               const Gap(5),
               Text(
