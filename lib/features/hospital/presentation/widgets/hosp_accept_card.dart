@@ -54,7 +54,8 @@ class HospAcceptCard extends StatelessWidget {
                       clipBehavior: Clip.antiAlias,
                       decoration: const BoxDecoration(shape: BoxShape.circle),
                       child: CustomCachedNetworkImage(
-                          image: hospitalBookingModel.hospitalDetails!.image!)),
+                          image: hospitalBookingModel
+                              .selectedDoctor!.doctorImage!)),
                   const Gap(20),
                   Expanded(
                     child: Column(
@@ -79,13 +80,13 @@ class HospAcceptCard extends StatelessWidget {
                         ),
                         const Gap(5),
                         Text(
-                          'Dr. ${hospitalBookingModel.selectedDoctor!.doctorName} (${hospitalBookingModel.selectedDoctor!.doctorQualification})',
+                          '${hospitalBookingModel.selectedDoctor!.doctorName} (${hospitalBookingModel.selectedDoctor!.doctorQualification})',
                           style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 15),
                         ),
                         Text(
                           '(${hospitalBookingModel.selectedDoctor!.doctorSpecialization!})',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
                               color: BColors.grey),
@@ -96,26 +97,52 @@ class HospAcceptCard extends StatelessWidget {
                           maxLines: 3,
                           text: TextSpan(
                             children: [
-                              TextSpan(
+                              const TextSpan(
                                   text: 'Patient Name :- ',
-                                  style: const TextStyle(
-                                    color: BColors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
+                                  style: TextStyle(
+                                    color: BColors.grey,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
                                     fontFamily: 'Montserrat',
                                   )),
                               TextSpan(
                                 text: hospitalBookingModel.patientName,
                                 style: const TextStyle(
                                     fontFamily: 'Montserrat',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
                                     color: BColors.black),
                               )
                             ],
                           ),
                         ),
-                        const Gap(5),
+                        
+                        (hospitalBookingModel.tokenNumber != null)
+                            ? Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Container(
+                                  height: 30,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: BColors.offRed),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                          'Token No- ${hospitalBookingModel.tokenNumber}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .copyWith(
+                                                color: Colors.white,
+                                              )),
+                                    ),
+                                  ),
+                                ),
+                            )
+                            : const SizedBox(),
+                        const Gap(4),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -223,7 +250,6 @@ class HospAcceptCard extends StatelessWidget {
                                 EasyNavigation.push(
                                     context: context,
                                     type: PageTransitionType.fade,
-                                   
                                     page: HospitalPaymentScreen(
                                       bookingModel: hospitalBookingModel,
                                     ));

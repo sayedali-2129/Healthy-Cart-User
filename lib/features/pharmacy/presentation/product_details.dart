@@ -229,8 +229,8 @@ class ProductDetailsScreen extends StatelessWidget {
                                         boxColor: BColors.offRed)),
                               ],
                             ),
-                    
-                      if (productData.productType != null && productData.productType!.isNotEmpty )
+                      if (productData.productType != null &&
+                          productData.productType!.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 24),
                           child: ProductDetailsStraightWidget(
@@ -416,31 +416,28 @@ class ProductDetailsScreen extends StatelessWidget {
                                 content: productData.specification ?? '',
                               ),
                             ),
-                         
                           if (productData.keyBenefits != null &&
                               productData.keyBenefits!.isNotEmpty)
                             Padding(
-                              padding:  const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.only(bottom: 16),
                               child: TitleAndProductInformation(
                                 title: 'Key Benefits : ',
                                 content: productData.keyBenefits ?? '',
                               ),
                             ),
-                         
                           if (productData.directionToUse != null &&
                               productData.directionToUse!.isNotEmpty)
                             Padding(
-                              padding:  const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.only(bottom: 16),
                               child: TitleAndProductInformation(
                                 title: 'Diection To Use : ',
                                 content: productData.directionToUse ?? '',
                               ),
                             ),
-                        
                           if (productData.safetyInformation != null &&
                               productData.safetyInformation!.isNotEmpty)
                             Padding(
-                              padding:  const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.only(bottom: 16),
                               child: TitleAndProductInformation(
                                 title: 'Safety Information : ',
                                 content: productData.safetyInformation ?? '',
@@ -557,15 +554,13 @@ class BottomSheetAddToCart extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 200,
                                 child: ProductInfoWidget(
                                   fontSize1: 11,
                                   fontSize2: 12,
                                   text1: 'Quantity in cart : ',
-                                  text2: (pharmacyProvider.quantityCount == 1)
-                                      ? '${pharmacyProvider.quantityCount} item already in your cart'
-                                      : '${pharmacyProvider.quantityCount} items already in your cart',
+                                  text2: 'This items already in your cart',
                                 ),
                               ),
                               (!fromCart) // check wheather get to this page from cart or not
@@ -577,7 +572,7 @@ class BottomSheetAddToCart extends StatelessWidget {
                                         );
                                       },
                                       buttonHeight: 48,
-                                      buttonWidth: 160,
+                                      buttonWidth: 144,
                                       buttonColor: BColors.darkblue,
                                       buttonWidget: const Text(
                                         'View Cart',
@@ -594,7 +589,7 @@ class BottomSheetAddToCart extends StatelessWidget {
                                         EasyNavigation.pop(context: context);
                                       },
                                       buttonHeight: 48,
-                                      buttonWidth: 160,
+                                      buttonWidth: 144,
                                       buttonColor: BColors.darkblue,
                                       buttonWidget: const Text(
                                         'Back to Cart',

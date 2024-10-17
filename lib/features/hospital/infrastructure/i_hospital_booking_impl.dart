@@ -37,14 +37,14 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
   FutureResult<List<HospitalBookingModel>> getPendingOrders(
       {required String userId}) async {
     try {
-      final responce = await _firestore
+      final response = await _firestore
           .collection(FirebaseCollections.hospitalBookingCollection)
           .where(Filter.and(Filter('userId', isEqualTo: userId),
               Filter('orderStatus', isEqualTo: 0)))
           .orderBy('bookedAt', descending: true)
           .get();
 
-      return right(responce.docs
+      return right(response.docs
           .map((e) => HospitalBookingModel.fromMap(e.data()).copyWith(id: e.id))
           .toList());
     } catch (e) {
@@ -211,7 +211,7 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
   FutureResult<HospitalBookingModel> getSingleOrderDoc(
       {required String userId}) async {
     try {
-      final responce = await _firestore
+      final response = await _firestore
           .collection(FirebaseCollections.hospitalBookingCollection)
           .where(Filter.and(
               Filter('userId', isEqualTo: userId),
@@ -220,7 +220,16 @@ class IHospitalBookingImpl implements IHospitalBookingFacade {
           .limit(1)
           .get();
 
-      return right(HospitalBookingModel.fromMap(responce.docs.single.data()));
+      if (response.docs.isEmpty) {
+        return left(
+            const MainFailure.generalException(errMsg: "No orders found."));
+      }
+
+      return right(HospitalBookingModel.fromMap(response.docs.single.data()));
+    } on FirebaseException catch (e) {
+      return left(
+        MainFailure.firebaseException(errMsg: e.code),
+      );
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }

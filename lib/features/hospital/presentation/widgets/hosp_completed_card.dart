@@ -80,7 +80,7 @@ class HospitalCompletedCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Dr. ${completedOrderData.selectedDoctor!.doctorName} (${completedOrderData.selectedDoctor!.doctorQualification})',
+                                '${completedOrderData.selectedDoctor!.doctorName} (${completedOrderData.selectedDoctor!.doctorQualification})',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 15),
                               ),
@@ -89,24 +89,24 @@ class HospitalCompletedCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,
                                 text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: 'Patient Name :- ',
-                                        style: const TextStyle(
-                                          color: BColors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13,
-                                          fontFamily: 'Montserrat',
-                                        )),
-                                    TextSpan(
-                                      text: completedOrderData.patientName,
-                                      style: const TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: BColors.black),
-                                    )
-                                  ],
+                                      children: [
+                              TextSpan(
+                                  text: 'Patient Name :- ',
+                                  style: const TextStyle(
+                                    color: BColors.grey,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    fontFamily: 'Montserrat',
+                                  )),
+                              TextSpan(
+                                text: completedOrderData.patientName,
+                                style: const TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.black),
+                              )
+                            ],
                                 ),
                               ),
                               const Gap(5),

@@ -5,6 +5,7 @@ import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provide
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/ad_pharmacy_slider.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/image_show_container.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:healthy_cart_user/utils/constants/images/images.dart';
 
 import 'package:provider/provider.dart';
 
@@ -33,7 +34,7 @@ class GalleryImagePicker extends StatelessWidget {
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: pharmacyProvider.productImageUrlList.length,
+              itemCount: pharmacyProvider.productImageUrlList.isEmpty ? 1 : pharmacyProvider.productImageUrlList.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -58,10 +59,10 @@ class GalleryImagePicker extends StatelessWidget {
                         },
                         height: 56,
                         width: 64,
-                        child: CustomCachedNetworkImage(
+                        child:pharmacyProvider.productImageUrlList.isNotEmpty? CustomCachedNetworkImage(
                           image: pharmacyProvider.productImageUrlList[index],
                           fit: BoxFit.fitHeight,
-                        ),
+                        ): Image.asset(BImage.healthycartText, fit: BoxFit.contain,)
                       ),
                     ),
                   ),

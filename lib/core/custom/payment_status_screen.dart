@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
-import 'package:healthy_cart_user/core/services/razorpay_service.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/lottie/lotties.dart';
 import 'package:lottie/lottie.dart';
@@ -21,7 +20,6 @@ class PaymentStatusScreen extends StatefulWidget {
 class _PaymentSuccessScreenState extends State<PaymentStatusScreen>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
-  RazorpayService razorpayService = RazorpayService();
 
   @override
   void initState() {
@@ -32,7 +30,6 @@ class _PaymentSuccessScreenState extends State<PaymentStatusScreen>
   @override
   void dispose() {
     _controller.dispose();
-    razorpayService.dispose();
     super.dispose();
   }
 

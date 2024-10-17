@@ -23,6 +23,7 @@ class RowTextContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
@@ -33,15 +34,17 @@ class RowTextContainerWidget extends StatelessWidget {
               fontWeight: fontWeightText1,
               color: text1Color),
         ),
-        Text(
-          text2,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-          style: TextStyle(
-              fontFamily: 'Montserrat',
-              fontSize: fontSizeText2,
-              fontWeight: fontWeightText2,
-              color: text2Color),
+        Expanded(
+          child: Text(
+            text2,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: fontSizeText2,
+                fontWeight: fontWeightText2,
+                color: text2Color),
+          ),
         ),
       ],
     );

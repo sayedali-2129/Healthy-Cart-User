@@ -76,11 +76,11 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                     child: RoundedImage(
                         backgroundColor: BColors.white,
                         applyBorderRadius: true,
-                        child: CustomCachedNetworkImage(
-                          image: widget.productData.productImage?.first ??
-                              BImage.healthycartText,
+                        child:widget.productData.productImage !=null? CustomCachedNetworkImage(
+                          image: widget.productData.productImage!.first,
                           fit: BoxFit.contain,
-                        )),
+                        ): Image.asset(BImage.healthycartText, fit: BoxFit.contain,)
+                        ),
                   ),
                   Padding(
                     padding:
@@ -282,13 +282,13 @@ class _PostCardVerticalState extends State<PostCardVertical> {
                 children: [
                   if (widget.productData.productDiscountRate != null)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 6, left: 12),
+                      padding: const EdgeInsets.only(bottom: 6, left: 6),
                       child: PercentageShowContainerWidget(
                         text:
                             '${widget.productData.discountPercentage ?? 0}% off',
                         textColor: BColors.textWhite,
                         boxColor: BColors.offRed,
-                        width: 74,
+                        width: 72,
                         height: 32,
                       ),
                     ),

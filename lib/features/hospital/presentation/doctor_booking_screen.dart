@@ -1,5 +1,3 @@
-
-
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -17,8 +15,9 @@ import 'package:provider/provider.dart';
 
 class DoctorBookingScreen extends StatelessWidget {
   const DoctorBookingScreen({
-    super.key, required this.hospital, required this.doctorModel,
-
+    super.key,
+    required this.hospital,
+    required this.doctorModel,
   });
   final HospitalModel hospital;
   final DoctorModel doctorModel;
@@ -62,7 +61,7 @@ class DoctorBookingScreen extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       )),
-                  const Gap(10),
+                  const Gap(16),
                   DatePicker(
                     DateTime.now(),
                     inactiveDates: hospitalProvider.findAllSundaysFromNow(30),
@@ -77,13 +76,13 @@ class DoctorBookingScreen extends StatelessWidget {
                     selectionColor: BColors.mainlightColor,
                     height: 90,
                   ),
-                  const Gap(10),
+                  const Gap(16),
                   const Text("Choose Time",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       )),
-                  const Gap(10),
+                  const Gap(16),
                   GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -98,6 +97,7 @@ class DoctorBookingScreen extends StatelessWidget {
                       String timeSlot = doctorDetail.doctorTimeList![timeIndex];
                       bool isSelected =
                           hospitalProvider.selectedSlot == timeSlot;
+
                       return GestureDetector(
                         onTap: () {
                           hospitalProvider.setTimeSlot(timeSlot);
@@ -126,7 +126,7 @@ class DoctorBookingScreen extends StatelessWidget {
                         ),
                       );
                     },
-                  )
+                  ),
                 ],
               ),
             ),
@@ -137,16 +137,14 @@ class DoctorBookingScreen extends StatelessWidget {
                   hospitalProvider.seletedBookingDate == null) {
                 CustomToast.infoToast(text: 'Please select date and time');
               } else {
-
                 EasyNavigation.push(
-                    context: context,
-                    page: PatientMemberScreen(
-                      selectedDoctor: doctorDetail,
-                      hospital: hospital,
-                      
-                    ),
-                    type: PageTransitionType.rightToLeft,
-                   );
+                  context: context,
+                  page: PatientMemberScreen(
+                    selectedDoctor: doctorDetail,
+                    hospital: hospital,
+                  ),
+                  type: PageTransitionType.rightToLeft,
+                );
               }
             },
             child: Container(

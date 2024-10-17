@@ -106,8 +106,8 @@ class _PharmacyProductScreenState extends State<PharmacyProductScreen> {
                   child: LoadingIndicater(),
                 ),
               )
-            else if (pharmacyProvider.fetchLoading == false &&
-                (pharmacyProvider.productAllList.isEmpty &&
+            else if (
+                (pharmacyProvider.productAllList.isEmpty ||
                 pharmacyProvider.pharmacyCategoryList.isEmpty))
               const SliverFillRemaining(
                   child: StillWorkingPage(

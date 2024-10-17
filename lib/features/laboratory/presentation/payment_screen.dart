@@ -1,20 +1,23 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
 import 'package:healthy_cart_user/core/custom/launch_dialer.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
+import 'package:healthy_cart_user/core/custom/payment_status_screen.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/core/services/razorpay_service.dart';
+import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/general/presentation/provider/general_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_orders_model.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/payment_type_radio.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/selected_tests_card.dart';
-import 'package:healthy_cart_user/features/payment_gateway/application/gateway_provider.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
+import 'package:healthy_cart_user/utils/app_details.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -31,28 +34,20 @@ class LabPaymentScreen extends StatefulWidget {
 }
 
 class _LabPaymentScreenState extends State<LabPaymentScreen> {
-  RazorpayService razorpayService = RazorpayService();
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        context.read<GatewayProvider>().getGatewayKey();
+        context.read<GeneralProvider>().fetchData();
       },
     );
     super.initState();
   }
 
   @override
-  void dispose() {
-    razorpayService.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Consumer2<LabOrdersProvider, GatewayProvider>(
-      builder: (context, ordersProvider, gatewayProvider, _) {
+    return Consumer2<LabOrdersProvider, GeneralProvider>(
+      builder: (context, ordersProvider, generalProvider, _) {
         return PopScope(
           onPopInvoked: (didPop) {
             ordersProvider.paymentType = null;
@@ -125,7 +120,7 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                       children: [
                         Text(
                           'Booking ID :- ${widget.labOrdersModel.id}',
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                          style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -156,15 +151,34 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                     if (widget.labOrdersModel.testMode == 'Home')
                       AddressCardPaymentScreen(
                           labOrdersModel: widget.labOrdersModel),
+                    if (widget.labOrdersModel.notes != null &&
+                        widget.labOrdersModel.notes!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: BColors.mainlightColor),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: RowTextContainerWidget(
+                              text1: 'Note by laboratory : ',
+                              text2:
+                                  widget.labOrdersModel.notes ?? 'Unknown note',
+                              text1Color: BColors.textLightBlack,
+                              fontSizeText1: 12,
+                              fontSizeText2: 13,
+                              fontWeightText1: FontWeight.w600,
+                              text2Color: BColors.black),
+                        ),
+                      ),
                     const Gap(10),
-
                     /* ------------------------------ ORDER SUMMARY ----------------------------- */
                     OrderSummaryCardPayment(
                         labOrdersModel: widget.labOrdersModel,
-                        isTimeSlotShow: widget.labOrdersModel.timeSlot == null
-                            ? false
-                            : true,
-                        timeSlot: widget.labOrdersModel.timeSlot ?? '',
+                        admintimeSlot:
+                            widget.labOrdersModel.admintimeSlot ?? '',
+                        usertimeSlot: widget.labOrdersModel.usertimeSlot ?? '',
                         totalTestFee: widget.labOrdersModel.totalAmount!,
                         doorStepCharge: widget.labOrdersModel.doorStepCharge!,
                         totalAmount: widget.labOrdersModel.finalAmount!),
@@ -243,8 +257,8 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                     'Select preffered payment method');
                                             return;
                                           } else {
-                                            if (gatewayProvider
-                                                    .gatewayModel?.key ==
+                                            if (generalProvider.generalModel
+                                                    ?.razorpayKey ==
                                                 null) {
                                               CustomToast.errorToast(
                                                   text:
@@ -294,22 +308,47 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
 
                                               Navigator.pop(context);
                                             } else {
-                                              razorpayService.openRazorpay(
+                                              final user = context
+                                                  .read<
+                                                      AuthenticationProvider>()
+                                                  .userFetchlDataFetched!;
+                                              RazorpayService.pay(
                                                 amount: widget.labOrdersModel
                                                     .finalAmount!,
-                                                key: gatewayProvider
-                                                    .gatewayModel!.key,
-                                                orgName: 'Healthy Cart',
-                                                userPhoneNumber: widget
-                                                    .labOrdersModel
-                                                    .userDetails!
-                                                    .phoneNo!,
-                                                userEmail: widget.labOrdersModel
-                                                    .userDetails!.userEmail!,
-                                                onSuccess: (paymentId) async {
+                                                rzpKey: generalProvider
+                                                    .generalModel!.razorpayKey,
+                                                razorpayKeySecret:
+                                                    generalProvider
+                                                        .generalModel!
+                                                        .razorpayKeySecret,
+                                                appName: AppDetails.appName,
+                                                userProfile: RzpUserProfile(
+                                                  uid: user.id!,
+                                                  name: user.userName,
+                                                  email: user.userEmail,
+                                                  phoneNumber: user.phoneNo,
+                                                ),
+                                                failure: (response) {
+                                                  Get.to(
+                                                    () => PaymentStatusScreen(
+                                                        isErrorPage: true,
+                                                        bookingId:
+                                                            response.message),
+                                                  );
+
+                                                  CustomToast.errorToast(
+                                                      text:
+                                                          'Payment Failed ORDER ID: ${response.message!}');
+                                                },
+                                                success: (response) async {
+                                                  CustomToast.sucessToast(
+                                                      text:
+                                                          'Payment Successful ORDER ID: ${response.paymentId!}');
+
                                                   await ordersProvider
                                                       .acceptOrder(
-                                                          paymentId: paymentId,
+                                                          paymentId: response
+                                                              .paymentId,
                                                           paymentStatus: 1,
                                                           paymentType:
                                                               ordersProvider
@@ -333,6 +372,14 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                                                       ordersProvider
                                                               .singleOrderDoc =
                                                           null;
+
+                                                      EasyNavigation.push(
+                                                        context: context,
+                                                        page: PaymentStatusScreen(
+                                                            isErrorPage: false,
+                                                            bookingId: response
+                                                                .paymentId),
+                                                      );
                                                     },
                                                   );
                                                 },
@@ -389,17 +436,16 @@ class OrderSummaryCardPayment extends StatelessWidget {
     required this.totalTestFee,
     required this.doorStepCharge,
     required this.totalAmount,
-    required this.isTimeSlotShow,
-    required this.timeSlot,
+    required this.usertimeSlot,
+    required this.admintimeSlot,
     required this.labOrdersModel,
   });
   final num totalTestFee;
   final num doorStepCharge;
   final num totalAmount;
   final LabOrdersModel labOrdersModel;
-  final bool isTimeSlotShow;
-  final String timeSlot;
-
+  final String? usertimeSlot;
+  final String? admintimeSlot;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -412,26 +458,79 @@ class OrderSummaryCardPayment extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            isTimeSlotShow == false
-                ? const Gap(0)
-                : Column(
-                    children: [
-                      const Text(
-                        'Time Scheduled',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: BColors.black),
-                      ),
-                      Text(
-                        timeSlot,
-                        style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: BColors.black),
-                      ),
-                    ],
+            if (labOrdersModel.tokenNumber != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 30,
+                  width: 120,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: BColors.offRed),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Token No- ${labOrdersModel.tokenNumber}',
+                          style:
+                              Theme.of(context).textTheme.labelMedium!.copyWith(
+                                    color: Colors.white,
+                                  )),
+                    ),
                   ),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Time Scheduled : ',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: BColors.black),
+                  ),
+                  ((admintimeSlot != null) &&
+                          (admintimeSlot!.isNotEmpty) &&
+                          (admintimeSlot!.trim() != usertimeSlot!.trim()))
+                      ? Expanded(
+                          child: Column(
+                            children: [
+                              Text(
+                                '$usertimeSlot',
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.buttonLightBlue),
+                              ),
+                              const Text(
+                                'Changed To',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.grey),
+                              ),
+                              Text(
+                                '$admintimeSlot',
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: BColors.buttonLightBlue),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Text(
+                          '$usertimeSlot',
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: BColors.buttonLightBlue),
+                        ),
+                ],
+              ),
+            ),
             const Gap(16),
             AmountRow(
               text: 'Total Test Fee',
@@ -529,19 +628,19 @@ class AddressCardPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               'Selected Address :-',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: BColors.black),
             ),
           ],
         ),
-        Gap(5),
+        const Gap(5),
         Row(
           children: [
             Expanded(

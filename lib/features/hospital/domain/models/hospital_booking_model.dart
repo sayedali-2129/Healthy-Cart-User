@@ -30,6 +30,8 @@ class HospitalBookingModel {
   String? newBookingDate;
   String? newTimeSlot;
   String? paymentId;
+  String? uhid;
+  int? tokenNumber;
   HospitalBookingModel({
     this.id,
     this.hospitalId,
@@ -57,6 +59,8 @@ class HospitalBookingModel {
     this.newBookingDate,
     this.newTimeSlot,
     this.paymentId,
+    this.uhid,
+    this.tokenNumber,
   });
 
   Map<String, dynamic> toMap() {
@@ -87,6 +91,8 @@ class HospitalBookingModel {
       'newTimeSlot': newTimeSlot,
       'newBookingDate': newBookingDate,
       'paymentId': paymentId,
+      'uhid': uhid,
+      'tokenNumber': tokenNumber,
     };
   }
 
@@ -146,6 +152,8 @@ class HospitalBookingModel {
       newTimeSlot:
           map['newTimeSlot'] != null ? map['newTimeSlot'] as String : null,
       paymentId: map['paymentId'] != null ? map['paymentId'] as String : null,
+      uhid: map['uhid'] != null ? map['uhid'] as String : null,
+      tokenNumber:  map['tokenNumber'] != null ? map['tokenNumber'] as int : null,
     );
   }
 
@@ -176,6 +184,8 @@ class HospitalBookingModel {
     String? newBookingDate,
     String? newTimeSlot,
     String? paymentId,
+    String?  uhid,
+    int? tokenNumber,
   }) {
     return HospitalBookingModel(
       id: id ?? this.id,
@@ -204,6 +214,8 @@ class HospitalBookingModel {
       newTimeSlot: newTimeSlot ?? this.newTimeSlot,
       newBookingDate: newBookingDate ?? this.newBookingDate,
       paymentId: paymentId ?? this.paymentId,
+      uhid: uhid?? this.uhid,
+      tokenNumber: tokenNumber?? this.tokenNumber,
     );
   }
 }

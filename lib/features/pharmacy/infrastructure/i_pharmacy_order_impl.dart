@@ -21,7 +21,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade {
     required String userId,
   }) async {
     try {
-      final responce = await _firebaseFirestore
+      final response = await _firebaseFirestore
           .collection(FirebaseCollections.pharmacyOrder)
           .orderBy('createdAt', descending: true)
           .where(Filter.and(
@@ -30,7 +30,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade {
           ))
           .get();
 
-      return right(responce.docs
+      return right(response.docs
           .map((e) => PharmacyOrderModel.fromMap(e.data()).copyWith(id: e.id))
           .toList());
     } catch (e) {
@@ -225,7 +225,7 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade {
   FutureResult<PharmacyOrderModel> getSingleOrderDoc(
       {required String userId}) async {
     try {
-      final responce = await _firebaseFirestore
+      final response = await _firebaseFirestore
           .collection(FirebaseCollections.pharmacyOrder)
           .where(Filter.and(
               Filter('userId', isEqualTo: userId),
@@ -233,8 +233,13 @@ class IPharmacyOrdersImpl implements IPharmacyOrderFacade {
               Filter('orderStatus', isEqualTo: 1)))
           .limit(1)
           .get();
+         
+      if (response.docs.isEmpty) {
+        return left(
+            const MainFailure.generalException(errMsg: "No orders found."));
+      }
 
-      return right(PharmacyOrderModel.fromMap(responce.docs.single.data()));
+      return right(PharmacyOrderModel.fromMap(response.docs.single.data()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }

@@ -22,10 +22,8 @@ class HospitalBookingTab extends StatelessWidget {
                   title: 'Bookings', onBackTap: () => Navigator.pop(context)),
               SliverToBoxAdapter(
                 child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                   child: ButtonsTabBar(
-                      height: 42,
-                      elevation: 5,
                       unselectedLabelStyle: const TextStyle(
                           color: BColors.darkblue,
                           fontFamily: 'Montserrat',

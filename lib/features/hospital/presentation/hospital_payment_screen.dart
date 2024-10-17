@@ -1,20 +1,22 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
 import 'package:healthy_cart_user/core/custom/launch_dialer.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
+import 'package:healthy_cart_user/core/custom/payment_status_screen.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/core/services/razorpay_service.dart';
+import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/general/presentation/provider/general_provider.dart';
 import 'package:healthy_cart_user/features/hospital/application/provider/hosp_booking_provider.dart';
 import 'package:healthy_cart_user/features/hospital/domain/models/hospital_booking_model.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/patient_details_card.dart';
 import 'package:healthy_cart_user/features/hospital/presentation/widgets/payment_radio_hosp.dart';
-import 'package:healthy_cart_user/features/payment_gateway/application/gateway_provider.dart';
+import 'package:healthy_cart_user/utils/app_details.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -28,28 +30,20 @@ class HospitalPaymentScreen extends StatefulWidget {
 }
 
 class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
-  RazorpayService razorpayService = RazorpayService();
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        context.read<GatewayProvider>().getGatewayKey();
+        context.read<GeneralProvider>().fetchData();
       },
     );
     super.initState();
   }
 
   @override
-  void dispose() {
-    razorpayService.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Consumer2<HospitalBookingProivder, GatewayProvider>(
-      builder: (context, ordersProvider, gatewayProvider, _) {
+    return Consumer2<HospitalBookingProivder, GeneralProvider>(
+      builder: (context, ordersProvider, generalprovider, _) {
         // final bookingModel = ordersProvider.approvedOrders[index];
         return PopScope(
           onPopInvoked: (didPop) {
@@ -97,7 +91,7 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Dr. ${widget.bookingModel.selectedDoctor!.doctorName} (${widget.bookingModel.selectedDoctor!.doctorQualification})',
+                                '${widget.bookingModel.selectedDoctor!.doctorName} (${widget.bookingModel.selectedDoctor!.doctorQualification})',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 15),
                               ),
@@ -155,6 +149,28 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                         )
                       ],
                     ),
+                    (widget.bookingModel.tokenNumber != null)
+                        ? Container(
+                            height: 30,
+                            width: 120,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: BColors.offRed),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                    'Token No- ${widget.bookingModel.tokenNumber}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(
+                                          color: Colors.white,
+                                        )),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
                     const Gap(8),
                     const Divider(),
                     PatientDetailsContainer(
@@ -193,8 +209,12 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                                 'Select preffered payment method');
                                         return;
                                       } else {
-                                        if (gatewayProvider.gatewayModel?.key ==
-                                            null) {
+                                        if (generalprovider.generalModel
+                                                    ?.razorpayKey ==
+                                                null ||
+                                            generalprovider.generalModel
+                                                    ?.razorpayKeySecret ==
+                                                null) {
                                           CustomToast.errorToast(
                                               text:
                                                   'Unable to process the payment');
@@ -238,21 +258,39 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
 
                                           Navigator.pop(context);
                                         } else {
-                                          razorpayService.openRazorpay(
+                                          final user = context
+                                              .read<AuthenticationProvider>()
+                                              .userFetchlDataFetched!;
+                                          RazorpayService.pay(
                                             amount: widget
                                                 .bookingModel.totalAmount!,
-                                            key: gatewayProvider
-                                                .gatewayModel!.key,
-                                            orgName: 'Healthy Cart',
-                                            userPhoneNumber: widget.bookingModel
-                                                .userDetails!.phoneNo!,
-                                            userEmail: widget.bookingModel
-                                                .userDetails!.userEmail!,
-                                            onSuccess: (paymentId) async {
+                                            rzpKey: generalprovider
+                                                .generalModel!.razorpayKey,
+                                            razorpayKeySecret: generalprovider
+                                                .generalModel!
+                                                .razorpayKeySecret,
+                                            appName: AppDetails.appName,
+                                            userProfile: RzpUserProfile(
+                                              uid: user.id!,
+                                              name: user.userName,
+                                              email: user.userEmail,
+                                              phoneNumber: user.phoneNo,
+                                            ),
+                                            failure: (response) {
+                                              Get.to(() => PaymentStatusScreen(
+                                                  isErrorPage: true,
+                                                  bookingId: response.message));
+
+                                              CustomToast.errorToast(
+                                                  text:
+                                                      'Payment Failed ORDER ID: ${response.message!}');
+                                            },
+                                            success: (response) async {
                                               await ordersProvider
                                                   .acceptOrder(
                                                       paymentStatus: 1,
-                                                      paymentId: paymentId,
+                                                      paymentId:
+                                                          response.paymentId,
                                                       userName: widget
                                                           .bookingModel
                                                           .userDetails!
@@ -267,6 +305,13 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                                 () {
                                                   ordersProvider
                                                       .singleOrderDoc = null;
+                                                  EasyNavigation.push(
+                                                    context: context,
+                                                    page: PaymentStatusScreen(
+                                                        isErrorPage: false,
+                                                        bookingId:
+                                                            response.paymentId),
+                                                  );
                                                 },
                                               );
                                             },

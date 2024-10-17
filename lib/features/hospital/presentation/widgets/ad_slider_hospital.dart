@@ -39,7 +39,7 @@ class _AdSliderHospitalState extends State<AdSliderHospital> {
               borderRadius: BorderRadius.circular(16),
             ),
             child: CustomCachedNetworkImage(
-                image: hospitalProvider.hospitalBanner[index].image!),
+                image: hospitalProvider.hospitalBanner[index].image!, fit: BoxFit.cover,),
           ),
           options: CarouselOptions(
             viewportFraction: 1,

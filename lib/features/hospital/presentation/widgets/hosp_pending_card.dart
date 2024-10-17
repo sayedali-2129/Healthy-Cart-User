@@ -65,13 +65,13 @@ class HospPendingCard extends StatelessWidget {
                         ),
                         const Gap(5),
                         Text(
-                          'Dr. ${orders.selectedDoctor!.doctorName} (${orders.selectedDoctor!.doctorQualification})',
+                          '${orders.selectedDoctor!.doctorName} (${orders.selectedDoctor!.doctorQualification})',
                           style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 15),
                         ),
                         Text(
                           '(${orders.selectedDoctor!.doctorSpecialization!})',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
                               color: BColors.grey),
@@ -82,20 +82,20 @@ class HospPendingCard extends StatelessWidget {
                           maxLines: 3,
                           text: TextSpan(
                             children: [
-                              TextSpan(
+                              const TextSpan(
                                   text: 'Patient Name :- ',
-                                  style: const TextStyle(
-                                    color: BColors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
+                                  style: TextStyle(
+                                    color: BColors.grey,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
                                     fontFamily: 'Montserrat',
                                   )),
                               TextSpan(
                                 text: orders.patientName,
                                 style: const TextStyle(
                                     fontFamily: 'Montserrat',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
                                     color: BColors.black),
                               )
                             ],
@@ -148,8 +148,8 @@ class HospPendingCard extends StatelessWidget {
                 ],
               ),
               const Gap(10),
-              Divider(),
-              Gap(4),
+              const Divider(),
+              const Gap(4),
               Column(
                 children: [
                   const Text(
@@ -164,7 +164,7 @@ class HospPendingCard extends StatelessWidget {
                   )
                 ],
               ),
-              Gap(8),
+              const Gap(8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

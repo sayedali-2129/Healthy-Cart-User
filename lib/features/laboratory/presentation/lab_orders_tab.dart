@@ -22,9 +22,9 @@ class LabOrdersTab extends StatelessWidget {
                   title: 'Lab Orders', onBackTap: () => Navigator.pop(context)),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                   child: ButtonsTabBar(
-                      height: 42,
+                     
                       unselectedLabelStyle: const TextStyle(
                           color: BColors.darkblue,
                           fontFamily: 'Montserrat',
@@ -37,7 +37,7 @@ class LabOrdersTab extends StatelessWidget {
                       unselectedBackgroundColor: BColors.white,
                       unselectedBorderColor: BColors.darkblue,
                       borderWidth: 1,
-                      elevation: 3,
+                   
                       contentPadding: const EdgeInsets.all(8),
                       radius: 12,
                       duration: 50,

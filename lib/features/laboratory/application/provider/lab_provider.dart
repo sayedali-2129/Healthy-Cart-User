@@ -83,7 +83,6 @@ class LabProvider with ChangeNotifier {
     if (labList.isEmpty) {
       isFirebaseDataLoding = true;
     }
-
     notifyListeners();
 
     final placeMark =
@@ -355,6 +354,38 @@ class LabProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /* -------------------------------------------------------------------------- */
+  //booking date
+  String? seletedBookingDate;
+  String? dateAndTime;
+/* -------------------------------------------------------------------------- */
+
+/* ------------------------------ SET TIME SLOT ----------------------------- */
+  void setTimeSlot() {
+   dateAndTime = '$seletedBookingDate ($selectedTimeSlot1 - $selectedTimeSlot2)';
+    notifyListeners();
+  }
+
+/* -------------------------------------------------------------------------- */
+/* ----------------------------- GET ALL SUNDAY ----------------------------- */
+  List<DateTime> findAllSundaysFromNow(int daysCount) {
+    List<DateTime> sundays = [];
+    DateTime currentDate = DateTime.now();
+
+    for (int i = 0; i < daysCount; i++) {
+      DateTime date = currentDate.add(Duration(days: i));
+      if (date.weekday == DateTime.sunday) {
+        sundays.add(date);
+      }
+    }
+
+    return sundays;
+  }
+  /* -------------------------------------------------------------------------- */
+
+  String? selectedTimeSlot1;
+  String? selectedTimeSlot2;
+
   LabOrdersModel? labOrderModel;
   /* ----------------------------- ADD LAB ORDERS ----------------------------- */
   Future<void> addLabOrders(
@@ -373,6 +404,7 @@ class LabProvider with ChangeNotifier {
         userId: userId,
         userDetails: userModel,
         userAddress: selectedAddress,
+        usertimeSlot: dateAndTime,
         orderAt: Timestamp.now(),
         totalAmount: claculateTotalAmount(),
         orderStatus: 0,
