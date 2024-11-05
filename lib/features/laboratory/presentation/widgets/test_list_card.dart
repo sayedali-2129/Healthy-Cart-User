@@ -46,10 +46,10 @@ class TestListCard extends StatelessWidget {
             children: [
               Container(
                 clipBehavior: Clip.antiAlias,
-                height: 54,
-                width: 54,
+                height: 60,
+                width: 60,
                 decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: CustomCachedNetworkImage(image: image),
+                child: CustomCachedNetworkImage(image: image, fit: BoxFit.contain,),
               ),
               const Gap(16),
               Expanded(
@@ -123,10 +123,10 @@ class TestListCard extends StatelessWidget {
                           ),
 
                        doorstepList == true
-                            ? const Gap(4)
+                            ? const Gap(8)
                             : isDoorstepAvailable == true
                                 ? Padding(
-                                  padding: const EdgeInsets.only(top: 4),
+                                  padding: const EdgeInsets.only(top: 8),
                                   child: Container(
                                       height: 23,
                                       width: 118,

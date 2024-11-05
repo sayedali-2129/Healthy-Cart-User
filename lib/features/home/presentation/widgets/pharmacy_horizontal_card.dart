@@ -24,14 +24,14 @@ class PharmacyHorizontalCard extends StatelessWidget {
           child: Stack(
             children: [
               Container(
-                height: 215,
-                width: 225,
+                height: 216,
+                width: 232,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: BColors.white,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(6.0),
                   child: Column(
                     children: [
                       Stack(
@@ -45,25 +45,27 @@ class PharmacyHorizontalCard extends StatelessWidget {
                                   topRight: Radius.circular(8)),
                             ),
                             child: CustomCachedNetworkImage(
-                                fit: BoxFit.cover, image: pharmacy.pharmacyImage!),
+                                fit: BoxFit.fill,
+                                image: pharmacy.pharmacyImage!, ),
                           ),
                           if (pharmacy.isPharmacyON == false)
                             Container(
-                    height: 130,
-                    
-                    decoration: BoxDecoration(
-                        color: BColors.white.withOpacity(0.6),
-                        borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(16),
-                            topLeft: Radius.circular(16))),
-                        child:Center(
-                          child: Image.asset(BImage.healthyCartLogoWithOpacity, scale: 5,),
-                        ) ,    
-                ),
-              
+                              height: 130,
+                              decoration: BoxDecoration(
+                                  color: BColors.white.withOpacity(0.6),
+                                  borderRadius: const BorderRadius.only(
+                                      topRight: Radius.circular(8),
+                                      topLeft: Radius.circular(8))),
+                              child: Center(
+                                child: Image.asset(
+                                  BImage.healthyCartLogoWithOpacity,
+                                  scale: 5,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
-                      const Gap(5),
+                      const Gap(6),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -102,8 +104,9 @@ class PharmacyHorizontalCard extends StatelessWidget {
                           // ),
                         ],
                       ),
-                      const Gap(5),
+                      const Spacer(),
                       Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Icon(
                             Icons.location_on,
@@ -113,7 +116,6 @@ class PharmacyHorizontalCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               pharmacy.pharmacyAddress ?? 'No Address',
-                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                   fontSize: 10, fontWeight: FontWeight.w500),
@@ -125,14 +127,14 @@ class PharmacyHorizontalCard extends StatelessWidget {
                   ),
                 ),
               ),
-           if (pharmacy.isPharmacyON == false)
-            Positioned(
-              bottom: 40,
-              right: 4,
-              child:  Image.asset(
-                  BImage.currentlyUnavailable,
-                  scale: 6,
-                )),
+              if (pharmacy.isPharmacyON == false)
+                Positioned(
+                    bottom: 48,
+                    right: 4,
+                    child: Image.asset(
+                      BImage.currentlyUnavailable,
+                      scale: 6,
+                    )),
             ],
           ),
         ),

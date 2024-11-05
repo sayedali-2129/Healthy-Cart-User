@@ -41,7 +41,6 @@ class _SplashScreenState extends State<SplashScreen> {
         if (mounted) {
           DependencyInjection.init();
           await context.read<GeneralProvider>().fetchData();
-          log('${context.read<GeneralProvider>().generalModel?.razorpayKey ?? 'NO KEY'} ${context.read<GeneralProvider>().generalModel?.razorpayKeySecret ?? 'NO SECRET KEY'}');
           final authProvider = context.read<AuthenticationProvider>();
           if (authProvider.userFetchlDataFetched?.isActive == false) {
             UserBlockedAlertBox.userBlockedAlert();

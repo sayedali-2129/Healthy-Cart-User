@@ -29,7 +29,7 @@ class CategoryListCard extends StatelessWidget {
               decoration: const BoxDecoration(shape: BoxShape.circle),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(40),
-                  child: CustomCachedNetworkImage(image: category.image ?? '')),
+                  child: CustomCachedNetworkImage(image: category.image ?? '',)),
             ),
             const Gap(8),
             Expanded(

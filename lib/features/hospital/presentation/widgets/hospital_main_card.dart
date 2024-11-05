@@ -116,6 +116,7 @@ class HospitalMainCard extends StatelessWidget {
                           ),
                           const Gap(5),
                           Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Icon(
                                 Icons.location_on,

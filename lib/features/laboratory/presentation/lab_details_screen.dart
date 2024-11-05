@@ -157,11 +157,11 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Icon(
                                   Icons.location_on_outlined,
-                                  size: 20,
+                                  size: 24,
                                 ),
                                 Expanded(
                                   child: Text(
