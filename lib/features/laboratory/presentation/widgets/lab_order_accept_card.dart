@@ -283,7 +283,7 @@ class _AcceptCardState extends State<AcceptCard> {
                         OutlineButtonWidget(
                             onPressed: () async {
                               await LaunchDialer.lauchDialer(
-                                  phoneNumber: orders.labDetails!.phoneNo!);
+                                  phoneNumber: '${orders.labDetails?.contactNumber ?? orders.labDetails?.phoneNo}');
                             },
                             borderColor: BColors.black,
                             buttonHeight: 38,

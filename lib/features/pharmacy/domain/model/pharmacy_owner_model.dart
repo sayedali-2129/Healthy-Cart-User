@@ -7,6 +7,7 @@ class PharmacyModel {
   final String? phoneNo;
   PlaceMark? placemark;
   final String? pharmacyName;
+  final String? contactNumber;
   final String? pharmacyAddress;
   final String? pharmacyownerName;
   final String? pharmacyDocumentLicense;
@@ -26,6 +27,7 @@ class PharmacyModel {
     this.phoneNo,
     this.placemark,
     this.pharmacyName,
+    this.contactNumber,
     this.pharmacyAddress,
     this.pharmacyownerName,
     this.pharmacyDocumentLicense,
@@ -47,6 +49,7 @@ class PharmacyModel {
     String? phoneNo,
     PlaceMark? placemark,
     String? pharmacyName,
+     String? contactNumber,
     String? pharmacyAddress,
     String? pharmacyownerName,
     String? pharmacyDocumentLicense,
@@ -67,6 +70,7 @@ class PharmacyModel {
       phoneNo: phoneNo ?? this.phoneNo,
       placemark: placemark ?? this.placemark,
       pharmacyName: pharmacyName ?? this.pharmacyName,
+      contactNumber: contactNumber ?? this.contactNumber,
       pharmacyAddress: pharmacyAddress ?? this.pharmacyAddress,
       pharmacyownerName: pharmacyownerName ?? this.pharmacyownerName,
       pharmacyDocumentLicense:
@@ -91,6 +95,7 @@ class PharmacyModel {
       'phoneNo': phoneNo,
       'placemark': placemark?.toMap(),
       'pharmacyName': pharmacyName,
+       'contactNumber' : contactNumber,
       'pharmacyAddress': pharmacyAddress,
       'pharmacyownerName': pharmacyownerName,
       'pharmacyDocumentLicense': pharmacyDocumentLicense,
@@ -112,6 +117,7 @@ class PharmacyModel {
   Map<String, dynamic> toProductMap() {
     return <String, dynamic>{
       'pharmacyName': pharmacyName,
+       'contactNumber' : contactNumber,
       'pharmacyAddress': pharmacyAddress,
       'pharmacyImage': pharmacyImage,
       'phoneNo': phoneNo,
@@ -130,6 +136,7 @@ class PharmacyModel {
           : null,
       pharmacyName:
           map['pharmacyName'] != null ? map['pharmacyName'] as String : null,
+       contactNumber: map['contactNumber'] as String?,       
       pharmacyAddress: map['pharmacyAddress'] != null
           ? map['pharmacyAddress'] as String
           : null,

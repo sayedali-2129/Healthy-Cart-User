@@ -326,8 +326,7 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                     ButtonWidget(
                         onPressed: () async {
                           await LaunchDialer.lauchDialer(
-                              phoneNumber: widget
-                                  .bookingModel.hospitalDetails!.phoneNo!);
+                              phoneNumber:  '${widget.bookingModel.hospitalDetails?.contactNumber ?? widget.bookingModel.hospitalDetails?.phoneNo}');
                         },
                         buttonHeight: 42,
                         buttonWidth: 170,
@@ -347,7 +346,8 @@ class _HospitalPaymentScreenState extends State<HospitalPaymentScreen> {
                                   fontWeight: FontWeight.w600),
                             ),
                           ],
-                        ))
+                        ),
+                        ),
                   ],
                 ),
               ),

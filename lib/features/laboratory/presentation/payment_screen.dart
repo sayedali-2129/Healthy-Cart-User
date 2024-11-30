@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -394,9 +396,10 @@ class _LabPaymentScreenState extends State<LabPaymentScreen> {
                     const Gap(20),
                     ButtonWidget(
                         onPressed: () async {
+                          log('Contact number :::: ${widget.labOrdersModel.labDetails?.contactNumber}');
                           await LaunchDialer.lauchDialer(
                               phoneNumber:
-                                  widget.labOrdersModel.labDetails!.phoneNo!);
+                                  '${widget.labOrdersModel.labDetails?.contactNumber ?? widget.labOrdersModel.labDetails?.phoneNo}');
                         },
                         buttonHeight: 42,
                         buttonWidth: 140,

@@ -116,11 +116,10 @@ class HospAcceptCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        
                         (hospitalBookingModel.tokenNumber != null)
                             ? Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Container(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Container(
                                   height: 30,
                                   width: 120,
                                   decoration: BoxDecoration(
@@ -140,7 +139,7 @@ class HospAcceptCard extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                            )
+                              )
                             : const SizedBox(),
                         const Gap(4),
                         Row(
@@ -313,8 +312,8 @@ class HospAcceptCard extends StatelessWidget {
                         OutlineButtonWidget(
                             onPressed: () async {
                               await LaunchDialer.lauchDialer(
-                                  phoneNumber: hospitalBookingModel
-                                      .hospitalDetails!.phoneNo!);
+                                  phoneNumber:
+                                      "${hospitalBookingModel.hospitalDetails?.contactNumber ??hospitalBookingModel.hospitalDetails?.phoneNo}");
                             },
                             borderColor: BColors.black,
                             buttonHeight: 38,

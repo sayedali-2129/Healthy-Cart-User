@@ -14,7 +14,6 @@ import 'package:healthy_cart_user/features/authentication/application/provider/a
 import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/booking_date_time_lab.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/checkout_screen.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_prescription_page.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_list_card.dart';

@@ -31,15 +31,18 @@ class HospitalMain extends StatefulWidget {
 }
 
 class _HospitalMainState extends State<HospitalMain> {
+  
+ late final ScrollController _hospitalScrollController;
   @override
   void initState() {
+    _hospitalScrollController = ScrollController();
     final hospitalProvider = context.read<HospitalProvider>();
     final bookingProvider = context.read<HospitalBookingProivder>();
     final userId = FirebaseAuth.instance.currentUser?.uid;
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         hospitalProvider.clearHospitalData();
-        hospitalProvider.hospitalFetchInitData(context: context);
+        hospitalProvider.hospitalFetchInitData(context: context, mainScrollController:_hospitalScrollController );
         if (userId != null) {
           bookingProvider.getSingleOrderDoc(userId: userId);
         }
@@ -47,7 +50,11 @@ class _HospitalMainState extends State<HospitalMain> {
     );
     super.initState();
   }
-
+@override
+  void dispose() {
+    _hospitalScrollController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
@@ -62,10 +69,10 @@ class _HospitalMainState extends State<HospitalMain> {
           onRefresh: () async {
             hospitalProvider
               ..clearHospitalLocationData()
-              ..hospitalFetchInitData(context: context);
+              ..hospitalFetchInitData(context: context, mainScrollController: _hospitalScrollController);
           },
           child: CustomScrollView(
-            controller: hospitalProvider.mainScrollController,
+            controller:_hospitalScrollController,
             slivers: [
               HomeSliverAppbar(
                 onSearchTap: () {
@@ -87,6 +94,7 @@ class _HospitalMainState extends State<HospitalMain> {
                       onSucess: () {
                         hospitalProvider.hospitalFetchInitData(
                           context: context,
+                          mainScrollController: _hospitalScrollController
                         );
                       },
                     ),

@@ -121,7 +121,7 @@ class HospPendingCard extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                         text:
-                                            '${orders.hospitalDetails!.hospitalName} ',
+                                        '${orders.hospitalDetails!.hospitalName} ',
                                         style: const TextStyle(
                                           color: BColors.black,
                                           fontWeight: FontWeight.w600,

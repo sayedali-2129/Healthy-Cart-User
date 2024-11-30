@@ -71,7 +71,7 @@ class LabProvider with ChangeNotifier {
   /* -------------------------------------------------------------------------- */
 
   /* ------------------------- Location based fetching Hospitals------------------------ */
-  final ScrollController mainScrollController = ScrollController();
+
   bool isFirebaseDataLoding = true;
   bool circularProgressLOading = true;
   bool isFunctionProcessing = false;
@@ -118,6 +118,7 @@ class LabProvider with ChangeNotifier {
 
   void labortaryFetchInitData({
     required BuildContext context,
+    required ScrollController scrollController,
   }) {
     notifyListeners();
     final placeMark =
@@ -132,9 +133,9 @@ class LabProvider with ChangeNotifier {
       );
     }
 
-    mainScrollController.addListener(() {
-      if (mainScrollController.position.atEdge &&
-          mainScrollController.position.pixels != 0 &&
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge &&
+          scrollController.position.pixels != 0 &&
           isFunctionProcessing == false &&
           circularProgressLOading == true) {
         fetchLabortaryLocationBasedData(context);

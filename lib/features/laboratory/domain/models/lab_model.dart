@@ -6,6 +6,7 @@ class LabModel {
   PlaceMark? placemark;
   String? phoneNo;
   String? laboratoryName;
+  String? contactNumber;
   String? address;
   String? ownerName;
   String? uploadLicense;
@@ -23,6 +24,7 @@ class LabModel {
     this.placemark,
     this.phoneNo,
     this.laboratoryName,
+     this.contactNumber,
     this.address,
     this.ownerName,
     this.uploadLicense,
@@ -42,6 +44,7 @@ class LabModel {
       'id': id,
       'phoneNo': phoneNo,
       'laboratoryName': laboratoryName,
+      'contactNumber' : contactNumber,
       'address': address,
       'ownerName': ownerName,
       'uploadLicense': uploadLicense,
@@ -60,6 +63,7 @@ class LabModel {
   Map<String, dynamic> toEditMap() {
     return {
       'laboratoryName': laboratoryName,
+      'contactNumber' : contactNumber,
       'address': address,
       'ownerName': ownerName,
       'uploadLicense': uploadLicense,
@@ -79,6 +83,7 @@ class LabModel {
       laboratoryName: map['laboratoryName'] != null
           ? map['laboratoryName'] as String
           : null,
+       contactNumber: map['contactNumber'] as String?,      
       address: map['address'] != null ? map['address'] as String : null,
       ownerName: map['ownerName'] != null ? map['ownerName'] as String : null,
       uploadLicense:
@@ -106,6 +111,7 @@ class LabModel {
     PlaceMark? placemark,
     String? phoneNo,
     String? laboratoryName,
+    String? contactNumber,
     String? address,
     String? ownerName,
     String? uploadLicense,
@@ -124,6 +130,7 @@ class LabModel {
       placemark: placemark ?? this.placemark,
       phoneNo: phoneNo ?? this.phoneNo,
       laboratoryName: laboratoryName ?? this.laboratoryName,
+       contactNumber: contactNumber ?? this.contactNumber,
       address: address ?? this.address,
       ownerName: ownerName ?? this.ownerName,
       uploadLicense: uploadLicense ?? this.uploadLicense,

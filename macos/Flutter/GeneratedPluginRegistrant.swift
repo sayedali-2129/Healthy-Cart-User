@@ -22,7 +22,7 @@ import path_provider_foundation
 import shared_preferences_foundation
 import smart_auth
 import soundpool_macos
-import sqflite
+import sqflite_darwin
 import syncfusion_pdfviewer_macos
 import url_launcher_macos
 

@@ -31,8 +31,10 @@ class LabMain extends StatefulWidget {
 }
 
 class _LabMainState extends State<LabMain> {
+  late final ScrollController _labScrollController;
   @override
   void initState() {
+    _labScrollController = ScrollController();
     final labProvider = context.read<LabProvider>();
     final labOrderProvider = context.read<LabOrdersProvider>();
     final userId = FirebaseAuth.instance.currentUser?.uid;
@@ -41,13 +43,20 @@ class _LabMainState extends State<LabMain> {
       (_) {
         labProvider
           ..clearLabData()
-          ..labortaryFetchInitData(context: context);
+          ..labortaryFetchInitData(
+              context: context, scrollController: _labScrollController);
         if (userId != null) {
           labOrderProvider.getSingleOrderDoc(userId: userId);
         }
       },
     );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _labScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,10 +73,10 @@ class _LabMainState extends State<LabMain> {
           onRefresh: () async {
             labProvider
               ..clearLabortaryLocationData()
-              ..labortaryFetchInitData(context: context);
+              ..labortaryFetchInitData(context: context, scrollController: _labScrollController);
           },
           child: CustomScrollView(
-            controller: labProvider.mainScrollController,
+            controller: _labScrollController,
             slivers: [
               HomeSliverAppbar(
                 onSearchTap: () {
@@ -87,7 +96,7 @@ class _LabMainState extends State<LabMain> {
                       isUserEditProfile: false,
                       locationSetter: 2,
                       onSucess: () {
-                        labProvider.labortaryFetchInitData(context: context);
+                        labProvider.labortaryFetchInitData(context: context, scrollController: _labScrollController);
                       },
                     ),
                   );

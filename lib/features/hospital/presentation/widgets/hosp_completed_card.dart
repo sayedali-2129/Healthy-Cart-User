@@ -10,7 +10,6 @@ class HospitalCompletedCard extends StatelessWidget {
   final HospitalBookingModel completedOrderData;
   @override
   Widget build(BuildContext context) {
-
     final formattedDate = DateFormat('dd/MM/yyyy')
         .format(completedOrderData.completedAt!.toDate());
     return Padding(
@@ -89,24 +88,24 @@ class HospitalCompletedCard extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,
                                 text: TextSpan(
-                                      children: [
-                              TextSpan(
-                                  text: 'Patient Name :- ',
-                                  style: const TextStyle(
-                                    color: BColors.grey,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    fontFamily: 'Montserrat',
-                                  )),
-                              TextSpan(
-                                text: completedOrderData.patientName,
-                                style: const TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: BColors.black),
-                              )
-                            ],
+                                  children: [
+                                    const TextSpan(
+                                        text: 'Patient Name :- ',
+                                        style: TextStyle(
+                                          color: BColors.grey,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12,
+                                          fontFamily: 'Montserrat',
+                                        )),
+                                    TextSpan(
+                                      text: completedOrderData.patientName,
+                                      style: const TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: BColors.black),
+                                    )
+                                  ],
                                 ),
                               ),
                               const Gap(5),
@@ -167,7 +166,7 @@ class HospitalCompletedCard extends StatelessWidget {
                         ),
                         const Gap(8),
                         Text(
-                          'Appointment Completed !',
+                          'Appointment Completed!',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontFamily: 'Montserrat',

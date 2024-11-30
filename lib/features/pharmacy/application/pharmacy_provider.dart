@@ -165,7 +165,6 @@ class PharmacyProvider extends ChangeNotifier {
 
   /* ------------------------- Location based fetching Pharmacy------------------------ */
 
-  final ScrollController mainScrollController = ScrollController();
   bool isFirebaseDataLoding = true;
   bool circularProgressLOading = true;
   bool isFunctionProcessing = false;
@@ -215,6 +214,7 @@ class PharmacyProvider extends ChangeNotifier {
 
   void pharmacyFetchInitData({
     required BuildContext context,
+       required ScrollController scrollController,
   }) {
     notifyListeners();
     final placeMark =
@@ -230,9 +230,9 @@ class PharmacyProvider extends ChangeNotifier {
       );
     }
 
-    mainScrollController.addListener(() {
-      if (mainScrollController.position.atEdge &&
-          mainScrollController.position.pixels != 0 &&
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge &&
+          scrollController.position.pixels != 0 &&
           isFunctionProcessing == false &&
           circularProgressLOading == true) {
         fetchPharmacyLocationBasedData(context);

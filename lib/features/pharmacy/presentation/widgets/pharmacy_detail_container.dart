@@ -53,7 +53,7 @@ class PharmacyDetailsContainer extends StatelessWidget {
                         const Gap(4),
                         RowTwoTextWidget(
                             text1: 'Phone No :',
-                            text2: pharmacyData.phoneNo ?? 'Unknown PhoneNo',
+                            text2: '${pharmacyData.contactNumber ?? pharmacyData.phoneNo}',
                             gap: 8),
                       ],
                     ),

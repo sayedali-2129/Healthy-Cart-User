@@ -46,6 +46,7 @@ class HomeMain extends StatefulWidget {
 }
 
 class _HomeMainState extends State<HomeMain> {
+  late final ScrollController _scrollController;
   @override
   void initState() {
     final homeProvider = context.read<HomeProvider>();
@@ -55,10 +56,10 @@ class _HomeMainState extends State<HomeMain> {
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
+        _scrollController = ScrollController();
         hospitalProvider
             .hospitalFetchInitData(
-          context: context,
-        )
+                context: context, mainScrollController: _scrollController)
             .whenComplete(
           () {
             hospitalProvider.getHospitalAllCategory();
@@ -67,12 +68,18 @@ class _HomeMainState extends State<HomeMain> {
         );
 
         labProvider.labortaryFetchInitData(
-          context: context,
-        );
-        pharmacyProvider.pharmacyFetchInitData(context: context);
+            context: context, scrollController: _scrollController);
+        pharmacyProvider.pharmacyFetchInitData(
+            context: context, scrollController: _scrollController);
       },
     );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,12 +105,12 @@ class _HomeMainState extends State<HomeMain> {
                   locationSetter: 0,
                   onSucess: () {
                     hospitalProvider.hospitalFetchInitData(
-                      context: context,
-                    );
+                        context: context,
+                        mainScrollController: _scrollController);
                     labProvider.labortaryFetchInitData(
-                      context: context,
-                    );
-                    pharmacyProvider.pharmacyFetchInitData(context: context);
+                        context: context, scrollController: _scrollController);
+                    pharmacyProvider.pharmacyFetchInitData(
+                        context: context, scrollController: _scrollController);
                   },
                 ),
               );
@@ -210,7 +217,8 @@ class _HomeMainState extends State<HomeMain> {
                                       categoryIdList: hospitalProvider
                                           .hospitalList[index]
                                           .selectedCategoryId,
-                                    ));
+                                    ),
+                                    );
                               }
                             },
                             child: HospitalsHorizontalCard(
@@ -424,7 +432,6 @@ class _HomeMainState extends State<HomeMain> {
                                     CustomToast.infoToast(
                                         text: 'Login to continue !');
                                   } else {
-                                  
                                     labProvider.setLabIdAndLab(
                                       selectedLabId:
                                           labProvider.labList[index].id!,

@@ -52,7 +52,7 @@ class LabDetailsCardOnOrders extends StatelessWidget {
                         const Gap(4),
                         RowTwoTextWidget(
                             text1: 'Phone No :',
-                            text2: labData.phoneNo ?? 'Unknown PhoneNo',
+                            text2:  '${labData.contactNumber ?? labData.phoneNo}',
                             gap: 8),
                       ],
                     ),
@@ -94,7 +94,7 @@ class LabDetailsCardOnOrders extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 orderProvider.lauchDialer(
-                                    phoneNumber: labData.phoneNo ?? '');
+                                    phoneNumber: '${labData.contactNumber ?? labData.phoneNo}');
                               },
                               icon: const Icon(Icons.phone,
                                   size: 24, color: Colors.blue),

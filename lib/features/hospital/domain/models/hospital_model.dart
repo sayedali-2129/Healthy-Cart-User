@@ -6,8 +6,8 @@ class HospitalModel {
   String? id;
   String? phoneNo;
   PlaceMark? placemark;
-
   String? hospitalName;
+  String? contactNumber;
   String? address;
   String? ownerName;
   String? image;
@@ -21,6 +21,7 @@ class HospitalModel {
   HospitalModel({
     this.id,
     this.hospitalName,
+     this.contactNumber,
     this.address,
     this.ownerName,
     this.image,
@@ -38,6 +39,7 @@ class HospitalModel {
     return <String, dynamic>{
       'id': id,
       'hospitalName': hospitalName,
+      'contactNumber' : contactNumber,
       'address': address,
       'ownerName': ownerName,
       'image': image,
@@ -57,6 +59,7 @@ class HospitalModel {
       id: map['id'] != null ? map['id'] as String : null,
       hospitalName:
           map['hospitalName'] != null ? map['hospitalName'] as String : null,
+        contactNumber: map['contactNumber'] as String?,     
       address: map['address'] != null ? map['address'] as String : null,
       ownerName: map['ownerName'] != null ? map['ownerName'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
@@ -80,7 +83,9 @@ class HospitalModel {
   }
 
   HospitalModel copyWith({
+    String? id,
     String? hospitalName,
+     String? contactNumber,
     String? address,
     String? ownerName,
     String? image,
@@ -89,13 +94,14 @@ class HospitalModel {
     bool? ishospitalON,
     Timestamp? createdAt,
     List<String>? keywords,
-    String? id,
     String? fcmToken,
     String? phoneNo,
     PlaceMark? placemark,
   }) {
     return HospitalModel(
+       id: id ?? this.id,
       hospitalName: hospitalName ?? this.hospitalName,
+      contactNumber: contactNumber ?? this.contactNumber,
       address: address ?? this.address,
       ownerName: ownerName ?? this.ownerName,
       image: image ?? this.image,
@@ -104,7 +110,6 @@ class HospitalModel {
       ishospitalON: ishospitalON ?? this.ishospitalON,
       createdAt: createdAt ?? this.createdAt,
       keywords: keywords ?? this.keywords,
-      id: id ?? this.id,
       fcmToken: fcmToken ?? this.fcmToken,
       phoneNo: phoneNo ?? this.phoneNo,
       placemark: placemark ?? this.placemark,

@@ -64,7 +64,7 @@ class OpenStritMapServices {
   static Future<List<PlaceMark>> searchPlaces({
     required String input,
   }) async {
-        final headers = {'User-Agent': 'HealthyCart v1.4.5'};
+        final headers = {'User-Agent': 'HealthyCart User'};
     final url = Uri.parse(
       'https://nominatim.openstreetmap.org/search.php?q=$input&format=json&addressdetails=1&limit=20&countrycodes=in',
     );

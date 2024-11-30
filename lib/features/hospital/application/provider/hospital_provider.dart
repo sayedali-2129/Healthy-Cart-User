@@ -381,7 +381,6 @@ class HospitalProvider with ChangeNotifier {
 
   /* ------------------------- Location based fetching Hospitals------------------------ */
 
-  final ScrollController mainScrollController = ScrollController();
   bool isFirebaseDataLoding = true;
   bool circularProgressLOading = true;
   bool isFunctionProcessing = false;
@@ -430,7 +429,7 @@ class HospitalProvider with ChangeNotifier {
   }
 
   Future<void> hospitalFetchInitData({
-    required BuildContext context,
+    required BuildContext context, required ScrollController mainScrollController
   }) async {
     notifyListeners();
     // log('called');

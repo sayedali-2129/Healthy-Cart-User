@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -24,6 +25,7 @@ class PhoneField extends StatelessWidget {
       ),
       autovalidateMode: AutovalidateMode.disabled,
       onChanged: (value) {
+        HapticFeedback.lightImpact();
         countryCode(value.countryCode);
       },
       controller: phoneNumberController,
