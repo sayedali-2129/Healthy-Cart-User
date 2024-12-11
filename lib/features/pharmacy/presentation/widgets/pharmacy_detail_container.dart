@@ -53,7 +53,8 @@ class PharmacyDetailsContainer extends StatelessWidget {
                         const Gap(4),
                         RowTwoTextWidget(
                             text1: 'Phone No :',
-                            text2: '${pharmacyData.contactNumber ?? pharmacyData.phoneNo}',
+                            text2:
+                                '${pharmacyData.contactNumber ?? pharmacyData.phoneNo}',
                             gap: 8),
                       ],
                     ),
@@ -95,7 +96,8 @@ class PharmacyDetailsContainer extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 orderProvider.lauchDialer(
-                                    phoneNumber: pharmacyData.phoneNo ?? '');
+                                    phoneNumber:
+                                        '${pharmacyData.contactNumber ?? pharmacyData.phoneNo}');
                               },
                               icon: const Icon(Icons.phone,
                                   size: 24, color: Colors.blue),

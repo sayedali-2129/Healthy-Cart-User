@@ -9,15 +9,15 @@ class PharmacyProductAddModel {
   final String? typeOfProduct;
   final num? productMRPRate;
   final num? productDiscountRate;
-  final int? discountPercentage;
+  final num? discountPercentage;
   final List<String>? productImage;
   final String? productName;
   final String? productBrandName;
-  final int? totalQuantity;
-  final int? productFormNumber;
-  final int? productPackageNumber;
-  final int? productMeasurementNumber;
-  final double? equipmentWarrantyNumber;
+  final num? totalQuantity;
+  final num? productFormNumber;
+  final num? productPackageNumber;
+  final num? productMeasurementNumber;
+  final num? equipmentWarrantyNumber;
    final String? storingDegree;
   final String? idealFor;
   final Timestamp? expiryDate;
@@ -83,15 +83,15 @@ class PharmacyProductAddModel {
     String? typeOfProduct,
     num? productMRPRate,
     num? productDiscountRate,
-    int? discountPercentage,
+    num? discountPercentage,
     List<String>? productImage,
     String? productName,
     String? productBrandName,
-    int? totalQuantity,
-    int? productFormNumber,
-    int? productPackageNumber,
-    int? productMeasurementNumber,
-    double? equipmentWarrantyNumber,
+    num? totalQuantity,
+    num? productFormNumber,
+    num? productPackageNumber,
+    num? productMeasurementNumber,
+    num? equipmentWarrantyNumber,
     String? storingDegree,
     String? idealFor,
     Timestamp? expiryDate,
@@ -330,7 +330,7 @@ class PharmacyProductAddModel {
           ? map['productDiscountRate'] as num
           : null,
       discountPercentage: map['discountPercentage'] != null
-          ? map['discountPercentage'] as int
+          ? map['discountPercentage'] as num
           : null,
       productImage: map['productImage'] != null
           ? List<String>.from((map['productImage'] as List<dynamic>))
@@ -341,15 +341,15 @@ class PharmacyProductAddModel {
           ? map['productBrandName'] as String
           : null,
       productFormNumber:
-          map['productFormNumber'] != null ? map['productFormNumber'] as int : null,
+          map['productFormNumber'] != null ? map['productFormNumber'] as num : null,
        totalQuantity:
-          map['totalQuantity'] != null ? map['totalQuantity'] as int : null,
+          map['totalQuantity'] != null ? map['totalQuantity'] as num : null,
         productPackageNumber:
-          map['productPackageNumber'] != null ? map['productPackageNumber'] as int : null,
+          map['productPackageNumber'] != null ? map['productPackageNumber'] as num : null,
          productMeasurementNumber:
-          map['productMeasurementNumber'] != null ? map['productMeasurementNumber'] as int : null,
+          map['productMeasurementNumber'] != null ? map['productMeasurementNumber'] as num : null,
          equipmentWarrantyNumber:
-          map['equipmentWarrantyNumber'] != null ? map['equipmentWarrantyNumber'] as double : null,           
+          map['equipmentWarrantyNumber'] != null ? map['equipmentWarrantyNumber'] as num : null,           
       storingDegree:
           map['storingDegree'] != null ? map['storingDegree'] as String : null,
       idealFor:

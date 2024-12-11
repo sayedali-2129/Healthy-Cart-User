@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -214,7 +215,7 @@ class PharmacyProvider extends ChangeNotifier {
 
   void pharmacyFetchInitData({
     required BuildContext context,
-       required ScrollController scrollController,
+    required ScrollController scrollController,
   }) {
     notifyListeners();
     final placeMark =
@@ -330,6 +331,7 @@ class PharmacyProvider extends ChangeNotifier {
     result.fold((failure) {
       fetchLoading = false;
       notifyListeners();
+      log('$failure');
       CustomToast.errorToast(text: "Couldn't able to show products");
     }, (products) {
       productAllList.addAll(products); //// here we are assigning the doctor
