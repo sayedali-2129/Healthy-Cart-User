@@ -1,7 +1,6 @@
 //import 'dart:developer' as log;
 import 'dart:io';
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:healthy_cart_user/core/failures/main_failure.dart';

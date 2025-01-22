@@ -114,7 +114,16 @@ class PendingCard extends StatelessWidget {
                                   fontWeightText1: FontWeight.w600,
                                   text2Color: BColors.textBlack,
                                 ),
-                                const Gap(6),
+                              if(pendingorderData.usertimeSlot != null)
+                               RowTextContainerWidget(
+                                  text1: 'Time Slot : ',
+                                  text2: '${pendingorderData.usertimeSlot}',
+                                  text1Color: BColors.textLightBlack,
+                                  fontSizeText1: 12,
+                                  fontSizeText2: 12,
+                                  fontWeightText1: FontWeight.w600,
+                                  text2Color: BColors.textBlack,
+                                ),
                                 const Divider(),
                               ],
                             ),

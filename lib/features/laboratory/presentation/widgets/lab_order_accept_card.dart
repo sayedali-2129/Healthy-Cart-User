@@ -8,6 +8,7 @@ import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_orders_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/payment_screen.dart';
+import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -81,6 +82,7 @@ class _AcceptCardState extends State<AcceptCard> {
                             )
                           ],
                         ),
+                        const Divider(),
                         orders.selectedTest!.length == 1
                             ? Text(orders.selectedTest!.first.testName!,
                                 style: const TextStyle(
@@ -90,6 +92,7 @@ class _AcceptCardState extends State<AcceptCard> {
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 15),
                               ),
+                        const Divider(),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -102,27 +105,28 @@ class _AcceptCardState extends State<AcceptCard> {
                             ),
                             // const Gap(5),
                             Expanded(
-                                child: RichText(
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                          text:
-                                              orders.labDetails!.laboratoryName,
-                                          style: const TextStyle(
-                                            color: BColors.black,
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: 'Montserrat',
-                                          )),
-                                      TextSpan(
-                                        text: orders.labDetails!.address,
-                                        style: const TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            color: BColors.black),
-                                      )
-                                    ])))
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                      text: orders.labDetails!.laboratoryName,
+                                      style: const TextStyle(
+                                        color: BColors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Montserrat',
+                                      )),
+                                  TextSpan(
+                                    text: orders.labDetails!.address,
+                                    style: const TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: BColors.black),
+                                  )
+                                ]),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -130,7 +134,47 @@ class _AcceptCardState extends State<AcceptCard> {
                   )
                 ],
               ),
-              const Gap(10),
+              (orders.tokenNumber != null)
+                  ? Container(
+                      height: 30,
+                      width: 120,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: BColors.offRed),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Token No- ${orders.tokenNumber}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                    color: Colors.white,
+                                  )),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+              if (orders.notes != null && orders.notes!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: BColors.mainlightColor),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: RowTextContainerWidget(
+                        text1: 'Note by laboratory : ',
+                        text2: orders.notes ?? 'Unknown note',
+                        text1Color: BColors.textLightBlack,
+                        fontSizeText1: 12,
+                        fontSizeText2: 13,
+                        fontWeightText1: FontWeight.w600,
+                        text2Color: BColors.black),
+                  ),
+                ),
+              const Gap(8),
               orders.isUserAccepted == false
                   ? Column(
                       children: [
@@ -201,17 +245,22 @@ class _AcceptCardState extends State<AcceptCard> {
                           ],
                         ),
                         const Gap(10),
-                        orders.timeSlot != null
+                        orders.usertimeSlot != null
                             ? Column(
                                 children: [
-                                  const Text(
-                                    'Laboratory will reach you on :',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
+                                  Text(
+                                    (orders.testMode == 'Home')
+                                        ? 'Our assistant will reach you at :'
+                                        : 'Your booking has been scheduled to :',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500),
                                   ),
                                   const Gap(5),
                                   Text(
-                                    orders.timeSlot ?? '',
+                                    (orders.admintimeSlot != null &&
+                                            orders.admintimeSlot!.isNotEmpty)
+                                        ? '${orders.admintimeSlot}'
+                                        : '${orders.usertimeSlot}',
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 15),
@@ -234,7 +283,7 @@ class _AcceptCardState extends State<AcceptCard> {
                         OutlineButtonWidget(
                             onPressed: () async {
                               await LaunchDialer.lauchDialer(
-                                  phoneNumber: orders.labDetails!.phoneNo!);
+                                  phoneNumber: '${orders.labDetails?.contactNumber ?? orders.labDetails?.phoneNo}');
                             },
                             borderColor: BColors.black,
                             buttonHeight: 38,

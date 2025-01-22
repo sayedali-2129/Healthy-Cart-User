@@ -1,12 +1,15 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/controller/no_internet_controller.dart';
-import 'package:healthy_cart_user/core/custom/user_block_alert_dialogur.dart';
+import 'package:healthy_cart_user/core/custom/user_block_alert_dialog.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/general/presentation/provider/general_provider.dart';
 import 'package:healthy_cart_user/features/location_picker/location_picker/presentation/location.dart';
 import 'package:healthy_cart_user/features/notifications/application/provider/notification_provider.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
@@ -25,18 +28,19 @@ class _SplashScreenState extends State<SplashScreen> {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final notiProvider = context.read<NotificationProvider>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      
       FirebaseMessaging.instance.subscribeToTopic('All');
       notiProvider.notificationPermission();
       if (userId != null) {
-        context.read<AuthenticationProvider>().userStreamFetchedData(userId: userId);
+        context
+            .read<AuthenticationProvider>()
+            .userStreamFetchedData(userId: userId);
       }
     });
     Future.delayed(const Duration(seconds: 4)).then(
-      (value) {
+      (value) async {
         if (mounted) {
           DependencyInjection.init();
-
+          await context.read<GeneralProvider>().fetchData();
           final authProvider = context.read<AuthenticationProvider>();
           if (authProvider.userFetchlDataFetched?.isActive == false) {
             UserBlockedAlertBox.userBlockedAlert();

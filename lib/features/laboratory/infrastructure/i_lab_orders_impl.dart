@@ -89,14 +89,14 @@ class ILabOrdersImpl implements ILabOrdersFacade {
   FutureResult<List<LabOrdersModel>> getPendingOrders(
       {required String userId}) async {
     try {
-      final responce = await _firestore
+      final response = await _firestore
           .collection(FirebaseCollections.labOrdersCollection)
           .where(Filter.and(Filter('userId', isEqualTo: userId),
               Filter('orderStatus', isEqualTo: 0)))
           .orderBy('orderAt', descending: true)
           .get();
 
-      return right(responce.docs
+      return right(response.docs
           .map((e) => LabOrdersModel.fromMap(e.data()).copyWith(id: e.id))
           .toList());
     } catch (e) {
@@ -229,7 +229,7 @@ class ILabOrdersImpl implements ILabOrdersFacade {
   FutureResult<LabOrdersModel> getSingleOrderDoc(
       {required String userId}) async {
     try {
-      final responce = await _firestore
+      final response = await _firestore
           .collection(FirebaseCollections.labOrdersCollection)
           .where(Filter.and(
               Filter('userId', isEqualTo: userId),
@@ -237,8 +237,14 @@ class ILabOrdersImpl implements ILabOrdersFacade {
               Filter('orderStatus', isEqualTo: 1)))
           .limit(1)
           .get();
+       
+      if (response.docs.isEmpty) {
+        return left(
+            const MainFailure.generalException(errMsg: "No orders found."));
+      }
+   
 
-      return right(LabOrdersModel.fromMap(responce.docs.single.data()));
+      return right(LabOrdersModel.fromMap(response.docs.single.data()));
     } catch (e) {
       return left(MainFailure.generalException(errMsg: e.toString()));
     }

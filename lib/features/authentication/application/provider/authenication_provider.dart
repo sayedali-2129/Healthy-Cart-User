@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/bottom_navigation/bottom_nav_widget.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
-import 'package:healthy_cart_user/core/custom/user_block_alert_dialogur.dart';
+import 'package:healthy_cart_user/core/custom/user_block_alert_dialog.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/domain/facade/i_auth_facade.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/otp_ui.dart';

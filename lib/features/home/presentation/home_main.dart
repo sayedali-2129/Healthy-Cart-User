@@ -46,6 +46,7 @@ class HomeMain extends StatefulWidget {
 }
 
 class _HomeMainState extends State<HomeMain> {
+  late final ScrollController _scrollController;
   @override
   void initState() {
     final homeProvider = context.read<HomeProvider>();
@@ -55,10 +56,10 @@ class _HomeMainState extends State<HomeMain> {
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
+        _scrollController = ScrollController();
         hospitalProvider
             .hospitalFetchInitData(
-          context: context,
-        )
+                context: context, mainScrollController: _scrollController)
             .whenComplete(
           () {
             hospitalProvider.getHospitalAllCategory();
@@ -67,12 +68,18 @@ class _HomeMainState extends State<HomeMain> {
         );
 
         labProvider.labortaryFetchInitData(
-          context: context,
-        );
-        pharmacyProvider.pharmacyFetchInitData(context: context);
+            context: context, scrollController: _scrollController);
+        pharmacyProvider.pharmacyFetchInitData(
+            context: context, scrollController: _scrollController);
       },
     );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,12 +105,12 @@ class _HomeMainState extends State<HomeMain> {
                   locationSetter: 0,
                   onSucess: () {
                     hospitalProvider.hospitalFetchInitData(
-                      context: context,
-                    );
+                        context: context,
+                        mainScrollController: _scrollController);
                     labProvider.labortaryFetchInitData(
-                      context: context,
-                    );
-                    pharmacyProvider.pharmacyFetchInitData(context: context);
+                        context: context, scrollController: _scrollController);
+                    pharmacyProvider.pharmacyFetchInitData(
+                        context: context, scrollController: _scrollController);
                   },
                 ),
               );
@@ -151,7 +158,9 @@ class _HomeMainState extends State<HomeMain> {
                   if (hospitalProvider.hospitalList.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -180,38 +189,43 @@ class _HomeMainState extends State<HomeMain> {
                             : hospitalProvider.hospitalList.length,
                         separatorBuilder: (context, index) => const Gap(10),
                         itemBuilder: (context, index) => FadeInRight(
-                            child: GestureDetector(
-                          onTap: () {
-                            if (authProvider.auth.currentUser == null) {
-                              EasyNavigation.push(
-                                  type: PageTransitionType.rightToLeft,
-                                  context: context,
-                                  page: const LoginScreen());
-                              CustomToast.infoToast(
-                                  text: 'Login to continue !');
-                            } else {
-                              hospitalProvider
-                                          .hospitalList[index].ishospitalON ==
-                                      false
-                                  ? CustomToast.errorToast(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (authProvider.auth.currentUser == null) {
+                                EasyNavigation.push(
+                                    type: PageTransitionType.rightToLeft,
+                                    context: context,
+                                    page: const LoginScreen());
+                                CustomToast.infoToast(
+                                    text: 'Login to continue !');
+                              } else {
+                                if (hospitalProvider
+                                        .hospitalList[index].ishospitalON ==
+                                    false) {
+                                  CustomToast.errorToast(
                                       text:
-                                          'This Hospital is not available now!')
-                                  : EasyNavigation.push(
-                                      context: context,
-                                      type: PageTransitionType.rightToLeft,
-                                      page: HospitalDetails(
-                                        hospitalId: hospitalProvider
-                                            .hospitalList[index].id!,
-                                        categoryIdList: hospitalProvider
-                                            .hospitalList[index]
-                                            .selectedCategoryId,
-                                      ));
-                            }
-                          },
-                          child: HospitalsHorizontalCard(
-                            index: index,
+                                          'This Hospital is not available now!');
+                                  return;
+                                }
+
+                                EasyNavigation.push(
+                                    context: context,
+                                    type: PageTransitionType.rightToLeft,
+                                    page: HospitalDetails(
+                                      hospitalId: hospitalProvider
+                                          .hospitalList[index].id!,
+                                      categoryIdList: hospitalProvider
+                                          .hospitalList[index]
+                                          .selectedCategoryId,
+                                    ),
+                                    );
+                              }
+                            },
+                            child: HospitalsHorizontalCard(
+                              index: index,
+                            ),
                           ),
-                        )),
+                        ),
                       ),
                     ),
                   if (hospitalProvider.hospitalAllCategoryList.isNotEmpty &&
@@ -342,24 +356,25 @@ class _HomeMainState extends State<HomeMain> {
                                     context: context,
                                     page: const ProfileSetup());
                               } else {
-                                pharmacyProvider
-                                            .pharmacyList[index].isPharmacyON ==
-                                        false
-                                    ? CustomToast.errorToast(
-                                        text:
-                                            'This Pharmacy is not available now!')
-                                    : pharmacyProvider
-                                        .setPharmacyIdAndCategoryList(
-                                            selectedpharmacyId: pharmacyProvider
-                                                    .pharmacyList[index].id ??
-                                                '',
-                                            categoryIdList:
-                                                pharmacyProvider
-                                                        .pharmacyList[index]
-                                                        .selectedCategoryId ??
-                                                    [],
-                                            pharmacy: pharmacyProvider
-                                                .pharmacyList[index]);
+                                if (pharmacyProvider
+                                        .pharmacyList[index].isPharmacyON ==
+                                    false) {
+                                  CustomToast.errorToast(
+                                      text:
+                                          'This Pharmacy is not available now!');
+                                  return;
+                                }
+
+                                pharmacyProvider.setPharmacyIdAndCategoryList(
+                                    selectedpharmacyId: pharmacyProvider
+                                            .pharmacyList[index].id ??
+                                        '',
+                                    categoryIdList: pharmacyProvider
+                                            .pharmacyList[index]
+                                            .selectedCategoryId ??
+                                        [],
+                                    pharmacy:
+                                        pharmacyProvider.pharmacyList[index]);
                                 EasyNavigation.push(
                                     type: PageTransitionType.rightToLeft,
                                     context: context,

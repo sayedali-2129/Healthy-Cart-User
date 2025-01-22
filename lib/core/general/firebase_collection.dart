@@ -24,4 +24,5 @@ class FirebaseCollections {
   static const String hospitalBookingCollection = 'hospital_booking';
   static const String notificationCollection = 'notifications';
   static String paymentGateway = 'paymentGateway';
+  static String general = 'general';
 }

@@ -1,5 +1,7 @@
 //import 'dart:developer';
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -40,20 +42,14 @@ class LabOrdersProvider with ChangeNotifier {
     iLabOrdersFacade.getLabOrders(userId: userId).listen(
       (event) {
         event.fold((err) {
-         // log(err.errMsg);
+          // log(err.errMsg);
           isLoading = false;
           notifyListeners();
         }, (success) {
-          // final uniquelists = success
-          //     .where(
-          //       (element) => !labOrderIds.contains(element.id),
-          //     )
-          //     .toList();
-          // labOrderIds.addAll(uniquelists.map((orders) => orders.id!));
-          // approvedOrders.addAll(uniquelists);
-
-          // log(approvedOrders.length.toString());
           approvedOrders = success;
+          for (var e in approvedOrders) {
+            log('token number called ${e.tokenNumber}');
+          }
           isLoading = false;
           notifyListeners();
         });
@@ -92,7 +88,7 @@ class LabOrdersProvider with ChangeNotifier {
         paymentId: paymentId);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to accept booking');
-     // log('Error :: ${err.errMsg}');
+      // log('Error :: ${err.errMsg}');
     }, (success) {
       CustomToast.sucessToast(text: success);
       sendFcmMessage(
@@ -100,7 +96,7 @@ class LabOrdersProvider with ChangeNotifier {
           body:
               '$userName accepted an order, Please check the status. Booking ID : $orderId',
           title: 'User Accepted An order');
-     // log(fcmtoken);
+      // log(fcmtoken);
     });
   }
 
@@ -115,7 +111,7 @@ class LabOrdersProvider with ChangeNotifier {
         orderId: orderId, rejectReason: rejectionReasonController.text);
     result.fold((err) {
       CustomToast.errorToast(text: 'Failed to cancel booking');
-     // log(err.errMsg);
+      // log(err.errMsg);
     }, (success) {
       if (fromPending == true) {
         pendingOrders.removeAt(index!);
@@ -135,7 +131,7 @@ class LabOrdersProvider with ChangeNotifier {
     notifyListeners();
     final result = await iLabOrdersFacade.getCancelledOrders(userId: userId);
     result.fold((err) {
-     // log('ERROR :: ${err.errMsg}');
+      // log('ERROR :: ${err.errMsg}');
     }, (success) {
       cancelledOrders.addAll(success);
     });
@@ -170,7 +166,7 @@ class LabOrdersProvider with ChangeNotifier {
     final result = await iLabOrdersFacade.getCompletedOrders(userId: userId);
 
     result.fold((err) {
-    //  log('ERROR :: ${err.errMsg}');
+      //  log('ERROR :: ${err.errMsg}');
     }, (success) {
       completedOrders.addAll(success);
     });
@@ -203,7 +199,7 @@ class LabOrdersProvider with ChangeNotifier {
     final result = await iLabOrdersFacade.getSingleOrderDoc(userId: userId);
 
     result.fold((err) {
-     // log('ERRROR :: ${err.errMsg}');
+      // log('ERRROR :: ${err.errMsg}');
     }, (success) {
       //log(success.toMap().toString());
       singleOrderDoc = success;

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,7 +46,7 @@ class PharmacyProvider extends ChangeNotifier {
   void setUserId(String id) {
     userId = id;
     notifyListeners();
-  //  log('User id in pharmacy $userId');
+    //  log('User id in pharmacy $userId');
   }
 
 /* ---------------------------------- prescription image --------------------------------- */
@@ -165,7 +166,6 @@ class PharmacyProvider extends ChangeNotifier {
 
   /* ------------------------- Location based fetching Pharmacy------------------------ */
 
-  final ScrollController mainScrollController = ScrollController();
   bool isFirebaseDataLoding = true;
   bool circularProgressLOading = true;
   bool isFunctionProcessing = false;
@@ -215,6 +215,7 @@ class PharmacyProvider extends ChangeNotifier {
 
   void pharmacyFetchInitData({
     required BuildContext context,
+    required ScrollController scrollController,
   }) {
     notifyListeners();
     final placeMark =
@@ -230,9 +231,9 @@ class PharmacyProvider extends ChangeNotifier {
       );
     }
 
-    mainScrollController.addListener(() {
-      if (mainScrollController.position.atEdge &&
-          mainScrollController.position.pixels != 0 &&
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge &&
+          scrollController.position.pixels != 0 &&
           isFunctionProcessing == false &&
           circularProgressLOading == true) {
         fetchPharmacyLocationBasedData(context);
@@ -330,9 +331,9 @@ class PharmacyProvider extends ChangeNotifier {
     result.fold((failure) {
       fetchLoading = false;
       notifyListeners();
+      log('$failure');
       CustomToast.errorToast(text: "Couldn't able to show products");
     }, (products) {
-     
       productAllList.addAll(products); //// here we are assigning the doctor
     });
     fetchLoading = false;
@@ -369,7 +370,7 @@ class PharmacyProvider extends ChangeNotifier {
     notifyListeners();
     final result = await _iPharmacyFacade.getPharmacyCategoryProductDetails(
         categoryId: categoryId, pharmacyId: pharmacyId, searchText: searchText);
-   // log(categoryId.toString());
+    // log(categoryId.toString());
     result.fold((failure) {
       fetchLoading = false;
       notifyListeners();
@@ -492,7 +493,7 @@ class PharmacyProvider extends ChangeNotifier {
         notifyListeners();
       },
       (cartProductsData) {
-       // log(cartProductsData.toString());
+        // log(cartProductsData.toString());
         if (cartProductsData.isNotEmpty) {
           cartProductMap.addAll(cartProductsData);
         }
@@ -625,7 +626,7 @@ class PharmacyProvider extends ChangeNotifier {
       totalFinalAmount += totalDiscountAmount;
     }
 
-   // log("totalAmount  :$totalAmount");
+    // log("totalAmount  :$totalAmount");
 
     notifyListeners();
   }
@@ -663,18 +664,18 @@ class PharmacyProvider extends ChangeNotifier {
         notifyListeners();
         EasyNavigation.pop(context: context);
         EasyNavigation.push(
-            type: PageTransitionType.bottomToTop,
-            context: context,
-            page: const OrderRequestSuccessScreen(
-              title: 'Your order is in review, we will notify you soon.',
-            ),
-            );
+          type: PageTransitionType.bottomToTop,
+          context: context,
+          page: const OrderRequestSuccessScreen(
+            title: 'Your order is in review, we will notify you soon.',
+          ),
+        );
         sendFcmMessage(
             token: selectedpharmacyData?.fcmToken ?? '',
             body:
                 'New Order Received from ${userDetails?.userName ?? 'Customer'}. Please check the details and accept the order',
             title: 'New Booking Received!!!');
-       // log('Order Request Send Successfully');
+        // log('Order Request Send Successfully');
         CustomToast.sucessToast(text: "The order is in review");
         clearImageFileAndPrescriptionDetails();
         clearProductAndUserInCheckOutDetails();
@@ -729,7 +730,7 @@ class PharmacyProvider extends ChangeNotifier {
   }
 
   void clearProductAndUserInCheckOutDetails() {
-   // log('Calledd clear selectedRadio');
+    // log('Calledd clear selectedRadio');
     userAddress = null;
     userDetails = null;
     selectedRadio = null;

@@ -4,14 +4,18 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class UrlService {
-  Future<bool> redirectToWhatsapp(String whatsAppLink) async {
+  Future<void> redirectToWhatsapp({ required String whatsAppLink,VoidCallback? onFailure}) async {
     String encodedUrl = Uri.encodeFull(whatsAppLink);
-
+ try {
     if (await launchUrlString(encodedUrl)) {
       await launchUrl(Uri.parse(encodedUrl));
-      return true;
     } else {
+       onFailure!();
       throw 'Could not launch $encodedUrl';
+    }
+     } on Exception catch (e) {
+      print(e.toString());
+      onFailure!();
     }
   }
 

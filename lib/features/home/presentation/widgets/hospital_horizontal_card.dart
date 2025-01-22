@@ -24,14 +24,14 @@ class HospitalsHorizontalCard extends StatelessWidget {
           child: Stack(
             children: [
               Container(
-                height: 215,
-                width: 225,
+                height: 216,
+                width: 232,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: BColors.white,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(6.0),
                   child: Column(
                     children: [
                       Stack(
@@ -41,11 +41,12 @@ class HospitalsHorizontalCard extends StatelessWidget {
                             clipBehavior: Clip.antiAlias,
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  topRight: Radius.circular(8)),
+                                topLeft: Radius.circular(8),
+                                topRight: Radius.circular(8),
+                              ),
                             ),
                             child: CustomCachedNetworkImage(
-                                fit: BoxFit.cover, image: hospitals.image!),
+                                fit: BoxFit.fill, image: hospitals.image!),
                           ),
                           if (hospitals.ishospitalON == false)
                             Container(
@@ -56,11 +57,14 @@ class HospitalsHorizontalCard extends StatelessWidget {
                                         topRight: Radius.circular(8),
                                         topLeft: Radius.circular(8))),
                                 child: Center(
-                          child: Image.asset(BImage.healthyCartLogoWithOpacity, scale: 5,),
-                        )),
+                                  child: Image.asset(
+                                    BImage.healthyCartLogoWithOpacity,
+                                    scale: 5,
+                                  ),
+                                )),
                         ],
                       ),
-                      const Gap(5),
+                      const Gap(6),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -99,8 +103,9 @@ class HospitalsHorizontalCard extends StatelessWidget {
                           // ),
                         ],
                       ),
-                      const Gap(5),
+                      const Spacer(),
                       Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Icon(
                             Icons.location_on,
@@ -110,7 +115,6 @@ class HospitalsHorizontalCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               hospitals.address ?? 'No Address',
-                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                   fontSize: 10, fontWeight: FontWeight.w500),
@@ -122,14 +126,15 @@ class HospitalsHorizontalCard extends StatelessWidget {
                   ),
                 ),
               ),
-                         if (hospitals.ishospitalON == false)
-            Positioned(
-              bottom: 40,
-              right: 4,
-              child:  Image.asset(
-                  BImage.currentlyUnavailable,
-                  scale: 6,
-                )),
+              if (hospitals.ishospitalON == false)
+                Positioned(
+                  bottom: 48,
+                  right: 4,
+                  child: Image.asset(
+                    BImage.currentlyUnavailable,
+                    scale: 6,
+                  ),
+                ),
             ],
           ),
         ),

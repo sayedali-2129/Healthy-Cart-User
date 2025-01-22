@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
@@ -55,7 +53,8 @@ class HospitalProvider with ChangeNotifier {
     hospitalFetchLoading = true;
     notifyListeners();
 
-    final result = await iHospitalFacade.getAllHospitals( hospitalSearch: hospitalSearchController.text);
+    final result = await iHospitalFacade.getAllHospitals(
+        hospitalSearch: hospitalSearchController.text);
     result.fold((err) {
       CustomToast.errorToast(text: "Couldn't able to show hospitals near you.");
     }, (success) {
@@ -101,7 +100,7 @@ class HospitalProvider with ChangeNotifier {
     final result =
         await iHospitalFacade.getHospitalBanner(hospitalId: hospitalId);
     result.fold((err) {
-     // log('ERROR :: ${err.errMsg}');
+      // log('ERROR :: ${err.errMsg}');
     }, (success) {
       hospitalBanner = success;
     });
@@ -142,7 +141,7 @@ class HospitalProvider with ChangeNotifier {
     result.fold((err) {
       CustomToast.errorToast(
           text: "Couldn't able to fetch hospital categories.");
-    //  log('ERROR IN CATEGORY :: ${err.errMsg}');
+      //  log('ERROR IN CATEGORY :: ${err.errMsg}');
     }, (success) {
       hospitalAllCategoryList = success;
     });
@@ -164,15 +163,15 @@ class HospitalProvider with ChangeNotifier {
 
     result.fold((err) {
       CustomToast.errorToast(text: 'Unable to fetch doctors.');
-     // log('ERROR IN GET DOCTOR :: ${err.errMsg}');
+      // log('ERROR IN GET DOCTOR :: ${err.errMsg}');
     }, (success) {
-         // log('SEARCH DOCTOR LENGTH:::::::${success.length}');
+      // log('SEARCH DOCTOR LENGTH:::::::${success.length}');
       final uniqueDoctors = success
           .where((doctor) => !categoryWiseDoctorIds.contains(doctor.id))
           .toList();
       categoryWiseDoctorIds.addAll(uniqueDoctors.map((doctor) => doctor.id!));
       categoryWiseDoctorsList.addAll(uniqueDoctors);
-  
+
       notifyListeners();
     });
     isLoading = false;
@@ -183,7 +182,9 @@ class HospitalProvider with ChangeNotifier {
     iHospitalFacade.clearAllDoctorsCategoryWiseData();
     categoryWiseDoctorIds.clear();
     categoryWiseDoctorsList = [];
-    getAllDoctorsCategoryWise(categoryId: categoryId,);
+    getAllDoctorsCategoryWise(
+      categoryId: categoryId,
+    );
     getAllDoctorsCategoryWiseinit(
       scrollController: doctorSearchScrollController,
       categoryId: categoryId,
@@ -222,7 +223,7 @@ class HospitalProvider with ChangeNotifier {
     final result =
         await iHospitalFacade.getCategoryWiseHospital(hospitalId: hospitalId);
     result.fold((err) {
-    //  log('ERROR :: ${err.errMsg}');
+      //  log('ERROR :: ${err.errMsg}');
     }, (success) {
       selectedCategoryWiseHospital = success;
     });
@@ -242,7 +243,7 @@ class HospitalProvider with ChangeNotifier {
 
     result.fold((err) {
       CustomToast.errorToast(text: 'Unable to fetch doctors.');
-    //  log('ERROR IN GET DOCTOR :: ${err.errMsg}');
+      //  log('ERROR IN GET DOCTOR :: ${err.errMsg}');
     }, (success) {
       final uniqueDoctors =
           success.where((doctor) => !doctorIds.contains(doctor.id)).toList();
@@ -306,6 +307,7 @@ class HospitalProvider with ChangeNotifier {
 
   HospitalBookingModel? hospitalBookingModel;
   /* ------------------------- CREATE HOSPITAL BOOKING ------------------------ */
+  final uhidController = TextEditingController();
   Future<void> addHospitalBooking({
     required String hospitalId,
     required String userId,
@@ -318,30 +320,31 @@ class HospitalProvider with ChangeNotifier {
     required UserFamilyMembersModel selectedMember,
   }) async {
     hospitalBookingModel = HospitalBookingModel(
-      hospitalId: hospitalId,
-      bookedAt: Timestamp.now(),
-      patientName: selectedMember.name,
-      patientAge: selectedMember.age,
-      patientGender: selectedMember.gender,
-      patientNumber: selectedMember.phoneNo,
-      patientPlace: selectedMember.place,
-      orderStatus: 0,
-      paymentStatus: 0,
-      totalAmount: totalAmount,
-      userDetails: userModel,
-      hospitalDetails: hospitalModel,
-      isUserAccepted: false,
-      selectedDate: seletedBookingDate,
-      selectedTimeSlot: selectedSlot,
-      selectedDoctor: selectedDoctor,
-      userId: userId,
-    );
+        hospitalId: hospitalId,
+        bookedAt: Timestamp.now(),
+        patientName: selectedMember.name,
+        patientAge: selectedMember.age,
+        patientGender: selectedMember.gender,
+        patientNumber: selectedMember.phoneNo,
+        patientPlace: selectedMember.place,
+        orderStatus: 0,
+        paymentStatus: 0,
+        totalAmount: totalAmount,
+        userDetails: userModel,
+        hospitalDetails: hospitalModel,
+        isUserAccepted: false,
+        selectedDate: seletedBookingDate,
+        selectedTimeSlot: selectedSlot,
+        selectedDoctor: selectedDoctor,
+        userId: userId,
+        uhid:
+            uhidController.text.isNotEmpty ? uhidController.text.trim() : null);
 
     final result = await iHospitalBookingFacade.createHospitalBooking(
         hospitalBookingModel: hospitalBookingModel!);
     result.fold(
       (err) {
-      //  log('error in addHospitalOrders() :: ${err.errMsg}');
+        //  log('error in addHospitalOrders() :: ${err.errMsg}');
       },
       (success) {
         sendFcmMessage(
@@ -350,7 +353,8 @@ class HospitalProvider with ChangeNotifier {
                 'New Booking Received from $userName. Please check the details and accept the order',
             title: 'New Booking Received!!!');
         CustomToast.sucessToast(text: success);
-      //  log('Order Request Send Successfully');
+        //  log('Order Request Send Successfully');
+        uhidController.clear();
       },
     );
     notifyListeners();
@@ -377,7 +381,6 @@ class HospitalProvider with ChangeNotifier {
 
   /* ------------------------- Location based fetching Hospitals------------------------ */
 
-  final ScrollController mainScrollController = ScrollController();
   bool isFirebaseDataLoding = true;
   bool circularProgressLOading = true;
   bool isFunctionProcessing = false;
@@ -426,10 +429,10 @@ class HospitalProvider with ChangeNotifier {
   }
 
   Future<void> hospitalFetchInitData({
-    required BuildContext context,
+    required BuildContext context, required ScrollController mainScrollController
   }) async {
     notifyListeners();
-   // log('called');
+    // log('called');
     final placeMark =
         context.read<LocationProvider>().locallySavedHospitalplacemark!;
     if (hospitalList.isEmpty ||

@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,8 +56,11 @@ class IAuthImpl implements IAuthFacade {
     required String smsCode,
   }) async {
     try {
-      final PhoneAuthCredential phoneAuthCredential =  PhoneAuthProvider.credential(verificationId: verificationId!, smsCode: smsCode);
-      UserCredential userCredential = await _firebaseAuth.signInWithCredential(phoneAuthCredential);
+      final PhoneAuthCredential phoneAuthCredential =
+          PhoneAuthProvider.credential(
+              verificationId: verificationId!, smsCode: smsCode);
+      UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(phoneAuthCredential);
 
       await saveUser(
         phoneNo: userCredential.user!.phoneNumber!,
@@ -73,6 +77,7 @@ class IAuthImpl implements IAuthFacade {
     required String uid,
     required String phoneNo,
   }) async {
+    try {
     final user = await _firestore
         .collection(FirebaseCollections.userCollection)
         .doc(uid)
@@ -85,20 +90,47 @@ class IAuthImpl implements IAuthFacade {
           .doc(uid)
           .update({'fcmToken': fcmToken});
     } else {
+      await _createUsers(uid: uid, phoneNo: phoneNo);
+    }
+    } on FirebaseAuthException catch (e) {
+        log(e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
+
+  }
+
+  Future<void> _createUsers({
+    required String uid,
+    required String phoneNo,
+  }) async {
+    try {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       final fcmToken = await messaging.getToken();
-      await _firestore
-          .collection(FirebaseCollections.userCollection)
-          .doc(uid)
-          .set(
-            UserModel()
-                .copyWith(
-                  phoneNo: phoneNo,
-                  fcmToken: fcmToken,
-                  id: uid,
-                  isActive: true,
-                ).toMap(),
-          );
+
+      final batch = _firestore.batch();
+      batch.set(
+          _firestore.collection(FirebaseCollections.userCollection).doc(uid),
+          UserModel()
+              .copyWith(
+                phoneNo: phoneNo,
+                fcmToken: fcmToken,
+                id: uid,
+                isActive: true,
+              )
+              .toMap());
+
+      batch.update(
+        _firestore.collection(FirebaseCollections.general).doc('general'),
+        {
+          'totalUsers': FieldValue.increment(1),
+          (Platform.isIOS ? 'ios_totalUsers' : 'android_totalUsers'):
+              FieldValue.increment(1),
+        },
+      );
+      await batch.commit();
+    } on Exception catch (e) {
+      throw Exception('Error: _createUsers() $e');
     }
   }
 
@@ -128,8 +160,6 @@ class IAuthImpl implements IAuthFacade {
     }
     yield* hospitalStreamController.stream;
   }
-
-
 
   @override
   Future<Either<MainFailure, String>> userLogOut() async {

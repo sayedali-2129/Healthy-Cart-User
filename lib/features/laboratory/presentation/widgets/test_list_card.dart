@@ -37,7 +37,6 @@ class TestListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<LabProvider>(builder: (context, labProvider, _) {
       return Container(
-        height: 80,
         decoration: BoxDecoration(
             border: Border.all(), borderRadius: BorderRadius.circular(8)),
         child: Padding(
@@ -45,150 +44,140 @@ class TestListCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Container(
+                clipBehavior: Clip.antiAlias,
+                height: 60,
+                width: 60,
+                decoration: const BoxDecoration(shape: BoxShape.circle),
+                child: CustomCachedNetworkImage(image: image, fit: BoxFit.contain,),
+              ),
+              const Gap(16),
               Expanded(
-                child: Row(
+               
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  
                   children: [
-                    Container(
-                      clipBehavior: Clip.antiAlias,
-                      height: 54,
-                      width: 54,
-                      decoration: const BoxDecoration(shape: BoxShape.circle),
-                      child: CustomCachedNetworkImage(image: image),
+                    Text(
+                      testName,
+                      style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600),
                     ),
-                    const Gap(8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  testName,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                    const Gap(6),
+                    offerPrice == null
+                        ? RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                    text: 'Test Fee - ',
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: BColors.green,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600)),
+                                TextSpan(
+                                  text: '₹$testPrice',
                                   style: const TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: BColors.black,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
                                 ),
-                              ),
-                              doorstepList == true
-                                  ? const Gap(0)
-                                  : isDoorstepAvailable == true
-                                      ? Container(
-                                          height: 23,
-                                          width: 118,
-                                          decoration: BoxDecoration(
-                                              color: BColors.darkblue,
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          child: Center(
-                                              child: Text(
-                                            'Door Step Available',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .copyWith(
-                                                    color: BColors.white,
-                                                    fontSize: 10,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                          )),
-                                        )
-                                      : const Gap(0),
-                            ],
+                              ],
+                            ),
+                          )
+                        : RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                    text: 'Test Fee - ',
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: BColors.green,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600)),
+                                TextSpan(
+                                  text: '₹$testPrice',
+                                  style: const TextStyle(
+                                      decoration:
+                                          TextDecoration.lineThrough,
+                                      fontFamily: 'Montserrat',
+                                      color: BColors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                TextSpan(
+                                  text: offerPrice == 0
+                                      ? '  Free'
+                                      : '  ₹$offerPrice',
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: BColors.green,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
                           ),
-                          const Gap(6),
-                          Expanded(
-                            child: offerPrice == null
-                                ? RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                            text: 'Test Fee - ',
-                                            style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                color: BColors.green,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600)),
-                                        TextSpan(
-                                          text: '₹$testPrice',
-                                          style: const TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
+
+                       doorstepList == true
+                            ? const Gap(8)
+                            : isDoorstepAvailable == true
+                                ? Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Container(
+                                      height: 23,
+                                      width: 118,
+                                      decoration: BoxDecoration(
+                                          color: BColors.darkblue,
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      child: Center(
+                                          child: Text(
+                                        'Door Step Available',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium!
+                                            .copyWith(
+                                                color: BColors.white,
+                                                fontSize: 10,
+                                                fontWeight:
+                                                    FontWeight.w600),
+                                      )),
                                     ),
-                                  )
-                                : RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                            text: 'Test Fee - ',
-                                            style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                color: BColors.green,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600)),
-                                        TextSpan(
-                                          text: '₹$testPrice',
-                                          style: const TextStyle(
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.black,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        TextSpan(
-                                          text: offerPrice == 0
-                                              ? '  Free'
-                                              : '  ₹$offerPrice',
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              color: BColors.green,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ),
+                                )
+                                : const Gap(0),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: GestureDetector(
-                  onTap: onAdd,
-                  child: Container(
-                    height: 26,
-                    width: 26,
-                    decoration: BoxDecoration(
-                        color: !isSelected ? BColors.white : BColors.green,
-                        border: Border.all(color: BColors.green),
-                        borderRadius: BorderRadius.circular(6)),
-                    child: Center(
-                        child: !isSelected
-                            ? const Icon(
-                                Icons.add,
-                                color: BColors.black,
-                                size: 20,
-                              )
-                            : const Icon(
-                                Icons.check,
-                                color: BColors.white,
-                                size: 18,
-                              )),
-                  ),
-                ),
-              )
+               Padding(
+                 padding: const EdgeInsets.only(right: 12),
+                 child: GestureDetector(
+                   onTap: onAdd,
+                   child: Container(
+                     height: 26,
+                     width: 26,
+                     decoration: BoxDecoration(
+                         color: !isSelected ? BColors.white : BColors.green,
+                         border: Border.all(color: BColors.green),
+                         borderRadius: BorderRadius.circular(6)),
+                     child: Center(
+                         child: !isSelected
+                             ? const Icon(
+                                 Icons.add,
+                                 color: BColors.black,
+                                 size: 20,
+                               )
+                             : const Icon(
+                                 Icons.check,
+                                 color: BColors.white,
+                                 size: 18,
+                               )),
+                   ),
+                 ),
+               )
             ],
           ),
         ),

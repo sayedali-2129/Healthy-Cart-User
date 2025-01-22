@@ -97,6 +97,7 @@ class LabListCard extends StatelessWidget {
                           ),
                           const Gap(6),
                           Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Icon(
                                 Icons.location_on,

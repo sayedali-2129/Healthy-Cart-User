@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_test_model.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
@@ -21,9 +23,11 @@ class LabOrdersModel {
   num? doorStepCharge;
   num? finalAmount;
   String? rejectReason;
+  String? notes;
   Timestamp? acceptedAt;
   Timestamp? rejectedAt;
-  String? timeSlot;
+  String? usertimeSlot;
+  String? admintimeSlot;
   Timestamp? completedAt;
   LabModel? labDetails;
   String? prescription;
@@ -32,35 +36,39 @@ class LabOrdersModel {
   bool? isRejectedByUser;
   bool? prescriptionOnly;
   String? paymentId;
-
-  LabOrdersModel(
-      {this.id,
-      this.labId,
-      this.userId,
-      this.name,
-      this.testMode,
-      this.orderAt,
-      this.userAddress,
-      this.userDetails,
-      this.totalAmount,
-      this.orderStatus,
-      this.paymentStatus,
-      this.paymentMethod,
-      this.selectedTest,
-      this.doorStepCharge,
-      this.finalAmount,
-      this.rejectReason,
-      this.acceptedAt,
-      this.rejectedAt,
-      this.timeSlot,
-      this.completedAt,
-      this.labDetails,
-      this.prescription,
-      this.isUserAccepted,
-      this.resultUrl,
-      this.isRejectedByUser,
-      this.prescriptionOnly,
-      this.paymentId});
+  int? tokenNumber;
+  LabOrdersModel({
+    this.id,
+    this.labId,
+    this.userId,
+    this.name,
+    this.testMode,
+    this.orderAt,
+    this.userAddress,
+    this.userDetails,
+    this.totalAmount,
+    this.orderStatus,
+    this.paymentStatus,
+    this.paymentMethod,
+    this.selectedTest,
+    this.doorStepCharge,
+    this.finalAmount,
+    this.rejectReason,
+    this.notes,
+    this.acceptedAt,
+    this.rejectedAt,
+    this.usertimeSlot,
+    this.admintimeSlot,
+    this.completedAt,
+    this.labDetails,
+    this.prescription,
+    this.isUserAccepted,
+    this.resultUrl,
+    this.isRejectedByUser,
+    this.prescriptionOnly,
+    this.paymentId,
+    this.tokenNumber,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -82,7 +90,8 @@ class LabOrdersModel {
       'rejectReason': rejectReason,
       'acceptedAt': acceptedAt,
       'rejectedAt': rejectedAt,
-      'timeSlot': timeSlot,
+      'usertimeSlot': usertimeSlot,
+      'admintimeSlot': admintimeSlot,
       'completedAt': completedAt,
       'labDetails': labDetails!.toMap(),
       'prescription': prescription,
@@ -97,6 +106,8 @@ class LabOrdersModel {
   factory LabOrdersModel.fromMap(Map<String, dynamic> map) {
     return LabOrdersModel(
       id: map['id'] != null ? map['id'] as String : null,
+      tokenNumber:
+          map['tokenNumber'] != null ? map['tokenNumber'] as int : null,
       labId: map['labId'] != null ? map['labId'] as String : null,
       userId: map['userId'] != null ? map['userId'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
@@ -123,6 +134,7 @@ class LabOrdersModel {
               ),
             )
           : null,
+      notes: map['notes'] != null ? map['notes'] as String : null,
       doorStepCharge:
           map['doorStepCharge'] != null ? map['doorStepCharge'] as num : null,
       finalAmount:
@@ -133,7 +145,10 @@ class LabOrdersModel {
           map['acceptedAt'] != null ? map['acceptedAt'] as Timestamp : null,
       rejectedAt:
           map['rejectedAt'] != null ? map['rejectedAt'] as Timestamp : null,
-      timeSlot: map['timeSlot'] != null ? map['timeSlot'] as String : null,
+      usertimeSlot:
+          map['usertimeSlot'] != null ? map['usertimeSlot'] as String : null,
+      admintimeSlot:
+          map['admintimeSlot'] != null ? map['admintimeSlot'] as String : null,
       completedAt:
           map['completedAt'] != null ? map['completedAt'] as Timestamp : null,
       labDetails: map['labDetails'] != null
@@ -171,17 +186,20 @@ class LabOrdersModel {
     num? doorStepCharge,
     num? finalAmount,
     String? rejectReason,
+    String? notes,
     Timestamp? acceptedAt,
     Timestamp? rejectedAt,
-    String? timeSlot,
+    String? usertimeSlot,
+    String? admintimeSlot,
     Timestamp? completedAt,
     LabModel? labDetails,
     String? prescription,
     bool? isUserAccepted,
+    String? resultUrl,
     bool? isRejectedByUser,
     bool? prescriptionOnly,
-    String? resultUrl,
     String? paymentId,
+    int? tokenNumber,
   }) {
     return LabOrdersModel(
       id: id ?? this.id,
@@ -200,9 +218,11 @@ class LabOrdersModel {
       doorStepCharge: doorStepCharge ?? this.doorStepCharge,
       finalAmount: finalAmount ?? this.finalAmount,
       rejectReason: rejectReason ?? this.rejectReason,
+      notes: notes ?? this.notes,
       acceptedAt: acceptedAt ?? this.acceptedAt,
       rejectedAt: rejectedAt ?? this.rejectedAt,
-      timeSlot: timeSlot ?? this.timeSlot,
+      usertimeSlot: usertimeSlot ?? this.usertimeSlot,
+      admintimeSlot: admintimeSlot ?? this.admintimeSlot,
       completedAt: completedAt ?? this.completedAt,
       labDetails: labDetails ?? this.labDetails,
       prescription: prescription ?? this.prescription,
@@ -211,6 +231,7 @@ class LabOrdersModel {
       isRejectedByUser: isRejectedByUser ?? this.isRejectedByUser,
       prescriptionOnly: prescriptionOnly ?? this.prescriptionOnly,
       paymentId: paymentId ?? this.paymentId,
+      tokenNumber: tokenNumber ?? this.tokenNumber,
     );
   }
 }

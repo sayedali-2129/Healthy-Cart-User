@@ -71,7 +71,7 @@ class LabProvider with ChangeNotifier {
   /* -------------------------------------------------------------------------- */
 
   /* ------------------------- Location based fetching Hospitals------------------------ */
-  final ScrollController mainScrollController = ScrollController();
+
   bool isFirebaseDataLoding = true;
   bool circularProgressLOading = true;
   bool isFunctionProcessing = false;
@@ -83,7 +83,6 @@ class LabProvider with ChangeNotifier {
     if (labList.isEmpty) {
       isFirebaseDataLoding = true;
     }
-
     notifyListeners();
 
     final placeMark =
@@ -119,6 +118,7 @@ class LabProvider with ChangeNotifier {
 
   void labortaryFetchInitData({
     required BuildContext context,
+    required ScrollController scrollController,
   }) {
     notifyListeners();
     final placeMark =
@@ -133,9 +133,9 @@ class LabProvider with ChangeNotifier {
       );
     }
 
-    mainScrollController.addListener(() {
-      if (mainScrollController.position.atEdge &&
-          mainScrollController.position.pixels != 0 &&
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge &&
+          scrollController.position.pixels != 0 &&
           isFunctionProcessing == false &&
           circularProgressLOading == true) {
         fetchLabortaryLocationBasedData(context);
@@ -355,6 +355,38 @@ class LabProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /* -------------------------------------------------------------------------- */
+  //booking date
+  String? seletedBookingDate;
+  String? dateAndTime;
+/* -------------------------------------------------------------------------- */
+
+/* ------------------------------ SET TIME SLOT ----------------------------- */
+  void setTimeSlot() {
+   dateAndTime = '$seletedBookingDate ($selectedTimeSlot1 - $selectedTimeSlot2)';
+    notifyListeners();
+  }
+
+/* -------------------------------------------------------------------------- */
+/* ----------------------------- GET ALL SUNDAY ----------------------------- */
+  List<DateTime> findAllSundaysFromNow(int daysCount) {
+    List<DateTime> sundays = [];
+    DateTime currentDate = DateTime.now();
+
+    for (int i = 0; i < daysCount; i++) {
+      DateTime date = currentDate.add(Duration(days: i));
+      if (date.weekday == DateTime.sunday) {
+        sundays.add(date);
+      }
+    }
+
+    return sundays;
+  }
+  /* -------------------------------------------------------------------------- */
+
+  String? selectedTimeSlot1;
+  String? selectedTimeSlot2;
+
   LabOrdersModel? labOrderModel;
   /* ----------------------------- ADD LAB ORDERS ----------------------------- */
   Future<void> addLabOrders(
@@ -373,6 +405,7 @@ class LabProvider with ChangeNotifier {
         userId: userId,
         userDetails: userModel,
         userAddress: selectedAddress,
+        usertimeSlot: dateAndTime,
         orderAt: Timestamp.now(),
         totalAmount: claculateTotalAmount(),
         orderStatus: 0,

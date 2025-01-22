@@ -99,7 +99,7 @@ class HospCancelledCard extends StatelessWidget {
                         ),
                         const Gap(5),
                         Text(
-                          'Dr. ${orders.selectedDoctor!.doctorName} (${orders.selectedDoctor!.doctorQualification})',
+                          '${orders.selectedDoctor!.doctorName} (${orders.selectedDoctor!.doctorQualification})',
                           style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 15),
                         ),

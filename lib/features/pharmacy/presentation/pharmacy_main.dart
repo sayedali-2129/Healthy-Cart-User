@@ -32,9 +32,11 @@ class PharmacyMain extends StatefulWidget {
 }
 
 class _PharmacyMainState extends State<PharmacyMain> {
+  late final ScrollController _pharmacyScrollController;
   @override
   void initState() {
     super.initState();
+    _pharmacyScrollController = ScrollController();
     final pharmacyProvider = context.read<PharmacyProvider>();
     final orderProvider = context.read<PharmacyOrderProvider>();
     final userId = FirebaseAuth.instance.currentUser?.uid;
@@ -42,12 +44,19 @@ class _PharmacyMainState extends State<PharmacyMain> {
       (timeStamp) {
         pharmacyProvider
           ..clearPharmacyFetchData()
-          ..pharmacyFetchInitData(context: context);
+          ..pharmacyFetchInitData(
+              context: context, scrollController: _pharmacyScrollController);
         if (userId != null) {
           orderProvider.getSingleOrderDoc(userId: userId);
         }
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _pharmacyScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,18 +73,18 @@ class _PharmacyMainState extends State<PharmacyMain> {
           onRefresh: () async {
             pharmacyProvider
               ..clearPharmacyLocationData()
-              ..pharmacyFetchInitData(context: context);
+              ..pharmacyFetchInitData(context: context, scrollController: _pharmacyScrollController);
           },
           child: CustomScrollView(
-            controller: pharmacyProvider.mainScrollController,
+            controller: _pharmacyScrollController,
             slivers: [
               HomeSliverAppbar(
                 onSearchTap: () {
                   EasyNavigation.push(
-                      type: PageTransitionType.topToBottom,
-                      context: context,
-                      page: const PharmaciesMainSearch(),
-                      );
+                    type: PageTransitionType.topToBottom,
+                    context: context,
+                    page: const PharmaciesMainSearch(),
+                  );
                 },
                 locationText:
                     "${locationProvider.locallySavedPharmacyplacemark?.localArea},${locationProvider.locallySavedPharmacyplacemark?.district},${locationProvider.locallySavedPharmacyplacemark?.state}",
@@ -83,15 +92,16 @@ class _PharmacyMainState extends State<PharmacyMain> {
                 searchController: pharmacyProvider.searchController,
                 locationTap: () {
                   EasyNavigation.push(
-                      context: context,
-                      page: UserLocationSearchWidget(
-                        isUserEditProfile: false,
-                        locationSetter: 3,
-                        onSucess: () {
-                          pharmacyProvider.pharmacyFetchInitData(
-                              context: context);
-                        },
-                      ),);
+                    context: context,
+                    page: UserLocationSearchWidget(
+                      isUserEditProfile: false,
+                      locationSetter: 3,
+                      onSucess: () {
+                        pharmacyProvider.pharmacyFetchInitData(
+                            context: context, scrollController: _pharmacyScrollController);
+                      },
+                    ),
+                  );
                 },
               ),
               SliverToBoxAdapter(
@@ -187,10 +197,10 @@ class _PharmacyMainState extends State<PharmacyMain> {
                     ),
                     onPressed: () {
                       EasyNavigation.push(
-                          context: context,
-                          page: const PharmacyOrdersTab(),
-                          type: PageTransitionType.bottomToTop,
-                          );
+                        context: context,
+                        page: const PharmacyOrdersTab(),
+                        type: PageTransitionType.bottomToTop,
+                      );
                     },
                   ),
                   if (orderProvider.singleOrderDoc != null)

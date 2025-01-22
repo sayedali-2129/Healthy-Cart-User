@@ -55,16 +55,7 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          surfaceTintColor: BColors.white,
-          backgroundColor: BColors.white,
-          leading: IconButton(
-            onPressed: () {
-              EasyNavigation.pop(context: context);
-            },
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          ),
-        ),
+      
         body: Consumer<AuthenticationProvider>(
             builder: (context, authenticationProvider, _) {
           return GestureDetector(
@@ -77,6 +68,17 @@ class _OTPScreenState extends State<OTPScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    AppBar(
+          surfaceTintColor: BColors.white,
+          backgroundColor: BColors.white,
+           leadingWidth: 2,
+          leading: IconButton(
+            onPressed: () {
+              EasyNavigation.pop(context: context);
+            },
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          ),
+        ),
                     const Gap(88),
                     SizedBox(
                       child: Center(

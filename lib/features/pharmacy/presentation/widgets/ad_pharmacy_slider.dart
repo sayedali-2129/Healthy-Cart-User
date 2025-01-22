@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:healthy_cart_user/core/general/cached_network_image.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_provider.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
+import 'package:healthy_cart_user/utils/constants/images/images.dart';
 import 'package:provider/provider.dart';
 
 class AdPharmacySlider extends StatelessWidget {
@@ -37,12 +38,12 @@ class AdPharmacySlider extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: CustomCachedNetworkImage(
+                      child:imageUrlList.isNotEmpty? CustomCachedNetworkImage(
                         image: productImage
                             ? imageUrlList[pharmacyProvider.selectedIndex]
                             : imageUrlList[index],
                         fit: fit,
-                      ),
+                      ): Image.asset(BImage.healthycartText, fit: BoxFit.contain,)
                       ),
                 ),
               ),

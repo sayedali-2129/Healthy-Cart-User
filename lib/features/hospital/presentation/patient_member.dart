@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
+import 'package:healthy_cart_user/core/custom/custom_textfields/textfield_widget.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_indicater.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
@@ -84,6 +85,13 @@ class _PatientMemberScreenState extends State<PatientMemberScreen> {
                       const Divider(),
                       FadeInRight(child: const MembersCard()),
                       const Divider(),
+                      const Gap(16),
+                  TextfieldWidget(
+                    keyboardType: TextInputType.emailAddress,
+                    fieldHeading: 'UHID of patient in this hospital below',
+                    hintText: 'Enter UHID(Optional)',
+                    controller: hospitalProvider.uhidController,
+                  ),
                     ],
                   ),
                 ),

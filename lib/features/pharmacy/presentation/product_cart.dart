@@ -274,7 +274,7 @@ class _ProductCartScreenState extends State<ProductCartScreen> {
                               }
                             },
                             buttonHeight: 48,
-                            buttonWidth: 160,
+                            buttonWidth: 144,
                             buttonColor: BColors.darkblue,
                             buttonWidget: const Text(
                               'Check Out',

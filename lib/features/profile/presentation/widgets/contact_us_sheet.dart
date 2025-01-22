@@ -22,7 +22,7 @@ class ContactUsBottomSheet extends StatelessWidget {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(40), topRight: Radius.circular(40))),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -32,7 +32,6 @@ class ContactUsBottomSheet extends StatelessWidget {
               },
               child: Container(
                 height: 48,
-                
                 decoration: BoxDecoration(
                     color: BColors.darkblue,
                     borderRadius: BorderRadius.circular(12)),
@@ -41,12 +40,58 @@ class ContactUsBottomSheet extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.phone,color: BColors.white,),
+                      Icon(
+                        Icons.phone,
+                        color: BColors.white,
+                      ),
                       Gap(12),
                       Text(
-                        'Call',
+                        'Give Us a Call',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500,color: BColors.white,),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: BColors.white,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const Gap(12),
+            GestureDetector(
+              onTap: () {
+                UrlService().redirectToWhatsapp(
+                  whatsAppLink:
+                      "https://wa.me/${AppDetails.phoneNumber}?text=Hi there! 👋 I'm looking for assistance with my query. Could you please help me? Thank you!",
+                  onFailure: () {
+                    CustomToast.sucessToast(
+                        text: "Chat option is not currently available");
+                  },
+                );
+              },
+              child: Container(
+                height: 48,
+                decoration: BoxDecoration(
+                    color: BColors.darkblue,
+                    borderRadius: BorderRadius.circular(12)),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.chat_bubble_outline,
+                        color: BColors.white,
+                      ),
+                      Gap(12),
+                      Text(
+                        'Chat With Us',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: BColors.white,
+                        ),
                       )
                     ],
                   ),
@@ -67,7 +112,6 @@ class ContactUsBottomSheet extends StatelessWidget {
               },
               child: Container(
                 height: 48,
-                
                 decoration: BoxDecoration(
                     color: BColors.darkblue,
                     borderRadius: BorderRadius.circular(12)),
@@ -76,12 +120,18 @@ class ContactUsBottomSheet extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.email_outlined, color: BColors.white,),
+                      Icon(
+                        Icons.email_outlined,
+                        color: BColors.white,
+                      ),
                       Gap(12),
                       Text(
-                        'E-Mail',
+                        'Send Us an Email',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500,color: BColors.white,),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: BColors.white,
+                        ),
                       )
                     ],
                   ),

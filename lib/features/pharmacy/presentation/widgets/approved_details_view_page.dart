@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
 import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
+import 'package:healthy_cart_user/core/custom/payment_status_screen.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/core/services/razorpay_service.dart';
-import 'package:healthy_cart_user/features/payment_gateway/application/gateway_provider.dart';
+import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
+import 'package:healthy_cart_user/features/general/presentation/provider/general_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/application/pharmacy_order_provider.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_order_model.dart';
 import 'package:healthy_cart_user/features/pharmacy/domain/model/pharmacy_owner_model.dart';
@@ -17,6 +20,7 @@ import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/pharmac
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/product_details_page_view.dart';
 import 'package:healthy_cart_user/features/pharmacy/presentation/widgets/row_text_widget.dart';
 import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
+import 'package:healthy_cart_user/utils/app_details.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -36,28 +40,20 @@ class ApprovedOrderDetailsScreen extends StatefulWidget {
 
 class _ApprovedOrderDetailsScreenState
     extends State<ApprovedOrderDetailsScreen> {
-  RazorpayService razorpayService = RazorpayService();
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        context.read<GatewayProvider>().getGatewayKey();
+        context.read<GeneralProvider>().fetchData();
       },
     );
     super.initState();
   }
 
   @override
-  void dispose() {
-    razorpayService.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Consumer2<PharmacyOrderProvider, GatewayProvider>(
-        builder: (context, orderProvider, gatewayProvider, _) {
+    return Consumer2<PharmacyOrderProvider, GeneralProvider>(
+        builder: (context, orderProvider, generalProvider, _) {
       return Scaffold(
         body: CustomScrollView(
           slivers: [
@@ -142,7 +138,7 @@ class _ApprovedOrderDetailsScreenState
                               const Divider(),
                               (widget.orderData.addresss != null &&
                                       widget.orderData.deliveryType == "Home")
-                                  ?  Row(
+                                  ? Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisAlignment:
@@ -156,10 +152,12 @@ class _ApprovedOrderDetailsScreenState
                                               fontSize: 12,
                                               fontWeight: FontWeight.w600),
                                         ),
-                                       const Gap(8),
+                                        const Gap(8),
                                         Expanded(
                                           child: AddressPharmacyOrderCard(
-                                              addressData: widget.orderData.addresss?? UserAddressModel()),
+                                              addressData:
+                                                  widget.orderData.addresss ??
+                                                      UserAddressModel()),
                                         ),
                                       ],
                                     )
@@ -408,26 +406,47 @@ class _ApprovedOrderDetailsScreenState
               CustomToast.errorToast(text: 'Please select a payment method.');
               return;
             }
-            if (gatewayProvider.gatewayModel?.key == null) {
+            if (generalProvider.generalModel?.razorpayKey == null ||
+                generalProvider.generalModel?.razorpayKeySecret == null) {
               CustomToast.errorToast(text: 'Unable to process the payment');
               return;
             }
             if (orderProvider.selectedPaymentRadio == 'Online') {
-              razorpayService.openRazorpay(
+              final user =
+                  context.read<AuthenticationProvider>().userFetchlDataFetched!;
+              RazorpayService.pay(
                 amount: widget.orderData.finalAmount!,
-                key: gatewayProvider.gatewayModel!.key,
-                orgName: 'Healthy Cart',
-                userPhoneNumber: widget.orderData.userDetails!.phoneNo!,
-                userEmail: widget.orderData.userDetails!.userEmail!,
-                onSuccess: (paymentId) async {
+                rzpKey: generalProvider.generalModel!.razorpayKey,
+                razorpayKeySecret:
+                    generalProvider.generalModel!.razorpayKeySecret,
+                appName: AppDetails.appName,
+                userProfile: RzpUserProfile(
+                  uid: user.id!,
+                  name: user.userName,
+                  email: user.userEmail,
+                  phoneNumber: user.phoneNo,
+                ),
+                failure: (response) {
+                  Get.to(() => PaymentStatusScreen(
+                      isErrorPage: true, bookingId: response.message));
+
+                  CustomToast.errorToast(
+                      text: 'Payment Failed ORDER ID: ${response.message!}');
+                },
+                success: (response) async {
                   await orderProvider
                       .updateOrderCompleteDetails(
-                          paymentId: paymentId,
+                          paymentId: response.paymentId,
                           productData: widget.orderData,
                           context: context)
                       .whenComplete(
                     () {
                       orderProvider.singleOrderDoc = null;
+                      EasyNavigation.push(
+                        context: context,
+                        page: PaymentStatusScreen(
+                            isErrorPage: false, bookingId: response.paymentId,),
+                      );
                     },
                   );
                 },

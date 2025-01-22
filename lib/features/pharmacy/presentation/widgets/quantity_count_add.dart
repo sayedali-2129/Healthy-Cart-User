@@ -21,8 +21,8 @@ class QuantityCountWidget extends StatelessWidget {
           child: GestureDetector(
             onTap: decrementTap,
             child: SizedBox(
-                height: 32,
-                width: 32,
+                height: 30,
+                width: 30,
                 child: Icon(
                   Icons.remove,
                   size: 24,
@@ -38,7 +38,7 @@ class QuantityCountWidget extends StatelessWidget {
           elevation: 3,
           child: SizedBox(
               height: 32,
-              width: 40,
+              width: 36,
               child: Center(
                   child: Text(
                 quantityValue.toString(),
@@ -58,8 +58,8 @@ class QuantityCountWidget extends StatelessWidget {
           child: GestureDetector(
             onTap: incrementTap,
             child: SizedBox(
-                height: 32,
-                width: 32,
+                height: 30,
+                width: 30,
                 child: Icon(
                   Icons.add,
                   size: 24,

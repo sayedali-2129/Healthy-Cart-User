@@ -228,8 +228,7 @@ class ProductListWidget extends StatelessWidget {
                                           .addProductToUserCart(
                                         productId: productData.id ?? '',
                                         selectedQuantityCount: pharmacyProvider.cartProductMap[productData.id],
-                                        cartQuantityIncrement:
-                                            true, // this is to make the custom toast accordingly
+                                        cartQuantityIncrement:true, // this is to make the custom toast accordingly
                                       )
                                           .whenComplete(
                                         () {
@@ -275,7 +274,7 @@ class ProductListWidget extends StatelessWidget {
                                             '${productData.discountPercentage ?? '0'} % off',
                                         textColor: BColors.white,
                                         boxColor: BColors.offRed,
-                                        width: 80,
+                                        width: 72,
                                         height: 32,
                                       ),
                                     ),

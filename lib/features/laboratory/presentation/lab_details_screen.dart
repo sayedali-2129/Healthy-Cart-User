@@ -13,7 +13,7 @@ import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/authentication/presentation/login_ui.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/checkout_screen.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/booking_date_time_lab.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/lab_prescription_page.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/ad_slider.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_list_card.dart';
@@ -25,8 +25,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class LabDetailsScreen extends StatefulWidget {
-  const LabDetailsScreen({super.key,});
-
+  const LabDetailsScreen({
+    super.key,
+  });
 
   @override
   State<LabDetailsScreen> createState() => _LabDetailsScreenState();
@@ -155,11 +156,11 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Icon(
                                   Icons.location_on_outlined,
-                                  size: 20,
+                                  size: 24,
                                 ),
                                 Expanded(
                                   child: Text(
@@ -253,7 +254,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),
                           child: FadeIn(
-                              duration: const Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 500),
                             child: CustomTabBar(
                               screenWidth: screenWidth,
                               text1: 'All Tests',
@@ -264,8 +265,10 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                               tab2Color: labProvider.isLabOnlySelected
                                   ? BColors.white
                                   : BColors.mainlightColor,
-                              onTapTab1: () => labProvider.labTabSelection(true),
-                              onTapTab2: () => labProvider.labTabSelection(false),
+                              onTapTab1: () =>
+                                  labProvider.labTabSelection(true),
+                              onTapTab2: () =>
+                                  labProvider.labTabSelection(false),
                             ),
                           ),
                         ),
@@ -282,7 +285,8 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                       ? const Center(
                                           child: Text('No Tests Available!'))
                                       : ListView.separated(
-                                          padding: const EdgeInsets.symmetric(vertical: 16),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 16),
                                           separatorBuilder: (context, index) =>
                                               const Gap(6),
                                           physics:
@@ -356,7 +360,9 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                                                 isDoorstepAvailable: true,
                                                 index: index,
                                                 image: doorStepList.testImage!,
-                                                testName: doorStepList.testName ??'No Name',
+                                                testName:
+                                                    doorStepList.testName ??
+                                                        'No Name',
                                                 testPrice:
                                                     doorStepList.testPrice ?? 0,
                                                 offerPrice:
@@ -422,26 +428,25 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                               if (labProvider.selectedRadio == null) {
                                 CustomToast.infoToast(
                                     text: 'Please select preferred test type');
-                              } else if (labProvider.selectedRadio == 'Home' &&
+                                return;
+                              }
+                              if (labProvider.selectedRadio == 'Home' &&
                                   checkHomeAvailable) {
                                 CustomToast.errorToast(
-                                    text:
-                                        'One or more tests are not available for door step service');
-                              } else {
+                                    text:'One or more tests are not available for door step service');
+                                    return;       
+                              } 
+                               
                                 Navigator.pop(context);
                                 EasyNavigation.push(
                                   type: PageTransitionType.rightToLeft,
                                   context: context,
-                                  page: CheckoutScreen(
-                                    userId:
-                                        authProvider.userFetchlDataFetched!.id!,
-                                    labData:labProvider.selectedLabData! ,
-                                    userModel:
-                                        authProvider.userFetchlDataFetched!,
+                                  page: LabDateBookingScreen(
+                                    user:authProvider.userFetchlDataFetched!,
+                                    labModel: labProvider.selectedLabData!,
+                                  
                                   ),
                                 );
-                                // labProvider.selectedRadio = null;
-                              }
                             },
                           ),
                         );

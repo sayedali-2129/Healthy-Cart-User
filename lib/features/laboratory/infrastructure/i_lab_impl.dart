@@ -447,7 +447,7 @@ class ILabImpl implements ILabFacade {
 
 /* -------------------------------------------------------------------------- */
 
-/* ------------------------------ GET ALL LABS ------------------------------ */
+/* ------------------------------ GET ALL LABS FOR SEARCH ------------------------------ */
 
   DocumentSnapshot<Map<String, dynamic>>? lastDoc;
   bool noMoreData = false;
