@@ -7,7 +7,8 @@ import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:provider/provider.dart';
 
 class DoctorCard extends StatelessWidget {
-  const DoctorCard({super.key, required this.doctor, required this.fromHomePage});
+  const DoctorCard(
+      {super.key, required this.doctor, required this.fromHomePage});
   final DoctorModel doctor;
   final bool fromHomePage;
   @override
@@ -48,16 +49,25 @@ class DoctorCard extends StatelessWidget {
                     children: [
                       ///////////////DOCTOR NAME///////////////
                       Text(
-                        '${doctor.doctorName} (${doctor.doctorQualification})',
+                        '${doctor.doctorName}',
                         style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: BColors.black),
                       ),
                       const Gap(4),
+                      Text(
+                        '${doctor.doctorQualification}',
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: BColors.black),
+                      ),
                       ///////////////CATEGORY//////////////////
                       Text(
-                       (fromHomePage)? doctor.hospital ?? 'Unknown Hospital': doctor.doctorSpecialization ?? "",
+                        (fromHomePage)
+                            ? doctor.hospital ?? 'Unknown Hospital'
+                            : doctor.doctorSpecialization ?? "",
                         style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,

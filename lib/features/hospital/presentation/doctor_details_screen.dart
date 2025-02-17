@@ -33,13 +33,12 @@ class DoctorDetailsScreen extends StatefulWidget {
 }
 
 class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
-          final scrollController = ScrollController();
+  final scrollController = ScrollController();
   @override
   void initState() {
     final hospitalProvider = context.read<HospitalProvider>();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        
         hospitalProvider
             .getCategoryWiseDoctor(
                 hospitalId: widget.hospital.id ?? '',
@@ -52,10 +51,12 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
         );
       },
     );
-        hospitalProvider.doctorinit(
+    hospitalProvider.doctorinit(
+        categoryId: widget.doctorModel.categoryId ?? '',
+        isCategoryWise: true,
         scrollController: scrollController,
         hospitalId: widget.doctorModel.id ?? '');
- 
+
     super.initState();
   }
 
@@ -113,20 +114,18 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                             null) {
                           EasyNavigation.push(
                               type: PageTransitionType.rightToLeft,
-                             
                               context: context,
                               page: const ProfileSetup());
                           CustomToast.infoToast(text: 'Fill user details');
                         } else {
                           EasyNavigation.push(
-                              context: context,
-                              page: DoctorBookingScreen(
-                                hospital: widget.hospital,
-                                doctorModel: doctor ?? DoctorModel(),
-                              ),
-                              type: PageTransitionType.rightToLeft,
-                            
-                              );
+                            context: context,
+                            page: DoctorBookingScreen(
+                              hospital: widget.hospital,
+                              doctorModel: doctor ?? DoctorModel(),
+                            ),
+                            type: PageTransitionType.rightToLeft,
+                          );
                         }
                       },
                     ),
@@ -154,7 +153,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
               (hospitalProvider.doctorsList.isEmpty)
                   ? const SliverFillRemaining(
                       child: Center(
-                      child: Text('No related doctors are currently available!'),
+                      child:
+                          Text('No related doctors are currently available!'),
                     ))
                   : SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -162,36 +162,38 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                         separatorBuilder: (context, index) => const Gap(5),
                         itemCount: hospitalProvider.doctorsList.length,
                         itemBuilder: (context, index) {
-                          final doctorRelated = hospitalProvider.doctorsList[index];
+                          final doctorRelated =
+                              hospitalProvider.doctorsList[index];
 
-                          if (doctor?.id == doctorRelated.id  ) {
+                          if (doctor?.id == doctorRelated.id) {
                             return const SizedBox.shrink();
                           } else {
                             return FadeIn(
                               child: GestureDetector(
-                                  onTap: () {
-                                    EasyNavigation.pushReplacement(
-                                      context: context,
-                                      page: DoctorDetailsScreen(
-                                          hospital: widget.hospital,
-                                          doctorModel: hospitalProvider
-                                              .doctorsList[index]),
-                                    );
-                                  },
-                                  child: DoctorCard(
+                                onTap: () {
+                                  EasyNavigation.pushReplacement(
+                                    context: context,
+                                    page: DoctorDetailsScreen(
+                                        hospital: widget.hospital,
+                                        doctorModel: hospitalProvider
+                                            .doctorsList[index]),
+                                  );
+                                },
+                                child: DoctorCard(
                                     fromHomePage: false,
-                                    doctor: hospitalProvider.doctorsList[index]),
-                                  ),
+                                    doctor:
+                                        hospitalProvider.doctorsList[index]),
+                              ),
                             );
                           }
                         },
                       ),
                     ),
-                  SliverToBoxAdapter(
+              SliverToBoxAdapter(
                   child: (hospitalProvider.isLoading == true &&
                           hospitalProvider.doctorsList.isNotEmpty)
                       ? const Center(child: LoadingIndicater())
-                      :null),
+                      : null),
             ],
           ),
         ),
