@@ -1,4 +1,3 @@
-
 import 'package:animate_do/animate_do.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,8 @@ class HospitalDoctorsScreen extends StatefulWidget {
   const HospitalDoctorsScreen(
       {super.key,
       required this.isCategoryWise,
-      required this.hospitalDetails,  this.category});
+      required this.hospitalDetails,
+      this.category});
 
   final HospitalModel hospitalDetails;
   final HospitalCategoryModel? category;
@@ -51,6 +51,8 @@ class _HospitalDoctorsScreenState extends State<HospitalDoctorsScreen> {
     );
 
     hospitalProvider.doctorinit(
+        isCategoryWise: widget.isCategoryWise,
+        categoryId: widget.category?.id ?? '',
         scrollController: scrollController,
         hospitalId: widget.hospitalDetails.id ?? '');
 
@@ -81,7 +83,7 @@ class _HospitalDoctorsScreenState extends State<HospitalDoctorsScreen> {
             slivers: [
               SliverCustomAppbar(
                 title: widget.isCategoryWise == true
-                    ? widget.category?.category ??''
+                    ? widget.category?.category ?? ''
                     : 'All Doctors',
                 onBackTap: () {
                   Navigator.pop(context);
@@ -145,18 +147,20 @@ class _HospitalDoctorsScreenState extends State<HospitalDoctorsScreen> {
                     itemBuilder: (context, doctorIndex) => GestureDetector(
                       onTap: () {
                         EasyNavigation.push(
-                            context: context,
-                            page: DoctorDetailsScreen(
-                              hospital:widget.hospitalDetails ,
-                              doctorModel:
-                                  hospitalProvider.doctorsList[doctorIndex],
-                            ),
-                            type: PageTransitionType.rightToLeft,
-                            );
+                          context: context,
+                          page: DoctorDetailsScreen(
+                            hospital: widget.hospitalDetails,
+                            doctorModel:
+                                hospitalProvider.doctorsList[doctorIndex],
+                          ),
+                          type: PageTransitionType.rightToLeft,
+                        );
                       },
-                      child: FadeIn(child: DoctorCard(
-                        fromHomePage: false,
-                        doctor: hospitalProvider.doctorsList[doctorIndex])),
+                      child: FadeIn(
+                          child: DoctorCard(
+                              fromHomePage: false,
+                              doctor:
+                                  hospitalProvider.doctorsList[doctorIndex])),
                     ),
                   ),
                 ),
@@ -164,7 +168,7 @@ class _HospitalDoctorsScreenState extends State<HospitalDoctorsScreen> {
                   child: (hospitalProvider.isLoading == true &&
                           hospitalProvider.doctorsList.isNotEmpty)
                       ? const Center(child: LoadingIndicater())
-                      :null),
+                      : null),
             ],
           ),
         ),

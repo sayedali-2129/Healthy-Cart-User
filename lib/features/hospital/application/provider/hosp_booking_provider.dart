@@ -202,7 +202,6 @@ class HospitalBookingProivder extends ChangeNotifier {
 
   /* ------------------------- Location based fetching Hospitals------------------------ */
 
-  final ScrollController mainScrollController = ScrollController();
   bool isFirebaseDataLoding = true;
   bool circularProgressLOading = true;
   bool isFunctionProcessing = false;
@@ -255,7 +254,9 @@ class HospitalBookingProivder extends ChangeNotifier {
   }
 
   Future<void> allDoctorsCategoryWiseFetchInitData(
-      {required BuildContext context, required String categoryId}) async {
+      {required BuildContext context,
+      required String categoryId,
+      required ScrollController mainScrollController}) async {
     notifyListeners();
     // log('called $categoryId');
     final placeMark =

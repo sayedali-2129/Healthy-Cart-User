@@ -56,6 +56,8 @@ class _CategoryWiseDoctorDetailsScreenState
     );
 
     hospitalProvider.doctorinit(
+        isCategoryWise: true,
+        categoryId: widget.doctorModel.categoryId ?? '',
         scrollController: scrollController,
         hospitalId: widget.doctorModel.id ?? '');
     super.initState();
@@ -121,21 +123,20 @@ class _CategoryWiseDoctorDetailsScreenState
                               null) {
                             EasyNavigation.push(
                                 type: PageTransitionType.rightToLeft,
-                              
                                 context: context,
                                 page: const ProfileSetup());
                             CustomToast.infoToast(text: 'Fill user details');
                           } else {
                             EasyNavigation.push(
-                                context: context,
-                                page: DoctorBookingScreen(
-                                  hospital: hospitalProvider
-                                          .selectedCategoryWiseHospital ??
-                                      HospitalModel(),
-                                  doctorModel: doctor ?? DoctorModel(),
-                                ),
-                                type: PageTransitionType.rightToLeft,
-                                );
+                              context: context,
+                              page: DoctorBookingScreen(
+                                hospital: hospitalProvider
+                                        .selectedCategoryWiseHospital ??
+                                    HospitalModel(),
+                                doctorModel: doctor ?? DoctorModel(),
+                              ),
+                              type: PageTransitionType.rightToLeft,
+                            );
                           }
                         }
                       : () {
@@ -146,50 +147,49 @@ class _CategoryWiseDoctorDetailsScreenState
                 ),
               ),
             ),
-            (hospitalProvider.selectedCategoryWiseHospital?.isActive !=
-                    true &&
-                hospitalProvider.selectedCategoryWiseHospital?.ishospitalON !=
-                    true)?
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.all(16),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                         TextSpan(
-                            text: "Unfortunately, ",
-                            style: TextStyle(
-                              color: BColors.red,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                            )),
-                        TextSpan(
-                          text:
-                              '${hospitalProvider.selectedCategoryWiseHospital?.hospitalName}',
-                          style: const TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: BColors.black),
+            (hospitalProvider.selectedCategoryWiseHospital?.isActive != true &&
+                    hospitalProvider
+                            .selectedCategoryWiseHospital?.ishospitalON !=
+                        true)
+                ? SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: "Unfortunately, ",
+                                style: TextStyle(
+                                  color: BColors.red,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  fontFamily: 'Montserrat',
+                                )),
+                            TextSpan(
+                              text:
+                                  '${hospitalProvider.selectedCategoryWiseHospital?.hospitalName}',
+                              style: const TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: BColors.black),
+                            ),
+                            TextSpan(
+                              text:
+                                  " is not accepting any booking, please try again after some time.",
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: BColors.red),
+                            )
+                          ],
                         ),
-                        TextSpan(
-                          text:
-                              " is not accepting any booking, please try again after some time.",
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: BColors.red),
-                        )
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ):
-            const SliverGap(24),
+                  )
+                : const SliverGap(24),
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.all(16),

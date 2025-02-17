@@ -30,6 +30,8 @@ class AllDoctorsScreen extends StatefulWidget {
 }
 
 class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
+  final ScrollController mainScrollController = ScrollController();
+
   @override
   void initState() {
     final hospitalBookingProivder = context.read<HospitalBookingProivder>();
@@ -38,7 +40,9 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
       (_) {
         hospitalProvider.clearAllDoctorsCategoryWiseData();
         hospitalBookingProivder.allDoctorsCategoryWiseFetchInitData(
-            context: context, categoryId: widget.category?.id ?? '');
+            mainScrollController: mainScrollController,
+            context: context,
+            categoryId: widget.category?.id ?? '');
       },
     );
     super.initState();
@@ -62,10 +66,12 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
               hospitalBookingProivder
                 ..clearAllDoctorsCategoryWiseLocationData()
                 ..allDoctorsCategoryWiseFetchInitData(
-                    context: context, categoryId: widget.category?.id ?? '');
+                    mainScrollController: mainScrollController,
+                    context: context,
+                    categoryId: widget.category?.id ?? '');
             },
             child: CustomScrollView(
-              controller: hospitalBookingProivder.mainScrollController,
+              controller: mainScrollController,
               slivers: [
                 SliverCustomAppbar(
                   title: widget.category?.category ?? 'Unknown Category',
@@ -73,7 +79,7 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
                     Navigator.pop(context);
                   },
                   child: PreferredSize(
-                    preferredSize: const Size.fromHeight(80),
+                    preferredSize: const Size.fromHeight(96),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -171,13 +177,13 @@ class _AllDoctorsScreenState extends State<AllDoctorsScreen> {
                           return GestureDetector(
                             onTap: () {
                               EasyNavigation.push(
-                                  context: context,
-                                  page: CategoryWiseDoctorDetailsScreen(
-                                    doctorModel: hospitalBookingProivder
-                                        .allDoctorHomeList[index],
-                                  ),
-                                  type: PageTransitionType.rightToLeft,
-                                  );
+                                context: context,
+                                page: CategoryWiseDoctorDetailsScreen(
+                                  doctorModel: hospitalBookingProivder
+                                      .allDoctorHomeList[index],
+                                ),
+                                type: PageTransitionType.rightToLeft,
+                              );
                             },
                             child: FadeIn(
                               child: DoctorCard(

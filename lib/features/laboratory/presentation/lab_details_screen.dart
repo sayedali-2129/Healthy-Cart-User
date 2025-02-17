@@ -156,7 +156,7 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Row(
-                               crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Icon(
                                   Icons.location_on_outlined,
@@ -433,20 +433,21 @@ class _LabDetailsScreenState extends State<LabDetailsScreen> {
                               if (labProvider.selectedRadio == 'Home' &&
                                   checkHomeAvailable) {
                                 CustomToast.errorToast(
-                                    text:'One or more tests are not available for door step service');
-                                    return;       
-                              } 
-                               
-                                Navigator.pop(context);
-                                EasyNavigation.push(
-                                  type: PageTransitionType.rightToLeft,
-                                  context: context,
-                                  page: LabDateBookingScreen(
-                                    user:authProvider.userFetchlDataFetched!,
-                                    labModel: labProvider.selectedLabData!,
-                                  
-                                  ),
-                                );
+                                    text:
+                                        'One or more tests are not available for door step service');
+                                return;
+                              }
+
+                              Navigator.pop(context);
+                              EasyNavigation.push(
+                                type: PageTransitionType.rightToLeft,
+                                context: context,
+                                page: LabDateBookingScreen(
+                                  fromPrescription: false,
+                                  user: authProvider.userFetchlDataFetched!,
+                                  labModel: labProvider.selectedLabData!,
+                                ),
+                              );
                             },
                           ),
                         );

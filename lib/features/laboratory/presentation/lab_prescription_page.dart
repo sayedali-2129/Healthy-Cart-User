@@ -3,20 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:healthy_cart_user/core/custom/app_bars/sliver_custom_appbar.dart';
 import 'package:healthy_cart_user/core/custom/button_widget/button_widget.dart';
-import 'package:healthy_cart_user/core/custom/custom_alertbox/confirm_alertbox_widget.dart';
-import 'package:healthy_cart_user/core/custom/loading_indicators/loading_lottie.dart';
-import 'package:healthy_cart_user/core/custom/order_request/order_request_success.dart';
 import 'package:healthy_cart_user/core/custom/prescription_bottom_sheet/precription_bottomsheet.dart';
 import 'package:healthy_cart_user/core/custom/toast/toast.dart';
 import 'package:healthy_cart_user/core/services/easy_navigation.dart';
 import 'package:healthy_cart_user/features/authentication/application/provider/authenication_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/application/provider/lab_provider.dart';
 import 'package:healthy_cart_user/features/laboratory/domain/models/lab_model.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/lab_prescription_order_address_screen.dart';
+import 'package:healthy_cart_user/features/laboratory/presentation/booking_date_time_lab.dart';
 import 'package:healthy_cart_user/features/laboratory/presentation/widgets/lab_prescription_image_widget.dart';
-import 'package:healthy_cart_user/features/laboratory/presentation/widgets/test_type_radio.dart';
 import 'package:healthy_cart_user/features/profile/application/provider/user_address_provider.dart';
-import 'package:healthy_cart_user/features/profile/domain/models/user_address_model.dart';
 import 'package:healthy_cart_user/features/profile/presentation/profile_setup.dart';
 import 'package:healthy_cart_user/utils/constants/colors/colors.dart';
 import 'package:healthy_cart_user/utils/constants/images/images.dart';
@@ -119,7 +114,8 @@ class LabPrescriptionPage extends StatelessWidget {
                         : FadeInUp(
                             child: ButtonWidget(
                               onPressed: () {
-                                if (authProvider .userFetchlDataFetched!.userName ==
+                                if (authProvider
+                                        .userFetchlDataFetched!.userName ==
                                     null) {
                                   EasyNavigation.push(
                                       type: PageTransitionType.rightToLeft,
@@ -128,89 +124,13 @@ class LabPrescriptionPage extends StatelessWidget {
                                   CustomToast.infoToast(
                                       text: 'Fill user details');
                                 } else {
-                                  showDialog(
+                                  EasyNavigation.push(
+                                    type: PageTransitionType.rightToLeft,
                                     context: context,
-                                    builder: (context) => TestTypeRadiopopup(
-                                      onConfirm: () {
-                                        if (labProvider.selectedRadio ==
-                                            'Lab') {
-                                          ConfirmAlertBoxWidget
-                                              .showAlertConfirmBox(
-                                                  context: context,
-                                                  titleText: 'Confirm Order',
-                                                  subText:
-                                                      'This will send your order to the laboratory and check the availability of the test. Are you sure you want to proceed?',
-                                                  confirmButtonTap: () async {
-                                                    LoadingLottie.showLoading(
-                                                        context: context,
-                                                        text: 'Please wait...');
-
-                                                    if (labProvider.prescriptionFile !=
-                                                        null) {
-                                                      await labProvider
-                                                          .uploadPrescription();
-                                                    }
-                                                    await labProvider
-                                                        .addLabOrders(
-                                                            prescriptionOnly:
-                                                                true,
-                                                            selectedTests: [],
-                                                            labModel: labModel,
-                                                            labId: labModel.id!,
-                                                            userId: authProvider
-                                                                .userFetchlDataFetched!
-                                                                .id!,
-                                                            userModel: authProvider
-                                                                .userFetchlDataFetched!,
-                                                            selectedAddress:
-                                                                addressProvider
-                                                                        .selectedAddress ??
-                                                                    UserAddressModel(),
-                                                            fcmtoken: labModel
-                                                                .fcmToken!,
-                                                            userName: authProvider
-                                                                .userFetchlDataFetched!
-                                                                .userName!)
-                                                        .whenComplete(
-                                                      () {
-                                                        labProvider
-                                                                .selectedRadio =
-                                                            null;
-                                                        addressProvider
-                                                                .selectedAddress =
-                                                            null;
-                                                        EasyNavigation
-                                                            .pushAndRemoveUntil(
-                                                          type:
-                                                              PageTransitionType
-                                                                  .bottomToTop,
-                                                          context: context,
-                                                          page:
-                                                              const OrderRequestSuccessScreen(
-                                                            title:
-                                                                'Your Laboratory appointment is currently being processed. We will notify you once its confirmed',
-                                                          ),
-                                                        );
-                                                        labProvider
-                                                            .clearCurrentDetails();
-                                                      },
-                                                    );
-                                                  });
-                                        } else {
-                                          EasyNavigation.push(
-                                              context: context,
-                                              type: PageTransitionType.rightToLeft,
-                                             
-                                              page:
-                                                  LabPrescriptionOrderAddressScreen(
-                                                labModel: labModel,
-                                                userId: authProvider
-                                                        .userFetchlDataFetched!
-                                                        .id ??
-                                                    '',
-                                              ));
-                                        }
-                                      },
+                                    page: LabDateBookingScreen(
+                                      fromPrescription: true,
+                                      user: authProvider.userFetchlDataFetched!,
+                                      labModel: labProvider.selectedLabData!,
                                     ),
                                   );
                                 }

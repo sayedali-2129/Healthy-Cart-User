@@ -270,13 +270,17 @@ class HospitalProvider with ChangeNotifier {
 
   void doctorinit(
       {required ScrollController scrollController,
+      required bool isCategoryWise,
+      required String categoryId,
       required String hospitalId}) {
     scrollController.addListener(
       () {
         if (scrollController.position.atEdge &&
             scrollController.position.pixels != 0 &&
             isLoading == false) {
-          getDoctors(hospitalId: hospitalId);
+          getDoctors(
+              hospitalId: hospitalId,
+              categoryId: isCategoryWise ? categoryId : null);
         }
       },
     );
@@ -428,9 +432,9 @@ class HospitalProvider with ChangeNotifier {
         _checkPlaceMark?.localArea);
   }
 
-  Future<void> hospitalFetchInitData({
-    required BuildContext context, required ScrollController mainScrollController
-  }) async {
+  Future<void> hospitalFetchInitData(
+      {required BuildContext context,
+      required ScrollController mainScrollController}) async {
     notifyListeners();
     // log('called');
     final placeMark =
